@@ -1,0 +1,44 @@
+## 模块介绍及目录
+
+目录
+
+- 模块介绍
+- 目录结构
+
+### 模块介绍
+
+> 定位: 实现小一点的功能模块，或者临时性使用的功能模块，或者就是小工具类型的功能，例如：小游戏(大转盘/消消乐/抽奖/大屏互动/红包等),小插件(广告管理/文章管理/友情链接等等),小模块(小型商城/报名/投票/签到),小程序等等
+
+### 目录结构
+
+> 注意：控制器需统一继承 `common\components\AddonsBaseController`
+
+目录 | 说明
+---|---
+**Demo** | 模块名称
+--- **backend** | 模块后台应用
+--- --- controllers | 控制器目录
+--- --- --- SettingController.php | 配置文件控制器, 有配置项的话可选
+--- --- views | 视图目录
+--- **frontend** | 模块前台应用
+--- --- controllers | 控制器目录
+--- --- views | 视图目录
+--- **wechat** | 模块微信应用
+--- --- controllers | 控制器目录
+--- --- views | 视图目录
+--- **api** | 模块api应用(主要用于小程序)
+--- --- controllers | 控制器目录
+--- --- --- PagesController.php | 小程序初始化(登录)控制器
+--- **common** | 公用
+--- --- models | 公共模型层
+--- **asset** | 资源配置目录
+--- ---  BackendAsset.php | 后台静态资源载入器
+--- ---  FrontendAsset.php | 前台静态资源载入器
+--- ---  WechatAsset.php | 微信静态资源载入器
+--- **resources** | 资源(js/css/image)目录(不可修改命名)
+--- AddonConfig.php | 模块配置文件(必须有)
+--- AddonMessage.php | 模块微信消息接收处理文件(可选)
+--- install.php | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)
+--- uninstall.php | 卸载SQL文件(同上)
+--- upgrade.php | 更新SQL文件(同上)
+--- icon.jpg | 模块图标

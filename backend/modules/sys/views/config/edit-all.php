@@ -1,0 +1,121 @@
+<?php
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
+use common\helpers\StringHelper;
+
+$this->title = '网站设置';
+$this->params['breadcrumbs'][] = ['label' =>  $this->title];
+?>
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row m-b-lg">
+        <div class="col-sm-9">
+            <div class="tabs-container">
+                <div class="tabs-left">
+                    <ul class="nav nav-tabs">
+                        <?php foreach ($cates as $k => $cate){ ?>
+                            <li <?php if($k == 0){ ?>class="active"<?php } ?>>
+                                <a aria-expanded="false" href="#tab-<?php echo $cate['id'] ?>" data-toggle="tab"> <?php echo $cate['title'] ?></a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                    <div class="tab-content ">
+                        <?php foreach ($cates as $k => $cate){ ?>
+                            <div id="tab-<?php echo $cate['id'] ?>" class="tab-pane <?php if($k == 0){ ?>active<?php } ?>">
+                                <div class="panel-body">
+                                    <?php $form = ActiveForm::begin(['id' => 'form-tab-' . $cate['id']]); ?>
+                                    <?php foreach ($cate['-'] as $item){ ?>
+                                        <h2 style="font-size: 20px;padding-top: 0;margin-top: 0">
+                                            <i class="fa fa-share-alt"></i>
+                                            <?php echo $item['title']?>
+                                        </h2>
+                                        <div class="col-sm-12" style="padding-left: 26px;">
+                                            <?php foreach ($item['config'] as $row){ ?>
+                                                <?php echo $this->render($row['type'], [
+                                                    'row' => $row,
+                                                    'option' => StringHelper::parseAttr($row['extra']),
+                                                ]) ?>
+                                            <?php } ?>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="form-group">
+                                        <div class="col-sm-12 text-center">
+                                            <span type="submit" class="btn btn-primary" onclick="present(<?php echo $cate['id'] ?>)">保存</span>
+                                        </div>
+                                    </div>
+                                    <?php ActiveForm::end(); ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3" id="explain">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="file-manager">
+                        <h4>说明：</h4>
+                        <h5>单击标题名称获取配置标识</h5>
+                        <div class="hr-line-dashed"></div>
+                        <h5 class="tag-title"></h5>
+                        <?php echo Html::input('text','demo','',['class' => 'form-control','id'=>'demo','readonly' => 'readonly']);?>
+                        <div class="hr-line-dashed"></div>
+                        <div class="clearfix">当前显示 ： <span id="demo-title">无</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        // 当前高度
+        var menuYloc = $("#explain").offset().top;
+        $(window).scroll(function () {
+            var offsetTop = $(window).scrollTop() - 40 + "px";
+            $("#explain").animate({ top: offsetTop }, { duration: 600, queue: false });
+
+            if ($(window).scrollTop() < 60){
+                $("#explain").animate({ top:0}, { duration: 600, queue: false });
+            }
+        });
+    });
+
+    // 单击
+    $('.demo').click(function(){
+        $('#demo').val($(this).attr('for'));
+        $('#demo-title').text($(this).text());
+    });
+
+    function present(obj){
+        // 获取表单内信息
+        var values = $("#form-tab-"+obj).serialize();
+
+        $.ajax({
+            type:"post",
+            url:"<?php echo Url::to(['update-info'])?>",
+            dataType: "json",
+            data: values,
+            success: function(data){
+                if(data.code == 200) {
+                    rfAffirm(data.message);
+                }else{
+                    rfAffirm(data.message);
+                }
+            }
+        });
+    }
+
+    function createKey(num,id){
+        var letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var token = '';
+        for(var i = 0; i < num; i++) {
+            var j = parseInt(Math.random() * 61 + 1);
+            token += letters[j];
+        }
+        $("#"+id).val(token);
+    }
+</script>

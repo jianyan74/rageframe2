@@ -1,0 +1,65 @@
+<?php
+namespace api\modules\v1\controllers;
+
+use Yii;
+use yii\web\NotFoundHttpException;
+use common\models\common\AccessToken;
+use common\helpers\ResultDataHelper;
+use api\controllers\OffAuthController;
+use api\modules\v1\models\LoginForm;
+
+/**
+ * 登录接口
+ *
+ * Class SiteController
+ * @package api\modules\v1\controllers
+ */
+class SiteController extends OffAuthController
+{
+    public $modelClass = '';
+
+    /**
+     * 登录根据用户信息返回accessToken
+     *
+     * @return array|bool
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
+     */
+    public function actionLogin()
+    {
+        if (Yii::$app->request->isPost)
+        {
+            $model = new LoginForm();
+            $model->attributes = Yii::$app->request->post();
+            if ($model->validate())
+            {
+                return AccessToken::getAccessToken($model->getUser());
+            }
+
+            // 返回数据验证失败
+            return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
+        }
+
+        throw new NotFoundHttpException('请求出错!');
+    }
+
+    /**
+     * 重置令牌
+     *
+     * @param $refresh_token
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
+     */
+    public function actionRefresh()
+    {
+        $refresh_token = Yii::$app->request->post('refresh_token');
+
+        if ($user = AccessToken::find()->where(['refresh_token' => $refresh_token])->one())
+        {
+            return AccessToken::getAccessToken($user);
+        }
+
+        throw new NotFoundHttpException('令牌错误，找不到用户!');
+    }
+}

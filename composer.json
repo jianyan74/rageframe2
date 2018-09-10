@@ -1,0 +1,73 @@
+{
+    "name": "yiisoft/yii2-app-advanced",
+    "description": "Yii 2 Advanced Project Template",
+    "keywords": ["yii2", "framework", "advanced", "project template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0",
+        "yiisoft/yii2": "~2.0.14",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "yiisoft/yii2-imagine": "~2.0.0",
+        "yiisoft/yii2-elasticsearch": "~2.0.0",
+        "yiisoft/yii2-authclient": "~2.1.0",
+        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2-queue": "dev-master",
+        "lokielse/omnipay-alipay": "dev-legacy",
+        "lokielse/omnipay-wechatpay": "^1.0",
+        "lokielse/omnipay-unionpay": "^0.4",
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "kartik-v/yii2-widget-timepicker": "*",
+        "kartik-v/yii2-widget-colorinput": "*",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-date-range": "*",
+        "2amigos/yii2-date-time-picker-widget" : "*",
+        "2amigos/qrcode-library": "^1.1",
+        "aliyuncs/oss-sdk-php": "~2.0",
+        "aliyunapi/php-aliyun-open-api-live": "~1.0",
+        "linslin/yii2-curl": "*",
+        "overtrue/pinyin": "~3.0",
+        "overtrue/easy-sms": "^1.0",
+        "crazyfd/yii2-qiniu": "*",
+        "denisogr/yii2-cronjobs": "dev-master",
+        "e282486518/yii2-console-migration": "*",
+        "xj/yii2-oauth": "~2.0.0",
+        "ramsey/uuid": "^3.7",
+        "moontoast/math": "^1.1",
+        "jianyan74/yii2-websocket": "^1.0",
+        "jianyan74/yii2-easy-wechat": "^1.0",
+        "unclead/yii2-multiple-input": "~2.0",
+        "zhuzhichao/ip-location-zh": "^2.4",
+        "hightman/xunsearch": "*@beta",
+        "phpoffice/phpspreadsheet": "^1.3"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0.0",
+        "yiisoft/yii2-gii": "~2.0.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "codeception/base": "^2.2.3",
+        "codeception/verify": "~0.3.1"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    ]
+}
