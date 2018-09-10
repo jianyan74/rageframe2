@@ -229,6 +229,5 @@ use unclead\multipleinput\MultipleInput;
 视图
 
 ```
-<?= $form->field($model, 'content')->widget(\crazydb\ueditor\UEditor::className()) ?>
+<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
 ```
-
