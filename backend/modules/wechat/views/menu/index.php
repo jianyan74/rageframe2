@@ -65,9 +65,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                             <td><?php echo Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                             <td>
 
-                                                <a href="<?php echo Url::to(['edit','id'=>$model->id,'type' => $model->type])?>"><span class="btn btn-info btn-sm"><?php echo $model->type == 2 ? '查看': '编辑';?></span></a>&nbsp
+                                                <a href="<?php echo Url::to(['edit','id'=>$model->id,'type' => $model->type])?>"><span class="btn btn-info btn-sm"><?php echo $model->type == 2 ? '查看': '编辑';?></span></a>
                                                 <?php if($model->status == 0 || $model->type == 2){ ?>
-                                                    <a href="<?php echo Url::to(['delete','id'=>$model->id,'type' => $model->type])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                                    <a href="<?php echo Url::to(['delete','id'=>$model->id,'type' => $model->type])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                                 <?php } ?>
                                             </td>
                                         </tr>

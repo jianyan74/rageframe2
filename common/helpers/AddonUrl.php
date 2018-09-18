@@ -30,6 +30,8 @@ class AddonUrl
     }
 
     /**
+     * 生成微信链接
+     *
      * @param array $url
      * @param bool $scheme
      * @return string
@@ -37,18 +39,12 @@ class AddonUrl
      */
     public static function toWechat(array $url, $scheme = false)
     {
-        Yii::$app->set('urlManagerWechat', [
-            'class' => 'yii\web\urlManager',
-            'scriptUrl' => '/wechat', // 代替'baseUrl'
-            'enablePrettyUrl' => true,
-            'showScriptName' => true,
-            'suffix' => '.html',// 静态
-        ]);
-
-        return urldecode(Yii::$app->urlManagerWechat->createAbsoluteUrl(self::regroupUrl($url), $scheme));
+        return UrlHelper::toWechat(self::regroupUrl($url), $scheme);
     }
 
     /**
+     * 生成前台链接
+     *
      * @param array $url
      * @param bool $scheme
      * @return string
@@ -56,19 +52,12 @@ class AddonUrl
      */
     public static function toFront(array $url, $scheme = false)
     {
-        Yii::$app->set('urlManagerFront', [
-            'class' => 'yii\web\urlManager',
-            'scriptUrl' => '/index.php', // 代替'baseUrl'
-            'enablePrettyUrl' => true,
-            'showScriptName' => true,
-            'suffix' => '.html',// 静态
-        ]);
-
-        $url = urldecode(Yii::$app->urlManagerFront->createAbsoluteUrl(self::regroupUrl($url), $scheme));
-        return str_replace('index.php/', '', $url);
+        return UrlHelper::toFront(self::regroupUrl($url), $scheme);
     }
 
     /**
+     * 生成api链接
+     *
      * @param array $url
      * @param bool $scheme
      * @return string
@@ -76,15 +65,7 @@ class AddonUrl
      */
     public static function toApi(array $url, $scheme = false)
     {
-        Yii::$app->set('urlManagerApi', [
-            'class' => 'yii\web\urlManager',
-            'scriptUrl' => '/api', // 代替'baseUrl'
-            'enablePrettyUrl' => true,
-            'showScriptName' => true,
-            'suffix' => '',// 静态
-        ]);
-
-        return urldecode(Yii::$app->urlManagerApi->createAbsoluteUrl(self::regroupUrl($url), $scheme));
+        return UrlHelper::toApi(self::regroupUrl($url), $scheme);
     }
 
     /**

@@ -51,7 +51,7 @@ class Images extends InputWidget
     public function init()
     {
         parent::init();
-        $this->boxId = StringHelper::uuid('uniqid');
+        $this->boxId = md5($this->name) . StringHelper::uuid('uniqid');
         $this->config = ArrayHelper::merge([
             'compress' => false, // 压缩
             'auto' => true, // 自动上传
@@ -110,6 +110,12 @@ class Images extends InputWidget
                 empty($value) && $value = unserialize($value);
                 empty($value) && $value = [];
             }
+        }
+
+        // 由于百度编辑器不能传递数组，所以转码成为json
+        if (isset($this->config['formData']['thumb']))
+        {
+            $this->config['formData']['thumb'] = json_encode($this->config['formData']['thumb']);
         }
 
         return $this->render('image', [

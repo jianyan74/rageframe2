@@ -1,6 +1,7 @@
 <?php
 namespace backend\modules\sys\controllers;
 
+use common\helpers\ResultDataHelper;
 use yii;
 use common\models\sys\AuthItem;
 use common\helpers\ArrayHelper;
@@ -90,6 +91,39 @@ class AuthAccreditController extends SController
         }
 
         return $this->message("删除失败", $this->redirect(['index']), 'error');
+    }
+
+    /**
+     * 更新排序/状态字段
+     *
+     * @return array
+     */
+    public function actionAjaxUpdate()
+    {
+        $data = Yii::$app->request->get();
+        $insertData  = [];
+        foreach (['sort', 'status', 'id'] as $item)
+        {
+            if (isset($data[$item]))
+            {
+                $insertData[$item] = $data[$item];
+            }
+        }
+
+        unset($data);
+
+        if (!($model = AuthItem::findOne(['key' => $insertData['id']])))
+        {
+            return ResultDataHelper::result(404, '找不到数据');
+        }
+
+        $model->attributes = $insertData;
+        if (!$model->save())
+        {
+            return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+        }
+
+        return ResultDataHelper::result(200, '修改成功');
     }
 
     /**

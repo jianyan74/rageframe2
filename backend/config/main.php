@@ -83,7 +83,7 @@ return [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,
                     'js' => [
-                        '/backend/resources/js/jquery.min.js',
+                        '/backend/resources/js/jquery.min.js?2.1.4',
                     ]
                 ],
             ],
@@ -99,6 +99,10 @@ return [
         ],
         'provinces' => [
             'class' => 'backend\widgets\provinces\ProvincesController',
+        ],
+        // 插件渲染默认控制器
+        'addons' => [
+            'class' => 'common\controllers\AddonsController',
         ],
     ],
     'params' => $params,

@@ -111,11 +111,11 @@ class MiniProgramController extends \yii\rest\ActiveController
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = MemberAuth::findOpend(MemberAuth::TYPE_MINI_PROGRAM, $userinfo['openId'])))
+        if (!($memberAuthInfo = MemberAuth::findOauthClient(MemberAuth::CLIENT_MINI_PROGRAM, $userinfo['openId'])))
         {
             $memberAuth = new MemberAuth();
             $memberAuthInfo = $memberAuth->add([
-                'type' => MemberAuth::TYPE_MINI_PROGRAM,
+                'type' => MemberAuth::CLIENT_MINI_PROGRAM,
                 'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
                 'openid' => $userinfo['openId'],
                 'sex' => $userinfo['gender'],
@@ -161,7 +161,7 @@ class MiniProgramController extends \yii\rest\ActiveController
     {
         $openid = Yii::$app->request->post('openid', '');
         // 查询授权信息
-        if ($memberAuthInfo = MemberAuth::findOpend(MemberAuth::TYPE_MINI_PROGRAM, $openid))
+        if ($memberAuthInfo = MemberAuth::findOauthClient(MemberAuth::CLIENT_MINI_PROGRAM, $openid))
         {
             if (!empty($memberAuthInfo->member))
             {

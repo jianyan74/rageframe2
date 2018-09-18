@@ -23,21 +23,19 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * 禁用登录
+     */
     const STATUS_DELETED = 0;
+    /**
+     * 正常登录
+     */
     const STATUS_ACTIVE = 1;
 
     /**
      * 规则
      */
     const ROLE_ADMIN = 10;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%member}}';
-    }
 
     /**
      * @inheritdoc

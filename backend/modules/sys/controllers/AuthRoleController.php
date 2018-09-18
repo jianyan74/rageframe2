@@ -3,7 +3,7 @@ namespace backend\modules\sys\controllers;
 
 use yii;
 use yii\data\Pagination;
-use common\helpers\ArrayHelper;
+use common\helpers\ResultDataHelper;
 use common\models\sys\AuthItem;
 use common\models\sys\AuthItemChild;
 use common\models\sys\AuthAssignment;
@@ -36,38 +36,6 @@ class AuthRoleController extends SController
     }
 
     /**
-     * 编辑
-     * @return array|mixed|string|\yii\web\Response
-     */
-    public function actionAjaxEdit()
-    {
-        $request = Yii::$app->request;
-        $name = $request->get('name');
-        $model = $this->findModel($name);
-
-        if ($model->load(Yii::$app->request->post()))
-        {
-            if($request->isAjax)
-            {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return \yii\widgets\ActiveForm::validate($model);
-            }
-            else
-            {
-                $model->type = AuthItem::ROLE;
-                $model->description = Yii::$app->user->identity->username . "|添加了|" . $model->name . "|角色";
-                return $model->save()
-                    ? $this->redirect(['index'])
-                    : $this->message($this->analyErr($model->getFirstErrors()),$this->redirect(['index']),'error');
-            }
-        }
-
-        return $this->renderAjax('ajax-edit', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * 删除
      *
      * @param $name
@@ -87,15 +55,19 @@ class AuthRoleController extends SController
 
     /**
      * 角色授权
-     * @return mixed|string
+     *
+     * @return array|string
+     * @throws yii\base\InvalidConfigException
+     * @throws yii\db\Exception
      */
-    public function actionAccredit()
+    public function actionEdit()
     {
         $request = Yii::$app->request;
-        $parent = $request->get('parent');
+        $name = $request->get('name');
+        $model = $this->findModel($name);
 
         $userAuth = [];
-        // 验证是否总管理员
+        // 验证是否总管理员, 并获取自己的权限列表
         if (Yii::$app->params['adminAccount'] != Yii::$app->user->id)
         {
             $itemNames = AuthAssignment::getUserItemName(Yii::$app->user->id);
@@ -108,33 +80,87 @@ class AuthRoleController extends SController
             }
         }
 
-        $auth = AuthItem::find()
+        $auths = AuthItem::find()
             ->where(['type' => AuthItem::AUTH])
             ->andFilterWhere(['in', 'name', $userAuth])
-            ->with(['authItemChildren0' => function($query) use($parent){
-                    $query->andWhere(['parent' => $parent]);
-                },
+            ->with(['authItemChildren0' => function($query) use($name){
+                $query->andWhere(['parent' => $name]);
+            },
             ])
             ->orderBy('sort asc')
             ->asArray()
             ->all();
 
-        if ($request->isPost)
+        $formAuth = []; // 全部权限
+        $checkId = []; // 被授权成功的额权限
+        foreach ($auths as $auth)
         {
-            // 提交过来的信息
-            $postAuth = $request->post();
-            // 授权
-            if ((new AuthItemChild())->accredit($postAuth['parent'], $postAuth['auth']))
+            $tmp = [];
+            $tmp['id'] = $auth['key'];
+            $tmp['parent'] = !empty($auth['parent_key']) ? $auth['parent_key'] : '#';
+            $tmp['text'] = $auth['description'];
+            // $tmp['icon'] = 'none';
+
+            if (!empty($auth['authItemChildren0']))
             {
-                return $this->message('授权成功', $this->redirect(['index']));
+                $checkId[] = $auth['key'];
             }
 
-            return $this->message('授权失败', $this->redirect(['index']), 'error');
+            $formAuth[] = $tmp;
+            unset($tmp);
         }
 
-        return $this->render('accredit', [
-            'auth' => ArrayHelper::itemsMerge($auth, 'key', 0, 'parent_key'),
-            'parent' => $parent,
+        if ($request->isAjax)
+        {
+            $name = $request->post('name');
+            $model = $this->findModel($request->post('originalName', ''));
+            $model->type = AuthItem::ROLE;
+            $model->name = $name;
+            $model->description = Yii::$app->user->identity->username . "|添加了|" . $model->name . "|角色";
+            if (!$model->save())
+            {
+                return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+            }
+
+            $ids = $request->post('ids', []);
+            if (!empty($ids))
+            {
+                $auths = AuthItem::find()
+                    ->where(['type' => AuthItem::AUTH])
+                    ->andWhere(['in', 'key', $ids])
+                    ->select('name')
+                    ->asArray()
+                    ->all();
+
+                if ((new AuthItemChild())->accredit($name, array_column($auths, 'name')))
+                {
+                    return ResultDataHelper::result(200, '提交成功');
+                }
+
+                return ResultDataHelper::result(404, '提交失败');
+            }
+
+            return ResultDataHelper::result(200, '提交成功');
+        }
+
+        // 由于jstree会和系统的js引入冲突，先设置禁用掉
+        Yii::$app->set('assetManager', [
+            'class' => 'yii\web\AssetManager',
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'sourcePath' => null,
+                    'js' => [
+
+                    ]
+                ],
+            ],
+        ]);
+
+        return $this->render('edit', [
+            'model' => $model,
+            'formAuth' => $formAuth,
+            'checkId' => $checkId,
+            'name' => $name
         ]);
     }
 

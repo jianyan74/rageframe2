@@ -23,7 +23,7 @@ return [
                 1024 * 1024 * 2  => 60, // 1M - 2M 区间压缩质量到60
             ],
             'tailor' => false, // 裁剪
-            'tailorConfig' => [ // 裁剪大小 返回的默认图片名为 test.jpg, 调用裁剪图片为 test@100*100.jpg
+            'tailorConfig' => [ // 裁剪大小 返回的默认图片名为 test.jpg, 调用裁剪图片为 test@100x100.jpg
                 [100, 100], // 宽、高
                 [200, 200], // 宽、高
             ],

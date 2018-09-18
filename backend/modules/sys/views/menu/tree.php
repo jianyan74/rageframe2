@@ -12,7 +12,7 @@ use common\helpers\ArrayHelper;
         </td>
         <td>
             <?php echo ArrayHelper::itemsLevel($model['level'], $models, $k)?>
-            <?php echo $model['title']?>&nbsp;
+            <?php echo $model['title']?>
             <!--禁止显示二级分类再次添加三级分类-->
             <?php if ($model['level'] <= 2){ ?>
                 <a href="<?php echo Url::to(['edit','pid' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $model['title'], 'level' => $model['level'] + 1])?>" data-toggle='modal' data-target='#ajaxModal'>

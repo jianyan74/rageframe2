@@ -51,7 +51,8 @@ class AuthItem extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['name', 'type'], 'required'],
+            [['type'], 'required'],
+            [['name'], 'required', 'message' => '内容不能为空'],
             [['type', 'level', 'sort', 'created_at', 'updated_at'], 'integer'],
             [['key','parent_key'], 'safe'],
             [['description', 'data'], 'string'],

@@ -79,7 +79,7 @@ class FileController extends OnAuthController
      */
     public function actionBase64Img()
     {
-        return UploadHelper::Base64Img(Yii::$app->request->post('image'));
+        return UploadHelper::Base64Img(Yii::$app->request->post('image'), Yii::$app->request->post('extend', 'jpg'));
     }
 
     /**

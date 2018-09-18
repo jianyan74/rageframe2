@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <td><?= Yii::$app->formatter->asShortSize($row['size'])?></td>
                                     <td><?= Yii::$app->formatter->asDatetime($row['time'])?></td>
                                     <td>
-                                        <a href="javascript:;"><span class="btn btn-info btn-sm table-restore">还原</span></a>&nbsp
+                                        <a href="javascript:;"><span class="btn btn-info btn-sm table-restore">还原</span></a>
                                         <a href="<?= Url::to(['delete','time'=>$row['time']])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                     </td>
                                 </tr>

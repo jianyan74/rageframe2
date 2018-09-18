@@ -4,9 +4,10 @@ namespace common\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use common\helpers\FileHelper;
+use common\helpers\StringHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
+use common\helpers\FileHelper;
 
 /**
  * 文件上传控制器
@@ -92,17 +93,22 @@ class FileBaseController extends Controller
 
             // 上传
             $result = UploadHelper::upload('file', 'images');
+
             // 创建缩略图
-            $thumbWidget = Yii::$app->request->post('thumbWidget', null);
-            $thumbHeight = Yii::$app->request->post('thumbHeight', null);
-            if ($thumbWidget && $thumbHeight && FileHelper::mkdirs($result['thumbAbsolutePath']))
+            $thumb = Yii::$app->request->post('thumb', null);
+            if ($thumb && !empty($thumbArr = json_decode($thumb, true)))
             {
-                UploadHelper::createThumb($result['absolutePath'] . $result['name'], $result['thumbAbsolutePath'] . $result['name'], $thumbWidget, $thumbHeight);
+                foreach ($thumbArr as $value)
+                {
+                    FileHelper::mkdirs($result['thumbAbsolutePath']);
+                    $thumbPath = $result['thumbAbsolutePath'] . $result['name'];
+                    $thumbPath = StringHelper::createThumbUrl($thumbPath, $value['widget'], $value['height']);
+                    UploadHelper::createThumb($result['absolutePath'] . $result['name'], $thumbPath, $value['widget'], $value['height']);
+                }
             }
 
             return ResultDataHelper::result(200, '上传成功', [
                 'urlPath' => $result['relativePath'] . $result['name'],
-                'thumbUrlPath' => $result['thumbRelativePath'] . $result['name'],
             ]);
         }
         catch (\Exception $e)
@@ -200,7 +206,7 @@ class FileBaseController extends Controller
     {
         try
         {
-            return ResultDataHelper::result(200, '上传成功', UploadHelper::Base64Img(Yii::$app->request->post('image')));
+            return ResultDataHelper::result(200, '上传成功', UploadHelper::Base64Img(Yii::$app->request->post('image'), Yii::$app->request->post('extend', 'jpg')));
         }
         catch (\Exception $e)
         {

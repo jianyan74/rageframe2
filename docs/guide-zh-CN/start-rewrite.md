@@ -2,8 +2,9 @@
 
 目录
 
-- nginx
-- apache
+- Nginx
+- Apache
+- IIS
 
 ### Nginx
 
@@ -58,4 +59,43 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # otherwise forward it to index.php
 RewriteRule . index.php
+```
+
+### IIS
+
+> rule 部分配置
+
+```
+<rule name="backend" stopProcessing="true">
+    <match url="^backend/(.*)" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="backend/index.php/{R:1}" />
+</rule>
+<rule name="wechat" stopProcessing="true">
+    <match url="^wechat/(.*)" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="wechat/index.php/{R:1}" />
+</rule>
+<rule name="api" stopProcessing="true">
+    <match url="^api/(.*)" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="api/index.php/{R:1}" />
+</rule>
+<rule name="frontend" stopProcessing="true">
+    <match url="^(.*)$" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="index.php/{R:1}" />
+</rule>
 ```

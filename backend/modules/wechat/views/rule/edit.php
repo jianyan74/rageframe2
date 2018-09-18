@@ -102,16 +102,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                 <strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br>
                                                                 <strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br>
                                                                 <strong>示例: </strong><br>
-                                                                <em>^微信</em>&nbsp;&nbsp;匹配以“微信”开头的语句<br>
-                                                                <em>微信$</em>&nbsp;&nbsp;匹配以“微信”结尾的语句<br>
-                                                                <em>^微信$</em>&nbsp;&nbsp;匹配等同“微信”的语句<br>
-                                                                <em>微信</em>&nbsp;&nbsp;匹配包含“微信”的语句<br>
-                                                                <em>[0-9.-]</em>&nbsp;&nbsp;匹配所有的数字，句号和减号<br>
-                                                                <em>^[a-zA-Z_]$</em>&nbsp;&nbsp;所有的字母和下划线<br>
-                                                                <em>^[[:alpha:]]{3}$</em>&nbsp;&nbsp;所有的3个字母的单词<br>
-                                                                <em>^a{4}$</em>&nbsp;&nbsp;aaaa<br>
-                                                                <em>^a{2,4}$</em>&nbsp;&nbsp;aa，aaa或aaaa<br>
-                                                                <em>^a{2,}$</em>&nbsp;&nbsp;匹配多于两个a的字符串
+                                                                <em>^微信</em>;;匹配以“微信”开头的语句<br>
+                                                                <em>微信$</em>;;匹配以“微信”结尾的语句<br>
+                                                                <em>^微信$</em>;;匹配等同“微信”的语句<br>
+                                                                <em>微信</em>;;匹配包含“微信”的语句<br>
+                                                                <em>[0-9.-]</em>;;匹配所有的数字，句号和减号<br>
+                                                                <em>^[a-zA-Z_]$</em>;;所有的字母和下划线<br>
+                                                                <em>^[[:alpha:]]{3}$</em>;;所有的3个字母的单词<br>
+                                                                <em>^a{4}$</em>;;aaaa<br>
+                                                                <em>^a{2,4}$</em>;;aa，aaa或aaaa<br>
+                                                                <em>^a{2,}$</em>;;匹配多于两个a的字符串
                                                             </span>
                                                         </div>
                                                     </div>

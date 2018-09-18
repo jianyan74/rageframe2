@@ -24,10 +24,10 @@ use Yii;
  */
 class MemberAuth extends \common\models\common\BaseModel
 {
-    const TYPE_MINI_PROGRAM = 'miniProgram';
-    const TYPE_WECHAT = 'wechat';
-    const TYPE_QQ = 'qq';
-    const TYPE_SINA = 'sina';
+    const CLIENT_MINI_PROGRAM = 'miniProgram';
+    const CLIENT_WECHAT = 'wechat';
+    const CLIENT_QQ = 'qq';
+    const CLIENT_SINA = 'sina';
 
     /**
      * {@inheritdoc}
@@ -46,8 +46,8 @@ class MemberAuth extends \common\models\common\BaseModel
             [['member_id', 'sex', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['unionid'], 'string', 'max' => 64],
-            [['type'], 'string', 'max' => 20],
-            [['openid', 'country', 'province', 'city'], 'string', 'max' => 100],
+            [['oauth_client'], 'string', 'max' => 20],
+            [['oauth_client_id', 'country', 'province', 'city'], 'string', 'max' => 100],
             [['nickname', 'head_portrait'], 'string', 'max' => 200],
         ];
     }
@@ -59,10 +59,10 @@ class MemberAuth extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'member_id' => 'Member ID',
+            'member_id' => '用户id',
             'unionid' => 'Unionid',
-            'type' => '类型',
-            'openid' => 'Openid',
+            'oauth_client' => '类型',
+            'oauth_client_id' => 'Openid',
             'sex' => '性别',
             'nickname' => '昵称',
             'head_portrait' => '头像',
@@ -77,23 +77,23 @@ class MemberAuth extends \common\models\common\BaseModel
     }
 
     /**
- * @param $type
- * @param $openid
- * @return MemberAuth|null
- */
-    public static function findOpend($type, $openid)
+     * @param $oauthClient
+     * @param $oauthClientId
+     * @return MemberAuth|null
+     */
+    public static function findOauthClient($oauthClient, $oauthClientId)
     {
-        return self::findOne(['type' => $type, 'openid' => $openid]);
+        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_id' => $oauthClientId]);
     }
 
     /**
-     * @param $type
-     * @param $openid
+     * @param $oauthClient
+     * @param $oauthClientId
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function findOpendMapMember($type, $openid)
+    public static function findOauthClientMapMember($oauthClient, $oauthClientId)
     {
-        return self::find()->where(['type' => $type, 'openid' => $openid])->with('member')->one();
+        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_id' => $oauthClientId])->with('member')->one();
     }
 
     /**

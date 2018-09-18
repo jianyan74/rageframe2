@@ -72,8 +72,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             // 不配置则不生成缩略图
                             'formData' => [
-                                'thumbWidget' => 100, // 缩略图宽度 px
-                                'thumbHeight' => 100, // 缩略图高度 px
+                                // 不配置则不生成缩略图
+                                'thumb' => [
+                                    [
+                                        'widget' => 100,
+                                        'height' => 100,
+                                    ],
+                                    [
+                                        'widget' => 200,
+                                        'height' => 200,
+                                    ],
+                                ]
                             ],
                             'chunked' => false,// 开启分片上传
                             'chunkSize' => 512 * 1024,// 分片大小
@@ -87,10 +96,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'pick' => [
                                 'multiple' => true,
                             ],
-                            // 不配置则不生成缩略图
                             'formData' => [
-                                // 'thumbWidget' => 100, // 缩略图宽度 px
-                                // 'thumbHeight' => 100, // 缩略图高度 px
+
                             ],
                             'chunked' => false,// 开启分片上传
                             'chunkSize' => 512 * 1024,// 分片大小

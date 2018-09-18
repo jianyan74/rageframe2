@@ -62,9 +62,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="ibox-tools">
-                                        关注扫描 <strong class="text-danger"><?= $attention_count ?></strong> 次 &nbsp;
-                                        已关注扫描 <strong class="text-danger"><?= $scan_count ?></strong> 次 &nbsp;
-                                        总计 <strong class="text-danger"><?= $pages->totalCount ?></strong> 次 &nbsp;
+                                        关注扫描 <strong class="text-danger"><?= $attention_count ?></strong> 次 ;
+                                        已关注扫描 <strong class="text-danger"><?= $scan_count ?></strong> 次 ;
+                                        总计 <strong class="text-danger"><?= $pages->totalCount ?></strong> 次 ;
                                         <a href="<?= Url::to(['export','from_date' => $from_date,'to_date' => $to_date,'type' => $type,'keyword' => $keyword]);?>">导出Excel</a>
                                     </div>
                                 </div>

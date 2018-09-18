@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                             <a href="<?php echo Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-info btn-sm">更新数据</span></a>
                                             <a href="<?php echo Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
                                             <?= \common\helpers\HtmlHelper::statusSpan($vo['status']) ?>
-                                            <a href="<?php echo Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>&nbsp
+                                            <a href="<?php echo Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
                                         </td>
                                     </tr>
                                     <tr id ="description-<?= $vo['id'] ?>" style="display: none">

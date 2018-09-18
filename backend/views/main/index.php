@@ -31,7 +31,7 @@ AppAsset::register($this);
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element text-center">
-                            <span><img alt="image" class="img-circle" src="<?php echo HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" width="48" height="48" id="head_portrait"/></span>
+                            <span><img class="img-circle" src="<?php echo HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" width="48" height="48" id="head_portrait"/></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear">
                                 <span class="block m-t-xs"><strong class="font-bold"><?php echo Yii::$app->user->identity->username; ?></strong></span>

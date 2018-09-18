@@ -1,30 +1,38 @@
 ## 模块Url生成辅助类
 
+目录
+
+- 直接生成Url
+- 生成前台Url
+- 生成微信Url
+- 生成ApiUrl
+
+引入
+
 ```
-//引入类
 use common\helpers\AddonUrl;
 ```
 
-直接生成Url
+### 直接生成Url
 
 ```
-echo AddonUrl::to(['index']);
+AddonUrl::to(['index']);
 ```
 
-生成前台Url
+### 生成前台Url
 
 ```
-echo AddonUrl::toFront(['index']);
+AddonUrl::toFront(['index']);
 ```
 
-生成微信
+### 生成微信Url
 
 ```
-echo AddonUrl::toWechat(['index']);
+AddonUrl::toWechat(['index']);
 ```
 
-生成Api
+### 生成ApiUrl
 
 ```
-echo AddonUrl::toApi(['index']);
+AddonUrl::toApi(['index']);
 ```

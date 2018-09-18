@@ -57,6 +57,10 @@ return [
         'ueditor' => [
             'class' => 'common\widgets\ueditor\UeditorController',
         ],
+        // 插件渲染默认控制器
+        'addons' => [
+            'class' => 'common\controllers\AddonsController',
+        ],
     ],
     'params' => $params,
 ];

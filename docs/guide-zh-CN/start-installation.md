@@ -55,7 +55,15 @@ php init // 然后输入0回车,再输入yes回车
 php ./yii migrate/up
 ```
 
-7、建议更新第三方扩展包(可选)
+7、初始化密码，一键创建总管理员密码(注意保存)
+
+```
+php ./yii password/init
+
+```
+
+
+8、建议更新第三方扩展包(可选)
 
 ```
 php composer.phar update
@@ -72,10 +80,6 @@ php composer.phar update
 ```
 
 后台地址：当前域名/backend
-
-用户名：admin
-
-密　码：2589632147
 
 微信地址：当前域名/wechat/
 

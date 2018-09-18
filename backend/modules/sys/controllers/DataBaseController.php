@@ -126,6 +126,7 @@ class DataBaseController extends SController
      * 开始备份
      *
      * @return array
+     * @throws \yii\db\Exception
      */
     public function actionExportStart()
     {
@@ -137,8 +138,8 @@ class DataBaseController extends SController
         $start = Yii::$app->request->post('start');
 
         // 备份指定表
-        $Database = new Database($file,$config);
-        $start = $Database->backup($tables[$id], $start);
+        $database = new Database($file,$config);
+        $start = $database->backup($tables[$id], $start);
         if($start === false)
         {
             return ResultDataHelper::result(404, '备份出错！');

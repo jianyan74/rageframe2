@@ -97,6 +97,8 @@ use kartik\daterange\DateRangePicker;
 
 ### 图片上传控件
 
+> 注意OSS/七牛暂不支持切片和缩略图操作
+
 ```
 <?= $form->field($model, 'cover')->widget('common\widgets\webuploader\Images', [
      'config' => [
@@ -106,11 +108,19 @@ use kartik\daterange\DateRangePicker;
          'pick' => [
              'multiple' => false,
          ],
-         // 不配置则不生成缩略图
-         'formData' => [
-             // 'thumbWidget' => 100, // 缩略图宽度 px
-             // 'thumbHeight' => 100, // 缩略图高度 px
-         ], 
+        'formData' => [
+            // 不配置则不生成缩略图
+            'thumb' => [
+                [
+                    'widget' => 100,
+                    'height' => 100,
+                ],
+                [
+                    'widget' => 200,
+                    'height' => 200,
+                ],
+            ]
+        ],
          'chunked' => false,// 开启分片上传
          'chunkSize' => 512 * 1024,// 分片大小
      ]
@@ -128,7 +138,16 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
      'config' => [ // 配置同图片上传
          'pick' => [
              'multiple' => ture,
-         ]
+         ],
+         'formData' => [
+             // 不配置则不生成缩略图
+             // 'thumb' => [
+             //     [
+             //         'widget' => 100,
+             //         'height' => 100,
+             //     ],
+             // ]
+         ],
      ]
 ]);?>
 
@@ -136,6 +155,8 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 
 ### 文件上传控件
+
+> 注意文件上传不支持缩略图配置
 
 ```
 <?= $form->field($model, 'file')->widget('common\widgets\webuploader\Files', [
@@ -148,6 +169,8 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 
 ### 多文件上传控件
+
+> 注意多文件上传不支持缩略图配置
 
 ```
 <?= $form->field($model, 'files')->widget('common\widgets\webuploader\Files', [
@@ -231,3 +254,4 @@ use unclead\multipleinput\MultipleInput;
 ```
 <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
 ```
+

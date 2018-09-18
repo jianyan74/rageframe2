@@ -60,10 +60,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         <?php } ?>
                                     </td>
                                     <td>
-                                        <a href="<?= Url::to(['down','id'=>$model->id])?>"><span class="btn btn-info btn-sm">下载</span></a>&nbsp
-                                        <a href="<?= Url::to(['ajax-edit','id'=>$model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
+                                        <a href="<?= Url::to(['down','id'=>$model->id])?>"><span class="btn btn-info btn-sm">下载</span></a>
+                                        <a href="<?= Url::to(['ajax-edit','id'=>$model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
                                         <?php if($model->model == Qrcode::MODEL_PERPETUAL){ ?>
-                                            <a href="<?= Url::to(['delete','id'=>$model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                            <a href="<?= Url::to(['delete','id'=>$model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                         <?php } ?>
                                     </td>
                                 </tr>

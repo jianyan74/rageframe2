@@ -32,7 +32,7 @@ class MenuController extends SController
         $cate_id = Yii::$app->request->get('cate_id', MenuCate::getFirstDataID());
         $models = Menu::find()
             ->filterWhere(['cate_id' => $cate_id])
-            ->orderBy('sort asc,created_at asc')
+            ->orderBy('sort asc, created_at asc')
             ->asArray()
             ->all();
 

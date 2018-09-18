@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <td><?php echo $vo['version'] ?></td>
                                         <td><?php echo $vo['author'] ?></td>
                                         <td>
-                                            <a href="<?php echo Url::to(['install','name' => $vo['name']])?>" data-method="post"><span class="btn btn-info btn-sm">安装插件</span></a>&nbsp
+                                            <a href="<?php echo Url::to(['install','name' => $vo['name']])?>" data-method="post"><span class="btn btn-info btn-sm">安装插件</span></a>
                                         </td>
                                     </tr>
                                 <?php } ?>

@@ -14,7 +14,7 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web/';
 
     public $css = [
-        'resources/css/bootstrap.min.css?v=3.3.6',
+        'resources/css/bootstrap.min.css?v=3.3.7',
         'resources/css/font-awesome.css?v=4.7.0',
         'resources/css/animate.css',
         'resources/css/style.css?v=4.1.0',
@@ -31,7 +31,7 @@ class AppAsset extends AssetBundle
 
     public $js = [
         // 全局js
-        'resources/js/bootstrap.min.js?v=3.3.6',
+        'resources/js/bootstrap.min.js?v=3.3.7',
         'resources/js/plugins/metisMenu/jquery.metisMenu.js',
         'resources/js/plugins/slimscroll/jquery.slimscroll.min.js',
         'resources/js/plugins/layer/layer.min.js',

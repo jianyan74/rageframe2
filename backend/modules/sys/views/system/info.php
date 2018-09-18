@@ -132,6 +132,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <?= extension_loaded('mongodb')
                                     ? '<span class="label label-primary">mongodb支持</span>'
                                     : '<span class="label label-default">mongodb不支持</span>'; ?>
+                                <?= extension_loaded('ffmpeg')
+                                    ? '<span class="label label-primary">ffmpeg支持</span>'
+                                    : '<span class="label label-default">ffmpeg不支持</span>'; ?>
                             </td>
                         </tr>
                         <tr>

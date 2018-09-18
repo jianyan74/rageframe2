@@ -49,24 +49,31 @@ class AuthItemChild extends \yii\db\ActiveRecord
 
     /**
      * 重新写入授权
-     * @param $parent  -角色名称
-     * @param $auth    -所有权限
-     * @return bool
+     *
+     * @param string $parent 角色名称
+     * @param array $auth 授权的路由数组
+     * @return int
+     * @throws \yii\db\Exception
      */
     public function accredit($parent, $auth)
     {
         // 删除原先所有权限
         $this::deleteAll(['parent' => $parent]);
 
+        $data = [];
         foreach ($auth as $value)
         {
-            $AuthItemChild = new $this;
-            $AuthItemChild->parent = $parent;
-            $AuthItemChild->child  = $value;
-            $AuthItemChild->save();
+            $data[] = [$parent, $value];
         }
 
-        return true;
+        if (!empty($data))
+        {
+            // 批量插入数据
+            $field = ['parent', 'child'];
+            return Yii::$app->db->createCommand()->batchInsert($this::tableName(), $field, $data)->execute();
+        }
+
+        return false;
     }
 
     /**

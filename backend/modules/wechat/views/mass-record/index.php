@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 </td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                                 <td>
-                                    <a href="<?= Url::to(['delete','id' => $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                    <a href="<?= Url::to(['delete','id' => $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                 </td>
                             </tr>
                         <?php } ?>

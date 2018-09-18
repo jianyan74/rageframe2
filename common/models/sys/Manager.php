@@ -140,7 +140,7 @@ class Manager extends \common\models\common\User
         }
         else
         {
-            if (Yii::$app->user->identity['password_hash'] != $this->password_hash)
+            if (isset(Yii::$app->user->identity) && Yii::$app->user->identity['password_hash'] != $this->password_hash)
             {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
             }

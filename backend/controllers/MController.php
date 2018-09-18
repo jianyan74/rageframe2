@@ -73,11 +73,11 @@ class MController extends \common\controllers\BaseController
         }
 
         // 控制器+方法
-        $permissionName = Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
+        $permissionName = '/' . Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
         // 加入模块验证
         if (Yii::$app->controller->module->id != "app-backend")
         {
-            $permissionName = Yii::$app->controller->module->id . '/' . $permissionName;
+            $permissionName = '/' . Yii::$app->controller->module->id . $permissionName;
         }
 
         if (in_array($permissionName, Yii::$app->params['noAuthRoute']) || in_array(Yii::$app->controller->action->id, Yii::$app->params['noAuthAction']) )

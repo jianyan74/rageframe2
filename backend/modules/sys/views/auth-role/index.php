@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="ibox-title">
                     <h5>角色管理</h5>
                     <div class="ibox-tools">
-                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
+                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['edit'])?>">
                             <i class="fa fa-plus"></i>  创建
                         </a>
                     </div>
@@ -33,9 +33,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td><?= $model->name?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <a href="<?= Url::to(['accredit','parent'=>$model->name])?>"><span class="btn btn-info btn-sm">角色授权</span></a>&nbsp
-                                    <a href="<?= Url::to(['ajax-edit','name'=>$model->name])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                    <a href="<?= Url::to(['delete','name'=>$model->name])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                    <a href="<?= Url::to(['edit', 'name' => $model->name])?>"><span class="btn btn-info btn-sm">编辑</span></a>
+                                    <a href="<?= Url::to(['delete', 'name' => $model->name])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                 </td>
                             </tr>
                         <?php } ?>

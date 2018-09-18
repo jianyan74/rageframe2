@@ -9,7 +9,7 @@ return [
 
     /** ------ 开发者信息 ------ **/
     'exploitName' => '简言',
-    'exploitVersions' => '2.0.2',
+    'exploitVersions' => '2.0.8',
     'exploitSysName' => 'RageFrame应用开发引擎',
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">github.com/jianyan74/rageframe2</a>',
@@ -23,12 +23,13 @@ return [
     'dataBackLock' => 'backup.lock',// 数据库备份缓存文件名
 
     // 不需要验证的路由全称
+    // 注意 前面以绝对路径/为开头
     'noAuthRoute' => [
-        'main/index',// 系统主页
-        'main/system',// 系统首页
-        'ueditor/index',// 百度编辑器配置及上传
-        'addons/execute',// 模块插件渲染
-        'menu-provinces/index',// 微信个性化菜单省市区
+        '/main/index',// 系统主页
+        '/main/system',// 系统首页
+        '/ueditor/index',// 百度编辑器配置及上传
+        '/addons/execute',// 模块插件渲染
+        '/menu-provinces/index',// 微信个性化菜单省市区
     ],
     // 不需要验证的方法
     'noAuthAction' => [

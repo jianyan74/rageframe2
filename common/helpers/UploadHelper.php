@@ -9,11 +9,16 @@ use crazyfd\qiniu\Qiniu;
 use OSS\OssClient;
 
 /**
+ * 上传辅助类
+ *
  * Class UploadHelper
  * @package common\helpers
  */
 class UploadHelper
 {
+    /**
+     * @var array
+     */
     protected static $config = [];
 
     /**
@@ -70,12 +75,12 @@ class UploadHelper
     /**
      * base64上传
      *
-     * @param $type
      * @param $base64Data
+     * @param string $extend
      * @return array
      * @throws NotFoundHttpException
      */
-    public static function Base64Img($base64Data)
+    public static function Base64Img($base64Data, $extend = 'jpg')
     {
         $base64Data = base64_decode($base64Data);
 
@@ -88,7 +93,7 @@ class UploadHelper
             throw new NotFoundHttpException('文件夹创建失败，请确认是否开启attachment文件夹写入权限');
         }
         // 保存的图片名
-        $fileName = $config['prefix'] . StringHelper::random(10) . ".jpg";
+        $fileName = $config['prefix'] . StringHelper::random(10) . "." . $extend;
         $filePath = $absolutePath . $fileName;
         // 移动文件
         if (!(file_put_contents($filePath, $base64Data) && file_exists($filePath)))
@@ -190,16 +195,14 @@ class UploadHelper
         $ultimatelyFilePath = $info['absolutePath'] . $fileName;
         if ($uploadFile->saveAs($fullPathName))
         {
+            // 判断如果上传成功就去合并文件
             if ($chunks == $chunk)
             {
                 self::mergeFile($ultimatelyFilePath, $info['tmpAbsolutePath'], 1, $uploadFile->getExtension());
             }
 
             $urlPath = $info['relativePath'] . $fileName;
-            if ($config['fullPath'] == true)
-            {
-                $urlPath = Yii::$app->request->hostInfo . $urlPath;
-            }
+            $config['fullPath'] == true && $urlPath = Yii::$app->request->hostInfo . $urlPath;
 
             return  [
                 'urlPath' => $urlPath,
@@ -232,14 +235,14 @@ class UploadHelper
         $tmpPath = 'tmp/' . date($config['subName'], time()) . "/" . $guid . '/';
 
         $info = [
-            'name' => $name,
-            'baseName' => $newBaseName,
-            'relativePath' => Yii::getAlias("@attachurl/") . $filePath,
-            'absolutePath' => Yii::getAlias("@attachment/") . $filePath,
-            'thumbRelativePath' => Yii::getAlias("@attachurl/") . $thumbPath,
-            'thumbAbsolutePath' => Yii::getAlias("@attachment/") . $thumbPath,
-            'tmpRelativePath' => Yii::getAlias("@attachurl/") . $tmpPath,
-            'tmpAbsolutePath' => Yii::getAlias("@attachment/") . $tmpPath,
+            'name' => $name, // 文件全称
+            'baseName' => $newBaseName, // 文件基础名称不包含后缀
+            'relativePath' => Yii::getAlias("@attachurl/") . $filePath, // 相对路径
+            'absolutePath' => Yii::getAlias("@attachment/") . $filePath, // 绝对路径
+            'thumbRelativePath' => Yii::getAlias("@attachurl/") . $thumbPath, // 缩略图相对路径
+            'thumbAbsolutePath' => Yii::getAlias("@attachment/") . $thumbPath, // 缩略图绝对路径
+            'tmpRelativePath' => Yii::getAlias("@attachurl/") . $tmpPath, // 临时相对路径
+            'tmpAbsolutePath' => Yii::getAlias("@attachment/") . $tmpPath, // 临时绝对路径
         ];
 
         return $info;
@@ -260,6 +263,8 @@ class UploadHelper
     }
 
     /**
+     * 合并文件
+     *
      * @param $ultimatelyFilePath
      * @param $directoryPath
      * @param $name
@@ -286,6 +291,7 @@ class UploadHelper
             }
             catch (\Exception $e)
             {
+                // 重复三次去合并文件，合成失败不管了等最终回调
                 if ($reconnectionNum < 3)
                 {
                     sleep(1);

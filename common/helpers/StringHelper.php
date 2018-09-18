@@ -13,7 +13,8 @@ class StringHelper extends BaseStringHelper
     /**
      * 生成Uuid
      *
-     * @param int $type
+     * @param string $type 类型 默认时间 time/md5/random/sha1/uniqid 其中uniqid不需要特别开启php函数
+     * @param string $name 加密名
      * @return string
      */
     public static function uuid($type = 'time', $name = 'php.net')
@@ -56,10 +57,10 @@ class StringHelper extends BaseStringHelper
      * 说明：如果是日期转时间戳，如果是时间就转日期
      *
      * @param string|int $value
-     * @param string $rule
+     * @param string $rule 日期规则
      * @return false|int|string
      */
-    public static function dateIntTransition($value, $rule = 'Y-m-d H:is')
+    public static function dateIntTransition($value, $rule = 'Y-m-d H:i:s')
     {
         if (!empty($value))
         {
@@ -72,6 +73,35 @@ class StringHelper extends BaseStringHelper
         }
 
         return date($value, $rule);
+    }
+
+    /**
+     * 获取缩略图地址
+     *
+     * @param $url
+     * @param $width
+     * @param $height
+     */
+    public static function getThumbUrl($url, $width, $height)
+    {
+        $url = str_replace('attachment/images', 'attachment/thumb', $url);
+        return self::createThumbUrl($url, $width, $height);
+    }
+
+    /**
+     * 创建缩略图地址
+     *
+     * @param $url
+     * @param $width
+     * @param $height
+     */
+    public static function createThumbUrl($url, $width, $height)
+    {
+        $url = explode('/', $url);
+        $nameArr = explode('.', end($url));
+        $url[count($url) - 1] = $nameArr[0] . "@{$width}x{$height}." . $nameArr[1];
+
+        return implode('/', $url);
     }
 
     /**
