@@ -3,7 +3,8 @@ namespace addons\RfArticle;
 
 /**
  * Class Addon
- * @package addons\RfArticle */
+ * @package addons\RfArticle
+ */
 class AddonConfig
 {
     /**
@@ -17,7 +18,7 @@ class AddonConfig
         'brief_introduction' => '内置基础的单页，文章管理',
         'description' => '文章管理',
         'author' => '简言',
-        'version' => '1.0',
+        'version' => '1.0.0',
     ];
 
     /**
@@ -90,12 +91,12 @@ class AddonConfig
         [
             'title' => '单页管理',
             'route' => 'article-single/index',
-            'icon' => ''
+            'icon' => 'fa fa-pencil-square-o'
         ],
         [
             'title' => '文章管理',
             'route' => 'article/index',
-            'icon' => ''
+            'icon' => 'fa fa-list'
         ],
         [
             'title' => '文章分类',
@@ -105,12 +106,12 @@ class AddonConfig
         [
             'title' => '文章标签',
             'route' => 'article-tag/index',
-            'icon' => ''
+            'icon' => 'fa fa-tags'
         ],
         [
             'title' => '回收站',
             'route' => 'article/recycle',
-            'icon' => ''
+            'icon' => 'fa fa-trash'
         ],
     ];
 

@@ -46,7 +46,7 @@ class Images extends InputWidget
     protected $boxId;
 
     /**
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function init()
     {
@@ -79,13 +79,16 @@ class Images extends InputWidget
             'fileSingleSizeLimit' => Yii::$app->params['uploadConfig']['images']['maxSize'], // 验证单个文件大小是否超出限制, 超出则不允许加入队列 KB
 
             /**-------------- 自定义的参数 ----------------**/
-
             'uploadType' => 'image',
+            'independentUrl' => false, // 独立上传地址,不受全局的地址上传影响
             'callback' => null,
             'name' => $this->name,
         ], $this->config);
 
-        !empty(Yii::$app->params['uploadConfig']['images']['takeOverUrl']) && $this->config['server'] == Yii::$app->params['uploadConfig']['images']['takeOverUrl'];
+        if (!empty(Yii::$app->params['uploadConfig']['images']['takeOverUrl']) && $this->config['independentUrl'] == false)
+        {
+            $this->config['server'] = Yii::$app->params['uploadConfig']['images']['takeOverUrl'];
+        }
     }
 
     /**

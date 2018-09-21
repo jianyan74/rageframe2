@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use Yii;
 use Ramsey\Uuid\Uuid;
 use yii\helpers\BaseStringHelper;
 
@@ -52,17 +53,14 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
-     * 日期和时间戳互转
+     * 日期转时间戳
      *
-     * 说明：如果是日期转时间戳，如果是时间就转日期
-     *
-     * @param string|int $value
-     * @param string $rule 日期规则
-     * @return false|int|string
+     * @param $value
+     * @return false|int
      */
-    public static function dateIntTransition($value, $rule = 'Y-m-d H:i:s')
+    public static function dateToInt($value)
     {
-        if (!empty($value))
+        if (empty($value))
         {
             return $value;
         }
@@ -72,15 +70,15 @@ class StringHelper extends BaseStringHelper
             return strtotime($value);
         }
 
-        return date($value, $rule);
+        return $value;
     }
 
     /**
      * 获取缩略图地址
      *
-     * @param $url
-     * @param $width
-     * @param $height
+     * @param string $url
+     * @param int $width
+     * @param int $height
      */
     public static function getThumbUrl($url, $width, $height)
     {
@@ -91,9 +89,9 @@ class StringHelper extends BaseStringHelper
     /**
      * 创建缩略图地址
      *
-     * @param $url
-     * @param $width
-     * @param $height
+     * @param string $url
+     * @param int $width
+     * @param int $height
      */
     public static function createThumbUrl($url, $width, $height)
     {
@@ -102,6 +100,24 @@ class StringHelper extends BaseStringHelper
         $url[count($url) - 1] = $nameArr[0] . "@{$width}x{$height}." . $nameArr[1];
 
         return implode('/', $url);
+    }
+
+    /**
+     * 根据Url获取本地绝对路径
+     *
+     * @param $url
+     * @param string $type
+     * @return string
+     */
+    public static function getLocalFilePath($url, $type = 'images')
+    {
+        $prefix =  Yii::getAlias("@root/") . 'web';
+        if (Yii::$app->params['uploadConfig'][$type]['fullPath'] == true)
+        {
+            $url = str_replace(Yii::$app->request->hostInfo, '', $url);
+        }
+
+        return $prefix . $url;
     }
 
     /**

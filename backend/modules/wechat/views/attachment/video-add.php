@@ -26,6 +26,7 @@ $form = ActiveForm::begin([
                     'mimeTypes' => 'video/*',
                 ],
                 'fileSingleSizeLimit' => 10240 * 1024 * 2,// 大小限制
+                'independentUrl' => true,
             ]
         ])->label('永久视频')->hint('永久视频只支持 rm/rmvb/wmv/avi/mpg/mpeg/mp4 格式,大小不超过为20M, 上限 1000 个');?>
     </div>

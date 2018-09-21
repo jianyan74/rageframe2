@@ -59,11 +59,11 @@ class ConfigCate extends \common\models\common\BaseModel
     /**
      * 关联配置
      *
-     * @return $this
+     * @return \yii\db\ActiveQuery
      */
     public function getConfig()
     {
-        return $this->hasMany(Config::className(), ['cate_id' => 'id'])->where(['status' => StatusEnum::ENABLED])->orderBy('sort asc,id desc');
+        return $this->hasMany(Config::className(), ['cate_id' => 'id'])->where(['status' => StatusEnum::ENABLED])->orderBy('sort asc, id desc');
     }
 
     /**

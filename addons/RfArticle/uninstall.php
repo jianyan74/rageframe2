@@ -1,9 +1,9 @@
 <?php
 
 // 表前缀
-$table_prefixion = "rf_addon_example_";
+$table_prefixion = "rf_addon_";
 // 列表
-$table_name = ['curd'];
+$table_name = ['article', 'article_cate', 'article_single', 'article_tag', 'article_tag_map'];
 
 $sql = "";
 foreach ($table_name as $value)
@@ -13,4 +13,4 @@ foreach ($table_name as $value)
 }
 
 // 执行sql
-// Yii::$app->getDb()->createCommand($sql)->execute();
+Yii::$app->getDb()->createCommand($sql)->execute();

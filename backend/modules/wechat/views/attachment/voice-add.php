@@ -24,6 +24,7 @@ $form = ActiveForm::begin([
                     'mimeTypes' => 'audio/*',
                 ],
                 'fileSingleSizeLimit' => 5120 * 1024,// 大小限制
+                'independentUrl' => true,
             ]
         ])->label('永久音频')->hint('永久语音只支持 mp3/wma/wav/amr 格式,大小不超过为5M,长度不超过60秒, 上限 1000 个');?>
     </div>

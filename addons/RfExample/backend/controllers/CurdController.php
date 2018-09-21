@@ -16,15 +16,6 @@ use addons\RfExample\common\models\Curd;
 class CurdController extends AddonsBaseController
 {
     /**
-     * 授权可ajax更新的字段
-     *
-     * @var array
-     */
-    protected $_ajaxUpdateField = [
-        'id', 'sort', 'status'
-    ];
-
-    /**
      * 首页
      *
      * @return string
@@ -61,8 +52,6 @@ class CurdController extends AddonsBaseController
         $model->files = json_decode($model->files, true);
         if ($model->load($request->post()))
         {
-            $model->stat_time = strtotime($model->stat_time);
-            $model->end_time = strtotime($model->end_time);
             $model->covers = serialize($model->covers);
             $model->files = json_encode($model->files);
 
@@ -104,7 +93,7 @@ class CurdController extends AddonsBaseController
     {
         $data = Yii::$app->request->get();
         $insertData = [];
-        foreach ($this->_ajaxUpdateField as $item)
+        foreach (['id', 'sort', 'status'] as $item)
         {
             isset($data[$item]) && $insertData[$item] = $data[$item];
         }

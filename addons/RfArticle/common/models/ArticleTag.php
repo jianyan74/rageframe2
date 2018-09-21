@@ -1,0 +1,62 @@
+<?php
+namespace addons\RfArticle\common\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "{{%addon_article_tag}}".
+ *
+ * @property int $id 主键
+ * @property string $title 标题
+ * @property int $sort 排序
+ * @property int $status 状态
+ * @property string $created_at 创建时间
+ * @property string $updated_at 更新时间
+ */
+class ArticleTag extends \common\models\common\BaseModel
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return '{{%addon_article_tag}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['title'], 'string', 'max' => 20],
+            [['title'], 'required'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'title' => '标题',
+            'sort' => '排序',
+            'status' => '状态',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * 关联中间表
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTagMap()
+    {
+        return $this->hasOne(ArticleTagMap::className(), ['tag_id' => 'id']);
+    }
+}

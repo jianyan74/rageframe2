@@ -133,6 +133,11 @@ class AddonConfig
             'route' => 'cate/index',
             'icon' => ''
         ],
+        [
+            'title' => '截取视频指定帧',
+            'route' => 'video/cut-image',
+            'icon' => ''
+        ],
     ];
 
     /**

@@ -344,6 +344,9 @@ class AddonsPlugController extends SController
             // 写入默认model
             file_put_contents("{$addonDir}common/models/DefaultModel.php", $this->renderPartial('template\DefaultModel',['model' => $model, 'appID' => 'backend']));
 
+            // 资源目录
+            file_put_contents("{$addonDir}resources/.gitkeep", '*');
+
             // 写入默认视图
             file_put_contents("{$addonDir}backend/views/default/index.php", $this->renderPartial('template\view\index',['model' => $model, 'appID' => 'backend']));
             file_put_contents("{$addonDir}frontend/views/default/index.php", $this->renderPartial('template\view\index',['model' => $model, 'appID' => 'frontend']));

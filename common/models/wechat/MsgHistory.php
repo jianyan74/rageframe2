@@ -73,7 +73,7 @@ class MsgHistory extends \common\models\common\BaseModel
     {
         $setting = Setting::getData('history');
         // 记录历史
-        if ($setting['history_status'] == StatusEnum::ENABLED)
+        if (!isset($setting['history_status']) || $setting['history_status'] == StatusEnum::ENABLED)
         {
             $msgHistory = new self();
             $data['message'] = $data['type'] == 'text' ? $message['Content'] : self::filtrate($message);
@@ -82,7 +82,7 @@ class MsgHistory extends \common\models\common\BaseModel
         }
 
         // 统计记录
-        if ($setting['utilization_status'] == StatusEnum::ENABLED)
+        if (!isset($setting['utilization_status']) || $setting['utilization_status'] == StatusEnum::ENABLED)
         {
             // 插入规则统计
             !empty($data['rule_id']) && RuleStat::setStat($data['rule_id']);

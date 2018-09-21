@@ -179,7 +179,7 @@ $(function() {
         var newLi = $('<li>'
             + '<input type="hidden" name="'+ name +'" value="'+ data.urlPath +'" />'
             + '<div class="img-box">'
-            + '<i class="fa fa-file"></i><i">.'+arr[1]+'</i>'
+            + '<i class="fa fa-file"></i>'
             + '<i class="delimg" data-multiple="'+ multiple +'"></i>'
             + '</div>'
             + '</li>');

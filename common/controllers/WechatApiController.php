@@ -93,7 +93,7 @@ class WechatApiController extends BaseController
                 throw new NotFoundHttpException('所请求的页面不存在.');
         }
 
-        return false;
+        exit();
     }
 
     /**

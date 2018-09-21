@@ -9,6 +9,7 @@ use common\helpers\ResultDataHelper;
 use common\models\wechat\Attachment;
 use common\models\wechat\AttachmentNews;
 use common\models\wechat\FansTags;
+use common\helpers\StringHelper;
 use backend\modules\wechat\models\PreviewForm;
 use backend\modules\wechat\models\SendForm;
 use backend\modules\wechat\models\VideoForm;
@@ -64,8 +65,7 @@ class AttachmentController extends WController
         {
             // 素材库
             $material = $this->app->material;
-            // 本地图片前缀
-            $prefix =  Yii::getAlias("@root/") . 'web';
+
             $attach_id = $request->post('attach_id');
             $attachment = $this->findModel($attach_id);
             $attachment->link_type = $request->post('link_type');
@@ -87,7 +87,7 @@ class AttachmentController extends WController
                 if (strpos(urldecode($item['thumb_url']), Attachment::WECHAT_MEDIAT_URL) === false)
                 {
                     // 上传到微信
-                    $imageMaterial = $material->uploadImage($prefix . $thumb_url);
+                    $imageMaterial = $material->uploadImage(StringHelper::getLocalFilePath($thumb_url));
                     $item['thumb_media_id'] = $imageMaterial['media_id'];
                     $item['thumb_url'] = $imageMaterial['url'];
 
@@ -101,7 +101,7 @@ class AttachmentController extends WController
                     // 判断是否已经上传到微信了
                     if (strpos(urldecode($src), Attachment::WECHAT_MEDIAT_URL) === false)
                     {
-                        $result = $material->uploadArticleImage($prefix . $src);
+                        $result = $material->uploadArticleImage(StringHelper::getLocalFilePath($src));
                         // 替换图片上传
                         $item['content'] = str_replace($src, $result['url'], $item['content']);
                     }

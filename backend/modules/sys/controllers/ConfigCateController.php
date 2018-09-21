@@ -66,7 +66,7 @@ class ConfigCateController extends SController
 
         return $this->renderAjax('edit', [
             'model' => $model,
-            'parent_title' => $request->get('parent_title','无'),
+            'parent_title' => $request->get('parent_title', '无'),
         ]);
     }
 }

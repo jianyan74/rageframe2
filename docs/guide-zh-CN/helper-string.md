@@ -39,20 +39,39 @@ StringHelper::uuid($type = 'time', $name = 'php.net');
 
 ```
 /**
- * 日期和时间戳互转
+ * 日期转时间戳
  *
- * 说明：如果是日期转时间戳，如果是时间就转日期
- *
- * @param string|int $value
- * @param string $rule 日期规则
- * @return false|int|string
+ * @param $value
+ * @return false|int
  */
-StringHelper::dateIntTransition($value, $rule = 'Y-m-d H:i:s')
+StringHelper::dateToInt($value)
 ```
 
 ### 获取缩略图地址
 
+```
+/**
+ * 获取缩略图地址
+ *
+ * @param string $url
+ * @param int $width
+ * @param int $height
+ */
+StringHelper::getThumbUrl($url, $width, $height)
+```
+
 ### 创建缩略图地址
+
+```
+/**
+ * 创建缩略图地址
+ *
+ * @param string $url
+ * @param int $width
+ * @param int $height
+ */
+StringHelper::createThumbUrl($url, $width, $height)
+```
 
 ### 分析枚举类型配置值
 

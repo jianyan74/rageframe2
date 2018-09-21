@@ -138,7 +138,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pick' => [
                         'multiple' => false,
                     ],
-                    'callback' => 'setUploadedImg'
+                    'callback' => 'setUploadedImg',
+                    'independentUrl' => true,
                 ],
             ])?>
         </div>

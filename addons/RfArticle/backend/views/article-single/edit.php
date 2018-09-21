@@ -18,7 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="ibox-content">
                 <div class="col-sm-12">
-                    <?php $form = ActiveForm::begin([]); ?>
+                    <?php $form = ActiveForm::begin([
+                        'fieldConfig' => [
+                            'template' => "<div class='col-sm-1 text-right'>{label}</div><div class='col-sm-11'>{input}\n{hint}\n{error}</div>",
+                        ]
+                    ]); ?>
                     <?= $form->field($model, 'title')->textInput(); ?>
                     <?= $form->field($model, 'author')->textInput(); ?>
                     <?= $form->field($model, 'sort')->textInput(); ?>

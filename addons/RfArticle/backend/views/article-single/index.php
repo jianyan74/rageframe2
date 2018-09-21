@@ -1,5 +1,4 @@
 <?php
-
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
 
@@ -10,7 +9,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-sm-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>单页管理</h5>
+                <h5><?= $this->title; ?></h5>
                 <div class="ibox-tools">
                     <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
                         <i class="fa fa-plus"></i>  创建
@@ -44,7 +43,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </table>
                 <div class="row">
                     <div class="col-sm-12">
-
+                        <?= LinkPager::widget([
+                            'pagination' => $pages,
+                            'maxButtonCount' => 5,
+                            'firstPageLabel' => "首页",
+                            'lastPageLabel' => "尾页",
+                            'nextPageLabel' => "下一页",
+                            'prevPageLabel'=> "上一页",
+                        ]);?>
                     </div>
                 </div>
             </div>

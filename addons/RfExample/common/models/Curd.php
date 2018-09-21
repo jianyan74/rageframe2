@@ -2,8 +2,7 @@
 namespace addons\RfExample\common\models;
 
 use Yii;
-use yii\db\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
+use common\helpers\StringHelper;
 
 /**
  * This is the model class for table "{{%addon_example_curd}}".
@@ -109,11 +108,14 @@ class Curd extends \common\models\common\BaseModel
     public function beforeSave($insert)
     {
         //创建时候插入
-        if($this->isNewRecord)
+        if ($this->isNewRecord)
         {
             $this->ip = Yii::$app->request->userIP;
             $this->manager_id = Yii::$app->user->id;
         }
+
+        $this->stat_time = StringHelper::dateToInt(($this->stat_time));
+        $this->end_time = StringHelper::dateToInt(($this->end_time));
 
         return parent::beforeSave($insert);
     }
