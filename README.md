@@ -32,9 +32,15 @@ RageFrame项目创建于2016年4月16日，一个基于Yii2高级框架的快速
 - 能查看日志和Debug技能
 - 一定要仔细走一遍文档
 
+### Demo
+
+地址：http://demo2.rageframe.com/backend  
+账号：demo  
+密码：123456
+
 ### 文档
 
-[项目文档说明地址](docs/guide-zh-CN/README.md)
+[本地文档地址](docs/guide-zh-CN/README.md)
 
 ### 特别鸣谢
 

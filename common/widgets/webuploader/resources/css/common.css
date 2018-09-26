@@ -1,10 +1,14 @@
+.upload-box{
+    margin-top: 15px;
+}
+
 /* 图片相册样式 */
 .photo-list{
     margin: 0;
     padding: 0;
 }
 .photo-list ul{
-    margin-top: -10px;
+    margin-top: -25px;
     margin-left: -55px;
 }
 .photo-list ul li{
@@ -19,6 +23,7 @@
     overflow: hidden;
     width: 112px;
     height: 112px;
+    margin-top: 15px;
     cursor: pointer;border: 1px #efefed solid;
 }
 .photo-list ul li .img-box .backgroundCover{
@@ -110,7 +115,7 @@
     padding: 0;
 }
 .file-list ul{
-    margin-top: -10px;
+    margin-top: -25px;
     margin-left: -55px;
 }
 .file-list ul li{
@@ -126,6 +131,7 @@
     width: 112px;
     height: 112px;
     line-height: 112px;
+    margin-top: 15px;
     cursor: pointer;border: 1px #efefed solid;
 }
 .file-list ul li .img-box .fa{

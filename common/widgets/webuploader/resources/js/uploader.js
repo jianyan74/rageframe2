@@ -42,7 +42,7 @@ $(function() {
                     rfError("最多只能上传" + config.fileNumLimit + "个");
                 } else {
                     // 创建进度条
-                    addProgress(parentObj, file);
+                    addProgress(parentObj, file, uploader);
                 }
             });
 
@@ -60,12 +60,11 @@ $(function() {
                 }
             });
 
-
             // 某个文件开始上传前触发，一个文件只会触发一次
             uploader.on('uploadStart', function(file) {
                 guid = WebUploader.Base.guid();
                 // 创建进度条
-                addProgress(parentObj, file);
+                addProgress(parentObj, file, uploader);
             });
 
             // 当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次。
@@ -127,7 +126,7 @@ $(function() {
     };
 
     // 创建进度条
-    function addProgress(parentObj, file) {
+    function addProgress(parentObj, file, uploader) {
         //防止重复创建
         if (parentObj.children(".upload-progress").length == 0){
             //创建进度条
@@ -180,6 +179,7 @@ $(function() {
             + '<input type="hidden" name="'+ name +'" value="'+ data.urlPath +'" />'
             + '<div class="img-box">'
             + '<i class="fa fa-file"></i>'
+            + '<i> .'+ arr[arr.length - 1] +'</i>'
             + '<i class="delimg" data-multiple="'+ multiple +'"></i>'
             + '</div>'
             + '</li>');

@@ -94,13 +94,13 @@ class AddonConfig
             'icon' => ''
         ],
         [
-            'title' => 'MongoDb Curd',
-            'route' => 'mongo-db-curd/index',
+            'title' => '默认搜索',
+            'route' => 'search/index',
             'icon' => ''
         ],
         [
-            'title' => '默认搜索',
-            'route' => 'search/index',
+            'title' => 'MongoDb Curd',
+            'route' => 'mongo-db-curd/index',
             'icon' => ''
         ],
         [
@@ -119,16 +119,6 @@ class AddonConfig
             'icon' => ''
         ],
         [
-            'title' => '阿里直播',
-            'route' => 'ali-live/index',
-            'icon' => ''
-        ],
-        [
-            'title' => '即时通讯',
-            'route' => 'websocket/index',
-            'icon' => ''
-        ],
-        [
             'title' => '无限级分类',
             'route' => 'cate/index',
             'icon' => ''
@@ -136,6 +126,11 @@ class AddonConfig
         [
             'title' => '截取视频指定帧',
             'route' => 'video/cut-image',
+            'icon' => ''
+        ],
+        [
+            'title' => 'Excel导入数据',
+            'route' => 'excel/index',
             'icon' => ''
         ],
     ];

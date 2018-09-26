@@ -88,7 +88,7 @@ CREATE TABLE `rf_addon_article_tag_map` (
   `article_id` int(10) DEFAULT '0' COMMENT '文章id',
   KEY `tag_id` (`tag_id`) USING BTREE,
   KEY `article_id` (`article_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统_文章标签关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='扩展_文章标签关联表';
 ";
 
 // 执行sql

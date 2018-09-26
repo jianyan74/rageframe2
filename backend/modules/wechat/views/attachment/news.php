@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <?php echo $this->render('_nav', [
         'allMediaType' => $allMediaType,
         'mediaType' => $mediaType,
+        'count' => $pages->totalCount
     ])?>
     <div class="row">
         <div class="col-sm-12">

@@ -60,10 +60,7 @@ class PayHelper
         $model->pay_status = StatusEnum::ENABLED;
         if ($model->save())
         {
-            return [
-                'order_sn' => $model->order_sn,
-                'order_group' => $model->order_group,
-            ];
+            return $model;
         }
 
         return false;

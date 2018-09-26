@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Html;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class ExcelHelper
@@ -112,7 +113,8 @@ class ExcelHelper
      *
      * @param $filePath
      * @param int $startRow
-     * @return array|bool|mixed
+     * @return array|mixed
+     * @throws NotFoundHttpException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
@@ -127,8 +129,7 @@ class ExcelHelper
             $reader->setReadDataOnly(true);
             if (!$reader->canRead($filePath))
             {
-                echo '不能读取excel';
-                return false;
+                throw new NotFoundHttpException('不能读取Excel');
             }
         }
 
@@ -155,7 +156,7 @@ class ExcelHelper
                 }
                 $arr[$currentRow] = array_filter($arr[$currentRow]);
                 // 统计连续空行
-                if(empty($arr[$currentRow]) && $emptyRowNum <= 50)
+                if (empty($arr[$currentRow]) && $emptyRowNum <= 50)
                 {
                     $emptyRowNum++ ;
                 }
@@ -165,7 +166,7 @@ class ExcelHelper
                 }
                 // 防止坑队友的同事在excel里面弄出很多的空行，陷入很漫长的循环中，设置如果连续超过50个空行就退出循环，返回结果
                 // 连续50行数据为空，不再读取后面行的数据，防止读满内存
-                if($emptyRowNum > 50)
+                if ($emptyRowNum > 50)
                 {
                     break;
                 }

@@ -121,7 +121,6 @@ class UploadHelper
     public static function upload($fileVal, $type)
     {
         $config = self::$config = Yii::$app->params['uploadConfig'][$type];
-
         $uploadFile = UploadedFile::getInstanceByName($fileVal);
         $info = self::getUploadFileInfo($uploadFile);
 

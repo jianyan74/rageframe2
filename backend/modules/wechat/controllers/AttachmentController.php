@@ -188,9 +188,8 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $prefix =  Yii::getAlias("@root/") . 'web';
             $material = $this->app->material;
-            $result = $material->uploadImage($prefix . $model->local_url);
+            $result = $material->uploadImage(StringHelper::getLocalFilePath($model->local_url));
 
             Attachment::add($model->local_url, 'image', $result['url'], $result['media_id']);
 
@@ -213,9 +212,8 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $prefix =  Yii::getAlias("@root/") . 'web';
             $material = $this->app->material;
-            $result = $material->uploadVoice($prefix . $model->local_url);
+            $result = $material->uploadVoice(StringHelper::getLocalFilePath($model->local_url, 'voices'));
             Attachment::add($model->local_url, 'voice', '', $result['media_id']);
 
             return $this->redirect(['index', 'type' => 'voice']);
@@ -237,10 +235,8 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()))
         {
             // 本地前缀
-            $prefix =  Yii::getAlias("@root/") . 'web';
-            $local_url = $prefix . $model->local_url;
             $material = $this->app->material;
-            $result = $material->uploadVideo($local_url, $model->file_name, $model->description);
+            $result = $material->uploadVideo(StringHelper::getLocalFilePath($model->local_url, 'videos'), $model->file_name, $model->description);
             Attachment::add($model->local_url, 'video', '', $result['media_id'], $model->file_name);
 
             return $this->redirect(['index', 'type' => 'video']);

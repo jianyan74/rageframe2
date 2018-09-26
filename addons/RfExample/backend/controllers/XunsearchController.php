@@ -38,7 +38,7 @@ class XunsearchController extends AddonsBaseController
 
             $condition = $keyword;	// 字符串原样保持，可包含 subject:xxx 这种形式
 
-            /*
+            /**
             $condition = 'hello world';	// 字符串原样保持，可包含 subject:xxx 这种形式
             $condition = ['WILD', 'key1', 'key2' ... ];	// 通过空格将多个查询条件连接
             $condition = ['AND', 'key1', 'key2' ... ]; // 通过 AND 连接，转换为：key1 AND key2
@@ -121,7 +121,7 @@ class XunsearchController extends AddonsBaseController
         if (empty($id) || empty(($model = Xunsearch::findOne($id))))
         {
             $model = new Xunsearch();
-            $model->id = StringHelper::uuid();
+            $model->id = StringHelper::uuid('uniqid');
             $model->status = StatusEnum::ENABLED;
             return $model;
         }

@@ -8,8 +8,6 @@ use common\helpers\ResultDataHelper;
 use addons\RfExample\common\models\Curd;
 
 /**
- * curd
- *
  * Class CurdController
  * @package addons\RfExample\backend\controllers
  */

@@ -1,20 +1,19 @@
 <?php
-namespace wechat\controllers;
+namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
 use common\models\common\PayLog;
 use common\enums\StatusEnum;
 use common\helpers\PayHelper;
-use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
 
 /**
- * 微信支付回调控制器
+ * 支付回调
  *
  * Class NotifyController
- * @package wechat\controllers
+ * @package frontend\controllers
  */
 class NotifyController extends Controller
 {
@@ -23,28 +22,29 @@ class NotifyController extends Controller
      */
     public $enableCsrfValidation = false;
 
+    protected $_config;
+
     public function init()
     {
-        $config = Yii::$app->debris->configAll();
-
-        // 微信支付参数配置
-        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $config['wechat_appid'],
-            'mch_id' => $config['wechat_mchid'],
-            'key' => $config['wechat_api_key'], // API 密钥
-            'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
-        ], Yii::$app->params['wechatPaymentConfig']);
+        $this->_config = Yii::$app->debris->configAll();
 
         parent::init();
     }
 
     /**
-     * 回调通知
+     * 微信支付回调通知
      *
      * @return mixed
      */
-    public function actionIndex()
+    public function actionWechat()
     {
+        // 微信支付参数配置
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
+            'app_id' => $this->_config['wechat_appid'],
+            'mch_id' => $this->_config['wechat_mchid'],
+            'key' => $this->_config['wechat_api_key'], // API 密钥
+        ], Yii::$app->params['wechatPaymentConfig']);
+
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)
         {
             // 记录写入日志
@@ -61,7 +61,7 @@ class NotifyController extends Controller
             /////////////  建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
 
             // 判断订单组别来源 比如课程、购物或者其他
-            if ($orderInfo['order_group'] == 1)
+            if ($orderInfo['order_group'] == PayLog::ORDER_GROUP)
             {
                 // 查找订单
                 if (!($order = Order::fineOne(['order_sn' => $orderInfo['order_sn']])))
@@ -95,40 +95,38 @@ class NotifyController extends Controller
     }
 
     /**
-     * 生成微信JSAPI支付的Demo方法 默认禁止外部访问 测试请修改方法类型
-     *
-     * @return string
-     * @throws Yii\base\ErrorException
+     * 小程序支付回调通知
      */
-    private function actionDemo()
+    public function actionMiniProgram()
     {
-        $totalFee = 100;// 支付金额单位：分
-        $orderSn = time() . StringHelper::randomNum();// 订单号
+        // 微信支付参数配置
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
+            'app_id' => $this->_config['miniprogram_appid'],
+            'mch_id' => $this->_config['wechat_mchid'],
+            'key' => $this->_config['wechat_api_key'], // API 密钥
+        ], Yii::$app->params['wechatPaymentConfig']);
 
-        $orderData = [
-            'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
-            'body' => '支付简单说明',
-            'detail' => '支付详情',
-            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-            'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, 1, PayLog::PAY_TYPE_WECHAT, 'JSAPI'), // 支付
-            'total_fee' => $totalFee,
-            'openid' => '', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
-        ];
-
-        $payment = Yii::$app->wechat->payment;
-        $result = $payment->order->unify($orderData);
-        if ($result['return_code'] == 'SUCCESS')
+        $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)
         {
-            $config = $payment->jssdk->sdkConfig($result['prepay_id']);
-        }
-        else
-        {
-            throw new yii\base\ErrorException('微信支付异常, 请稍后再试');
-        }
+            // 你的回调处理 同上
+        });
 
-        return $this->render('wxpay', [
-            'jssdk' => $payment->jssdk, // $app通过上面的获取实例来获取
-            'config' => $config
-        ]);
+        return $response;
+    }
+
+    /**
+     * 支付宝支付回调
+     */
+    public function actionAli()
+    {
+        // TODO 待开发
+    }
+
+    /**
+     * 银联支付回调
+     */
+    public function actionUnion()
+    {
+        // TODO 待开发
     }
 }

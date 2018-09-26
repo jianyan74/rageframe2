@@ -11,6 +11,7 @@ use yii\helpers\Url;
             <?php } ?>
         </div>
         <div class="ibox-tools">
+            总记录 <strong class="text-danger"><?= $count ?></strong> 条
             <a class="btn btn-primary btn-xs" id="getAllAttachment">
                 <i class="fa fa-cloud-download"></i> 同步
             </a>

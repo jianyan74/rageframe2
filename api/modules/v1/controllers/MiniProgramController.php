@@ -152,27 +152,6 @@ class MiniProgramController extends \yii\rest\ActiveController
     }
 
     /**
-     * 通过openid 获取token信息
-     *
-     * @return array|bool
-     * @throws \yii\base\Exception
-     */
-    public function actionFindTokenByOpenid()
-    {
-        $openid = Yii::$app->request->post('openid', '');
-        // 查询授权信息
-        if ($memberAuthInfo = MemberAuth::findOauthClient(MemberAuth::CLIENT_MINI_PROGRAM, $openid))
-        {
-            if (!empty($memberAuthInfo->member))
-            {
-                return AccessToken::getAccessToken($memberAuthInfo->member, true);
-            }
-        }
-
-        return ResultDataHelper::apiResult(422, '找不到用户信息');
-    }
-
-    /**
      * 解析错误
      *
      * @param $fistErrors

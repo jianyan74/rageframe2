@@ -54,25 +54,11 @@ auth_key | string| 是 | 无 | 授权秘钥
 返回
 
 ```
-
-```
-
-### 通过openid获取最新token
-
-请求地址(Post)
-
-```
-/v1/mini-program/find-token-by-openid
-```
-
-参数
-
-参数名 | 参数类型| 必填 | 默认 | 说明
----|---|---|---|---
-openid | string| 是 | 无 | 小程序openid
-
-返回
-
-```
-
+{
+    "code": 200,
+    "message": "OK",
+    "data": {
+     
+     }
+}
 ```

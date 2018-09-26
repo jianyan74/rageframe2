@@ -3,7 +3,7 @@
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
 
-$this->title = 'Curd';
+$this->title = 'MongoDB Curd';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 <div class="row">
@@ -24,24 +24,24 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <th>#</th>
                         <th>标题</th>
                         <th>排序</th>
-                        <th>开始结束时间</th>
+                        <th>经纬度</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php foreach($models as $model){ ?>
-                        <tr id = <?= $model->id; ?>>
-                            <td><?= $model->id; ?></td>
+                        <tr id = <?= $model->_id; ?>>
+                            <td><?= $model->_id; ?></td>
                             <td><?= $model->title; ?></td>
                             <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
                             <td>
-                                开始：<?= Yii::$app->formatter->asDatetime($model->stat_time); ?> <br>
-                                结束：<?= Yii::$app->formatter->asDatetime($model->end_time); ?>
+                                经度：<?= $model->longitude; ?><br>
+                                纬度：<?= $model->latitude; ?>
                             </td>
                             <td>
-                                <a href="<?= AddonUrl::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
+                                <a href="<?= AddonUrl::to(['edit','id' => $model->_id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
                                 <?php echo \common\helpers\HtmlHelper::statusSpan($model['status']);?>
-                                <a href="<?= AddonUrl::to(['delete','id'=> $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                <a href="<?= AddonUrl::to(['delete','id'=> $model->_id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
                             </td>
                         </tr>
                     <?php } ?>
