@@ -42,6 +42,14 @@ RageFrame项目创建于2016年4月16日，一个基于Yii2高级框架的快速
 
 [本地文档地址](docs/guide-zh-CN/README.md)
 
+### 问题反馈
+
+在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
+
+QQ群：[655084090](https://jq.qq.com/?_wv=1027&k=4BeVA2r)
+
+Github：https://github.com/jianyan74/rageframe2.git
+
 ### 特别鸣谢
 
 感谢以下的项目,排名不分先后
