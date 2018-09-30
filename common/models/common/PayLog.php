@@ -26,6 +26,7 @@ use Yii;
 class PayLog extends \common\models\common\BaseModel
 {
     const ORDER_GROUP = 1;
+    const ORDER_GROUP_GOODS = 2;
 
     /**
      * 订单组别说明
@@ -34,6 +35,7 @@ class PayLog extends \common\models\common\BaseModel
      */
     public static $orderGroupExplain = [
         self::ORDER_GROUP => '统一支付',
+        self::ORDER_GROUP_GOODS => '商品',
     ];
 
     const PAY_TYPE = 0;

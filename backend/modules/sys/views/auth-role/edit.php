@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $("#"+id).find("li").each(function(){
                     if (checkId == 'all') {
                         $("#"+id).jstree("check_node",$(this));
-                    } if(checkId instanceof Array){
+                    } if (checkId instanceof Array){
                         for (var i=0;i<checkId.length;i++){
                             if ($(this).attr("id") == checkId[i]){
                                 $("#"+id).jstree("check_node",$(this));
@@ -107,15 +107,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
         // 获取选中的id
         function getCheckboxTreeSelNode(treeid){
+            // 打开所有的节点，不然获取不到子节点数据
+            $("#"+treeid).jstree('open_all');
+
             var ids = [];
             $("#"+treeid).find("li").each(function(){
                 var liid = $(this).attr("id");
-                if ($("#"+liid+">a").hasClass("jstree-clicked") || $("#"+liid+">a>i").hasClass("jstree-undetermined")) {
+                if ($("#" + liid + ">a").hasClass("jstree-clicked") || $("#" + liid + ">a>i").hasClass("jstree-undetermined")) {
                     ids.push(liid);
                 }
             });
-
-            console.log(ids);
 
             $.ajax({
                 type:"post",

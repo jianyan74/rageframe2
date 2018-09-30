@@ -5,6 +5,7 @@ use Yii;
 use api\controllers\OnAuthController;
 use api\modules\v1\events\RoomEvent;
 use common\helpers\ResultDataHelper;
+use common\models\live\Room;
 
 /**
  * 直播房间
@@ -34,13 +35,11 @@ class RoomController extends OnAuthController
     }
 
     /**
-     * 创建
-     *
-     * @return bool
+     * @return bool|Room|mixed
      */
     public function actionCreate()
     {
-        $model = new $this->modelClass();
+        $model = new Room();
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->id;
         $model->start_time = time(); // 直播推拉流有效开始时间

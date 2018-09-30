@@ -44,6 +44,6 @@ class ResultDataHelper
         Yii::$app->response->setStatusCode($code, $message);
         Yii::$app->response->data = $data ? ArrayHelper::toArray($data) : [];
 
-        return false;
+        return Yii::$app->response->data;
     }
 }

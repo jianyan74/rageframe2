@@ -19,7 +19,7 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-imagine": "~2.0.0",
-        "yiisoft/yii2-elasticsearch": "~2.0.0",
+        "yiisoft/yii2-elasticsearch": "2.1.x-dev",
         "yiisoft/yii2-authclient": "~2.1.0",
         "yiisoft/yii2-redis": "^2.0",
         "yiisoft/yii2-queue": "dev-master",

@@ -2,6 +2,7 @@
 namespace addons\RfExample\common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\elasticsearch\ActiveRecord;
 
 /**
@@ -11,23 +12,6 @@ use yii\elasticsearch\ActiveRecord;
 class ElasticSearchCurd extends ActiveRecord
 {
     public static $currentIndex;
-
-    /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-
-        // 配置了es的集群，那么需要在http_address中把每一个节点的ip都要配置上
-        Yii::$app->set('elasticsearch', [
-            'class' => 'yii\elasticsearch\Connection',
-            'nodes' => [
-                ['http_address' => '192.168.0.199:9200'],
-                ['http_address' => '192.168.0.210:9200'],
-            ],
-        ]);
-    }
 
     /**
      * @return null|object|\yii\elasticsearch\Connection
@@ -69,6 +53,34 @@ class ElasticSearchCurd extends ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['title', 'status', 'cover'], 'required'],
+            [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['content'], 'required'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'title' => '标题',
+            'sort' => '排序',
+            'content' => '内容',
+            'status' => '状态',
+            'cover' => '封面',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
      * mapping配置(表字段说明)
      *
      * 如果需要在mapping中添加其他的字段，那么添加后在运行一次updateMapping()
@@ -83,10 +95,13 @@ class ElasticSearchCurd extends ActiveRecord
             'properties' => [
                 // 不想进行分词等操作，想当成一个和数据库类似的搜索 设置为not_analyzed
                 // index 默认可不设置
-                'customer_id' => ['type' => 'long',  "index" => "not_analyzed"],
-                'uuids' => ['type' => 'string',  "index" => "not_analyzed"],
-                'updated_at' => ['type' => 'long',  "index" => "not_analyzed"],
-                'emails' => ['type' => 'string',"index" => "not_analyzed"],
+                'title' => ['type' => 'text'],
+                'content' => ['type' => 'text'],
+                'cover' => ['type' => 'keyword'],
+                'sort' => ['type' => 'integer'],
+                'status' => ['type' => 'integer'],
+                'created_at' => ['type' => 'long'],
+                'updated_at' => ['type' => 'long'],
             ]
         ];
     }
@@ -119,6 +134,18 @@ class ElasticSearchCurd extends ActiveRecord
     }
 
     /**
+     * 删除
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function deleteMapping()
+    {
+        $db = self::getDb();
+        $command = $db->createCommand();
+        $command->deleteIndex(static::index());
+    }
+
+    /**
      * 获取字段
      *
      * @return mixed
@@ -130,5 +157,21 @@ class ElasticSearchCurd extends ActiveRecord
         $command = $db->createCommand();
 
         return $command->getMapping();
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+            ],
+        ];
     }
 }

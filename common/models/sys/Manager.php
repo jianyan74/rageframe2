@@ -123,7 +123,7 @@ class Manager extends \common\models\common\User
      */
     public function getAssignment()
     {
-        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
+        return $this->hasOne(\common\models\sys\AuthAssignment::className(), ['user_id' => 'id']);
     }
 
     /**

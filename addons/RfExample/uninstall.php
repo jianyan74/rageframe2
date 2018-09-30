@@ -3,7 +3,7 @@
 // 表前缀
 $table_prefixion = "rf_addon_example_";
 // 列表
-$table_name = ['curd'];
+$table_name = ['curd', 'cate'];
 
 $sql = "";
 foreach ($table_name as $value)

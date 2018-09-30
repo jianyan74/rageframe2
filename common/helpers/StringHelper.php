@@ -103,6 +103,22 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
+     * 获取压缩图片地址
+     *
+     * @param $url
+     * @param $quality
+     * @return string
+     */
+    public static function getAliasUrl($url, $alias = 'compress')
+    {
+        $url = explode('/', $url);
+        $nameArr = explode('.', end($url));
+        $url[count($url) - 1] = $nameArr[0] . "@{$alias}." . $nameArr[1];
+
+        return implode('/', $url);
+    }
+
+    /**
      * 根据Url获取本地绝对路径
      *
      * @param $url

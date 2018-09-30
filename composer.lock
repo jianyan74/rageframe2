@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2eec32339707e2a738be908b5d8d13",
+    "content-hash": "0c0f6ff617c35f222eca5dcad3635285",
     "packages": [
         {
             "name": "2amigos/qrcode-library",
@@ -3613,16 +3613,16 @@
         },
         {
             "name": "yiisoft/yii2-elasticsearch",
-            "version": "2.0.5",
+            "version": "2.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-elasticsearch.git",
-                "reference": "82d66d17543040dda3c64f299ae251658156c2c1"
+                "reference": "ca76f01e93605b2b6dfb7dbaa30cf4070141bf7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-elasticsearch/zipball/82d66d17543040dda3c64f299ae251658156c2c1",
-                "reference": "82d66d17543040dda3c64f299ae251658156c2c1",
+                "url": "https://api.github.com/repos/yiisoft/yii2-elasticsearch/zipball/ca76f01e93605b2b6dfb7dbaa30cf4070141bf7c",
+                "reference": "ca76f01e93605b2b6dfb7dbaa30cf4070141bf7c",
                 "shasum": ""
             },
             "require": {
@@ -3658,7 +3658,7 @@
                 "search",
                 "yii2"
             ],
-            "time": "2018-03-20T11:34:58+00:00"
+            "time": "2018-03-27T22:33:22+00:00"
         },
         {
             "name": "yiisoft/yii2-httpclient",
@@ -6363,6 +6363,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "yiisoft/yii2-elasticsearch": 20,
         "yiisoft/yii2-queue": 20,
         "lokielse/omnipay-alipay": 20,
         "kartik-v/yii2-widget-datepicker": 20,

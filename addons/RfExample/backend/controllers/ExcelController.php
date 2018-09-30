@@ -4,7 +4,6 @@ namespace addons\RfExample\backend\controllers;
 use Yii;
 use common\helpers\ExcelHelper;
 use common\controllers\AddonsBaseController;
-use yii\web\NotFoundHttpException;
 
 /**
  * Class ExcelController

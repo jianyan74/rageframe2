@@ -40,7 +40,7 @@ class AliYunLive extends Model
         ];
 
         $response = $live->createRequest($package);
-        $uuid = StringHelper::uuid();
+        $uuid = StringHelper::uuid('uniqid');
         //获取播放地址
         $playUrl = $live->getPlayUrls($uuid);
         $liveData = [

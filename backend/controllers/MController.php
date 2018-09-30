@@ -27,7 +27,7 @@ class MController extends \common\controllers\BaseController
     {
         parent::init();
 
-        $this->app = Yii::$app->wechat->app;
+        empty($this->app) && $this->app = Yii::$app->wechat->app;
     }
 
     /**

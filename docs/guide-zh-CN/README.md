@@ -28,6 +28,7 @@
 
 #### 微信开发
 
+- [微信扩展](wechat-extend.md)
 - [公众号绑定](wechat-binding.md)
 - [用户信息获取](wechat-userinfo.md)
 - [JSSDK](wechat-jssdk.md)

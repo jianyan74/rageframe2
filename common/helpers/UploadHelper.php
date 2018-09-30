@@ -143,6 +143,47 @@ class UploadHelper
         $fullPathName = $info['absolutePath'] . $info['name'];
         if ($uploadFile->saveAs($fullPathName))
         {
+            if ($type == 'images')
+            {
+                $imgInfo = getimagesize($fullPathName);
+
+                // 判断水印
+                if (Yii::$app->debris->config('sys_image_watermark_status') == true)
+                {
+                    $local = Yii::$app->debris->config('sys_image_watermark_location');
+
+                    $watermarkImg = StringHelper::getLocalFilePath(Yii::$app->debris->config('sys_image_watermark_img'));
+                    if ($coordinate = DebrisHelper::getWatermarkLocation($fullPathName, $watermarkImg, $local))
+                    {
+                        // $aliasName = StringHelper::getAliasUrl($fullPathName, 'watermark');
+                        Image::watermark($fullPathName, $watermarkImg, $coordinate)
+                            ->save($fullPathName, ['quality' => 100]);
+                    }
+                }
+
+                // 判断压缩
+                if (Yii::$app->params['uploadConfig']['images']['compress'] == true)
+                {
+                    $compressibility = Yii::$app->params['uploadConfig']['images']['compressibility'];
+
+                    $tmpMinSize = 0;
+                    foreach ($compressibility as $key => $item)
+                    {
+                        if ($uploadFile->size >= $tmpMinSize && $uploadFile->size < $key && $item < 100)
+                        {
+                            // $aliasName = StringHelper::getAliasUrl($fullPathName, 'compress');
+                            Image::thumbnail($fullPathName, $imgInfo[0] , $imgInfo[1])
+                                ->save($fullPathName, ['quality' => $item]
+                                );
+
+                            break;
+                        }
+
+                        $tmpMinSize = $key;
+                    }
+                }
+            }
+
             if ($config['fullPath'] == true)
             {
                 $info['relativePath'] = Yii::$app->request->hostInfo . $info['relativePath'];
@@ -240,9 +281,16 @@ class UploadHelper
             'absolutePath' => Yii::getAlias("@attachment/") . $filePath, // 绝对路径
             'thumbRelativePath' => Yii::getAlias("@attachurl/") . $thumbPath, // 缩略图相对路径
             'thumbAbsolutePath' => Yii::getAlias("@attachment/") . $thumbPath, // 缩略图绝对路径
-            'tmpRelativePath' => Yii::getAlias("@attachurl/") . $tmpPath, // 临时相对路径
-            'tmpAbsolutePath' => Yii::getAlias("@attachment/") . $tmpPath, // 临时绝对路径
         ];
+
+        // 切片的临时路径
+        if ($guid)
+        {
+            $info = ArrayHelper::merge($info, [
+                'tmpRelativePath' => Yii::getAlias("@attachurl/") . $tmpPath, // 临时相对路径
+                'tmpAbsolutePath' => Yii::getAlias("@attachment/") . $tmpPath, // 临时绝对路径
+            ]);
+        }
 
         return $info;
     }
@@ -258,6 +306,10 @@ class UploadHelper
      */
     public static function createThumb($originalPath, $thumbOriginalPath, $thumbWidget, $thumbHeight)
     {
+        // 裁剪从坐标0,60 裁剪一张300 x 20 的图片,并保存 不设置坐标则从坐标0，0开始
+        // Image::crop($originalPath, $thumbWidget , $thumbHeight, [0, 60])->save($thumbOriginalPath), ['quality' => 100]);
+
+        // 缩略图
         return Image::thumbnail($originalPath, $thumbWidget, $thumbHeight)->save($thumbOriginalPath);
     }
 

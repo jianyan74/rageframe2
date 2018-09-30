@@ -33,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-sm-12 text-center">
                         <div class="hr-line-dashed"></div>
                         <button class="btn btn-primary" type="submit">保存</button>
-                        <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                     </div>
                 </div>
                 <?php ActiveForm::end(); ?>

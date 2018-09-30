@@ -10,18 +10,18 @@ AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
-    <html lang="<?php echo Yii::$app->language ?>">
+    <html lang="<?= Yii::$app->language ?>">
     <head>
         <!-- Meta -->
-        <meta charset="<?php echo Yii::$app->charset ?>">
+        <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"<
         <meta name="renderer" content="webkit">
-        <?php echo Html::csrfMetaTags() ?>
-        <title><?php echo Yii::$app->params['adminTitle'];?></title>
+        <?= Html::csrfMetaTags() ?>
+        <title><?= Yii::$app->params['adminTitle'];?></title>
         <?php $this->head() ?>
     </head>
 
-    <body class="fixed-sidebar full-height-layout gray-bg skin-<?php echo $style->skin_id; ?>">
+    <body class="fixed-sidebar full-height-layout gray-bg skin-<?= $style->skin_id; ?>">
     <?php $this->beginBody() ?>
     <div id="wrapper">
         <!--左侧导航开始-->
@@ -31,25 +31,32 @@ AppAsset::register($this);
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element text-center">
-                            <span><img class="img-circle" src="<?php echo HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" width="48" height="48" id="head_portrait"/></span>
+                            <span><img class="img-circle" src="<?= HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" width="48" height="48" id="head_portrait"/></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear">
-                                <span class="block m-t-xs"><strong class="font-bold"><?php echo Yii::$app->user->identity->username; ?></strong></span>
-                                <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
+                                <span class="block m-t-xs"><strong class="font-bold"><?= Yii::$app->user->identity->username; ?></strong></span>
+                                <span class="text-muted text-xs block">
+                                    <?php if (Yii::$app->user->id == Yii::$app->params['adminAccount']){; ?>
+                                        超级管理员
+                                    <?php }else{ ?>
+                                        <?= isset(Yii::$app->user->identity->assignment->item_name) ? Yii::$app->user->identity->assignment->item_name : '未授权'?>
+                                    <?php } ?>
+                                    <b class="caret"></b>
+                                </span>
                             </span>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a class="J_menuItem" href="<?php echo Url::to(['sys/manager/personal'])?>"  onclick="$('body').click();">个人中心</a></li>
-                                <li><a class="J_menuItem" href="<?php echo Url::to(['sys/manager/up-password'])?>"  onclick="$('body').click();">修改密码</a></li>
-                                <li><a class="J_menuItem" href="<?php echo Url::to(['main/clear-cache'])?>"  onclick="$('body').click();">清除缓存</a></li>
+                                <li><a class="J_menuItem" href="<?= Url::to(['/sys/manager/personal'])?>"  onclick="$('body').click();">个人中心</a></li>
+                                <li><a class="J_menuItem" href="<?= Url::to(['/sys/manager/up-password'])?>"  onclick="$('body').click();">修改密码</a></li>
+                                <li><a class="J_menuItem" href="<?= Url::to(['/main/clear-cache'])?>"  onclick="$('body').click();">清除缓存</a></li>
                                 <li class="divider"></li>
-                                <li><a href="<?php echo Url::to(['site/logout'])?>" data-method="post">安全退出</a></li>
+                                <li><a href="<?= Url::to(['/site/logout'])?>" data-method="post">安全退出</a></li>
                             </ul>
                         </div>
-                        <div class="logo-element"><?php echo Yii::$app->params['adminAcronym']; ?>
+                        <div class="logo-element"><?= Yii::$app->params['adminAcronym']; ?>
                         </div>
                     </li>
-                    <?php echo MenuLeftWidget::widget() ?>
+                    <?= MenuLeftWidget::widget() ?>
                 </ul>
             </div>
         </nav>
@@ -68,8 +75,8 @@ AppAsset::register($this);
                         <?php foreach ($menuCates as $cate){ ?>
                             <?php if($cate['status'] == StatusEnum::ENABLED){ ?>
                                 <li class="dropdown">
-                                    <a class="navbar-top-menu <?php echo $cate['is_default_show'] == StatusEnum::ENABLED ? 'navbar-top-menu-hover' : '' ?>" href="#" menu-type="<?php echo $cate['id']; ?>">
-                                        <i class="fa <?php echo $cate['icon']; ?>"></i><?php echo $cate['title']; ?>
+                                    <a class="navbar-top-menu <?= $cate['is_default_show'] == StatusEnum::ENABLED ? 'navbar-top-menu-hover' : '' ?>" href="#" menu-type="<?= $cate['id']; ?>">
+                                        <i class="fa <?= $cate['icon']; ?>"></i><?= $cate['title']; ?>
                                     </a>
                                 </li>
                             <?php } ?>
@@ -95,7 +102,7 @@ AppAsset::register($this);
                 <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-angle-double-left"></i></button>
                 <nav class="page-tabs J_menuTabs" id="rftags">
                     <div class="page-tabs-content">
-                        <a href="javascript:;" class="active J_menuTab" data-id="<?php echo Url::to(['main/system']); ?>">首页</a>
+                        <a href="javascript:;" class="active J_menuTab" data-id="<?= Url::to(['main/system']); ?>">首页</a>
                         <!--默认主页需在对应的选项卡a元素上添加data-id="默认主页的url"-->
                     </div>
                 </nav>
@@ -109,15 +116,15 @@ AppAsset::register($this);
                         <li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
                     </ul>
                 </div>
-                <a href="<?php echo Url::to(['site/logout'])?>" data-method="post" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+                <a href="<?= Url::to(['site/logout'])?>" data-method="post" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
             </div>
             <div class="row J_mainContent" id="content-main">
-                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="<?php echo Url::to(['main/system']); ?>" frameborder="0" data-id="<?php echo Url::to(['main/system']); ?>" seamless></iframe>
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="<?= Url::to(['main/system']); ?>" frameborder="0" data-id="<?= Url::to(['main/system']); ?>" seamless></iframe>
                 <!--默认主页需在对应的页面显示iframe元素上添加name="iframe0"和data-id="默认主页的url"-->
             </div>
             <div class="footer">
-                <div class="pull-left">当前版本：<?php echo Yii::$app->params['exploitVersions']; ?></div>
-                <div class="pull-right"><?php echo Yii::$app->debris->config('web_copyright'); ?></div>
+                <div class="pull-left">当前版本：<?= Yii::$app->params['exploitVersions']; ?></div>
+                <div class="pull-right"><?= Yii::$app->debris->config('web_copyright'); ?></div>
             </div>
         </div>
         <!--右侧部分结束-->
@@ -205,7 +212,7 @@ AppAsset::register($this);
     </div>
     <!--js配置-->
     <script>
-        var styleUrl = "<?php echo Url::to(['sys/style/update']); ?>";
+        var styleUrl = "<?= Url::to(['sys/style/update']); ?>";
     </script>
     <?php $this->endBody() ?>
     </body>

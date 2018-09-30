@@ -18,7 +18,7 @@
 例如，如果您需要下载并保存一个文件，该类可能看起来如下:
 
 ```
-class DownloadJob extends Object implements \yii\queue\JobInterface
+class DownloadJob extends BaseObject implements \yii\queue\JobInterface
 {
     public $url;
     public $file;

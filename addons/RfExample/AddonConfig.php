@@ -105,7 +105,7 @@ class AddonConfig
         ],
         [
             'title' => 'Elasticsearch',
-            'route' => 'elasticsearch/index',
+            'route' => 'elastic-search/index',
             'icon' => ''
         ],
         [
@@ -114,7 +114,7 @@ class AddonConfig
             'icon' => ''
         ],
         [
-            'title' => '队列',
+            'title' => '消息',
             'route' => 'queue/index',
             'icon' => ''
         ],

@@ -1,9 +1,13 @@
 <?php
 namespace addons\RfExample\backend\controllers;
 
+use Yii;
 USE yii\data\Pagination;
-use addons\RfExample\common\models\ElasticSearchCurd;
+use common\enums\StatusEnum;
+use common\components\CurdTrait;
+use common\helpers\StringHelper;
 use common\controllers\AddonsBaseController;
+use addons\RfExample\common\models\ElasticSearchCurd;
 
 /**
  * Class ElasticSearchController
@@ -11,6 +15,41 @@ use common\controllers\AddonsBaseController;
  */
 class ElasticSearchController extends AddonsBaseController
 {
+    use CurdTrait;
+
+    public $modelClass = 'addons\RfExample\common\models\ElasticSearchCurd';
+
+    /**
+     * 到时候正式请配置在main里面
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function init()
+    {
+        // 配置了es的集群，那么需要在http_address中把每一个节点的ip都要配置上
+        Yii::$app->set('elasticsearch', [
+            'class' => 'yii\elasticsearch\Connection',
+            'nodes' => [
+                ['http_address' => '127.0.0.1:9200'],
+                // ['http_address' => '192.168.0.210:9200'],
+            ],
+        ]);
+
+        // 更新字段，每次修改字段都需执行该方法
+        ElasticSearchCurd::updateMapping();
+
+        // 删库 注意使用
+        // ElasticSearchCurd::deleteMapping();
+        // 获取字段
+        // ElasticSearchCurd::getMapping();
+
+        parent::init();
+    }
+
+    /**
+     * @return string
+     * @throws \yii\elasticsearch\Exception
+     */
     public function actionIndex()
     {
         $data = ElasticSearchCurd::find();
@@ -19,56 +58,87 @@ class ElasticSearchController extends AddonsBaseController
             'pageSize' => $this->_pageSize
         ]);
 
-        // emails 按照desc的方式进行排序
+        // sort 字段按照desc的方式进行排序
         $sort = [
-            'emails' => [
+            'sort' => [
                 'order' => 'desc'
             ]
         ];
 
+        // 查询文档 https://blog.csdn.net/taoshujian/article/details/60397099
+        // http://blog.csdn.net/dm_vincent/article/details/42024799
+        $filterArr = [
+            'bool' => [
+                'must' => [ // 此示例编写两个match查询，即查询title中包含“1”和 '2'帐户。bool must子句表示所有条件必须满足 类似于判断条件中的&&。
+                    ['match' => ['title' => '1']],
+                    ['match' => ['title' => '2']]
+                ],
+                'should' => [ // 相比之下，此示例中两个match则是查询并title中包含“1”或“2”的所有帐户。bool should类似于判断条件中的||
+                    ['match' => ['title' => '1']],
+                    ['match' => ['title' => '2']]
+                ],
+                'must_not' => [ // 此示例的两个match查询，则是查询title中既不包含“1”也不包含“3”的所有帐户。
+                    ['match' => ['title' => '1']],
+                    ['match' => ['title' => '2']]
+                ],
+            ]
+        ];
+
+        $filterArr = [];
+
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->orderby($sort)
+            ->query($filterArr)
+            ->asArray()
             ->all();
 
-        $data = \yii\helpers\ArrayHelper::getColumn($models, '_source');
+        // $data = ArrayHelper::getColumn($models, '_source');
+
+        return $this->render('index',[
+            'models' => $models,
+            'pages' => $pages,
+        ]);
     }
 
     /**
-     * 对于上面出现的must should，自己查资料，了解elasticSearch
-     * 对于term 相当于等于
-     * 对于terms相当于mysql中的in
-     * 在上述查询中，filter是不分词，不进行同义词查询的，速度肯定要快
-     * query会进行同义词查询的，速度肯定要慢一些的。
-     * @return \yii\elasticsearch\ActiveQuery
+     * @param $id
+     * @return mixed
      */
-    public function _getSearchQuery()
+    public function actionDelete($id)
     {
-//        # $field_1 $field_2 都是字段
-//        $filter_arr = [
-//            'bool' => [
-//                'must' => [
-//                    ['term' => [$field_1 => 'xxxxxxx']]
-//                        # $emails_arr 是数组。
-//                    ['terms' => [$field_2 => $emails_arr]]  # 在查询的字段只有一个值的时候，应该使用term而不是terms，在查询字段包含多个的时候才使用terms
-//            ]
-//        ],
-//      ];
-//      # $field_1 $field_2 都是字段
-//      $query_arr = [
-//          'bool' => [
-//              'must' => [
-//                  ['match' => [$field_1 => 'xxxxx']],
-//
-//              ],
-//              'should' => [
-//                  # 关于wildcard查询可以参看文章：http://blog.csdn.net/dm_vincent/article/details/42024799
-//                  ['wildcard' => [$field_2 => "W?F*HW"]]
-//              ]
-//          ],
-//      ];
-//      # Customer 就是elasticSearch 的 model
-//      $query = ElasticSearchCurd::find()->filter($filter_arr)->query($query_arr);
-//      return $query;
+        try
+        {
+            if ($this->findModel($id)->delete())
+            {
+                return $this->message("删除成功", $this->redirect(['index']));
+            }
+        }
+        catch(\Exception $e)
+        {
+
+        }
+
+        return $this->message("删除失败", $this->redirect(['index']), 'error');
+    }
+
+    /**
+     * 返回模型
+     *
+     * @param $id
+     * @return ElasticSearchCurd|null
+     */
+    protected function findModel($id)
+    {
+        if (empty($id) || empty(($model = ElasticSearchCurd::findOne($id))))
+        {
+            $model = new ElasticSearchCurd();
+            $model->primaryKey = StringHelper::uuid('uniqid');
+            $model->status = StatusEnum::ENABLED;
+            $model->sort = 0;
+            return $model;
+        }
+
+        return $model;
     }
 }

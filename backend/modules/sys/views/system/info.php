@@ -157,6 +157,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <td>Socket超时时间</td>
                             <td><?= ini_get('default_socket_timeout'); ?> 秒</td>
                         </tr>
+                        <tr>
+                            <td>POST数据最大尺寸</td>
+                            <td><?= ini_get('post_max_size'); ?></td>
+                        </tr>
                     </table>
                 </div>
             </div>
