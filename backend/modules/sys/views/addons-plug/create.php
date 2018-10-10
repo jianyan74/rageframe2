@@ -30,16 +30,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     ]
                                 ]); ?>
                                 <div class="col-sm-12">
-                                    <?= $form->field($model, 'title')->textInput()->hint('模块的名称, 由于显示在用户的模块列表中. 不要超过20个字符 ') ?>
-                                    <?= $form->field($model, 'name')->textInput()->hint('模块标识符, 应对应模块文件夹的名称, 系统系统按照此标识符查找模块定义, 只能英文和下划线组成 ') ?>
+                                    <?= $form->field($model, 'title')->textInput()->hint('模块的名称, 由于显示在用户的模块列表中. 不要超过20个字符') ?>
+                                    <?= $form->field($model, 'name')->textInput()->hint('模块标识符, 应对应模块文件夹的名称, 系统系统按照此标识符查找模块定义, 只能英文和下划线组成，建议大写驼峰，例如：RfArticle') ?>
                                     <?= $form->field($model, 'group')->dropDownList(\yii\helpers\ArrayHelper::map($addonsGroup,'name','title')) ?>
                                     <?= $form->field($model, 'version')->textInput()->hint('模块当前版本, 此版本号用于模块的版本更新')?>
                                     <?= $form->field($model, 'brief_introduction')->textInput() ?>
                                     <?= $form->field($model, 'description')->textarea()->hint('模块详细描述, 详细介绍模块的功能和使用方法 ')?>
                                     <?= $form->field($model, 'author')->textInput()?>
-                                    <?= $form->field($model, 'is_mini_program')->checkbox()->hint('此模块是否支持小程序') ?>
-                                    <?= $form->field($model, 'is_setting')->checkbox()->hint('此模块是否存在全局的配置参数') ?>
-                                    <?= $form->field($model, 'is_hook')->checkbox()->hint('此模块是否存在钩子') ?>
+                                    <?= $form->field($model, 'is_mini_program')->checkbox()->hint('勾选后将会生成api目录') ?>
+                                    <?= $form->field($model, 'is_setting')->checkbox()->hint('勾选后会创建全局配置功能') ?>
+                                    <?= $form->field($model, 'is_hook')->checkbox()->hint('勾选后会创建对应的钩子方法') ?>
                                     <div class="hr-line-dashed"></div>
                                     <?= $form->field($model, 'wechat_message')->checkboxList(\common\models\wechat\Account::$typeExplanation)->hint('当前模块能够直接处理的消息类型(没有上下文的对话语境, 能直接处理消息并返回数据). 如果公众平台传递过来的消息类型不在设定的类型列表中, 那么系统将不会把此消息路由至此模块')?>
                                     <div class="alert-warning alert">

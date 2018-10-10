@@ -44,7 +44,11 @@ class ConfigController extends SController
      */
     public function actionIndex($cate_id = '')
     {
-        $data = Config::find()->andFilterWhere(['cate_id' => $cate_id]);
+        $keyword = Yii::$app->request->get('keyword', '');
+        $data = Config::find()
+            ->orFilterWhere(['cate_id' => $cate_id])
+            ->orFilterWhere(['like', 'title', $keyword])
+            ->orFilterWhere(['like', 'name', $keyword]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('cate_id asc,sort asc')
@@ -56,6 +60,7 @@ class ConfigController extends SController
             'models' => $models,
             'pages' => $pages,
             'cate_id' => $cate_id,
+            'keyword' => $keyword
         ]);
     }
 
@@ -79,8 +84,8 @@ class ConfigController extends SController
             }
 
             return $model->save()
-                ? $this->redirect(['index'])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
+                ? $this->redirect(Yii::$app->request->referrer)
+                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(Yii::$app->request->referrer), 'error');
         }
 
         return $this->renderAjax($this->action->id, [

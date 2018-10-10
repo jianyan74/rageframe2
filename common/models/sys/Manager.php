@@ -2,7 +2,6 @@
 namespace common\models\sys;
 
 use Yii;
-use backend\modules\sys\models\AuthAssignment;
 
 /**
  * This is the model class for table "{{%sys_manager}}".
@@ -123,7 +122,7 @@ class Manager extends \common\models\common\User
      */
     public function getAssignment()
     {
-        return $this->hasOne(\common\models\sys\AuthAssignment::className(), ['user_id' => 'id']);
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
     /**

@@ -22,11 +22,11 @@ class NotifyController extends Controller
      */
     public $enableCsrfValidation = false;
 
-    protected $_config;
+    protected $config;
 
     public function init()
     {
-        $this->_config = Yii::$app->debris->configAll();
+        $this->config = Yii::$app->debris->configAll();
 
         parent::init();
     }
@@ -40,9 +40,9 @@ class NotifyController extends Controller
     {
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $this->_config['wechat_appid'],
-            'mch_id' => $this->_config['wechat_mchid'],
-            'key' => $this->_config['wechat_api_key'], // API 密钥
+            'app_id' => $this->config['wechat_appid'],
+            'mch_id' => $this->config['wechat_mchid'],
+            'key' => $this->config['wechat_api_key'], // API 密钥
         ], Yii::$app->params['wechatPaymentConfig']);
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)
@@ -101,9 +101,9 @@ class NotifyController extends Controller
     {
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $this->_config['miniprogram_appid'],
-            'mch_id' => $this->_config['wechat_mchid'],
-            'key' => $this->_config['wechat_api_key'], // API 密钥
+            'app_id' => $this->config['miniprogram_appid'],
+            'mch_id' => $this->config['wechat_mchid'],
+            'key' => $this->config['wechat_api_key'], // API 密钥
         ], Yii::$app->params['wechatPaymentConfig']);
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)

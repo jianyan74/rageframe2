@@ -9,6 +9,7 @@
 - 访问微信应用 出现 redirect_url 参数错误
 - 小程序Post提交服务器无法接收到数据
 - Windows环境打开后台微信报错
+- 如何配置权限管理的路由和菜单绑定
 
 #### 出现 vendor/bower/jquery/dist 找不到的解决方案
 
@@ -43,11 +44,11 @@ composer global require "fxp/composer-asset-plugin:^1.4.0"
 
 $_POST 只能接收 Content-Type 为 application/x-www-form-urlencoded 和 multipart/form-data 的 POST 数据。
 
-如果你要用 $_POST 的话，你就改一下这里：
+如果你要用 $_POST 的话，你就改一下 Content-Type 这里替换为上面的其中一个：
 
 ```
 header: {
-              'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
  }
 ```
 
@@ -56,3 +57,7 @@ header: {
 #### Windows环境打开后台微信报错
 
 注意查看[环境搭建](start-environment.md)的Windows微信环境配置
+
+#### 如何配置权限管理的路由和菜单绑定
+
+只要把权限路由和菜单的路由统一，就能自由控制菜单显示了，比如菜单路由 menu-sys 那么权限这边也要相对应的加上 menu-sys

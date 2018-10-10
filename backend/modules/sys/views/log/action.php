@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                             <?= $model->country; ?>·<?= $model->provinces; ?>·<?= $model->city; ?>
                                         <?php } ?>
                                     </td>
-                                    <td><?= $model->remark; ?></td>
+                                    <td><?= \yii\helpers\Html::encode($model->remark); ?></td>
                                     <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                     <td>
                                         <a href="<?= Url::to(['action-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>

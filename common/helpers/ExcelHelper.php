@@ -141,19 +141,21 @@ class ExcelHelper
         $emptyRowNum = 0;
         for ($i = 0; $i < $sheetCount; $i++)
         {
-            $currentSheet = $spreadsheet->getSheet($i);// 读取excel文件中的第一个工作表
-            $allColumn = $currentSheet->getHighestColumn();// 取得最大的列号
+            $currentSheet = $spreadsheet->getSheet($i); // 读取excel文件中的第一个工作表
+            $allColumn = $currentSheet->getHighestColumn(); // 取得最大的列号
+            $allColumn = Coordinate::columnIndexFromString($allColumn); // 由列名转为列数('AB'->28)
             $allRow = $currentSheet->getHighestRow(); // 取得一共有多少行
 
             $arr = [];
             for ($currentRow = $startRow; $currentRow <= $allRow; $currentRow++)
             {
-                // 从第A列开始输出
-                for ($currentColumn = 'A'; $currentColumn <= $allColumn; $currentColumn++)
+                // 从第1列开始输出
+                for ($currentColumn = 1; $currentColumn <= $allColumn; $currentColumn++)
                 {
-                    $val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue();
+                    $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
                     $arr[$currentRow][] = trim($val);
                 }
+
                 $arr[$currentRow] = array_filter($arr[$currentRow]);
                 // 统计连续空行
                 if (empty($arr[$currentRow]) && $emptyRowNum <= 50)
@@ -171,6 +173,7 @@ class ExcelHelper
                     break;
                 }
             }
+
             $excleDatas[$i] = $arr; // 多个sheet的数组的集合
         }
 

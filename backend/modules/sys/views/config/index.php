@@ -18,6 +18,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="tab-content">
             <div class="tab-pane active">
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="input-group m-b">
+                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入标题/标识'?>"/>
+                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <table class="table table-hover">
                             <thead>

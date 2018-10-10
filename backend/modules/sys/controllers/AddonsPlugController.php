@@ -336,44 +336,44 @@ class AddonsPlugController extends SController
             FileHelper::createDirOrFiles($files);
 
             // 写入控制器
-            file_put_contents("{$addonDir}backend/controllers/DefaultController.php", $this->renderPartial('template\DefaultController',['model' => $model, 'appID' => 'backend']));
-            file_put_contents("{$addonDir}frontend/controllers/DefaultController.php", $this->renderPartial('template\DefaultController',['model' => $model, 'appID' => 'frontend']));
-            file_put_contents("{$addonDir}wechat/controllers/DefaultController.php", $this->renderPartial('template\DefaultController',['model' => $model, 'appID' => 'wechat']));
-            $model->is_mini_program == true && file_put_contents("{$addonDir}api/controllers/DefaultController.php", $this->renderPartial('template\ApiDefaultController',['model' => $model, 'appID' => 'api',]));
+            file_put_contents("{$addonDir}backend/controllers/DefaultController.php", $this->renderPartial('template/DefaultController',['model' => $model, 'appID' => 'backend']));
+            file_put_contents("{$addonDir}frontend/controllers/DefaultController.php", $this->renderPartial('template/DefaultController',['model' => $model, 'appID' => 'frontend']));
+            file_put_contents("{$addonDir}wechat/controllers/DefaultController.php", $this->renderPartial('template/DefaultController',['model' => $model, 'appID' => 'wechat']));
+            $model->is_mini_program == true && file_put_contents("{$addonDir}api/controllers/DefaultController.php", $this->renderPartial('template/ApiDefaultController',['model' => $model, 'appID' => 'api',]));
 
             // 写入默认model
-            file_put_contents("{$addonDir}common/models/DefaultModel.php", $this->renderPartial('template\DefaultModel',['model' => $model, 'appID' => 'backend']));
+            file_put_contents("{$addonDir}common/models/DefaultModel.php", $this->renderPartial('template/DefaultModel',['model' => $model, 'appID' => 'backend']));
 
             // 资源目录
             file_put_contents("{$addonDir}resources/.gitkeep", '*');
 
             // 写入默认视图
-            file_put_contents("{$addonDir}backend/views/default/index.php", $this->renderPartial('template\view\index',['model' => $model, 'appID' => 'backend']));
-            file_put_contents("{$addonDir}frontend/views/default/index.php", $this->renderPartial('template\view\index',['model' => $model, 'appID' => 'frontend']));
-            file_put_contents("{$addonDir}wechat/views/default/index.php", $this->renderPartial('template\view\index',['model' => $model, 'appID' => 'wechat']));
+            file_put_contents("{$addonDir}backend/views/default/index.php", $this->renderPartial('template/view/index',['model' => $model, 'appID' => 'backend']));
+            file_put_contents("{$addonDir}frontend/views/default/index.php", $this->renderPartial('template/view/index',['model' => $model, 'appID' => 'frontend']));
+            file_put_contents("{$addonDir}wechat/views/default/index.php", $this->renderPartial('template/view/index',['model' => $model, 'appID' => 'wechat']));
 
             // 写入前台/后台/微信资源
-            file_put_contents("{$addonDir}assets/BackendAsset.php", $this->renderPartial('template\Asset',['model' => $model, 'appID' => 'Backend']));
-            file_put_contents("{$addonDir}assets/FrontendAsset.php", $this->renderPartial('template\Asset',['model' => $model, 'appID' => 'Frontend']));
-            file_put_contents("{$addonDir}assets/WechatAsset.php", $this->renderPartial('template\Asset',['model' => $model, 'appID' => 'Wechat']));
+            file_put_contents("{$addonDir}assets/BackendAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Backend']));
+            file_put_contents("{$addonDir}assets/FrontendAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Frontend']));
+            file_put_contents("{$addonDir}assets/WechatAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Wechat']));
 
             // 参数设置支持
             if($model->is_setting == true)
             {
                 // 写入设置
-                file_put_contents("{$addonDir}backend/controllers/SettingController.php", $this->renderPartial('template\SettingController', ['model' => $model, 'appID' => 'backend']));
-                file_put_contents("{$addonDir}common/models/SettingForm.php", $this->renderPartial('template\SettingFormModel', ['model' => $model, 'appID' => 'common']));
-                file_put_contents("{$addonDir}backend/views/setting/hook.php", $this->renderPartial('template\view\hook', ['model' => $model]));
-                file_put_contents("{$addonDir}backend/views/setting/display.php", $this->renderPartial('template\view\display', ['model' => $model]));
+                file_put_contents("{$addonDir}backend/controllers/SettingController.php", $this->renderPartial('template/SettingController', ['model' => $model, 'appID' => 'backend']));
+                file_put_contents("{$addonDir}common/models/SettingForm.php", $this->renderPartial('template/SettingFormModel', ['model' => $model, 'appID' => 'common']));
+                file_put_contents("{$addonDir}backend/views/setting/hook.php", $this->renderPartial('template/view/hook', ['model' => $model]));
+                file_put_contents("{$addonDir}backend/views/setting/display.php", $this->renderPartial('template/view/display', ['model' => $model]));
             }
             // 写入微信消息回复
             if($model->wechat_message == true)
             {
-                file_put_contents("{$addonDir}AddonMessage.php", $this->renderPartial('template\AddonMessage',['model' => $model]));
+                file_put_contents("{$addonDir}AddonMessage.php", $this->renderPartial('template/AddonMessage',['model' => $model]));
             }
 
             // 写入配置
-            file_put_contents("{$addonDir}AddonConfig.php", $this->renderPartial('template\AddonConfig',[
+            file_put_contents("{$addonDir}AddonConfig.php", $this->renderPartial('template/AddonConfig',[
                 'model' => $model,
                 'wechatMessage' => $wechatMessage,
                 'menus' => isset($data['bindings']['menu']) ? $data['bindings']['menu'] : [],
@@ -381,9 +381,9 @@ class AddonsPlugController extends SController
             ]));
 
             // 写入文件
-            $model['install'] && file_put_contents("{$addonDir}/{$model['install']}", $this->renderPartial('template\install',['model' => $model]));
-            $model['uninstall'] && file_put_contents("{$addonDir}/{$model['uninstall']}", $this->renderPartial('template\uninstall',['model' => $model]));
-            $model['upgrade'] && file_put_contents("{$addonDir}/{$model['upgrade']}", $this->renderPartial('template\upgrade',['model' => $model]));
+            $model['install'] && file_put_contents("{$addonDir}/{$model['install']}", $this->renderPartial('template/install',['model' => $model]));
+            $model['uninstall'] && file_put_contents("{$addonDir}/{$model['uninstall']}", $this->renderPartial('template/uninstall',['model' => $model]));
+            $model['upgrade'] && file_put_contents("{$addonDir}/{$model['upgrade']}", $this->renderPartial('template/upgrade',['model' => $model]));
 
             return $this->message('模块创建成功', $this->redirect(['install']));
         }

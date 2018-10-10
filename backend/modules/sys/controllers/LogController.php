@@ -110,9 +110,8 @@ class LogController extends SController
      */
     public function actionPayView($id)
     {
-        $model = PayLog::find()->where(['id' => $id])->one();
         return $this->renderAjax($this->action->id, [
-            'model' => $model,
+            'model' => PayLog::find()->where(['id' => $id])->one(),
         ]);
     }
 }

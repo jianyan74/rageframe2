@@ -114,7 +114,7 @@ class AddonConfig
             'icon' => ''
         ],
         [
-            'title' => '消息',
+            'title' => '消息队列',
             'route' => 'queue/index',
             'icon' => ''
         ],

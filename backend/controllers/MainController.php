@@ -44,43 +44,73 @@ class MainController extends MController
      */
     public function actionClearCache()
     {
+        $status = false;
         // 删除后台文件缓存
         Yii::$app->cache->flush();
 
-        // 清理前台文件缓存
         $frontend_cache_path = Yii::getAlias('@frontend') . '/runtime/cache';
+        $wechat_cache_path = Yii::getAlias('@wechat') . '/runtime/cache';
+        $api_cache_path = Yii::getAlias('@api') . '/runtime/cache';
+        $console_cache_path = Yii::getAlias('@console') . '/runtime/cache';
+
+        // 清理前台文件缓存
         if (is_dir($frontend_cache_path))
         {
-            $cache = new FileCache();
-            $cache->cachePath = $frontend_cache_path;
-            $cache->gc(true, false);
+            if (is_writable($frontend_cache_path))
+            {
+                $cache = new FileCache();
+                $cache->cachePath = $frontend_cache_path;
+                $cache->gc(true, false);
+            }
+            else
+            {
+                $status = $frontend_cache_path;
+            }
         }
 
         // 清理微信文件缓存
-        $wechat_cache_path = Yii::getAlias('@wechat') . '/runtime/cache';
         if (is_dir($wechat_cache_path))
         {
-            $cache = new FileCache();
-            $cache->cachePath = $wechat_cache_path;
-            $cache->gc(true, false);
+            if (is_writable($wechat_cache_path))
+            {
+                $cache = new FileCache();
+                $cache->cachePath = $wechat_cache_path;
+                $cache->gc(true, false);
+            }
+            else
+            {
+                $status = $wechat_cache_path;
+            }
         }
 
         // 清理api文件缓存
-        $api_cache_path = Yii::getAlias('@api') . '/runtime/cache';
         if (is_dir($api_cache_path))
         {
-            $cache = new FileCache();
-            $cache->cachePath = $api_cache_path;
-            $cache->gc(true, false);
+            if (is_writable($api_cache_path))
+            {
+                $cache = new FileCache();
+                $cache->cachePath = $api_cache_path;
+                $cache->gc(true, false);
+            }
+            else
+            {
+                $status = $api_cache_path;
+            }
         }
 
         // 清理控制台文件缓存
-        $console_cache_path = Yii::getAlias('@console') . '/runtime/cache';
         if (is_dir($console_cache_path))
         {
-            $cache = new FileCache();
-            $cache->cachePath = $console_cache_path;
-            $cache->gc(true, false);
+            if (is_writable($console_cache_path))
+            {
+                $cache = new FileCache();
+                $cache->cachePath = $console_cache_path;
+                $cache->gc(true, false);
+            }
+            else
+            {
+                $status = $console_cache_path;
+            }
         }
 
         // 删除备份缓存
@@ -89,7 +119,7 @@ class MainController extends MController
         array_map("unlink", glob($lock));
 
         return $this->render('clear-cache', [
-
+            'status' => $status
         ]);
     }
 }
