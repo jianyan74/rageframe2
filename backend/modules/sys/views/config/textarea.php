@@ -4,9 +4,9 @@ use common\enums\StatusEnum;
 ?>
 
 <div class="form-group">
-    <?php echo Html::label($row['title'], $row['name'], ['class' => 'control-label demo']);?>
+    <?= Html::label($row['title'], $row['name'], ['class' => 'control-label demo']);?>
     <?php if($row['is_hide_remark'] != StatusEnum::ENABLED){ ?>
-        (<?php echo $row['remark']?>)
+        (<?= $row['remark']?>)
     <?php } ?>
-    <?php echo Html::textarea('config[' . $row['name'] . ']', $row['value'], ['class' => 'form-control']);?>
+    <?= Html::textarea('config[' . $row['name'] . ']', $row['value'], ['class' => 'form-control']);?>
 </div>

@@ -5,11 +5,11 @@ use common\enums\StatusEnum;
 ?>
 
 <div class="form-group">
-    <?php echo Html::label($row['title'],$row['name'],['class' => 'control-label demo']);?>
+    <?= Html::label($row['title'],$row['name'],['class' => 'control-label demo']);?>
     <?php if($row['is_hide_remark'] != StatusEnum::ENABLED){ ?>
-        (<?php echo $row['remark']?>)
+        (<?= $row['remark']?>)
     <?php } ?>
-    <?php echo \common\widgets\ueditor\UEditor::widget([
+    <?= \common\widgets\ueditor\UEditor::widget([
         'id' => "config[".$row['name']."]",
         'attribute' => $row['name'],
         'name' => $row['name'],

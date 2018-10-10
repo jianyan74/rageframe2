@@ -4,7 +4,7 @@ use common\helpers\ArrayHelper;
 
 ?>
 <?php foreach($models as $k => $model){ ?>
-    <tr id=<?= $model['key'] ?> name="<?= $model['name'] ?>" class="<?php echo $parent_key ?>">
+    <tr id=<?= $model['key'] ?> name="<?= $model['name'] ?>" class="<?= $parent_key ?>">
         <td>
             <?php if (!empty($model['-'])){ ?>
                 <div class="fa fa-minus-square cf" style="cursor:pointer;"></div>

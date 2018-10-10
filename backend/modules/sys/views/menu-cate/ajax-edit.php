@@ -17,11 +17,11 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基础设置</h4>
     </div>
     <div class="modal-body">
-        <?php echo $form->field($model, 'title')->textInput() ?>
-        <?php echo $form->field($model, 'icon')->textInput()->hint('详情请参考：<a href="http://fontawesome.dashgame.com" target="_blank">http://fontawesome.dashgame.com</a>')?>
-        <?php echo $form->field($model, 'sort')->textInput() ?>
-        <?php echo $form->field($model, 'is_default_show')->radioList(['1' => '是','0' => '否'])->hint('默认菜单导航显示') ?>
-        <?php echo $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']) ?>
+        <?= $form->field($model, 'title')->textInput() ?>
+        <?= $form->field($model, 'icon')->textInput()->hint('详情请参考：<a href="http://fontawesome.dashgame.com" target="_blank">http://fontawesome.dashgame.com</a>')?>
+        <?= $form->field($model, 'sort')->textInput() ?>
+        <?= $form->field($model, 'is_default_show')->radioList(['1' => '是','0' => '否'])->hint('默认菜单导航显示') ?>
+        <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

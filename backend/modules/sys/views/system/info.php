@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         </tr>
                         <tr>
                             <td width="150px">Yii2版本</td>
-                            <td><?php echo Yii::getVersion(); ?></td>
+                            <td><?= Yii::getVersion(); ?></td>
                         </tr>
                         <tr>
                             <td>官网</td>

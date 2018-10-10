@@ -4,6 +4,7 @@
 
 - 继承的基类说明
 - 速率和参数配置
+- 不需要速率控制设置
 - Url权限配置
 - 方法权限验证
 - 返回数据格式修改
@@ -41,6 +42,11 @@ return [
     'user.pageSize' => 10,
 ];
 ```
+
+### 不需要速率控制设置
+
+找到 `common\models\common\AccessToken` 让其直接继承 `common\models\member\MemberInfo` 即可
+
 ### Url权限配置
 
 > 系统默认都是严格校验url方式注意在 `api/config/main.php的urlManager`里添加规则，否则访问都是404。

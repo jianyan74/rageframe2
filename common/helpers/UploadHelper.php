@@ -173,8 +173,7 @@ class UploadHelper
                         {
                             // $aliasName = StringHelper::getAliasUrl($fullPathName, 'compress');
                             Image::thumbnail($fullPathName, $imgInfo[0] , $imgInfo[1])
-                                ->save($fullPathName, ['quality' => $item]
-                                );
+                                ->save($fullPathName, ['quality' => $item]);
 
                             break;
                         }

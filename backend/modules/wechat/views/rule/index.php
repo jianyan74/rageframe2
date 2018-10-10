@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <div class="btn-group">
                         <a class="btn <?= !$module ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index'])?>">全部</a>
                         <?php foreach ($modules as $key => $mo){ ?>
-                            <a class="btn <?php echo $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module'=>$key])?>"><?= $mo?></a>
+                            <a class="btn <?= $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module'=>$key])?>"><?= $mo?></a>
                         <?php } ?>
                     </div>
                     <a class="btn btn-primary btn-xs pull-right h6" onclick="openEdit()">
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script type="text/html"  id="editModel">
     <?php foreach($modules as $key => $module){ ?>
         <div class="col-lg-12 text-center" style="padding: 10px">
-            <a href="<?php echo Url::to(['edit', 'module' => $key]); ?>" class="btn btn-w-m btn-info"><?php echo $module; ?></a>
+            <a href="<?= Url::to(['edit', 'module' => $key]); ?>" class="btn btn-w-m btn-info"><?= $module; ?></a>
         </div>
     <?php } ?>
 </script>

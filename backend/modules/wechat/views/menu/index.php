@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <a class="btn btn-primary btn-xs" id="getNewMenu">
                             <i class="fa fa-cloud-download"></i> 同步
                         </a>
-                        <a class="btn btn-primary btn-xs" href="<?php echo Url::to(['edit','type'=> $type])?>">
+                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['edit','type'=> $type])?>">
                             <i class="fa fa-plus"></i> 创建
                         </a>
                     </div>
@@ -42,8 +42,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <tbody>
                                     <?php foreach($models as $model){ ?>
                                         <tr>
-                                            <td><?php echo $model->id?></td>
-                                            <td><?php echo $model->title?></td>
+                                            <td><?= $model->id?></td>
+                                            <td><?= $model->title?></td>
                                             <td>
                                                 <?php if($model->type == 1){ ?>
                                                     全部粉丝
@@ -59,15 +59,15 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                 <?php if($model->status == 1){ ?>
                                                     <font color="green">菜单生效中</font>
                                                 <?php }else{ ?>
-                                                    <a href="<?php echo Url::to(['save','id' => $model->id])?>" class="color-default">生效并置顶</a>
+                                                    <a href="<?= Url::to(['save','id' => $model->id])?>" class="color-default">生效并置顶</a>
                                                 <?php } ?>
                                             </td>
-                                            <td><?php echo Yii::$app->formatter->asDatetime($model->created_at)?></td>
+                                            <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                             <td>
 
-                                                <a href="<?php echo Url::to(['edit','id'=>$model->id,'type' => $model->type])?>"><span class="btn btn-info btn-sm"><?php echo $model->type == 2 ? '查看': '编辑';?></span></a>
+                                                <a href="<?= Url::to(['edit','id'=>$model->id,'type' => $model->type])?>"><span class="btn btn-info btn-sm"><?= $model->type == 2 ? '查看': '编辑';?></span></a>
                                                 <?php if($model->status == 0 || $model->type == 2){ ?>
-                                                    <a href="<?php echo Url::to(['delete','id'=>$model->id,'type' => $model->type])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
+                                                    <a href="<?= Url::to(['delete','id'=>$model->id,'type' => $model->type])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                                 <?php } ?>
                                             </td>
                                         </tr>
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 </table>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <?php echo LinkPager::widget([
+                                        <?= LinkPager::widget([
                                             'pagination' => $pages,
                                             'maxButtonCount' => 5,
                                             'firstPageLabel' => "首页",

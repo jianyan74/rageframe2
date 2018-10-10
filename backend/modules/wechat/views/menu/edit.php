@@ -183,7 +183,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         };
 
-        var list = '<?php echo json_encode(unserialize($model->menu_data)) ?>';
+        var list = '<?= json_encode(unserialize($model->menu_data)) ?>';
         list = JSON.parse(list);
 
         for (var i=0; i<list.length; i++){
@@ -330,8 +330,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     var prevent = true;
                     if(prevent){
                         prevent = false;
-                        var id = '<?php echo $model->id ?>';
-                        var type = '<?php echo $type ?>';
+                        var id = '<?= $model->id ?>';
+                        var type = '<?= $type ?>';
                         var title = $('#menu-title').val();
                         var sex = $('#menu-sex').val();
                         var language = $('#menu-language').val();

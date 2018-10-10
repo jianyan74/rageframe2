@@ -6,7 +6,7 @@ $this->title = '个人中心';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<?php echo $this->render('_form', [
+<?= $this->render('_form', [
         'model' => $model,
         'backBtn' => '',
 ]) ?>

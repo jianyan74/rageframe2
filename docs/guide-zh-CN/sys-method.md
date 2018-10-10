@@ -25,7 +25,7 @@
 Yii::$app->debris->config($fildName);
 
 // 强制不从缓存读取
-Yii::$app->debris->config("fildName", true);
+Yii::$app->debris->config($fildName, true);
 ```
 
 ##### 获取全部配置信息

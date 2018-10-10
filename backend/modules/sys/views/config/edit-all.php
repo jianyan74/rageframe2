@@ -15,23 +15,23 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <ul class="nav nav-tabs">
                         <?php foreach ($cates as $k => $cate){ ?>
                             <li <?php if($k == 0){ ?>class="active"<?php } ?>>
-                                <a aria-expanded="false" href="#tab-<?php echo $cate['id'] ?>" data-toggle="tab"> <?php echo $cate['title'] ?></a>
+                                <a aria-expanded="false" href="#tab-<?= $cate['id'] ?>" data-toggle="tab"> <?= $cate['title'] ?></a>
                             </li>
                         <?php } ?>
                     </ul>
                     <div class="tab-content ">
                         <?php foreach ($cates as $k => $cate){ ?>
-                            <div id="tab-<?php echo $cate['id'] ?>" class="tab-pane <?php if($k == 0){ ?>active<?php } ?>">
+                            <div id="tab-<?= $cate['id'] ?>" class="tab-pane <?php if($k == 0){ ?>active<?php } ?>">
                                 <div class="panel-body">
                                     <?php $form = ActiveForm::begin(['id' => 'form-tab-' . $cate['id']]); ?>
                                     <?php foreach ($cate['-'] as $item){ ?>
                                         <h2 style="font-size: 20px;padding-top: 0;margin-top: 0">
                                             <i class="fa fa-share-alt"></i>
-                                            <?php echo $item['title']?>
+                                            <?= $item['title']?>
                                         </h2>
                                         <div class="col-sm-12" style="padding-left: 26px;">
                                             <?php foreach ($item['config'] as $row){ ?>
-                                                <?php echo $this->render($row['type'], [
+                                                <?= $this->render($row['type'], [
                                                     'row' => $row,
                                                     'option' => StringHelper::parseAttr($row['extra']),
                                                 ]) ?>
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <?php } ?>
                                     <div class="form-group">
                                         <div class="col-sm-12 text-center">
-                                            <span type="submit" class="btn btn-primary" onclick="present(<?php echo $cate['id'] ?>)">保存</span>
+                                            <span type="submit" class="btn btn-primary" onclick="present(<?= $cate['id'] ?>)">保存</span>
                                         </div>
                                     </div>
                                     <?php ActiveForm::end(); ?>
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <h5>单击标题名称获取配置标识</h5>
                         <div class="hr-line-dashed"></div>
                         <h5 class="tag-title"></h5>
-                        <?php echo Html::input('text','demo','',['class' => 'form-control','id'=>'demo','readonly' => 'readonly']);?>
+                        <?= Html::input('text','demo','',['class' => 'form-control','id'=>'demo','readonly' => 'readonly']);?>
                         <div class="hr-line-dashed"></div>
                         <div class="clearfix">当前显示 ： <span id="demo-title">无</span></div>
                     </div>
@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 
         $.ajax({
             type:"post",
-            url:"<?php echo Url::to(['update-info'])?>",
+            url:"<?= Url::to(['update-info'])?>",
             dataType: "json",
             data: values,
             success: function(data){

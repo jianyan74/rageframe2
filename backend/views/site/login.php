@@ -21,8 +21,8 @@ use yii\captcha\Captcha;
         <div class="col-sm-6">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
             <p class="no-margins">欢迎登录 <?= Yii::$app->params['adminTitle']; ?></p>
-            <?php echo $form->field($model, 'username')->textInput(['autofocus' => true,'placeholder' => '用户名','class' => 'form-control uname'])->label(false) ?>
-            <?php echo $form->field($model, 'password')->passwordInput(['placeholder' => '密码','class' => 'form-control pword m-b'])->label(false) ?>
+            <?= $form->field($model, 'username')->textInput(['autofocus' => true,'placeholder' => '用户名','class' => 'form-control uname'])->label(false) ?>
+            <?= $form->field($model, 'password')->passwordInput(['placeholder' => '密码','class' => 'form-control pword m-b'])->label(false) ?>
 
             <?php if ($model->scenario == 'captchaRequired'){ ?>
                 <?= $form->field($model,'verifyCode')->widget(Captcha::className(),[
@@ -46,12 +46,12 @@ use yii\captcha\Captcha;
             <div class="form-group text-left">
                 <div class="checkbox i-checks">
                     <label class="no-padding">
-                        <?php echo $field->parts['{input}']; ?><i></i> <?php echo $field->parts['{labelTitle}'];?>
+                        <?= $field->parts['{input}']; ?><i></i> <?= $field->parts['{labelTitle}'];?>
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <?php echo Html::submitButton('立即登录', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('立即登录', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
             </div>
             <?php ActiveForm::end(); ?>
         </div>
@@ -59,7 +59,7 @@ use yii\captcha\Captcha;
     </div>
     <div class="signup-footer">
         <div class="text-center">
-            <?php echo Yii::$app->debris->config('web_copyright'); ?>
+            <?= Yii::$app->debris->config('web_copyright'); ?>
         </div>
     </div>
 </div>

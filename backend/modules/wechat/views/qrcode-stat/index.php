@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <form action="" method="get" class="form-horizontal" role="form" id="form">
                                         <div class="col-sm-4">
                                             <div class="input-group drp-container">
-                                                <?php echo DateRangePicker::widget([
+                                                <?= DateRangePicker::widget([
                                                         'name' => 'queryDate',
                                                         'value' => $from_date . '-' . $to_date,
                                                         'readonly' => 'readonly',

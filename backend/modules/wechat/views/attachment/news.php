@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <?php echo $this->render('_nav', [
+    <?= $this->render('_nav', [
         'allMediaType' => $allMediaType,
         'mediaType' => $mediaType,
         'count' => $pages->totalCount
@@ -97,8 +97,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         });
 
         // 弹出框选择新建图文类型
-        var postType1Link = "<?php echo Url::to(['news-edit','model' => 'perm', 'link_type' => 1])?>";
-        var postType2Link = "<?php echo Url::to(['news-edit','model' => 'perm', 'link_type' => 2])?>";
+        var postType1Link = "<?= Url::to(['news-edit','model' => 'perm', 'link_type' => 1])?>";
+        var postType2Link = "<?= Url::to(['news-edit','model' => 'perm', 'link_type' => 2])?>";
         $('#createPostBtn').click(function(){
             layer.open({
                 type: 1,

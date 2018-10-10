@@ -38,11 +38,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                             <img alt="image" class="img-rounded m-t-xs img-responsive" src="<?= AddonHelper::getAddonIcon($vo['name']); ?>" width="64" height="64">
                                         </td>
                                         <td>
-                                            <h4><?php echo $vo['title'] ?></h4>
-                                            <small>标识 : <?php echo $vo['name'] ?></small>
+                                            <h4><?= $vo['title'] ?></h4>
+                                            <small>标识 : <?= $vo['name'] ?></small>
                                         </td>
-                                        <td><?php echo $vo['version'] ?></td>
-                                        <td><?php echo $vo['author'] ?></td>
+                                        <td><?= $vo['version'] ?></td>
+                                        <td><?= $vo['author'] ?></td>
                                         <td>
                                             <?php if($vo['is_mini_program'] == true){ ?>
                                                 <span class="label label-info">小程序</span>
@@ -57,19 +57,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                                 <span class="label label-info">钩子</span>
                                             <?php } ?>
                                         </td>
-                                        <td><?php echo $vo['brief_introduction'] ?> <a href="javascript:void(0);" class="show-description">详细介绍</a></td>
+                                        <td><?= $vo['brief_introduction'] ?> <a href="javascript:void(0);" class="show-description">详细介绍</a></td>
                                         <td>
-                                            <a href="<?php echo Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置');return false;"><span class="btn btn-info btn-sm">更新配置</span></a>
-                                            <a href="<?php echo Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-info btn-sm">更新数据</span></a>
-                                            <a href="<?php echo Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
+                                            <a href="<?= Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置');return false;"><span class="btn btn-info btn-sm">更新配置</span></a>
+                                            <a href="<?= Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-info btn-sm">更新数据</span></a>
+                                            <a href="<?= Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
                                             <?= \common\helpers\HtmlHelper::statusSpan($vo['status']) ?>
-                                            <a href="<?php echo Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
+                                            <a href="<?= Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
                                         </td>
                                     </tr>
                                     <tr id ="description-<?= $vo['id'] ?>" style="display: none">
                                         <td></td>
                                         <td colspan="6">
-                                            <?php echo $vo['description'] ?>
+                                            <?= $vo['description'] ?>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -138,7 +138,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         $('#listAddons').html('');
         $.ajax({
             type : "get",
-            url : "<?php echo  Url::to(['uninstall'])?>",
+            url : "<?=  Url::to(['uninstall'])?>",
             dataType : "json",
             data : {keyword:value},
             success : function(data){

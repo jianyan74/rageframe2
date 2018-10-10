@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="input-group drp-container">
-                                        <?php echo DateRangePicker::widget([
+                                        <?= DateRangePicker::widget([
                                                 'name' => 'queryDate',
                                                 'value' => $from_date . '-' . $to_date,
                                                 'readonly' => 'readonly',

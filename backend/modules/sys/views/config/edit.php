@@ -17,15 +17,15 @@ $form = ActiveForm::begin([
     <h4 class="modal-title">基本信息</h4>
 </div>
 <div class="modal-body">
-    <?php echo $form->field($model, 'title')->textInput() ?>
-    <?php echo $form->field($model, 'name')->textInput()->hint('注意：标识唯一') ?>
-    <?php echo $form->field($model, 'sort')->textInput()?>
-    <?php echo $form->field($model, 'type')->dropDownList($configTypeList) ?>
-    <?php echo $form->field($model, 'cate_id')->dropDownList($cates, ['prompt' => '请选择分类',]) ?>
-    <?php echo $form->field($model, 'extra')->textarea()->hint('如果是枚举型 需要配置该项') ?>
-    <?php echo $form->field($model, 'remark')->textarea() ?>
-    <?php echo $form->field($model, 'is_hide_remark')->checkbox() ?>
-    <?php echo $form->field($model, 'status')->radioList(['1' => '启用', '0' => '禁用']) ?>
+    <?= $form->field($model, 'title')->textInput() ?>
+    <?= $form->field($model, 'name')->textInput()->hint('注意：标识唯一') ?>
+    <?= $form->field($model, 'sort')->textInput()?>
+    <?= $form->field($model, 'type')->dropDownList($configTypeList) ?>
+    <?= $form->field($model, 'cate_id')->dropDownList($cates, ['prompt' => '请选择分类',]) ?>
+    <?= $form->field($model, 'extra')->textarea()->hint('如果是枚举型 需要配置该项') ?>
+    <?= $form->field($model, 'remark')->textarea() ?>
+    <?= $form->field($model, 'is_hide_remark')->checkbox() ?>
+    <?= $form->field($model, 'status')->radioList(['1' => '启用', '0' => '禁用']) ?>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="form-group">
                             <label class="col-xs-12 col-sm-2 col-md-2 control-label">日期范围</label>
                             <div class="col-sm-8 input-group">
-                                <?php echo DateRangePicker::widget([
+                                <?= DateRangePicker::widget([
                                         'name' => 'queryDate',
                                         'value' => $from_date . '-' . $to_date,
                                         'readonly' => 'readonly',

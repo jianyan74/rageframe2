@@ -8,7 +8,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
-        <?php echo $this->render('_nav', [
+        <?= $this->render('_nav', [
             'type' => 'api'
         ]) ?>
         <div class="tab-content">
@@ -33,14 +33,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             </thead>
                             <tbody>
                             <?php foreach($models as $model){ ?>
-                                <tr id = <?php echo $model->id; ?>>
-                                    <td><?php echo $model->id; ?></td>
-                                    <td><?php echo $model->method; ?></td>
+                                <tr id = <?= $model->id; ?>>
+                                    <td><?= $model->id; ?></td>
+                                    <td><?= $model->method; ?></td>
                                     <td><?= isset($model->member->username) ? $model->member->username : '游客' ?></td>
-                                    <td><?php echo $model->module; ?></td>
-                                    <td><?php echo $model->controller; ?>/<?php echo $model->action; ?></td>
-                                    <td><?php echo $model->url; ?></td>
-                                    <td><?php echo long2ip($model->ip); ?></td>
+                                    <td><?= $model->module; ?></td>
+                                    <td><?= $model->controller; ?>/<?= $model->action; ?></td>
+                                    <td><?= $model->url; ?></td>
+                                    <td><?= long2ip($model->ip); ?></td>
                                     <td>
                                         <?php
                                         if (!empty($model['ip']) && ($ipData = \Zhuzhichao\IpLocationZh\Ip::find(long2ip($model['ip'])))) {
@@ -51,14 +51,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     </td>
                                     <td>
                                         <?php if($model->error_code < 300){ ?>
-                                            <span class="label label-primary"><?php echo $model->error_code; ?></span>
+                                            <span class="label label-primary"><?= $model->error_code; ?></span>
                                         <?php }else{ ?>
-                                            <span class="label label-danger"><?php echo $model->error_code; ?></span>
+                                            <span class="label label-danger"><?= $model->error_code; ?></span>
                                         <?php } ?>
                                     </td>
-                                    <td><?php echo Yii::$app->formatter->asDatetime($model->created_at); ?></td>
+                                    <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                     <td>
-                                        <a href="<?php echo Url::to(['api-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>
+                                        <a href="<?= Url::to(['api-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         </table>
                         <div class="row">
                             <div class="col-sm-12">
-                                <?php echo LinkPager::widget([
+                                <?= LinkPager::widget([
                                     'pagination' => $pages,
                                     'maxButtonCount' => 5,
                                     'firstPageLabel' => "首页",

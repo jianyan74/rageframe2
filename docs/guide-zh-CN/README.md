@@ -49,10 +49,11 @@
 
 #### API文档
 
+- [接口说明](api-explain.md)
 - [登录重置](api-login.md)
 - [小程序登录注册](api-mini-program.md)
 - [文件上传](api-upload.md)
-- 个人信息
+- [个人信息](api-get-member.md)
 
 #### 助手类
 

@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
                                     <a href="<?= Url::to(['ajax-edit','id' => $model->id, 'member_id' => $member_id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
-                                    <?php echo \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
+                                    <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
                                     <a href="<?= Url::to(['delete','id' => $model->id, 'member_id' => $member_id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                 </td>
                             </tr>

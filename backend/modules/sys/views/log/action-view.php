@@ -28,7 +28,7 @@ use yii\helpers\Url;
         </tr>
         <tr>
             <td>控制器方法</td>
-            <td><?php echo $model['controller']; ?>/<?php echo $model['action']; ?></td>
+            <td><?= $model['controller']; ?>/<?= $model['action']; ?></td>
         </tr>
         <tr>
             <td>Url</td>
@@ -40,7 +40,7 @@ use yii\helpers\Url;
         </tr>
         <tr>
             <td>地区</td>
-            <td><?php echo $model['country']; ?>·<?php echo $model['provinces']; ?>·<?php echo $model['city']; ?></td>
+            <td><?= $model['country']; ?>·<?= $model['provinces']; ?>·<?= $model['city']; ?></td>
         </tr>
         <tr>
             <td style="min-width: 100px">Get数据</td>

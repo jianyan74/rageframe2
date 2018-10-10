@@ -27,7 +27,7 @@ $addon = Yii::$app->params['addon']['name'];
                         <?php foreach (Yii::$app->params['addonBinding']['cover'] as $value){ ?>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="control-label" for="menu-title"><?php echo $value['title'] ?></label>
+                                    <label class="control-label" for="menu-title"><?= $value['title'] ?></label>
                                     <input class="form-control" type="text" value="<?= AddonUrl::toWechat([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                                 </div>
                                 <div class="col-md-4">
@@ -47,7 +47,7 @@ $addon = Yii::$app->params['addon']['name'];
                         <?php foreach (Yii::$app->params['addonBinding']['cover'] as $value){ ?>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="control-label" for="menu-title"><?php echo $value['title'] ?></label>
+                                    <label class="control-label" for="menu-title"><?= $value['title'] ?></label>
                                     <input class="form-control" type="text" value="<?= AddonUrl::toFront([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                                 </div>
                                 <div class="col-md-4">
@@ -67,14 +67,14 @@ $addon = Yii::$app->params['addon']['name'];
                         <?php foreach (Yii::$app->params['addonBinding']['cover'] as $value){ ?>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="control-label" for="menu-title"><?php echo $value['title'] ?></label>
+                                    <label class="control-label" for="menu-title"><?= $value['title'] ?></label>
                                     <input class="form-control" type="text" value="<?= AddonUrl::toApi([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label" for="menu-title">二维码</label><br>
                                         <div class="row" style="padding-left: 15px">
-                                            <img src="<?= Url::to(['qr-code', 'addon' => $addon, 'route' => $value['route'],'url'=> AddonUrl::toApi([$value['route'], 'addon' => $addon])])?>" style="border:1px solid #CCC;border-radius:4px;">
+                                            <img src="<?= Url::to(['qr-code', 'addon' => $addon, 'route' => $value['route'], 'url' => AddonUrl::toApi([$value['route'], 'addon' => $addon])])?>" style="border:1px solid #CCC;border-radius:4px;">
                                         </div>
                                     </div>
                                 </div>

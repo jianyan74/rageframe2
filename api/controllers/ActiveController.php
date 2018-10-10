@@ -59,7 +59,7 @@ class ActiveController extends \yii\rest\ActiveController
                 // yii\filters\auth\HttpHeaderAuth::className(),
                 [
                     'class' => QueryParamAuth::className(),
-                    'tokenParam' => 'access_token'
+                    'tokenParam' => 'access-token'
                 ],
             ],
             // 不进行认证判断方法

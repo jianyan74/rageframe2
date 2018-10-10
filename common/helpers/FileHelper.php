@@ -30,10 +30,11 @@ class FileHelper
      *
      * @param $path
      * @param $content
+     * @return bool|int
      */
      public static function writeLog($path, $content)
      {
-         file_put_contents(self::mkdirs($path), "\r\n" . $content, FILE_APPEND);
+         return file_put_contents(self::mkdirs($path), "\r\n" . $content, FILE_APPEND);
      }
 
     /**

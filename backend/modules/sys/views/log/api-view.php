@@ -24,7 +24,7 @@ use yii\helpers\Url;
         </tr>
         <tr>
             <td>控制器方法</td>
-            <td><?php echo $model->controller; ?>/<?php echo $model->action; ?></td>
+            <td><?= $model->controller; ?>/<?= $model->action; ?></td>
         </tr>
         <tr>
             <td>Url</td>
@@ -56,9 +56,9 @@ use yii\helpers\Url;
             <td>状态码</td>
             <td>
                 <?php if($model->error_code < 300){ ?>
-                    <span class="label label-primary"><?php echo $model->error_code; ?></span>
+                    <span class="label label-primary"><?= $model->error_code; ?></span>
                 <?php }else{ ?>
-                    <span class="label label-danger"><?php echo $model->error_code; ?></span>
+                    <span class="label label-danger"><?= $model->error_code; ?></span>
                 <?php } ?>
             </td>
         </tr>

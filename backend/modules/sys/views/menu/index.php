@@ -9,10 +9,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="tabs-container">
         <ul class="nav nav-tabs">
             <?php foreach ($cates as $cate){ ?>
-                <li class="<?php if($cate->id == $cate_id ){ echo 'active' ;}?>"><a href="<?php echo Url::to(['index','cate_id' => $cate->id])?>"> <?php echo $cate->title ?></a></li>
+                <li class="<?php if($cate->id == $cate_id ){ echo 'active' ;}?>"><a href="<?= Url::to(['index','cate_id' => $cate->id])?>"> <?= $cate->title ?></a></li>
             <?php } ?>
-            <li><a href="<?php echo Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
-            <a class="btn btn-primary btn-xs pull-right h6" href="<?php echo Url::to(['edit', 'cate_id' => $cate_id])?>" data-toggle='modal' data-target='#ajaxModal'>
+            <li><a href="<?= Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
+            <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['edit', 'cate_id' => $cate_id])?>" data-toggle='modal' data-target='#ajaxModal'>
                 <i class="fa fa-plus"></i>  创建
             </a>
         </ul>
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             </tr>
                             </thead>
                             <tbody>
-                            <?php echo $this->render('tree', [
+                            <?= $this->render('tree', [
                                 'models' => $models,
                                 'parent_title' =>"无",
                                 'pid' => 0,

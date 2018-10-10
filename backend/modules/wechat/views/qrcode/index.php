@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <li class="active"><a href="<?= Url::to(['index'])?>"> 二维码管理</a></li>
             <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
             <li><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
-            <a class="btn btn-primary btn-xs pull-right h6" href="<?php echo Url::to(['add'])?>" data-toggle='modal' data-target='#ajaxModal'>
+            <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['add'])?>" data-toggle='modal' data-target='#ajaxModal'>
                 <i class="fa fa-plus"></i> 创建
             </a>
         </ul>

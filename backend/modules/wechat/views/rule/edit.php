@@ -167,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="col-sm-12">
-            <?php echo $this->render($model->module, [
+            <?= $this->render($model->module, [
                 'moduleModel' => $moduleModel,
                 'form' => $form,
             ])?>

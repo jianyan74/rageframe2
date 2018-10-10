@@ -7,7 +7,7 @@ use yii\helpers\Url;
     <div class="col-sm-12">
         <div class="btn-group">
             <?php foreach ($allMediaType as $key => $mo){ ?>
-                <a class="btn <?php echo $mediaType == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index', 'type' => $key])?>"><?= $mo ?></a>
+                <a class="btn <?= $mediaType == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index', 'type' => $key])?>"><?= $mo ?></a>
             <?php } ?>
         </div>
         <div class="ibox-tools">
@@ -20,7 +20,7 @@ use yii\helpers\Url;
                 <i class="fa fa-plus"></i> 创建
             </a>
             <?php }else{ ?>
-                <a class="btn btn-primary btn-xs" href="<?php echo Url::to([ $mediaType . '-add','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
+                <a class="btn btn-primary btn-xs" href="<?= Url::to([ $mediaType . '-add','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
                     <i class="fa fa-plus"></i>  创建
                 </a>
             <?php } ?>

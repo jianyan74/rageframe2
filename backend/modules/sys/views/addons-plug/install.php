@@ -35,13 +35,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                             <img alt="image" class="img-rounded m-t-xs img-responsive" src="<?= AddonHelper::getAddonIcon($vo['name']); ?>" width="64" height="64">
                                         </td>
                                         <td>
-                                            <h4><?php echo $vo['title'] ?></h4>
-                                            <small>标识 : <?php echo $vo['name'] ?></small>
+                                            <h4><?= $vo['title'] ?></h4>
+                                            <small>标识 : <?= $vo['name'] ?></small>
                                         </td>
-                                        <td><?php echo $vo['version'] ?></td>
-                                        <td><?php echo $vo['author'] ?></td>
+                                        <td><?= $vo['version'] ?></td>
+                                        <td><?= $vo['author'] ?></td>
                                         <td>
-                                            <a href="<?php echo Url::to(['install','name' => $vo['name']])?>" data-method="post"><span class="btn btn-info btn-sm">安装插件</span></a>
+                                            <a href="<?= Url::to(['install','name' => $vo['name']])?>" data-method="post"><span class="btn btn-info btn-sm">安装插件</span></a>
                                         </td>
                                     </tr>
                                 <?php } ?>

@@ -16,9 +16,9 @@ use yii\widgets\ActiveForm;
         <div class="col-sm-3">
             <div class="ibox-content text-center">
                 <div class="m-b-md">
-                    <img class="img-circle circle-border" alt="image" src="<?php echo \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>">
+                    <img class="img-circle circle-border" alt="image" src="<?= \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>">
                 </div>
-                <p class="font-bold"><h3><i class="fa <?php echo $model->sex == 1 ? 'fa-mars': 'fa-venus'; ?>"></i> <?= $model->realname?></h3></p>
+                <p class="font-bold"><h3><i class="fa <?= $model->sex == 1 ? 'fa-mars': 'fa-venus'; ?>"></i> <?= $model->realname?></h3></p>
                 <div class="text-center">
                     <a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a>
                 </div>
@@ -192,7 +192,7 @@ use yii\widgets\ActiveForm;
 
     // 提交表单时候触发
     function SendForm(){
-        var status = "<?php echo Yii::$app->user->id == $model->id ? true : false ;?>";
+        var status = "<?= Yii::$app->user->id == $model->id ? true : false ;?>";
         if(status){
             var src = $('#manager-head_portrait').val();
             if(src){

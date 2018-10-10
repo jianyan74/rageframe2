@@ -8,7 +8,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
-        <?php echo $this->render('_nav', [
+        <?= $this->render('_nav', [
             'type' => 'pay'
         ]) ?>
         <div class="tab-content">

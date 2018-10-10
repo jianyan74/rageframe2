@@ -17,11 +17,11 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
-        <?php echo $form->field($model, 'title')->textInput() ?>
-        <?php echo $form->field($model, 'author')->textInput() ?>
-        <?php echo $form->field($model, 'brief_introduction')->textInput() ?>
-        <?php echo $form->field($model, 'description')->textarea() ?>
-        <?php echo $form->field($model, 'status')->radioList(['1' => '启用', '0' => '禁用']) ?>
+        <?= $form->field($model, 'title')->textInput() ?>
+        <?= $form->field($model, 'author')->textInput() ?>
+        <?= $form->field($model, 'brief_introduction')->textInput() ?>
+        <?= $form->field($model, 'description')->textarea() ?>
+        <?= $form->field($model, 'status')->radioList(['1' => '启用', '0' => '禁用']) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

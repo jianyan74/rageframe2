@@ -28,7 +28,7 @@ rfSuccess(title,text)
 删除二次确认
 
 ```
-<a href="<?php echo Url::to(['delete','id' => $model['id']])?>"  onclick="rfDelete(this);return false;">
+<a href="<?= Url::to(['delete','id' => $model['id']])?>"  onclick="rfDelete(this);return false;">
     <span class="btn btn-warning btn-sm">删除</span>
 </a>
 ```
@@ -36,13 +36,14 @@ rfSuccess(title,text)
 ### ajax更新数据
 
 > 注意tr上面的id为model主键
+
 ```
-<tr id = "<?php echo $model['id']?>">
+<tr id = "<?= $model['id']?>">
     <td>
-        <input type="text" class="form-control" value="<?php echo $model['sort']?>" onblur="rfSort(this)">
+        <input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)">
     </td>
     <td>
-        <?php echo \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
+        <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
     </td>
 </tr>
-```__
+```
