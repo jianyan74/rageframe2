@@ -45,7 +45,7 @@ php ./yii migrate/up
 
 ```
 //每分钟执行一次定时任务
-* * * * * /[你的项目地址]/yii cron/run
+* * * * * /path-to-your-project/yii cron/run
 ```
 
 2、在 console/config/params.php 中加入新的定时任务：

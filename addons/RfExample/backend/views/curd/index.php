@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->title; ?></td>
                             <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
                             <td>
-                                开始：<?= Yii::$app->formatter->asDatetime($model->stat_time); ?> <br>
+                                开始：<?= Yii::$app->formatter->asDatetime($model->start_time); ?> <br>
                                 结束：<?= Yii::$app->formatter->asDatetime($model->end_time); ?>
                             </td>
                             <td>

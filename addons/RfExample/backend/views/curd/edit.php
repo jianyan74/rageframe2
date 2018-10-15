@@ -24,11 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'sort')->textInput(); ?>
                     <div class="row">
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'stat_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
                                 'language' => 'zh-CN',
                                 'template' => '{button}{reset}{input}',
                                 'options' => [
-                                    'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->stat_time),
+                                    'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
                                 ],
                                 'clientOptions' => [
                                     'format' => 'yyyy-mm-dd hh:ii:ss',

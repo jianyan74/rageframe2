@@ -9,7 +9,7 @@ return [
 
     /** ------ 开发者信息 ------ **/
     'exploitName' => '简言',
-    'exploitVersions' => '2.0.28',
+    'exploitVersions' => '2.0.34',
     'exploitSysName' => 'RageFrame应用开发引擎',
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">github.com/jianyan74/rageframe2</a>',

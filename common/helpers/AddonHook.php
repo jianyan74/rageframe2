@@ -32,6 +32,10 @@ class AddonHook
     {
         try
         {
+            $oldAddonInfo = Yii::$app->params['addonInfo'];
+            $oldAddon = Yii::$app->params['addon'];
+            $oldAddonBinding = Yii::$app->params['addonBinding'];
+
             // 初始化模块
             AddonHelper::initAddon($addonsName, self::hookPath);
             // 解析路由
@@ -44,11 +48,17 @@ class AddonHook
 
             // 实例化解获取数据
             $list = new $class($controllerName, Yii::$app->module);
-            return $list->$actionName($params);
+            $data = $list->$actionName($params);
+
+            // 恢复存储信息
+            Yii::$app->params['addonInfo'] = $oldAddonInfo;
+            Yii::$app->params['addon'] = $oldAddon;
+            Yii::$app->params['addonBinding'] = $oldAddonBinding;
+            return $data;
         }
         catch (\Exception $e)
         {
-            if ($debug)
+            if (YII_DEBUG || $debug)
             {
                 throw new NotFoundHttpException($e->getMessage());
             }

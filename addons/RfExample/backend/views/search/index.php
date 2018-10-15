@@ -31,13 +31,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="input-group drp-container">
                                 <?= DateRangePicker::widget([
                                     'name' => 'queryDate',
-                                    'value' => $searchModel->stat_time . '-' . $searchModel->end_time,
+                                    'value' => $searchModel->start_time . '-' . $searchModel->end_time,
                                     'readonly' => 'readonly',
                                     'useWithAddon' => true,
                                     'convertFormat' => true,
-                                    'startAttribute' => 'stat_time',
+                                    'startAttribute' => 'start_time',
                                     'endAttribute' => 'end_time',
-                                    'startInputOptions' => ['value' => $searchModel->stat_time],
+                                    'startInputOptions' => ['value' => $searchModel->start_time],
                                     'endInputOptions' => ['value' => $searchModel->end_time],
                                     'pluginOptions' => [
                                         'locale' => ['format' => 'Y-m-d'],

@@ -47,7 +47,7 @@ class MemberAuth extends \common\models\common\BaseModel
             [['birthday'], 'safe'],
             [['unionid'], 'string', 'max' => 64],
             [['oauth_client'], 'string', 'max' => 20],
-            [['oauth_client_id', 'country', 'province', 'city'], 'string', 'max' => 100],
+            [['oauth_client_user_id', 'country', 'province', 'city'], 'string', 'max' => 100],
             [['nickname', 'head_portrait'], 'string', 'max' => 200],
         ];
     }
@@ -62,7 +62,7 @@ class MemberAuth extends \common\models\common\BaseModel
             'member_id' => '用户id',
             'unionid' => 'Unionid',
             'oauth_client' => '类型',
-            'oauth_client_id' => 'Openid',
+            'oauth_client_user_id' => 'Openid',
             'sex' => '性别',
             'nickname' => '昵称',
             'head_portrait' => '头像',
@@ -83,7 +83,7 @@ class MemberAuth extends \common\models\common\BaseModel
      */
     public static function findOauthClient($oauthClient, $oauthClientId)
     {
-        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_id' => $oauthClientId]);
+        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientId]);
     }
 
     /**
@@ -93,7 +93,7 @@ class MemberAuth extends \common\models\common\BaseModel
      */
     public static function findOauthClientMapMember($oauthClient, $oauthClientId)
     {
-        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_id' => $oauthClientId])->with('member')->one();
+        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientId])->with('member')->one();
     }
 
     /**

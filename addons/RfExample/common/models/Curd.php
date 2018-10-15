@@ -24,7 +24,7 @@ use common\helpers\StringHelper;
  * @property string $description 描述
  * @property double $price 价格
  * @property string $views 点击
- * @property int $stat_time 开始时间
+ * @property int $start_time 开始时间
  * @property int $end_time 结束时间
  * @property string $email
  * @property string $provinces
@@ -55,7 +55,7 @@ class Curd extends \common\models\common\BaseModel
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
             [['content', 'covers', 'files'], 'string'],
             [['price'], 'number'],
-            [['stat_time', 'end_time'], 'safe'],
+            [['start_time', 'end_time'], 'safe'],
             [['title'], 'string', 'max' => 50],
             [['cover', 'attachfile', 'keywords'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 255],
@@ -88,7 +88,7 @@ class Curd extends \common\models\common\BaseModel
             'description' => '简单介绍',
             'price' => '价格',
             'views' => '浏览量',
-            'stat_time' => '开始时间',
+            'start_time' => '开始时间',
             'end_time' => '结束时间',
             'status' => '状态',
             'email' => '邮箱',
@@ -114,7 +114,7 @@ class Curd extends \common\models\common\BaseModel
             $this->manager_id = Yii::$app->user->id;
         }
 
-        $this->stat_time = StringHelper::dateToInt(($this->stat_time));
+        $this->start_time = StringHelper::dateToInt(($this->start_time));
         $this->end_time = StringHelper::dateToInt(($this->end_time));
 
         return parent::beforeSave($insert);

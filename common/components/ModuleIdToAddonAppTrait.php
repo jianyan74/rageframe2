@@ -30,10 +30,10 @@ trait ModuleIdToAddonAppTrait
         // 判断如果是模块进入之前返回模块所在的应用id
         if ($moduleId == 'addons')
         {
-            return Yii::$app->params['addonInfo']['moduleId'];
+            return !empty(Yii::$app->params['addonInfo']['moduleId']) ? Yii::$app->params['addonInfo']['moduleId'] : 'backend';
         }
 
         Yii::$app->params['addonInfo']['moduleId'] = $appId[$moduleId];
-        return $appId[$moduleId];
+        return isset($appId[$moduleId]) ? $appId[$moduleId] : 'backend';
     }
 }

@@ -64,7 +64,7 @@ class MiniProgramController extends \yii\rest\ActiveController
         {
             $oauth = $this->miniProgramApp->auth->session($code);
             // 解析是否接口报错
-            $oauth = Yii::$app->debris->analyWechatPortBack($oauth);
+            Yii::$app->debris->analyWechatPortBack($oauth);
 
             // 缓存数据
             $auth_key = Yii::$app->security->generateRandomString() . '_' . time();

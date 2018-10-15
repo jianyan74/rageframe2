@@ -6,6 +6,7 @@ use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\Article;
 use common\enums\StatusEnum;
 use common\controllers\AddonsBaseController;
+use yii\data\Pagination;
 
 /**
  * Class IndexController
@@ -14,22 +15,21 @@ use common\controllers\AddonsBaseController;
 class IndexController extends AddonsBaseController
 {
     /**
+     * @var string
+     */
+    public $layout = "@addons/RfArticle/frontend/views/layouts/main";
+
+    /**
     * 首页
     *
     * @return string
     */
     public function actionIndex()
     {
-        $where = [];
-        // 推荐位 位运算查询
-        if ($position = Yii::$app->request->get('position', ''))
-        {
-            $where = Article::position($position);
-        }
-
         $articles = Article::find()
             ->where(['status' => StatusEnum::ENABLED])
-            ->andWhere($where)
+            ->andWhere(Article::position(1))// 推荐位 位运算查询
+            ->with(['tags'])
             ->asArray()
             ->all();
 
@@ -43,6 +43,33 @@ class IndexController extends AddonsBaseController
     }
 
     /**
+     * 首页
+     *
+     * @return string
+     */
+    public function actionList()
+    {
+        $keyword = Yii::$app->request->get('keyword', '');
+        $cate_id = Yii::$app->request->get('cate_id', '');
+
+        $data = Article::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['like', 'title', $keyword])
+            ->andFilterWhere(['cate_id' => $cate_id]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $articles = $data->offset($pages->offset)
+            ->orderBy('id desc')
+            ->with(['tags'])
+            ->limit($pages->limit)
+            ->all();
+
+        return $this->render('list',[
+            'articles' => $articles,
+            'pages' => $pages,
+        ]);
+    }
+
+    /**
      * 文章详情
      *
      * @return string
@@ -50,9 +77,13 @@ class IndexController extends AddonsBaseController
     public function actionDetails($id)
     {
         $article = Article::find()
-            ->where(['status' => StatusEnum::ENABLED])
+            ->where(['status' => StatusEnum::ENABLED, 'id' => $id])
+            ->with(['tags'])
             ->asArray()
             ->one();
+
+        // 更新浏览量
+        Article::updateAllCounters(['view' => 1], ['id' => $id]);
 
         return $this->render('details',[
             'article' => $article,

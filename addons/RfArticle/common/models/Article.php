@@ -98,14 +98,14 @@ class Article extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['<', 'id', $id])
-            ->select('id')
+            ->select(['id', 'title'])
             ->orderBy('id asc')
-            ->scalar();
+            ->one();
     }
 
     /**
      * 下一篇
-     *
+     * scalar
      * @param int $id 当前文章id
      * @return false|null|string
      */
@@ -113,9 +113,9 @@ class Article extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['>', 'id', $id])
-            ->select('id')
+            ->select(['id', 'title'])
             ->orderBy('id asc')
-            ->scalar();
+            ->one();
     }
 
     /**
@@ -179,6 +179,18 @@ class Article extends \common\models\common\BaseModel
     public function getCate()
     {
         return $this->hasOne(ArticleCate::className(),['id' => 'cate_id']);
+    }
+
+    /**
+     * 中间表关联标签
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTags()
+    {
+        return $this->hasMany(ArticleTag::className(), ['id' => 'tag_id'])
+            ->viaTable(ArticleTagMap::tableName(), ['article_id' => 'id'])
+            ->asArray();
     }
 
     /**

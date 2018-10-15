@@ -17,7 +17,8 @@ class FrontendAsset extends AssetBundle
     public $sourcePath = '@addons/RfArticle/resources';
 
     public $css = [
-
+        'plugin/bootstrap/css/bootstrap.min.css',
+        'css/common.css',
     ];
 
     public $js = [

@@ -12,7 +12,7 @@ class CurdSearch extends Curd
 {
     public function init()
     {
-        !$this->stat_time && $this->stat_time = date('Y-m-d', strtotime("-60 day"));
+        !$this->start_time && $this->start_time = date('Y-m-d', strtotime("-60 day"));
         !$this->end_time && $this->end_time  = date('Y-m-d', strtotime("+1 day"));
 
         parent::init();
@@ -40,7 +40,7 @@ class CurdSearch extends Curd
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['between','created_at', strtotime($this->stat_time), strtotime($this->end_time)]);
+            ->andFilterWhere(['between','created_at', strtotime($this->start_time), strtotime($this->end_time)]);
 
         return $query;
     }

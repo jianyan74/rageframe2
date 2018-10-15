@@ -20,7 +20,7 @@ CREATE TABLE `rf_addon_example_curd` (
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
   `price` float(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '价格',
   `views` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击',
-  `stat_time` int(10) DEFAULT '0' COMMENT '开始时间',
+  `start_time` int(10) DEFAULT '0' COMMENT '开始时间',
   `end_time` int(10) DEFAULT '0' COMMENT '结束时间',
   `email` varchar(60) DEFAULT '',
   `provinces` varchar(10) DEFAULT '',

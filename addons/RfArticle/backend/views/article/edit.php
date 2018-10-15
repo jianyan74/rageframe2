@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-12">
                     <?php $form = ActiveForm::begin([
                         'fieldConfig' => [
-                            'template' => "<div class='col-sm-1 text-right'>{label}</div><div class='col-sm-11'>{input}\n{hint}\n{error}</div>",
+                            'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
                         ]
                     ]); ?>
                     <?= $form->field($model, 'title')->textInput(); ?>
@@ -49,10 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'description')->textarea(); ?>
                     <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
                     <div class="form-group field-article-position">
-                        <div class='col-sm-1 text-right'>
+                        <div class='col-sm-2 text-right'>
                             <label class="control-label">推荐位</label>
                         </div>
-                        <div class='col-sm-11'>
+                        <div class='col-sm-10'>
                             <input type="hidden" name="Article[position]" value="">
                             <div id="article-position">
                                 <?php foreach ($positionExplain as $key => $value){ ?>
@@ -66,10 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <?php if(!empty($tags)){ ?>
                         <div class="form-group field-article-tag">
-                            <div class='col-sm-1 text-right'>
+                            <div class='col-sm-2 text-right'>
                                 <label class="control-label">文章标签</label>
                             </div>
-                            <div class='col-sm-11'>
+                            <div class='col-sm-10'>
                                 <div id="article-position">
                                     <?php foreach ($tags as $key => $item){ ?>
                                         <label class="checkbox-inline i-checks">
@@ -83,10 +83,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php } ?>
                     <?= $form->field($model, 'link')->textInput(); ?>
                     <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
-                    <div class="hr-line-dashed"></div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
+                        <div class="hr-line-dashed"></div>
                         <button class="btn btn-primary" type="submit">保存</button>
                         <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                     </div>

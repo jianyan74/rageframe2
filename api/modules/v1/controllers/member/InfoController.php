@@ -20,7 +20,8 @@ class InfoController extends OnAuthController
     /**
      * 测试查询方法
      *
-     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionSearch()
     {

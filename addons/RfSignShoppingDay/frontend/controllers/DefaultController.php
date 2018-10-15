@@ -1,5 +1,5 @@
 <?php
-namespace addons\RfArticle\backend\controllers;
+namespace addons\RfSignShoppingDay\frontend\controllers;
 
 use Yii;
 use common\controllers\AddonsBaseController;
@@ -8,7 +8,7 @@ use common\controllers\AddonsBaseController;
  * 默认控制器
  *
  * Class DefaultController
- * @package addons\RfArticle\backend\controllers
+ * @package addons\RfSignShoppingDay\frontend\controllers
  */
 class DefaultController extends AddonsBaseController
 {

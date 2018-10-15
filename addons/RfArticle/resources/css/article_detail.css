@@ -1,0 +1,71 @@
+.w_main_left {
+    font: 12px "宋体", Arial, Helvetica, sans-serif;
+    color: #756F71;
+}
+.c_titile {
+    font-size: 22px;
+    margin: 20px 0;
+    text-align: center;
+    color: #333;
+	font-weight: bold;
+}
+.box_c {
+    border: #ccc 1px dashed;
+    text-align: center;
+    padding: 5px 0;
+    margin-right: 30px;
+    color: #999;
+}
+.box_c span {
+    margin: 0 10px;
+}
+.box_c span a {
+    color: #099;
+}
+ul {
+    list-style: none;
+}
+ul.infos {
+    overflow: hidden;
+    margin: 20px 30px 20px 0;
+    line-height: 28px;
+    font-size: 14px;
+    text-indent: 2em;
+    color: #666;
+}
+
+ul.infos p {
+    margin-bottom: 5px;
+}
+
+.keybq {
+    background: url(../img/tab.png) no-repeat 10px center #F8F8F8;
+    line-height: 30px;
+    height: 30px;
+    padding-left: 40px;
+    border: 1px solid #F0F0F0;
+}
+.keybq span {
+    color: #099;
+}
+.keybq .label{
+	margin-right: 10px;
+}
+.nextinfo {
+	margin: 25px 0px;
+    line-height: 20px;
+}
+.nextinfo .last{
+	width: 50%;
+    float: left;
+}
+
+.nextinfo .next{
+    width: 50%;
+    float: right;
+    text-align: right;
+}
+
+.nextinfo a:hover{
+	color: #337AB7;
+}

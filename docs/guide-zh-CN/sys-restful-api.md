@@ -83,7 +83,8 @@ public function checkAccess($action, $model = null, $params = [])
 
 ### 返回数据格式修改
 
-> 请自行修改 `api\behaviors\beforeSend` 行为
+> 请自行修改 `api\behaviors\beforeSend` 行为  
+> 注意: 有些前端没有接触过状态码在Http头里面返回所以可以 在 beforeSend 数据处理后开启 `$response->statusCode = 200`;
 
 ### 自定义code返回
 

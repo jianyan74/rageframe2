@@ -23,7 +23,7 @@ $header = [
     ['openid', 'fans.openid', 'text'],
     ['昵称', 'fans.nickname', 'text'],
     ['关注/扫描', 'type', 'selectd', [1 => '关注', 2 => '扫描']],
-    [ '创建时间', 'create_at', 'date', 'Y-m-d'],
+    ['创建时间', 'created_at', 'date', 'Y-m-d'],
 ];
 
 $list = [

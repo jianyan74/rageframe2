@@ -70,7 +70,7 @@ class beforeSend extends Behavior
         Yii::$app->params['user.log'] && Log::record($response->data['code'], $response->data['message'], $responseData);
 
         unset($responseData);
-        // $response->statusCode = 200; // 考虑到了某些前端必须返回成功操作，所以这里可以设置为都返回200的状态码
         $response->format = yii\web\Response::FORMAT_JSON;
+        // $response->statusCode = 200; // 考虑到了某些前端必须返回成功操作，所以这里可以设置为都返回200的状态码
     }
 }

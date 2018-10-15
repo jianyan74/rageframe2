@@ -143,7 +143,7 @@ stdout_logfile=/var/www/my_project/log/yii-queue-worker.log
 配置示例:
 
 ```
-* * * * * /usr/bin/php /var/www/my_project/yii queue/run
+* * * * * /path-to-your-project/yii queue/run
 ```
 
 在这种情况下，cron将每分钟启动一次命令。
