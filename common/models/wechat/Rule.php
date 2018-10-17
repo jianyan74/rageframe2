@@ -115,27 +115,6 @@ class Rule extends \common\models\common\BaseModel
     }
 
     /**
-     * 关联关键字
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRuleKeyword()
-    {
-        return $this->hasMany(RuleKeyword::className(), ['rule_id' => 'id'])->orderBy('type asc');
-    }
-
-    /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        // 更新状态和排序
-        RuleKeyword::updateAll(['sort' => $this->sort, 'status' => $this->status], ['rule_id' => $this->id]);
-        parent::afterSave($insert, $changedAttributes);
-    }
-
-    /**
      * 查询规则标题
      *
      * @param $rule_id
@@ -204,10 +183,33 @@ class Rule extends \common\models\common\BaseModel
     }
 
     /**
+     * 关联关键字
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRuleKeyword()
+    {
+        return $this->hasMany(RuleKeyword::className(), ['rule_id' => 'id'])->orderBy('type asc');
+    }
+
+    /**
+     * 关联模块
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAddon()
     {
         return $this->hasMany(ReplyAddon::className(), ['rule_id' => 'id']);
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        // 更新状态和排序
+        RuleKeyword::updateAll(['sort' => $this->sort, 'status' => $this->status], ['rule_id' => $this->id]);
+        parent::afterSave($insert, $changedAttributes);
     }
 }

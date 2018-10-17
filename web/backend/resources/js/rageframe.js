@@ -95,7 +95,7 @@ function rfText(text) {
     }
 }
 
-//复选框
+// 复选框
 $(".i-checks").iCheck({
     checkboxClass:"icheckbox_square-green",
     radioClass:"iradio_square-green"
@@ -123,7 +123,7 @@ var closeAlert = (function() {
     return change;
 })();
 
-//倒计时
+// 倒计时
 function closeInterval() {
     var closeTime = $('.rfCloseTime').text();
     closeTime = parseInt(closeTime);
@@ -152,4 +152,11 @@ $('.navbar-top-menu').click(function(){
     $('.navbar-left-menu-' + type).show();
 
     $(this).addClass('navbar-top-menu-hover');
+});
+
+
+// 在顶部导航栏打开tab
+$(".openContab").click(function(){
+    parent.openConTab($(this));
+    return false;
 });

@@ -53,6 +53,13 @@ $this->title = '我的博客';
                         </a>
                     </div>
                 </div>
+                <div class="panel panel-default contenttop">
+                    <a href="javascript:void (0)">
+                        <strong>置顶</strong>
+                        <h3 class="title">RageFrame</h3>
+                        <p class="overView">为二次开发而生，让开发变得更简单</p>
+                    </a>
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">推荐文章</h3>

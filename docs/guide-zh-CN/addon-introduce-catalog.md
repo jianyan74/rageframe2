@@ -41,4 +41,3 @@
 --- install.php | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)
 --- uninstall.php | 卸载SQL文件(同上)
 --- upgrade.php | 更新SQL文件(同上)
---- icon.jpg | 模块图标

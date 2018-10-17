@@ -43,9 +43,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             </tr>
                             </tbody>
                         </table>
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">　
                             <div class="col-sm-4 col-sm-offset-2">
+                                <div class="hr-line-dashed"></div>
                                 <button class="btn btn-primary" type="submit">保存</button>
                             </div>
                         </div>

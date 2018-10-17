@@ -77,6 +77,24 @@ AppAsset::register($this);
     </div>
 </div>
 
+<!--基础ajax弹出框-->
+<div class="modal inmodal fade" id="baseModel" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg" style="width: 70%">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px;text-align: left">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                基本信息
+            </div>
+            <div class="modal-body">
+                <div class="inlineBlockContainer col3 vAlignTop" id="imageList"></div>
+                <div class="row text-center" id="loadingImg">
+                    <span onclick="getImages()" class="btn btn-white">点击加载更多</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // 小模拟框清除
     $('#ajaxModal').on('hide.bs.modal', function () {

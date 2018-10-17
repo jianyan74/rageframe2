@@ -22,10 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-sm-12">
                                 <?= $form->field($model, 'follow_content')->textInput()->hint('注意这里是自动回复设置的关键字，设置用户添加公众帐号好友时，发送的欢迎信息。') ?>
                                 <?= $form->field($model, 'default_content')->textInput()->hint('注意这里是自动回复设置的关键字，当系统不知道该如何回复粉丝的消息时，默认发送的内容。') ?>
-                                <div class="hr-line-dashed"></div>
                             </div>
                             <div class="form-group">　
                                 <div class="col-sm-4 col-sm-offset-2">
+                                    <div class="hr-line-dashed"></div>
                                     <button class="btn btn-primary" type="submit">保存</button>
                                 </div>
                             </div>

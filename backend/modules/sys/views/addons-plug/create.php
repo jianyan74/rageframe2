@@ -30,8 +30,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     ]
                                 ]); ?>
                                 <div class="col-sm-12">
-                                    <?= $form->field($model, 'title')->textInput()->hint('模块的名称, 由于显示在用户的模块列表中. 不要超过20个字符') ?>
-                                    <?= $form->field($model, 'name')->textInput()->hint('模块标识符, 应对应模块文件夹的名称, 系统系统按照此标识符查找模块定义, 只能英文和下划线组成，建议大写驼峰，例如：RfArticle') ?>
+                                    <?= $form->field($model, 'title')->textInput()->hint('模块的名称, 显示在用户的模块列表中. 不要超过20个字符') ?>
+                                    <?= $form->field($model, 'name')->textInput()->hint('模块标识符, 应对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能英文和下划线组成，建议大写驼峰，例如：RfArticle') ?>
                                     <?= $form->field($model, 'group')->dropDownList(\yii\helpers\ArrayHelper::map($addonsGroup,'name','title')) ?>
                                     <?= $form->field($model, 'version')->textInput()->hint('模块当前版本, 此版本号用于模块的版本更新')?>
                                     <?= $form->field($model, 'brief_introduction')->textInput() ?>
@@ -123,10 +123,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     <?= $form->field($model, 'install')->textInput()->hint('当前模块全新安装时所执行的脚本, 指定为单个的php脚本文件, 如: install.php')?>
                                     <?= $form->field($model, 'uninstall')->textInput()->hint('当前模块卸载时所执行的脚本, 指定为单个的php脚本文件, 如: uninstall.php')?>
                                     <?= $form->field($model, 'upgrade')->textInput()->hint('当前模块更新时所执行的脚本, 指定为单个的php脚本文件, 如: upgrade.php')?>
-                                    <div class="hr-line-dashed"></div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12 text-center">
+                                        <div class="hr-line-dashed"></div>
                                         <button class="btn btn-primary" type="submit">保存内容</button>
                                     </div>
                                 </div>

@@ -52,4 +52,14 @@ class ReplyNews extends \yii\db\ActiveRecord
     {
         return $this->hasMany(AttachmentNews::className(),['attachment_id' => 'attachment_id'])->orderBy('id asc');
     }
+
+    /**
+     * 关联图文资源
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNewsTop()
+    {
+        return $this->hasOne(AttachmentNews::className(),['attachment_id' => 'attachment_id'])->where(['sort' => 0]);
+    }
 }

@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <div class="help-block"></div>
                                     </div>
                                 <?php } ?>
-                                <div class="hr-line-dashed"></div>
                             </div>
                             <div class="form-group">　
                                 <div class="col-sm-4 col-sm-offset-2">
+                                    <div class="hr-line-dashed"></div>
                                     <button class="btn btn-primary" type="submit">保存</button>
                                 </div>
                             </div>

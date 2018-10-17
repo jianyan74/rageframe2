@@ -8,10 +8,10 @@
             <?= $form->field($moduleModel, 'default')->textInput()->hint('当接口无回复时，则返回用户此处设置的文字信息，优先级高于“默认关键字”') ?>
             <?= $form->field($moduleModel, 'cache_time')->textInput()->hint('接口返回数据将缓存在系统中的时限，默认为0不缓存') ?>
             <?= $form->field($moduleModel, 'description')->textarea()->hint('仅作为后台备注接口的用途') ?>
-            <div class="hr-line-dashed"></div>
         </div>
         <div class="form-group">　
             <div class="col-sm-4 col-sm-offset-2">
+                <div class="hr-line-dashed"></div>
                 <button class="btn btn-primary" type="submit">保存内容</button>
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>

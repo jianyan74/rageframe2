@@ -67,6 +67,32 @@
     border-bottom-right-radius: 0;
 }
 
+/* 规则选择图片 */
+.rule-ajax-img:hover{
+    background-color:#000;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.rule-photo-list{
+    margin: 0;
+}
+.rule-photo-list .img-box{
+    position: relative;
+    overflow: hidden;
+    width: 230px;
+    height: 150px;
+    margin-top: 15px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;border: 1px #efefed solid;
+}
+.rule-photo-list .img-box img{
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+    opacity: 1;
+}
+
 
 /** Added by Wangzq**/
 /** ====================================重载==================================== **/

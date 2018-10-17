@@ -18,10 +18,10 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
                         <?= $form->field($model, 'passwd')->passwordInput() ?>
                         <?= $form->field($model, 'passwd_new')->passwordInput() ?>
                         <?= $form->field($model, 'passwd_repetition')->passwordInput() ?>
-                        <div class="hr-line-dashed"></div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-center">
+                            <div class="hr-line-dashed"></div>
                             <button class="btn btn-primary" type="submit">保存</button>
                         </div>
                     </div>

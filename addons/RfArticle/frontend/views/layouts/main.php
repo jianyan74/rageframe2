@@ -36,7 +36,7 @@ AppAsset::register($this);
             <div class="w_search">
                 <form action="<?= AddonUrl::to(['index/list'])?>" method="get">
                     <div class="w_searchbox">
-                        <input type="text" placeholder="关键字查询" name="keyword"/>
+                        <input type="text" placeholder="关键字查询" name="keyword" value="<?= Yii::$app->request->get('keyword', '')?>"/>
                         <input type="hidden" name="addon" value="<?= Yii::$app->params['addonInfo']['name'];?>"/>
                         <input type="hidden"  name="route" value="index/list"/>
                         <button>搜索</button>

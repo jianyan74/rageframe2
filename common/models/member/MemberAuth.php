@@ -81,9 +81,9 @@ class MemberAuth extends \common\models\common\BaseModel
      * @param $oauthClientId
      * @return MemberAuth|null
      */
-    public static function findOauthClient($oauthClient, $oauthClientId)
+    public static function findOauthClient($oauthClient, $oauthClientUserId)
     {
-        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientId]);
+        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId]);
     }
 
     /**
@@ -91,9 +91,9 @@ class MemberAuth extends \common\models\common\BaseModel
      * @param $oauthClientId
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function findOauthClientMapMember($oauthClient, $oauthClientId)
+    public static function findOauthClientMapMember($oauthClient, $oauthClientUserId)
     {
-        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientId])->with('member')->one();
+        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])->with('member')->one();
     }
 
     /**

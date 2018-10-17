@@ -115,9 +115,9 @@ class MiniProgramController extends \yii\rest\ActiveController
         {
             $memberAuth = new MemberAuth();
             $memberAuthInfo = $memberAuth->add([
-                'type' => MemberAuth::CLIENT_MINI_PROGRAM,
                 'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
-                'openid' => $userinfo['openId'],
+                'oauth_client' => MemberAuth::CLIENT_MINI_PROGRAM,
+                'oauth_client_user_id' => $userinfo['openId'],
                 'sex' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
                 'head_portrait' => $userinfo['avatarUrl'],

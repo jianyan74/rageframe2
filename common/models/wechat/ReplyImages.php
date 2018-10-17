@@ -44,4 +44,15 @@ class ReplyImages extends \yii\db\ActiveRecord
             'media_id' => '图片',
         ];
     }
+
+
+    /**
+     * 关联素材
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttachment()
+    {
+        return $this->hasOne(Attachment::className(), ['media_id' => 'media_id']);
+    }
 }

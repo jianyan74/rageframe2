@@ -7,10 +7,10 @@
             <?= $form->field($moduleModel, 'title')->textInput() ?>
             <?= $form->field($moduleModel, 'media_id')->dropDownList(\common\helpers\ArrayHelper::map(\common\models\wechat\Attachment::getList('video'), 'media_id', 'file_name')) ?>
             <?= $form->field($moduleModel, 'description')->textarea() ?>
-            <div class="hr-line-dashed"></div>
         </div>
         <div class="form-group">　
             <div class="col-sm-4 col-sm-offset-2">
+                <div class="hr-line-dashed"></div>
                 <button class="btn btn-primary" type="submit">保存内容</button>
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
