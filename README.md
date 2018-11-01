@@ -21,6 +21,14 @@ RageFrame项目创建于2016年4月16日，一个基于Yii2高级框架的快速
 
 ![image](docs/guide-zh-CN/images/RageFrame2.png)
 
+### 系统快照
+
+![image](docs/guide-zh-CN/images/material.png)
+
+![image](docs/guide-zh-CN/images/addon.png)
+
+![image](docs/guide-zh-CN/images/sysInfo.png)
+
 ### 开始之前
 
 - 具备 PHP 基础知识
