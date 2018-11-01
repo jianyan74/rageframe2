@@ -5,7 +5,9 @@ echo "<?php\n";
 namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers;
 
 use Yii;
-use common\controllers\AddonsBaseController;
+use api\controllers\OffAuthController;
+use api\controllers\OnAuthController;
+use api\controllers\UserOnAuthController;
 
 /**
  * 默认控制器
@@ -13,8 +15,10 @@ use common\controllers\AddonsBaseController;
  * Class DefaultController
  * @package addons\<?= $model->name;?>\<?= $appID ?>\controllers
  */
-class DefaultController extends AddonsBaseController
+class DefaultController extends OffAuthController
 {
+    public $modelClass = '';
+
     /**
     * 首页
     *

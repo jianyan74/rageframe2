@@ -5,6 +5,7 @@ use yii;
 use yii\data\Pagination;
 use common\controllers\AddonsBaseController;
 use common\helpers\ResultDataHelper;
+use common\helpers\ExcelHelper;
 use addons\RfExample\common\models\Curd;
 
 /**
@@ -110,6 +111,35 @@ class CurdController extends AddonsBaseController
         }
 
         return ResultDataHelper::result(200, '修改成功');
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @return bool
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function actionExport()
+    {
+        // [名称, 字段名, 类型, 类型规则]
+        $header = [
+            ['ID', 'id'],
+            ['标题', 'title', 'text'],
+            ['用户账号', 'manager.username', 'text'],
+            ['状态', 'status', 'selectd', [0 => '已禁用', 1 => '已启用', -1 => '已删除']],
+            ['性别', 'sex', 'function', function($model){
+                return $model['sex'] == 1 ? '男' : '女';
+            }],
+            ['创建时间', 'created_at', 'date', 'Y-m-d'],
+        ];
+
+        $list = Curd::find()
+            ->with(['manager'])
+            ->asArray()
+            ->all();
+
+        return ExcelHelper::exportData($list, $header, 'Curd数据导出_' . time());
     }
 
     /**

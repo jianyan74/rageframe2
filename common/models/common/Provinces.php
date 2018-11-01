@@ -84,6 +84,7 @@ class Provinces extends \yii\db\ActiveRecord
 
     /**
      * 根据id获取区域名称
+     *
      * @param $id
      * @return mixed
      */
@@ -92,6 +93,28 @@ class Provinces extends \yii\db\ActiveRecord
         if($provinces =  Provinces::findOne($id))
         {
             return $provinces['title'];
+        }
+
+        return false;
+    }
+
+    /**
+     * 根据id数组获取区域名称
+     *
+     * @param $id
+     * @return mixed
+     */
+    public static function getCityListName(array $ids)
+    {
+        if($provinces =  Provinces::find()->where(['in', 'id', $ids])->all())
+        {
+            $address = '';
+            foreach ($provinces as $province)
+            {
+                $address .= $province['title'] . ' ';
+            }
+
+            return $address;
         }
 
         return false;

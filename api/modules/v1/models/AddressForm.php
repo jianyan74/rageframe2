@@ -33,7 +33,7 @@ class AddressForm extends \common\models\member\Address
     {
         if ($insert && $this->is_default)
         {
-            MemberInfo::setDefaultAddress(Yii::$app->user->id, $this->id);
+            MemberInfo::setDefaultAddress(Yii::$app->user->identity->member_id, $this->id);
         }
 
         parent::afterSave($insert, $changedAttributes);

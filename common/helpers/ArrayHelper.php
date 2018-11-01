@@ -51,6 +51,7 @@ class ArrayHelper extends BaseArrayHelper
                 $arr = array_merge(self::getParents($items, $v['pid']), $arr);
             }
         }
+
         return $arr;
     }
 
@@ -205,5 +206,38 @@ class ArrayHelper extends BaseArrayHelper
         }
 
         return $arr;
+    }
+
+    /**
+     * 数组转xml
+     *
+     *
+     * @param $arr
+     * 微信回调成功：['return_code' => 'SUCCESS', 'return_msg' => 'OK']
+     * 微信回调失败：['return_code' => 'FAIL', 'return_msg' => 'OK']
+     * @return bool|string
+     */
+    public static function toXml($arr)
+    {
+        if (!is_array($arr) || count($arr) <= 0)
+        {
+            return false;
+        }
+
+        $xml = "<xml>";
+        foreach ($arr as $key => $val)
+        {
+            if (is_numeric($val))
+            {
+                $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+            }
+            else
+            {
+                $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
+            }
+        }
+
+        $xml .= "</xml>";
+        return $xml;
     }
 }

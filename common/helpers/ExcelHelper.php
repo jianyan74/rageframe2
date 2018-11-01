@@ -58,7 +58,8 @@ class ExcelHelper
                 foreach($header as $key => $value)
                 {
                     // 解析字段
-                    $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])));
+                    $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
+                    // 写入excel
                     $sheet->setCellValue(Coordinate::stringFromColumnIndex($span) . $column, $realData);
                     $span++;
                 }
@@ -191,8 +192,10 @@ class ExcelHelper
      * @param array $array 头部规则
      * @return false|mixed|null|string 内容值
      */
-    protected static function formatting(array $array, $value)
+    protected static function formatting(array $array, $value, $row)
     {
+        !isset($array[2]) && $array[2] = 'text';
+
         switch ($array[2])
         {
             // 文本
@@ -208,6 +211,10 @@ class ExcelHelper
                 return  isset($array[3][$value]) ? $array[3][$value] : null ;
                 break;
             // 匿名函数
+            case  'function' :
+                return call_user_func($array[3], $row);
+                break;
+            // 默认
             default :
 
                 break;
@@ -243,6 +250,6 @@ class ExcelHelper
             }
         }
 
-        return $row;
+        return is_array($row) ? false : $row;
     }
 }

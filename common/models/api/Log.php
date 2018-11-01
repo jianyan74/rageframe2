@@ -94,16 +94,21 @@ class Log extends \common\models\common\BaseModel
         $model->url = $url[0];
         $model->get_data = json_encode(Yii::$app->request->get());
 
-        $route = Yii::$app->controller->module->id . '/' . Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
+        $module = $controller = $action = '';
+        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
+        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
+        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
+
+        $route = $module . '/' . $controller . '/' . $action;
         if (!in_array($route, Yii::$app->params['user.log.noPostData']))
         {
             $model->post_data = json_encode(Yii::$app->request->post());
         }
 
         $model->method = Yii::$app->request->method;
-        $model->module = Yii::$app->controller->module->id;
-        $model->controller = Yii::$app->controller->id;
-        $model->action = Yii::$app->controller->action->id;
+        $model->module = $module;
+        $model->controller = $controller;
+        $model->action = $action;
         $model->ip = ip2long(Yii::$app->request->userIP);
         $model->error_code = $error_code;
         $model->error_msg = $error_msg;

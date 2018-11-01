@@ -7,6 +7,7 @@ use common\payment\AliPay;
 use common\payment\UnionPay;
 use common\payment\WechatPay;
 use common\helpers\ArrayHelper;
+use common\helpers\UrlHelper;
 
 /**
  * Class Pay
@@ -34,13 +35,14 @@ class Pay extends Component
      *
      * @param array $config
      * @return AliPay
+     * @throws \yii\base\InvalidConfigException
      */
     public function alipay(array $config = [])
     {
         return new AliPay(ArrayHelper::merge([
             'app_id' => $this->_rfConfig['alipay_appid'],
-            'notify_url' => Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']),
-            'return_url' => Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['return/index']),
+            'notify_url' => UrlHelper::toFront(['notify/ali']),
+            'return_url' => '',
             'ali_public_key' => $this->_rfConfig['alipay_cert_path'],
             // 加密方式： ** RSA2 **
             'private_key' => $this->_rfConfig['alipay_key_path'],
@@ -68,17 +70,17 @@ class Pay extends Component
      * 银联支付
      *
      * @param array $config
-     * @return WechatPay
+     * @return UnionPay
+     * @throws \yii\base\InvalidConfigException
      */
     public function union(array $config = [])
     {
         return new UnionPay(ArrayHelper::merge([
-            'mch_id' => $this->_rfConfig['UNION_MCHID'],
-            'cert_id' => $this->_rfConfig['UNION_CERT_ID'],
-            'notify_url' => Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']),
-            'return_url' => Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['return/index']),
-            'public_key' => $this->_rfConfig['UNION_PUBLIC_KEY'],
-            'private_key' => $this->_rfConfig['UNION_PRIVATE_KEY'],
+            'mch_id' => $this->_rfConfig['union_mchid'],
+            'notify_url' => UrlHelper::toFront(['notify/union']),
+            'return_url' => '',
+            'cert_id' => $this->_rfConfig['union_cert_id'],
+            'private_key' => $this->_rfConfig['union_private_key'],
         ], $config));
     }
 

@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <div class="col-sm-12">
                     <?php $form = ActiveForm::begin([]); ?>
                     <?= $form->field($model, \'share_title\')->textInput(); ?>
-                    <?= $form->field($model, \'share_explain\')->textarea(); ?>
                     <?= $form->field($model, \'share_cover\')->widget(Images::className(), [
                         \'config\' => [
                             \'pick\' => [

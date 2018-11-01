@@ -1,3 +1,10 @@
+/*必填项加星*/
+div.required label:before {
+    content: "* ";
+    color: red;
+}
+
+/*其他*/
 .breadcrumb {
     background-color: #f1f4f5;
     padding: 0;

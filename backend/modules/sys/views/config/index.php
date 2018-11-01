@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
+use yii\helpers\ArrayHelper;
 
 $this->title = '配置管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -12,15 +14,18 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <li class="active"><a href="<?= Url::to(['config/index'])?>"> 配置管理</a></li>
             <li><a href="<?= Url::to(['config-cate/index'])?>"> 配置分类</a></li>
             <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
-                <i class="fa fa-plus"></i>  创建
+                <i class="fa fa-plus"></i> 创建
             </a>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="col-sm-5">
+                                    <?= Html::dropDownList('cate_id', $cate_id, ArrayHelper::merge(['' => '全部'], \common\models\sys\ConfigCate::getList()), ['class' => 'form-control']);?>
+                                </div>
                                 <div class="input-group m-b">
                                     <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入标题/标识'?>"/>
                                     <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>

@@ -17,6 +17,11 @@ class AddonHelper
     private static $resourcesUrl;
 
     /**
+     * @var array
+     */
+    protected static $addonModels = [];
+
+    /**
      * 获取插件配置
      *
      * @param $name
@@ -86,6 +91,31 @@ class AddonHelper
     }
 
     /**
+     * 获取配置信息
+     *
+     * @return mixed
+     */
+    public static function getConfig()
+    {
+        $model = Yii::$app->params['addon'];
+        return unserialize($model->config);
+    }
+
+    /**
+     * 写入配置信息
+     *
+     * @param $config
+     * @return bool
+     */
+    public static function setConfig($config)
+    {
+        $model = Yii::$app->params['addon'];
+        $model->config = serialize($config);
+
+        return $model->save();
+    }
+
+    /**
      * 初始化模块信息
      *
      * @param string $addonName 模块名称
@@ -100,9 +130,19 @@ class AddonHelper
             throw new NotFoundHttpException("模块不能为空");
         }
 
-        if (!($addonModel = Addons::findByName($addonName)))
+        // 减少查询
+        if (isset(self::$addonModels[$addonName]))
         {
-            throw new NotFoundHttpException("模块不存在");
+            $addonModel = self::$addonModels[$addonName];
+        }
+        else
+        {
+            if (!($addonModel = Addons::findByName($addonName)))
+            {
+                throw new NotFoundHttpException("模块不存在");
+            }
+
+            self::$addonModels[$addonName] = $addonModel;
         }
 
         // 当前模块实例
@@ -148,31 +188,38 @@ class AddonHelper
         }
 
         $route = explode('/', $route);
-        if (count($route) < 2)
+        if (($countRoute = count($route)) < 2)
         {
             throw new NotFoundHttpException('路由解析错误,请检查路由地址');
         }
 
-        $controller = StringHelper::strUcwords($route[0]);
-        $action = StringHelper::strUcwords($route[1]);
+        $oldController = $route[$countRoute - 2];
+        $oldAction = $route[$countRoute - 1];
+
+        $controller = StringHelper::strUcwords($oldController);
+        $action = StringHelper::strUcwords($oldAction);
+        // 删除控制器和方法
+        unset($route[$countRoute - 1], $route[$countRoute - 2]);
+        $controllerPath = !empty($route) ? implode('\\', $route) : '';
+        !empty($controllerPath) && $controllerPath .= '\\';
 
         $controllerName = $controller . 'Controller';
         $addonRootPath = "\\addons\\" . Yii::$app->params['addonInfo']['name'];
         $tmpInfo = [
-            'oldController' => $route[0],
-            'oldAction' => $route[1],
+            'oldController' => $oldController,
+            'oldAction' => $oldAction,
             'controller' => $controller,
             'action' => $action,
             'controllerName' => $controllerName,
             'actionName' => "action" . $action,
             'rootPath' => $addonRootPath,
             'rootAbsolutePath' => Yii::getAlias('@addons') .'/' .Yii::$app->params['addonInfo']['name'],
-            'controllersPath' => $addonRootPath . "\\" . $module . "\\controllers\\" . $controllerName
+            'controllersPath' => $addonRootPath . "\\" . $module . "\\controllers\\" . $controllerPath . $controllerName
         ];
 
         // 存入模块基础的信息
         Yii::$app->params['addonInfo'] = ArrayHelper::merge(Yii::$app->params['addonInfo'], $tmpInfo);
-        unset($tmpInfo, $addonRootPath, $controllerName, $controller, $action);
+        unset($tmpInfo, $addonRootPath, $controllerName, $controller, $action, $controllerPath);
 
         return true;
     }

@@ -8,13 +8,15 @@ use common\models\member\MemberInfo;
  */
 class LoginForm extends \common\models\common\LoginForm
 {
+    public $group;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['username', 'password'], 'required'],
+            [['username', 'password', 'group'], 'required'],
             ['password', 'validatePassword'],
         ];
     }
@@ -24,6 +26,7 @@ class LoginForm extends \common\models\common\LoginForm
         return [
             'username' => '登录帐号',
             'password' => '登录密码',
+            'group' => '组别',
         ];
     }
 

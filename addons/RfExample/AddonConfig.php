@@ -133,6 +133,11 @@ class AddonConfig
             'route' => 'excel/index',
             'icon' => ''
         ],
+        [
+            'title' => '服务层调用',
+            'route' => 'servers/index',
+            'icon' => ''
+        ],
     ];
 
     /**

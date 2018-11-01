@@ -31,7 +31,7 @@ CREATE TABLE `rf_addon_example_curd` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='示例插件_curd';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_示例插件_curd';
 
 DROP TABLE IF EXISTS `rf_addon_example_cate`;
 CREATE TABLE `rf_addon_example_cate` (
@@ -44,7 +44,7 @@ CREATE TABLE `rf_addon_example_cate` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_分类表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_示例插件_分类表';
 ";
 
 // 执行sql

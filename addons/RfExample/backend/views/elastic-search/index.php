@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $tmpModel['content']?></td>
                             <td>
                                 <a href="<?= AddonUrl::to(['edit','id' => $model['_id']])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                <?php echo \common\helpers\HtmlHelper::statusSpan($tmpModel['status'] ?? 1);?>
+                                <?= \common\helpers\HtmlHelper::statusSpan($tmpModel['status'] ?? 1);?>
                                 <a href="<?= AddonUrl::to(['delete','id'=> $model['_id']])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
                             </td>
                         </tr>

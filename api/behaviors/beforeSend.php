@@ -47,7 +47,7 @@ class beforeSend extends Behavior
             $responseData = [
                 'name' => ($exception instanceof \Exception || $exception instanceof \ErrorException) ? $exception->getName() : 'Exception',
                 'type' => get_class($exception),
-                'file' => $exception->getFile(),
+                'file' => method_exists($exception, 'getFile') ? $exception->getFile() : '',
                 'errorMessage' => $exception->getMessage(),
                 'line' => $exception->getLine(),
                 'stack-trace' => explode("\n", $exception->getTraceAsString()),
@@ -71,6 +71,6 @@ class beforeSend extends Behavior
 
         unset($responseData);
         $response->format = yii\web\Response::FORMAT_JSON;
-        // $response->statusCode = 200; // 考虑到了某些前端必须返回成功操作，所以这里可以设置为都返回200的状态码
+        $response->statusCode = 200; // 考虑到了某些前端必须返回成功操作，所以这里可以设置为都返回200的状态码
     }
 }

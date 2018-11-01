@@ -3,6 +3,7 @@ namespace common\models\member;
 
 use Yii;
 use yii\web\NotFoundHttpException;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * This is the model class for table "{{%member_credits_log}}".
@@ -65,12 +66,14 @@ class CreditsLog extends \common\models\common\BaseModel
     /**
      * 变动用户积分或者余额记录
      *
-     * @param int $member_id
-     * @param string $field
-     * @param double $num
-     * @param null $credit_group
-     * @return MemberInfo|null|bool
+     * @param $member_id
+     * @param $field
+     * @param $num
+     * @param string $credit_group
+     * @param string $remark
+     * @return MemberInfo|null
      * @throws NotFoundHttpException
+     * @throws UnprocessableEntityHttpException
      * @throws \yii\db\Exception
      */
     public static function change($member_id, $field, $num, $credit_group = '', $remark = '')
@@ -104,7 +107,7 @@ class CreditsLog extends \common\models\common\BaseModel
         catch(\Exception $e)
         {
             $transaction->rollBack();
-            throw $e;
+            throw new UnprocessableEntityHttpException($e);
         }
 
         throw new NotFoundHttpException('找不到用户');

@@ -28,7 +28,7 @@ class UnionPay
      * @param $type
      * @return mixed
      */
-    private function create($type)
+    private function create($type = 'UnionPay_Express')
     {
         $gateway = Omnipay::create($type);
         $gateway->setMerId($this->_config['mch_id']);
@@ -48,10 +48,11 @@ class UnionPay
      */
     public function notify()
     {
-        $gateway = $this->create('Union_Express');
-        return $gateway->completePurchase(['request_params' => $_REQUEST])->send();
+        $gateway = $this->create();
+        return $gateway->completePurchase([
+            'request_params' => $_REQUEST
+        ])->send();
     }
-
 
     /**
      * APP
@@ -61,7 +62,7 @@ class UnionPay
      */
     public function app($order, $debug = false)
     {
-        $gateway = $this->create('Union_Express');
+        $gateway = $this->create();
         $response = $gateway->createOrder($order)->send();
 
         return $debug ? $response->getData() : $response->getTradeNo();
@@ -75,40 +76,23 @@ class UnionPay
      */
     public function html($order, $debug = false)
     {
-        $gateway = $this->create('Union_Express');
-        $response = $gateway->createOrder($order)->send();
+        $gateway = $this->create();
+        $response = $gateway->purchase($order)->send();
 
         return $debug ? $response->getData() : $response->getRedirectHtml();
     }
 
     /**
-     * 关闭订单
-     *
-     * 订单类型
-     * @param $type WechatPay_App, WechatPay_Native, WechatPay_Js, WechatPay_Pos, WechatPay_Mweb
-     * @param $out_trade_no
-     */
-    public function close($out_trade_no)
-    {
-        $gateway = $this->create('UnionPay_Express');
-        $response = $gateway->close([
-            'out_trade_no' => $out_trade_no, //The merchant trade no
-        ])->send();
-
-        return $response->getData();
-    }
-
-    /**
      * 查询订单
      *
-     * @param $orderId 订单id
-     * @param $txnTime 订单交易时间
-     * @param $txnAmt 订单总费用
+     * @param int $orderId 订单id
+     * @param int $txnTime 订单交易时间
+     * @param int $txnAmt 订单总费用
      * @return mixed
      */
     public function query($orderId, $txnTime, $txnAmt)
     {
-        $gateway = $this->create('UnionPay_Express');
+        $gateway = $this->create();
         $response = $gateway->query([
             'orderId' => $orderId, //Your site trade no, not union tn.
             'txnTime' => $txnTime, //Order trade time
@@ -119,20 +103,42 @@ class UnionPay
     }
 
     /**
-     * 退款
+     * 查询订单
      *
-     * @param $orderId 订单id
-     * @param $txnTime 订单交易时间
-     * @param $txnAmt 订单总费用
+     * @param int $orderId 订单id
+     * @param int $txnTime 订单交易时间
+     * @param int $txnAmt 订单总费用
      * @return mixed
      */
-    public function refund($orderId, $txnTime, $txnAmt)
+    public function close($orderId, $txnTime, $txnAmt, $queryId)
     {
-        $gateway = $this->create('UnionPay_Express');
+        $gateway = $this->create();
+        $response = $gateway->query([
+            'orderId' => $orderId, //Your site trade no, not union tn.
+            'txnTime' => $txnTime, //Order trade time
+            'txnAmt' => $txnAmt, //Order total fee
+            'queryId' => $queryId, //Order total fee
+        ])->send();
+
+        return $response->getData();
+    }
+
+    /**
+     * 退款
+     *
+     * @param int $orderId 订单id
+     * @param int $txnTime 订单交易时间
+     * @param int $txnAmt 订单总费用
+     * @return mixed
+     */
+    public function refund($orderId, $txnTime, $txnAmt, $queryId)
+    {
+        $gateway = $this->create();
         $response = $gateway->refund([
             'orderId' => $orderId, //Your site trade no, not union tn.
             'txnTime' => $txnTime, //Order trade time
-            'txnAmt'  => $txnAmt, //Order total fee
+            'txnAmt' => $txnAmt, //Order total fee
+            'queryId' => $queryId, //Order total fee
         ])->send();
 
         return $response->getData();

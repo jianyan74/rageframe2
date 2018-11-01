@@ -4,7 +4,7 @@ namespace api\modules\v1\controllers;
 use Yii;
 use api\modules\v1\models\MiniProgramLoginForm;
 use common\models\member\MemberInfo;
-use common\models\common\AccessToken;
+use common\models\api\AccessToken;
 use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
 use common\models\member\MemberAuth;
@@ -147,8 +147,7 @@ class MiniProgramController extends \yii\rest\ActiveController
             $memberAuthInfo->save();
         }
 
-        // 默认为不刷新token 如果要刷请设置第二个参数为false
-        return AccessToken::getAccessToken($member, true);
+        return AccessToken::getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
     }
 
     /**

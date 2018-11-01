@@ -2,6 +2,7 @@
 namespace common\controllers;
 
 use Yii;
+use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
 use common\helpers\AddonUrl;
 use common\components\ModuleIdToAddonAppTrait;
@@ -94,7 +95,7 @@ class AddonsBaseController extends BaseController
 
     /**
      * 匹配对应的渲染的视图
-     * 
+     *
      * @param $view
      */
     protected function analyView($view)
@@ -138,8 +139,7 @@ class AddonsBaseController extends BaseController
      */
     protected function getConfig()
     {
-        $model = Yii::$app->params['addon'];
-        return unserialize($model->config);
+        return AddonHelper::getConfig();
     }
 
     /**
@@ -150,10 +150,7 @@ class AddonsBaseController extends BaseController
      */
     protected function setConfig($config)
     {
-        $model = Yii::$app->params['addon'];
-        $model->config = serialize($config);
-
-        return $model->save();
+        return AddonHelper::setConfig($config);
     }
 
     /**

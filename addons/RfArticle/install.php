@@ -62,7 +62,7 @@ CREATE TABLE `rf_addon_article_single` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `article_id` (`id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_单页文章表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_文章单页表';
 
 -- ----------------------------
 -- Table structure for rf_addon_article_tag
@@ -77,7 +77,7 @@ CREATE TABLE `rf_addon_article_tag` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `tag_id` (`id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_标签表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_文章标签表';
 
 -- ----------------------------
 -- Table structure for rf_addon_article_tag_map

@@ -3,9 +3,8 @@ use common\helpers\AddonHelper;
 
 $path = AddonHelper::getResourcesUrl();
 $this->title = isset($config['site_title']) ? $config['site_title'] : '购物节';
+$openShare = false; // 开启微信分享
 ?>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript" charset="utf-8"></script>
-
 <div id="wrap">
     <div class="container">
         <img src="<?= $path;?>img/logo.png" class="logo"/>
@@ -145,3 +144,12 @@ $this->title = isset($config['site_title']) ? $config['site_title'] : '购物节
     var signed = "<?= !empty($isSign);?>";   //今日是否已签到,默认false未签到
     var signInDays = "<?= $user['sign_num'] ?>";   //已签到天数，默认0
 </script>
+
+<?php
+if ($openShare){
+    echo $this->render('share', [
+        'app' => $app,
+        'config' => $config
+    ]);
+};
+?>

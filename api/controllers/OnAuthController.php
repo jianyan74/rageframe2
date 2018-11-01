@@ -29,6 +29,26 @@ class OnAuthController extends ActiveController
     }
 
     /**
+     * @return array
+     */
+    protected function verbs()
+    {
+        // 判断是否插件模块进入
+        if (isset(Yii::$app->params['addon']))
+        {
+            return [];
+        }
+
+        return [
+            'index' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT', 'PATCH'],
+            'delete' => ['DELETE'],
+        ];
+    }
+
+    /**
      * 验证更新是否本人
      *
      * @param $action
@@ -40,7 +60,7 @@ class OnAuthController extends ActiveController
      */
     public function beforeAction($action)
     {
-        if ($action == 'update' && Yii::$app->user->id != Yii::$app->request->get('id', null))
+        if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null))
         {
             throw new NotFoundHttpException('权限不足.');
         }
@@ -74,7 +94,7 @@ class OnAuthController extends ActiveController
     {
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
-        $model->member_id = Yii::$app->user->id;
+        $model->member_id = Yii::$app->user->identity->member_id;
         if (!$model->save())
         {
             return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));

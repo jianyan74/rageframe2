@@ -95,12 +95,16 @@ AppAsset::register($this);
 <script>
 
     $(document).ready(function () {
-        // 当前高度
-        var menuYloc = $("#explain").offset().top;
+
+        // 判断高度
+        if ($(window).height() < $('#explain').height() + 60){
+            return false;
+        }
+
         $(window).scroll(function () {
             var offsetTop = $(window).scrollTop() - 40 + "px";
-            $("#explain").animate({ top: offsetTop }, { duration: 600, queue: false });
 
+            $("#explain").animate({ top: offsetTop }, { duration: 600, queue: false });
             if ($(window).scrollTop() < 60){
                 $("#explain").animate({ top:0}, { duration: 600, queue: false });
             }

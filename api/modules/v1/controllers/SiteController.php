@@ -3,10 +3,12 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use common\models\common\AccessToken;
+use common\models\api\AccessToken;
 use common\helpers\ResultDataHelper;
+use common\models\member\MemberInfo;
 use api\controllers\OffAuthController;
 use api\modules\v1\models\LoginForm;
+use api\modules\v1\models\RefreshForm;
 
 /**
  * 登录接口
@@ -33,7 +35,7 @@ class SiteController extends OffAuthController
             $model->attributes = Yii::$app->request->post();
             if ($model->validate())
             {
-                return AccessToken::getAccessToken($model->getUser());
+                return AccessToken::getAccessToken($model->getUser(), $model->group);
             }
 
             // 返回数据验证失败
@@ -53,11 +55,17 @@ class SiteController extends OffAuthController
      */
     public function actionRefresh()
     {
-        $refresh_token = Yii::$app->request->post('refresh_token');
-
-        if ($user = AccessToken::find()->where(['refresh_token' => $refresh_token])->one())
+        $model = new RefreshForm();
+        $model->attributes = Yii::$app->request->post();
+        if (!$model->validate())
         {
-            return AccessToken::getAccessToken($user);
+            return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
+        }
+
+        $accessToken = AccessToken::find()->where(['refresh_token' => $model->refresh_token])->one();
+        if ($accessToken && ($member = MemberInfo::findIdentity($accessToken['member_id'])))
+        {
+            return AccessToken::getAccessToken($member, $model->group);
         }
 
         throw new NotFoundHttpException('令牌错误，找不到用户!');

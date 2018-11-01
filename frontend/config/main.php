@@ -11,6 +11,13 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    // 'catchAll' => ['site/offline'], // 全拦截路由(比如维护时可用)
+    'modules' => [
+        /** ------ 会员模块 ------ **/
+        'member' => [
+            'class' => 'frontend\modules\member\Module',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',

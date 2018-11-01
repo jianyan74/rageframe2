@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'msg_history_date')->textInput()->hint('设置保留历史消息记录的天数，为0则为保留全部，需要开启定时任务。') ?>
                 <?= $form->field($model, 'utilization_status')->radioList([1 => '开启', 0 => '关闭'])->hint('开启此项后，系统将记录系统中的规则的使用情况，并生成走势图。') ?>
                 <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-2">
+                    <div class="col-sm-12 text-center">
                         <button class="btn btn-primary" type="submit">保存</button>
                     </div>
                 </div>

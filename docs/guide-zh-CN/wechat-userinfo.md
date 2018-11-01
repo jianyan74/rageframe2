@@ -10,6 +10,12 @@
 ```
 // 注意这里如果开启模拟微信数据，且未在微信打开这里的数据是模拟的数据
 Yii::$app->params['wechatMember'];
+
+// 获取微信当前用户信息，注意不能被模拟
+Yii::$app->wechat->user
+
+// 通过openid获取
+$user = $app->user->get($openId);
 ```
 **如果不需要自动去获取用户信息怎么办？**
 

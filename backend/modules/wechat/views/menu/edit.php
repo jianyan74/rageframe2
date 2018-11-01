@@ -74,29 +74,38 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="ibox-content clearfix">
                         <div class="col-sm-12">
                             <div class="col-sm-3">
-                                <?= $form->field($model, 'sex')->dropDownList(Yii::$app->params['individuationMenuSex'])->label('性别') ?>
+                                <?= $form->field($model, 'sex')->dropDownList(Yii::$app->params['individuationMenuSex'],[
+                                    'disabled' => $model->isNewRecord ? false : true
+                                ])->label('性别') ?>
                             </div>
                             <div class="col-sm-3">
-                                <?= $form->field($model, 'client_platform_type')->dropDownList(Yii::$app->params['individuationMenuClientPlatformType'])->label('系统') ?>
+                                <?= $form->field($model, 'client_platform_type')->dropDownList(Yii::$app->params['individuationMenuClientPlatformType'],[
+                                    'disabled' => $model->isNewRecord ? false : true
+                                ])->label('系统') ?>
                             </div>
                             <div class="col-sm-3">
-                                <?= $form->field($model, 'language')->dropDownList(Yii::$app->params['individuationMenuLanguage'])->label('语言') ?>
+                                <?= $form->field($model, 'language')->dropDownList(Yii::$app->params['individuationMenuLanguage'],[
+                                    'disabled' => $model->isNewRecord ? false : true
+                                ])->label('语言') ?>
                             </div>
                             <div class="col-sm-3">
-                                <?= $form->field($model, 'tag_id')->dropDownList(ArrayHelper::map($fansTags,'id','name'),['prompt' => '不限'])->label('标签') ?>
+                                <?= $form->field($model, 'tag_id')->dropDownList(ArrayHelper::map($fansTags,'id','name'),[
+                                    'prompt' => '不限',
+                                    'disabled' => $model->isNewRecord ? false : true
+                                ])->label('标签') ?>
                             </div>
                             <div class="col-sm-6">
-                                <?php if($model->isNewRecord){?>
-                                    <?= $form->field($model, 'province')->dropDownList(MenuProvinces::getMenuList(1),['prompt' => '不限',"@change" => "province"])->label('省/直辖市') ?>
-                                <?php }else{ ?>
-                                    <?= $form->field($model, 'province')->dropDownList([$model->province => $model->province])->label('省/直辖市') ?>
-                                <?php } ?>
+                                <?= $form->field($model, 'province')->dropDownList(MenuProvinces::getMenuList(1),[
+                                    'prompt' => '不限',
+                                    "@change" => "province",
+                                    'disabled' => $model->isNewRecord ? false : true
+                                ])->label('省/直辖市') ?>
                             </div>
                             <div class="col-sm-6">
                                 <?php if($model->isNewRecord){?>
                                     <?= $form->field($model, 'city')->dropDownList([],['prompt' => '不限'])->label('市') ?>
                                 <?php }else{ ?>
-                                    <?= $form->field($model, 'city')->dropDownList([$model->city => $model->city])->label('省/直辖市') ?>
+                                    <?= $form->field($model, 'city')->dropDownList([$model->city => $model->city],['disabled' => true])->label('省/直辖市') ?>
                                 <?php } ?>
                             </div>
                         </div>

@@ -37,7 +37,7 @@ class AliPay
      * @param $type
      * @return mixed
      */
-    private function _create($type)
+    private function _create($type = 'Alipay_AopApp')
     {
         $gateway = Omnipay::create($type);
         $gateway->setSignType('RSA2'); // RSA/RSA2/MD5
@@ -141,8 +141,7 @@ class AliPay
     /**
      * 手机网站支付
      *
-     * @param $config
-     * @param null $notifyUrl
+     * @param $order
      * @return mixed
      */
     public function wap($order)
@@ -177,10 +176,37 @@ class AliPay
      */
     public function refund(array $info)
     {
-        $gateway = $this->_create('Alipay_AopF2F');
+        $gateway = $this->_create();
         $request = $gateway->refund();
         $response = $request->setBizContent($info);
 
         return $response->getData();
+    }
+
+    /**
+     * 扫码收款
+     *
+     * @return mixed
+     */
+    public function capture()
+    {
+        $gateway = $this->_create('Alipay_AopF2F');
+        $request = $gateway->capture();
+
+        return $request;
+    }
+
+    /**
+     * 异步/同步通知
+     *
+     * @return mixed
+     */
+    public function notify()
+    {
+        $gateway = $this->_create();
+        $request = $gateway->completePurchase();
+        $request->setParams(array_merge(Yii::$app->request->post(), Yii::$app->request->get()));//Optional
+
+        return $request;
     }
 }

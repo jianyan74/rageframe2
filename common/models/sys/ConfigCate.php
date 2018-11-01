@@ -93,6 +93,6 @@ class ConfigCate extends \common\models\common\BaseModel
             ->all();
 
         $models = ArrayHelper::itemsMerge($models);
-        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models),'id','title');
+        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
     }
 }

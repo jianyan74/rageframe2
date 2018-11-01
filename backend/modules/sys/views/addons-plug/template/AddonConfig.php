@@ -50,7 +50,7 @@ class AddonConfig
     public $isHook = <?= $model['is_hook'] == true ? 'true' : 'false' ?>;
 
     /**
-     * 小程序
+     * Api/小程序
      *
      * @var bool
      */

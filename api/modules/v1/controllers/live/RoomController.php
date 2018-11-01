@@ -41,7 +41,7 @@ class RoomController extends OnAuthController
     {
         $model = new Room();
         $model->attributes = Yii::$app->request->post();
-        $model->member_id = Yii::$app->user->id;
+        $model->member_id = Yii::$app->user->identity->member_id;
         $model->start_time = time(); // 直播推拉流有效开始时间
         $model->end_time = time() + 60 * 60 * 24 * 2;// 直播推拉流有效结束时间
         if (!$model->save())

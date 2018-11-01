@@ -28,6 +28,7 @@ class MemberController extends MController
         $request  = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
+        $model->scenario = 'backendCreate';
         $modelInfo = clone $model;
         if ($model->load($request->post()))
         {

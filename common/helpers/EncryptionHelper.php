@@ -1,5 +1,7 @@
 <?php
 namespace common\helpers;
+use yii\web\NotFoundHttpException;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Class EncryptionHelper
@@ -56,28 +58,90 @@ class EncryptionHelper
     /**
      * 创建参数(包括签名的处理)
      *
+     * $paramArr = [
+     *     'time' => time(),
+     *     'nonceStr' => \common\helpers\StringHelper::random(8),
+     *     'appId' => 'doormen',
+     *  ]
      * @param array $paramArr 变量参数
-     * @param string $secret 秘钥
+     * @param string $secret 秘钥(appSecret)
      * @return string
      */
     public static function createUrlParam(array $paramArr = [], $secret, $signName = 'sign')
     {
         $paraStr = "";
-        $signStr = "";
         ksort($paramArr);
         foreach ($paramArr as $key => $val)
         {
             if ($key != '' && $val != '')
             {
-                $signStr .= $key . $val;
                 $paraStr .= $key . '=' . urlencode($val) . '&';
             }
         }
 
-        $signStr .= $secret;// 排好序的参数加上secret,进行md5
+        // 去掉最后一个&
+        $paraStr = substr($paraStr, 0, strlen($paraStr) - 1);
+
+        $signStr = $paraStr . $secret;// 排好序的参数加上secret,进行md5
         $sign = strtolower(md5($signStr));
+
+        $paraStr .= '&';
         $paraStr .= $signName . '=' . $sign;// 将md5后的值作为参数,便于服务器的效验
 
         return $paraStr;
+    }
+
+    /**
+     * 解密url
+     *
+     * @param array $paramArr
+     * @param $secret
+     * @param string $signName
+     * @throws UnprocessableEntityHttpException
+     */
+    public static function decodeUrlParam(array $paramArr = [], $secret, $signName = 'sign')
+    {
+        // 验证必填参数 time/nonceStr/appId/signature
+        if (!isset($paramArr['time']))
+        {
+            throw new UnprocessableEntityHttpException('缺少参数 time');
+        }
+
+        if (!isset($paramArr['sign']))
+        {
+            throw new UnprocessableEntityHttpException('缺少参数 sign');
+        }
+
+        if (!isset($paramArr['appId']))
+        {
+            throw new UnprocessableEntityHttpException('缺少参数 appId');
+        }
+
+        if (time() - 60 > $paramArr['time'])
+        {
+            throw new UnprocessableEntityHttpException('时间已过期');
+        }
+
+        $sign = $paramArr[$signName];
+        unset($paramArr[$signName]);
+
+        ksort($paramArr);
+        $signStr = '';
+        foreach ($paramArr as $key => $val)
+        {
+            $signStr .= $key . '=' . urlencode($val) . '&';
+        }
+
+        // 去掉最后一个&
+        $signStr = substr($signStr, 0, strlen($signStr) - 1);
+
+        // 排好序的参数加上secret,进行md5
+        $signStr .= $secret;
+        if (strtolower(md5($signStr)) !== $sign)
+        {
+            throw new UnprocessableEntityHttpException('签名错误');
+        }
+
+        return true;
     }
 }

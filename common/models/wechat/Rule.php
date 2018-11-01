@@ -64,6 +64,7 @@ class Rule extends \common\models\common\BaseModel
     public function rules()
     {
         return [
+            ['name', 'required'],
             ['name', 'unique','message' => '规则名称已经被占用'],
             [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name', 'module'], 'string', 'max' => 50],

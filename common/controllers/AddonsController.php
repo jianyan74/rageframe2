@@ -60,22 +60,15 @@ class AddonsController extends Controller
      */
     public function actionExecute()
     {
-        try
-        {
-            // 初始化模块
-            AddonHelper::initAddon($this->addonName, $this->route);
-            // 解析路由
-            AddonHelper::analysisRoute($this->route, $this->getModuleIdToAddonApp());
-            // 替换
-            Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
+        // 初始化模块
+        AddonHelper::initAddon($this->addonName, $this->route);
+        // 解析路由
+        AddonHelper::analysisRoute($this->route, $this->getModuleIdToAddonApp());
+        // 替换
+        Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
 
-            // 实例化解获取数据
-            return $this->rendering();
-        }
-        catch (\Exception $e)
-        {
-            throw new NotFoundHttpException($e->getMessage());
-        }
+        // 实例化解获取数据
+        return $this->rendering();
     }
 
     /**

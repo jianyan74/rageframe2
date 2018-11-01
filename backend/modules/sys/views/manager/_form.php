@@ -1,22 +1,20 @@
 <?php
+
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-
+use common\helpers\HtmlHelper;
 ?>
 
 <link href="/backend/resources/other/cropper/cropper.min.css" rel="stylesheet">
 <link href="/backend/resources/other/cropper/sitelogo.css" rel="stylesheet">
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <?php $form = ActiveForm::begin([
-        'fieldConfig' => [
-        ]
-    ]); ?>
+    <?php $form = ActiveForm::begin([]); ?>
     <div class="row">
         <div class="col-sm-3">
             <div class="ibox-content text-center">
                 <div class="m-b-md">
-                    <img class="img-circle circle-border" alt="image" src="<?= \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>">
+                    <img class="img-circle circle-border" alt="image" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImgBase64();?>'">
                 </div>
                 <p class="font-bold"><h3><i class="fa <?= $model->sex == 1 ? 'fa-mars': 'fa-venus'; ?>"></i> <?= $model->realname?></h3></p>
                 <div class="text-center">

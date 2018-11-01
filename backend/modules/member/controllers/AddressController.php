@@ -159,8 +159,9 @@ class AddressController extends MController
         if (empty($id) || empty(($model = AddressForm::findOne($id))))
         {
             $model = new AddressForm;
+            $model = $model->loadDefaultValues();
             $model->member_id = $this->member_id;
-            return $model->loadDefaultValues();
+            return $model;
         }
 
         return $model;

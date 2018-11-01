@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <div class="col-sm-12">
                     <?php $form = ActiveForm::begin([]); ?>
                     <?= $form->field($model, 'share_title')->textInput(); ?>
-                    <?= $form->field($model, 'share_explain')->textarea(); ?>
                     <?= $form->field($model, 'share_cover')->widget(Images::className(), [
                         'config' => [
                             'pick' => [
@@ -27,10 +26,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         ]
                     ]); ?>
                     <?= $form->field($model, 'share_link')->textInput(); ?>
-                    <div class="hr-line-dashed"></div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
+                        <div class="hr-line-dashed"></div>
                         <button class="btn btn-primary" type="submit">保存</button>
                         <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                     </div>

@@ -127,7 +127,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <div class="form-group">
                                     <div class="col-sm-12 text-center">
                                         <div class="hr-line-dashed"></div>
-                                        <button class="btn btn-primary" type="submit">保存内容</button>
+                                        <button class="btn btn-primary" type="submit">保存</button>
                                     </div>
                                 </div>
                                 <?php ActiveForm::end(); ?>

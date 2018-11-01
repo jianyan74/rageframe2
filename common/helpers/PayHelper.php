@@ -65,4 +65,24 @@ class PayHelper
 
         return false;
     }
+
+    /**
+     * 告诉微信已经成功了
+     *
+     * @return bool|string
+     */
+    public static function notifyWechatSuccess()
+    {
+        return ArrayHelper::toXml(['return_code' => 'SUCCESS', 'return_msg' => 'OK']);
+    }
+
+    /**
+     * 告诉微信失败了
+     *
+     * @return bool|string
+     */
+    public static function notifyWechatFail()
+    {
+        return ArrayHelper::toXml(['return_code' => 'FAIL', 'return_msg' => 'OK']);
+    }
 }

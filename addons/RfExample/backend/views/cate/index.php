@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </tr>
                     </thead>
                     <tbody>
-                    <?php echo $this->render('tree', [
+                    <?= $this->render('tree', [
                         'models' => $models,
                         'parent_title' =>"无",
                         'pid' => 0,

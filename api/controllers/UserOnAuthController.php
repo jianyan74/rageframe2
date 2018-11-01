@@ -30,6 +30,26 @@ class UserOnAuthController extends ActiveController
     }
 
     /**
+     * @return array
+     */
+    protected function verbs()
+    {
+        // 判断是否插件模块进入
+        if (isset(Yii::$app->params['addon']))
+        {
+            return [];
+        }
+
+        return [
+            'index' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT', 'PATCH'],
+            'delete' => ['DELETE'],
+        ];
+    }
+
+    /**
      * 验证更新是否本人
      *
      * @param $action
@@ -41,7 +61,7 @@ class UserOnAuthController extends ActiveController
      */
     public function beforeAction($action)
     {
-        if ($action == 'update' && Yii::$app->user->id != Yii::$app->request->get('id', null))
+        if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null))
         {
             throw new NotFoundHttpException('权限不足.');
         }
@@ -56,7 +76,7 @@ class UserOnAuthController extends ActiveController
     {
         return new ActiveDataProvider([
             'query' => $this->modelClass::find()
-                ->where(['status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->id])
+                ->where(['status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->identity->member_id])
                 ->orderBy('id desc')
                 ->asArray(),
             'pagination' => [
@@ -75,7 +95,7 @@ class UserOnAuthController extends ActiveController
     {
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
-        $model->member_id = Yii::$app->user->id;
+        $model->member_id = Yii::$app->user->identity->member_id;
         if (!$model->save())
         {
             return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
@@ -136,7 +156,7 @@ class UserOnAuthController extends ActiveController
      */
     protected function findModel($id)
     {
-        if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->id])->one()))
+        if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->identity->member_id])->one()))
         {
             throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');
         }

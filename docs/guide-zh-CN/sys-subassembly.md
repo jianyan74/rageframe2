@@ -4,6 +4,7 @@
 
 - 生成二维码
 - IP地址转地区
+- Curl
 
 ### 生成二维码
 
@@ -59,3 +60,26 @@ array (size=4)
   4 => string '410100' (length=6)
 ```
 
+### Curl
+
+```
+use linslin\yii2\curl;
+$curl = new curl\Curl();
+
+//get http://example.com/
+$response = $curl->get('http://example.com/');
+
+if ($curl->errorCode === null) {
+   echo $response;
+} else {
+     // List of curl error codes here https://curl.haxx.se/libcurl/c/libcurl-errors.html
+    switch ($curl->errorCode) {
+    
+        case 6:
+            //host unknown example
+            break;
+    }
+} 
+```
+
+文档地址：https://github.com/linslin/Yii2-Curl

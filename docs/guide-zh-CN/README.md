@@ -20,10 +20,10 @@
 - [系统JS](sys-js-method.md)
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
-- 服务层Server
+- [服务层Server](sys-service.md)
 - [RESTful Api](sys-restful-api.md)
 - WebSocket
-- 数据字典
+- [数据字典](sys-data-dictionary.md)
 - 单元测试
 
 #### 微信开发
@@ -33,19 +33,18 @@
 - [用户信息获取](wechat-userinfo.md)
 - [JSSDK](wechat-jssdk.md)
 - [微信支付](wechat-payment.md)
-- 模版消息
-- 微信红包
+- [模版消息](wechat-template-message.md)
+- [微信红包](wechat-red-packet.md)
 - 关键字回复
 - 消息概述和响应
-- Access Token
+- [Access Token](wechat-token.md)
 
 #### 模块开发
 
 - [模块介绍及目录](addon-introduce-catalog.md)
-- [模块变量调用](addon-variable.md)
-- 模块开发流程
+- [模块开发流程](addon-flow.md)
 - [钩子说明及调用](addon-hook.md)
-- 模块开发注意事项
+- [模块辅助说明](addon-helper.md)
 
 #### API文档
 
@@ -60,6 +59,7 @@
 - ArrayHelper - 数组辅助类
 - FileHelper - 文件辅助类
 - DateHelper - 日期格式辅助类
+- PayHelper - 支付辅助类
 - [StringHelper](helper-string.md) - 字符串辅助类
 - [UrlHelper](helper-url.md) - Url生成辅助类
 - RegularHelper - 正则验证辅助类

@@ -7,9 +7,9 @@
             <?= $form->field($moduleModel, 'media_id')->dropDownList(\common\helpers\ArrayHelper::map(\common\models\wechat\Attachment::getList('voice'), 'media_id', 'file_name')) ?>
         </div>
         <div class="form-group">　
-            <div class="col-sm-4 col-sm-offset-2">
+            <div class="col-sm-12 text-center">
                 <div class="hr-line-dashed"></div>
-                <button class="btn btn-primary" type="submit">保存内容</button>
+                <button class="btn btn-primary" type="submit">保存</button>
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
         </div>

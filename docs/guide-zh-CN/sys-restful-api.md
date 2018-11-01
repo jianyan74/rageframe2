@@ -45,18 +45,12 @@ return [
 
 ### 不需要速率控制设置
 
-找到 `common\models\common\AccessToken` 让其直接继承 `common\models\member\MemberInfo` 即可
+找到 `common\models\api\AccessToken` 让其直接继承 `common\models\common\BaseModel` 即可
 
 ### Url权限配置
 
 > 系统默认都是严格校验url方式注意在 `api/config/main.php的urlManager`里添加规则，否则访问都是404。
 > 如果不想严格校验请在 urlManager 里面注释或删除 `'enableStrictParsing' => true,`
-
-如果你不想用严格校验rule，还想用RESTful的curd路由规则，请将rule修改为
-
-```
-
-```
 
 ### 方法权限验证
 
@@ -116,5 +110,8 @@ $this->analyErr($model->getFirstErrors())
 ### 获取当前登录的用户信息
 
 ```
-$member = Yii::$app->user->identity;
+use common\models\member\MemberInfo;
+
+$tokenModel = Yii::$app->user->identity;
+$member = MemberInfo::findIdentity($tokenModel['member_id']);
 ```

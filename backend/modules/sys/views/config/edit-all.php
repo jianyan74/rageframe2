@@ -72,6 +72,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script type="text/javascript">
 
     $(document).ready(function () {
+
         // 当前高度
         var menuYloc = $("#explain").offset().top;
         $(window).scroll(function () {

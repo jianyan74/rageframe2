@@ -3,7 +3,6 @@ namespace common\models\common;
 
 use Yii;
 use yii\filters\RateLimitInterface;
-use common\models\member\MemberInfo;
 
 /**
  * 速率控制
@@ -11,7 +10,7 @@ use common\models\member\MemberInfo;
  * Class RateLimit
  * @package common\models\common
  */
-class RateLimit extends MemberInfo implements RateLimitInterface
+class RateLimit extends User implements RateLimitInterface
 {
     /**
      * 速度控制

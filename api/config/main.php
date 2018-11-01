@@ -23,7 +23,7 @@ return [
     ],
     'components' => [
         'user' => [
-            'identityClass' => 'common\models\common\AccessToken',
+            'identityClass' => 'common\models\api\AccessToken',
             'enableAutoLogin' => true,
             'enableSession' => false,// 显示一个HTTP 403 错误而不是跳转到登录界面
             'loginUrl' => null,
@@ -58,8 +58,8 @@ return [
                          * 默认登录测试控制器(Post)
                          * http://当前域名/api/v1/site/login
                          */
-                        'addons',
                         'web-hook',// git自动更新钩子
+                        // 'sign-secret-key',
                         // 版本1
                         'v1/default',// 默认测试入口
                         'v1/site',
@@ -74,7 +74,6 @@ return [
                     'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
                     'extraPatterns' => [
                         'POST gitee' => 'gitee', // 码云钩子
-                        'GET execute' => 'execute', // 插件渲染
                         'POST login' => 'login',// 登录获取token
                         'POST refresh' => 'refresh',// 重置token
                         // 测试查询可删除 http://当前域名/api/v1/member/member/search
@@ -88,7 +87,7 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['v1/file'],
                     'pluralize' => false,
-                    'patterns' => [
+                    'extraPatterns' => [
                         'POST images' => 'images', // 图片上传
                         'POST videos' => 'videos', // 视频上传
                         'POST voices' => 'voices', // 语音上传
@@ -96,6 +95,17 @@ return [
                         'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
                         'POST qiniu' => 'qiniu', // 七牛上传
                         'POST oss' => 'oss', // 阿里云oss上传
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['addons',],
+                    'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
+                    'extraPatterns' => [
+                        'GET execute' => 'execute', // 插件渲染
+                        'POST execute' => 'execute', // 插件渲染
+                        'PUT execute' => 'execute', // 插件渲染
+                        'DELETE execute' => 'execute', // 插件渲染
                     ],
                 ],
             ]
@@ -113,12 +123,6 @@ return [
         ],
         'errorHandler' => [
             'errorAction' => 'message/error',
-        ],
-    ],
-    'controllerMap' => [
-        // 插件渲染默认控制器
-        'addons' => [
-            'class' => 'common\controllers\AddonsController',
         ],
     ],
     'params' => $params,

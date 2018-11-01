@@ -124,4 +124,16 @@ class DateHelper
         $min = floor($min - ($days * 60 * 24) - ($hours * 60));
         return $days . " 天 " . $hours . " 小时 " . $min . " 分钟 ";
     }
+
+    /**
+     * 时间戳
+     *
+     * @param  integer $accuracy 精度 默认微妙
+     * @return int
+     */
+    public static function getMicrotime($accuracy = 1000000)
+    {
+        $microtime = explode(' ', microtime());
+        return $microtime = (int)round(($microtime[1] + $microtime[0]) * $accuracy, 0);
+    }
 }

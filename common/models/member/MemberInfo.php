@@ -56,6 +56,8 @@ class MemberInfo extends \common\models\common\User
     public function rules()
     {
         return [
+            [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
+            [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
             [['type', 'sex', 'user_integral', 'address_id', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['user_money', 'accumulate_money', 'frozen_money'], 'number'],
@@ -66,9 +68,6 @@ class MemberInfo extends \common\models\common\User
             [['realname'], 'string', 'max' => 10],
             [['email'], 'string', 'max' => 60],
             [['last_ip'], 'string', 'max' => 16],
-            [['allowance', 'allowance_updated_at'], 'integer'],
-            [['refresh_token', 'access_token'], 'string', 'max' => 60],
-            [['access_token', 'refresh_token'], 'unique'],
             ['mobile_phone', 'match', 'pattern' => '/^[1][3578][0-9]{9}$/','message' => '不是一个有效的手机号码'],
             ['last_ip', 'default', 'value' => '0.0.0.0'],
         ];
@@ -104,16 +103,25 @@ class MemberInfo extends \common\models\common\User
             'role' => '权限',
             'last_time' => '最后一次登录时间',
             'last_ip' => '最后一次登录ip',
-            'refresh_token' => '重置token',
-            'access_token' => '授权token',
-            'allowance' => '查询次数',
-            'allowance_updated_at' => '最后一次查询时间',
             'provinces' => '省',
             'city' => '市',
             'area' => '区',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
+        ];
+    }
+
+    /**
+     * 场景
+     *
+     * @return array
+     */
+    public function scenarios()
+    {
+        return [
+            'backendCreate' => ['username', 'password_hash'],
+            'default' => array_keys($this->attributeLabels()),
         ];
     }
 
@@ -140,8 +148,6 @@ class MemberInfo extends \common\models\common\User
     {
         if ($this->isNewRecord)
         {
-            $this->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
-            $this->access_token = Yii::$app->security->generateRandomString() . '_' . time();
             $this->auth_key = Yii::$app->security->generateRandomString();
         }
 

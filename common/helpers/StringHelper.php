@@ -6,7 +6,7 @@ use Ramsey\Uuid\Uuid;
 use yii\helpers\BaseStringHelper;
 
 /**
- * Class ArrayHelper
+ * Class StringHelper
  * @package common\helpers
  */
 class StringHelper extends BaseStringHelper
@@ -17,6 +17,7 @@ class StringHelper extends BaseStringHelper
      * @param string $type 类型 默认时间 time/md5/random/sha1/uniqid 其中uniqid不需要特别开启php函数
      * @param string $name 加密名
      * @return string
+     * @throws \Exception
      */
     public static function uuid($type = 'time', $name = 'php.net')
     {
@@ -275,11 +276,8 @@ class StringHelper extends BaseStringHelper
         $seed = base_convert(md5(microtime() . $_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
         $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
 
-        if ($numeric)
-        {
-            $hash = '';
-        }
-        else
+        $hash = '';
+        if (!$numeric)
         {
             $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
             $length--;

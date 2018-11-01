@@ -10,7 +10,6 @@ use yii\base\Model;
 class SettingForm extends Model
 {
     public $share_title;
-    public $share_explain;
     public $share_cover;
     public $share_link;
 
@@ -25,7 +24,7 @@ class SettingForm extends Model
     {
         return [
             [['share_title', 'share_cover', 'site_title'], 'string', 'max' => 100],
-            [['share_explain', 'share_link'], 'string', 'max' => 255],
+            [['share_link'], 'string', 'max' => 255],
             [['share_link'], 'url'],
             [['start_time', 'end_time'], 'safe'],
         ];
@@ -41,7 +40,6 @@ class SettingForm extends Model
             'start_time' => '活动开始时间',
             'end_time' => '活动结束时间',
             'share_title' => '分享标题',
-            'share_explain' => '分享说明',
             'share_cover' => '分享封面',
             'share_link' => '分享链接',
         ];

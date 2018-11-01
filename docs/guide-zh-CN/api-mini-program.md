@@ -58,7 +58,40 @@ auth_key | string| 是 | 无 | 授权秘钥
     "code": 200,
     "message": "OK",
     "data": {
-     
-     }
+        "refresh_token": "ZQqIzE91lZsOsiBZUzX_HRvH_er71IA3_1527339061",
+        "access_token": "y7ch3kQtRq7dEkqf6le2LOyRNOB_xzQV_1527339061",
+        "expiration_time": 172800,
+        "member": {
+            "id": 1,
+            "username": "admin",
+            "type": 1,
+            "nickname": "简言",
+            "realname": null,
+            "head_portrait": null,
+            "sex": 1,
+            "qq": null,
+            "email": "1@qq.com",
+            "birthday": null,
+            "user_money": "0.00",
+            "accumulate_money": "0.00",
+            "frozen_money": "0.00",
+            "user_integral": 0,
+            "address_id": "0",
+            "visit_count": 9,
+            "home_phone": null,
+            "mobile_phone": null,
+            "role": 10,
+            "last_time": 1527339061,
+            "last_ip": "127.0.0.1",
+            "provinces": 0,
+            "city": 0,
+            "area": 0,
+            "allowance": 2,
+            "allowance_updated_at": 1527339061,
+            "status": 10,
+            "append": 1511169880,
+            "updated": 1527339061
+        }
+    }
 }
 ```

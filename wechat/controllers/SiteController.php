@@ -31,8 +31,9 @@ class SiteController extends WController
      */
     public function actionIndex()
     {
-        // echo "<pre>";
-        // print_r(Yii::$app->params['wechatMember']);die();
+        // 个人信息
+        // p(Yii::$app->wechat->user);
+        // p(Yii::$app->params['wechatMember']);
 
         return $this->render('index', [
 

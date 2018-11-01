@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <?php } ?>
             <li><a href="<?= Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
             <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['edit', 'cate_id' => $cate_id])?>" data-toggle='modal' data-target='#ajaxModal'>
-                <i class="fa fa-plus"></i>  创建
+                <i class="fa fa-plus"></i> 创建
             </a>
         </ul>
         <div class="tab-content">

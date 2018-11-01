@@ -4,6 +4,8 @@ namespace backend\modules\sys\controllers;
 use Yii;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
+use common\enums\StatusEnum;
+use common\helpers\ArrayHelper;
 use common\models\sys\Config;
 use common\models\sys\ConfigCate;
 use common\helpers\ResultDataHelper;
@@ -45,8 +47,13 @@ class ConfigController extends SController
     public function actionIndex($cate_id = '')
     {
         $keyword = Yii::$app->request->get('keyword', '');
+
+        // 查询所有子分类
+        $cateIds = ArrayHelper::getChildsId(ConfigCate::find()->where(['status' => StatusEnum::ENABLED])->all(), $cate_id);
+        $cate_id && array_push($cateIds, $cate_id);
+
         $data = Config::find()
-            ->orFilterWhere(['cate_id' => $cate_id])
+            ->orFilterWhere(['in', 'cate_id', $cateIds])
             ->orFilterWhere(['like', 'title', $keyword])
             ->orFilterWhere(['like', 'name', $keyword]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);

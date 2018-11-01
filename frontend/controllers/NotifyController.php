@@ -32,7 +32,7 @@ class NotifyController extends Controller
     }
 
     /**
-     * 微信支付回调通知
+     * EasyWechat支付回调 - 微信
      *
      * @return mixed
      */
@@ -95,7 +95,7 @@ class NotifyController extends Controller
     }
 
     /**
-     * 小程序支付回调通知
+     * EasyWechat支付回调 - 小程序
      */
     public function actionMiniProgram()
     {
@@ -115,18 +115,73 @@ class NotifyController extends Controller
     }
 
     /**
-     * 支付宝支付回调
+     * 公用支付回调 - 支付宝
      */
     public function actionAli()
     {
-        // TODO 待开发
+        $request = Yii::$app->pay->alipay->notify();
+
+        try
+        {
+            $response = $request->send();
+            if($response->isPaid())
+            {
+                /**
+                 * Payment is successful
+                 */
+                die('success'); //The notify response should be 'success' only
+            }
+            else
+            {
+                /**
+                 * Payment is not successful
+                 */
+                die('fail'); //The notify response
+            }
+        }
+        catch (\Exception $e)
+        {
+            /**
+             * Payment is not successful
+             */
+            die('fail'); //The notify response
+        }
     }
 
     /**
-     * 银联支付回调
+     * 公用支付回调 - 银联
      */
     public function actionUnion()
     {
-        // TODO 待开发
+        $response = Yii::$app->pay->union->notify();
+        if ($response->isPaid())
+        {
+            //pay success
+        }
+        else
+        {
+            //pay fail
+        }
+    }
+
+    /**
+     * 公用支付回调 - 微信
+     */
+    public function actionWechat2()
+    {
+        $response = Yii::$app->pay->wechat->notify();
+        if ($response->isPaid())
+        {
+            //pay success 注意微信会发二次消息过来 需要判断是通知还是回调
+            var_dump($response->getRequestData());
+
+            // 成功通知
+            return PayHelper::notifyWechatSuccess();
+        }
+        else
+        {
+            // 失败通知
+            return PayHelper::notifyWechatFail();
+        }
     }
 }

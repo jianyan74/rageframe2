@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <input id="excel-file" type="file" name="excelFile" style="display:none">
                             <input type="text" class="form-control" id="fileName" name="fileName" readonly>
                             <span class="input-group-btn">
-                                    <a class="btn btn-white" onclick="$('#excel-file').click();">选择文件</a>
-                                </span>
+                                <a class="btn btn-white" onclick="$('#excel-file').click();">选择文件</a>
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -19,9 +19,9 @@ use yii\helpers\Url;
             </div>
         </div>
         <div class="form-group">　
-            <div class="col-sm-4 col-sm-offset-2">
+            <div class="col-sm-12 text-center">
                 <div class="hr-line-dashed"></div>
-                <span class="btn btn-primary" onclick="beforSubmit()">保存内容</span>
+                <span class="btn btn-primary" onclick="beforSubmit()">保存</span>
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
         </div>

@@ -19,6 +19,8 @@
 ---|---|---|---|---
 username | string| 是 | 无 | 账号
 password | string| 是 | 无 | 密码
+group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
+
 
 返回
 
@@ -78,6 +80,7 @@ password | string| 是 | 无 | 密码
 参数名 | 参数类型 | 必填 | 默认 | 说明
 ---|---|---|---|---
 refresh_token | string| 是 | 无 | 登录获取到的重置令牌
+group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
 
 返回
 

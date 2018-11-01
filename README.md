@@ -40,7 +40,7 @@ RageFrame项目创建于2016年4月16日，一个基于Yii2高级框架的快速
 
 ### 文档
 
-[本地文档地址](docs/guide-zh-CN/README.md)  
+[本地文档](docs/guide-zh-CN/README.md)  
 [更新历史](docs/guide-zh-CN/start-update-log.md)
 
 ### 问题反馈
@@ -55,11 +55,11 @@ Github：https://github.com/jianyan74/rageframe2.git
 
 感谢以下的项目,排名不分先后
 
-Yii：http://www.yiiframework.com/
+Yii：http://www.yiiframework.com
 
 Bootstrap：http://getbootstrap.com
 
-EasyWechat：https://easywechat.org/
+EasyWechat：https://www.easywechat.com
 
 ### 版权信息
 

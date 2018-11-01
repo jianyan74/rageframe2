@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <td><?= $vo['author'] ?></td>
                                         <td>
                                             <?php if($vo['is_mini_program'] == true){ ?>
-                                                <span class="label label-info">小程序</span>
+                                                <span class="label label-info">Api/小程序</span>
                                             <?php } ?>
                                             <?php if($vo['is_setting'] == true){ ?>
                                                 <span class="label label-info">全局设置</span>
@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <td>{{value.brief_introduction}} <a href="#" class="show-description">详细介绍</a></td>
         <td>
             {{if value.is_mini_program == 1}}
-            <span class="label label-info">小程序</span>
+            <span class="label label-info">Api/小程序</span>
             {{/if}}
             {{if value.is_setting == 1}}
             <span class="label label-info">全局设置</span>

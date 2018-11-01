@@ -45,10 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                     <?= $form->field($model, 'content')->textarea(); ?>
                     <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
-                    <div class="hr-line-dashed"></div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">
+                        <div class="hr-line-dashed"></div>
                         <button class="btn btn-primary" type="submit">保存</button>
                         <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                     </div>

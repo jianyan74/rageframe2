@@ -167,9 +167,8 @@ class SiteController extends Controller
     }
 
     /**
-     * Requests password reset.
-     *
-     * @return mixed
+     * @return string|\yii\web\Response
+     * @throws \yii\base\Exception
      */
     public function actionRequestPasswordReset()
     {
@@ -182,10 +181,8 @@ class SiteController extends Controller
 
                 return $this->goHome();
             }
-            else
-            {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
+
+            Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
         }
 
         return $this->render('requestPasswordResetToken', [

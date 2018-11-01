@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <h5>后台用户</h5>
                     <div class="ibox-tools">
                         <a class="btn btn-primary btn-xs" href="<?= Url::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
-                            <i class="fa fa-plus"></i>  创建
+                            <i class="fa fa-plus"></i> 创建
                         </a>
                     </div>
                 </div>

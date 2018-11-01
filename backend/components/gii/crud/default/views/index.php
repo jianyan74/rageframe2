@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h5><?= "<?= " ?>Html::encode($this->title) ?></h5>
                     <div class="ibox-tools">
                         <a class="btn btn-primary btn-xs" href="<?= "<?= " ?>Url::to(['edit']) ?>">
-                            <i class="fa fa-plus"></i>  创建
+                            <i class="fa fa-plus"></i> 创建
                         </a>
                     </div>
                 </div>

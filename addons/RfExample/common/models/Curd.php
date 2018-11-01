@@ -1,6 +1,8 @@
 <?php
 namespace addons\RfExample\common\models;
 
+use common\models\member\MemberInfo;
+use common\models\sys\Manager;
 use Yii;
 use common\helpers\StringHelper;
 
@@ -99,6 +101,16 @@ class Curd extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
+    }
+
+    /**
+     * 关联当前用户
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getManager()
+    {
+        return $this->hasOne(Manager::className(), ['id' => 'manager_id']);
     }
 
     /**

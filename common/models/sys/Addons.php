@@ -85,7 +85,7 @@ class Addons extends BaseModel
             'is_hook' => '钩子',
             'is_rule' => '嵌入规则',
             'is_setting' => '全局设置项',
-            'is_mini_program' => '小程序',
+            'is_mini_program' => 'Api/小程序',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',

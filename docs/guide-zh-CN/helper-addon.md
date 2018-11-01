@@ -3,6 +3,7 @@
 目录
 
 - 获取资源文件路径
+- 获取/设置当前模块配置信息
 
 #### 获取资源文件路径
 
@@ -18,4 +19,14 @@ AddonHelper::getResourcesUrl();
 
 // 获取静态资源文件 该方法获取的内容为 addons\[模块]\resources\img\test.jpg 文件
 AddonHelper::getResourcesFile('img/test.jpg');
+```
+
+#### 获取/设置当前模块配置信息
+
+```
+// 获取
+AddonHelper::getConfig();
+
+// 设置
+AddonHelper::setConfig($config)
 ```
