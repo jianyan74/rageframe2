@@ -46,7 +46,7 @@ class AuthAssignment extends \common\models\common\BaseModel
         return [
             'item_name' => '角色名称',
             'user_id' => 'User ID',
-            'created_at' => 'Created At',
+            'created_at' => '创建时间',
         ];
     }
 
@@ -54,11 +54,11 @@ class AuthAssignment extends \common\models\common\BaseModel
      * @param $id
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function getUserItemName($id)
+    public static function finldByUserId($id)
     {
         return self::find()
             ->where(['user_id' => $id])
-            ->with('itemNameChild')
+            ->with('authItemChild')
             ->asArray()
             ->one();
     }
@@ -98,11 +98,23 @@ class AuthAssignment extends \common\models\common\BaseModel
     }
 
     /**
+     * 关联权限名称
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getItemName()
     {
         return $this->hasOne(AuthItem::className(), ['name' => 'item_name']);
+    }
+
+    /**
+     * 关联权限列表
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthItemChild()
+    {
+        return $this->hasMany(AuthItemChild::className(), ['parent' => 'item_name']);
     }
 
     /**

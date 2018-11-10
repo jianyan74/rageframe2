@@ -67,8 +67,8 @@ class AttachmentNews extends \common\models\common\BaseModel
             'media_url' => '资源 Url',
             'sort' => '排序',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 
@@ -134,5 +134,13 @@ class AttachmentNews extends \common\models\common\BaseModel
         }
 
         return $model;
+    }
+
+    /**
+     * 关联素材
+     */
+    public function getAttachment()
+    {
+        return $this->hasOne(Attachment::className(), ['id' => 'attachment_id']);
     }
 }

@@ -52,8 +52,8 @@ class Record extends \common\models\common\BaseModel
             'award_id' => 'Award ID',
             'award_title' => 'Award Title',
             'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

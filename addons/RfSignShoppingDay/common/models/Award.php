@@ -66,8 +66,8 @@ class Award extends \common\models\common\BaseModel
             'draw_end_time' => '中奖结束时间',
             'cate_id' => '分类',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

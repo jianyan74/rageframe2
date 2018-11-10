@@ -53,9 +53,9 @@ class WechatRuleKeywordStat extends \common\models\common\BaseModel
             'keyword_type' => 'Keyword Type',
             'keyword_content' => 'Keyword Content',
             'hit' => 'Hit',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'status' => '状态',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

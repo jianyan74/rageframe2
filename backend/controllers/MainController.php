@@ -22,7 +22,7 @@ class MainController extends MController
     public function actionIndex()
     {
         return $this->renderPartial('index',[
-            'style' => Style::getStyle(),
+            'style' => Style::findByManagerId(Yii::$app->user->id),
             'menuCates' => MenuCate::getList()
         ]);
     }

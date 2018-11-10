@@ -71,8 +71,8 @@ class MemberAuth extends \common\models\common\BaseModel
             'province' => '省',
             'city' => '市',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 
@@ -93,23 +93,29 @@ class MemberAuth extends \common\models\common\BaseModel
      */
     public static function findOauthClientMapMember($oauthClient, $oauthClientUserId)
     {
-        return self::find()->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])->with('member')->one();
+        return self::find()
+            ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
+            ->with('member')
+            ->one();
     }
 
     /**
      * @param $data
-     * @return array|MemberAuth
+     * @return MemberAuth
+     * @throws \Exception
      */
     public function add($data)
     {
         $model = new self();
         $model->attributes = $data;
-        if ($model->save())
+
+        if (!$model->save())
         {
-            return $model;
+            $error = Yii::$app->debris->analyErr($model->getFirstErrors());
+            throw new \Exception($error);
         }
 
-        return $model->getFirstErrors();
+        return $model;
     }
 
     /**

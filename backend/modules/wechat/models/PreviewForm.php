@@ -26,7 +26,8 @@ class PreviewForm extends Model
     public function rules()
     {
         return [
-            [['type','content'], 'required'],
+            [['content'], 'required'],
+            [['type'], 'integer'],
         ];
     }
 

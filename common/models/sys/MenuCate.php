@@ -62,6 +62,7 @@ class MenuCate extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->orderBy('sort asc')
             ->all();
     }
 

@@ -7,11 +7,7 @@ use common\enums\StatusEnum;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
 use common\components\CurdTrait;
-use common\helpers\ResultDataHelper;
-use common\models\wechat\Attachment;
-use common\models\wechat\AttachmentNews;
 use backend\modules\wechat\models\RuleForm;
-use yii\helpers\Url;
 
 /**
  * Class RuleController
@@ -21,6 +17,9 @@ class RuleController extends WController
 {
     use CurdTrait;
 
+    /**
+     * @var string
+     */
     public $modelClass = 'common\models\wechat\Rule';
 
     /**
@@ -32,7 +31,7 @@ class RuleController extends WController
         $module = $request->get('module', null);
         $keyword = $request->get('keyword', null);
 
-        $data = Rule::find()->with('ruleKeyword')
+        $data = Rule::find()->where(['>=', 'status', StatusEnum::DISABLED])->with('ruleKeyword')
             ->andWhere(['in', 'module', array_keys(Rule::$moduleExplain)])
             ->andFilterWhere(['module' => $module])
             ->andFilterWhere(['like', 'name', $keyword]);
@@ -110,53 +109,6 @@ class RuleController extends WController
             'title' => Rule::$moduleExplain[$model->module],
             'ruleKeywords' => $defaultRuleKeywords,
         ]);
-    }
-
-    /**
-     * 获取图片
-     *
-     * @return array
-     */
-    public function actionSelectImages()
-    {
-        $data = Attachment::find()->where(['media_type' => Attachment::TYPE_IMAGE, 'status' => StatusEnum::ENABLED]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 15, 'validatePage' => false]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->asArray()
-            ->all();
-
-        foreach ($models as &$model)
-        {
-            $model['image_url'] = Url::to(['analysis/image', 'attach' => $model['media_url']]);
-        }
-
-        return ResultDataHelper::result(200, '获取数据成功', $models);
-    }
-
-    /**
-     * 获取图文
-     *
-     * @return array
-     */
-    public function actionSelectNews()
-    {
-        $data = AttachmentNews::find()->where(['sort' => 0, 'status' => StatusEnum::ENABLED]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 15, 'validatePage' => false]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->select('id, sort, status, thumb_url, title, attachment_id')
-            ->asArray()
-            ->all();
-
-        foreach ($models as &$model)
-        {
-            $model['image_url'] = Url::to(['analysis/image', 'attach' => $model['thumb_url']]);
-        }
-
-        return ResultDataHelper::result(200, '获取数据成功', $models);
     }
 
     /**

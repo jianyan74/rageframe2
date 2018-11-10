@@ -97,7 +97,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'multiple' => true,
                             ],
                             'formData' => [
-
+                                // 保留原名称
+                                'originalName' => true
                             ],
                             'chunked' => false,// 开启分片上传
                             'chunkSize' => 512 * 1024,// 分片大小
@@ -108,6 +109,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'pick' => [
                                 'multiple' => false,
                             ],
+                            'chunked' => true,// 开启分片上传
+                            'chunkSize' => 1024 * 1024 * 5,// 分片大小
                         ]
                     ]); ?>
                     <?= $form->field($model, 'files')->widget(Files::className(), [

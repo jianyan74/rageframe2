@@ -71,8 +71,8 @@ class ArticleSingle extends \common\models\common\BaseModel
             'view' => '浏览量',
             'sort' => '排序',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

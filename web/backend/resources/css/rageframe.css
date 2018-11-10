@@ -88,7 +88,6 @@ div.required label:before {
     overflow: hidden;
     width: 230px;
     height: 150px;
-    margin-top: 15px;
     vertical-align: middle;
     text-align: center;
     cursor: pointer;border: 1px #efefed solid;

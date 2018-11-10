@@ -58,6 +58,7 @@ class MemberInfo extends \common\models\common\User
         return [
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
+            [['username'], 'unique', 'on' => ['backendCreate']],
             [['type', 'sex', 'user_integral', 'address_id', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['user_money', 'accumulate_money', 'frozen_money'], 'number'],

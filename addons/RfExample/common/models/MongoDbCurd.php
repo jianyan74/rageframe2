@@ -66,8 +66,8 @@ class MongoDbCurd extends ActiveRecord
             'author' => '作者',
             'longitude' => '经度',
             'latitude' => '纬度',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

@@ -53,8 +53,8 @@ class Stat extends \common\models\common\BaseModel
             'device' => 'Device',
             'ip' => 'Ip',
             'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

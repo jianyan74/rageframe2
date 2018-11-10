@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
 $this->title = '行为日志';
@@ -14,6 +15,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="tab-content">
             <div class="tab-pane active">
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="col-sm-5">
+                                    <?= Html::dropDownList('pay_status', $pay_status, ['' => '全部', 0 => '未支付', 1 => '已支付'], ['class' => 'form-control']);?>
+                                </div>
+                                <div class="input-group m-b">
+                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入支付编号/订单编号'?>"/>
+                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <table class="table table-hover">
                             <thead>

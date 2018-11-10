@@ -48,8 +48,12 @@ function rfSuccess(title, text) {
 }
 
 // 删除提示
-function rfDelete(obj) {
-    appConfirm("您确定要删除这条信息吗?", "删除后将无法恢复，请谨慎操作！", function (){
+function rfDelete(obj, text) {
+    if (!text) {
+        text =  '删除后将无法恢复，请谨慎操作！';
+    }
+
+    appConfirm("您确定要删除这条信息吗?", text, function (){
         var link = $(obj).attr('href');
         window.location = link;
     })

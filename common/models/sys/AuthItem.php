@@ -78,8 +78,8 @@ class AuthItem extends \common\models\common\BaseModel
             'parent_key' => 'Parent Key',
             'level' => '级别',
             'sort' => '排序',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

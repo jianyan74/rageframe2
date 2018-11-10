@@ -75,8 +75,8 @@ class ElasticSearchCurd extends ActiveRecord
             'content' => '内容',
             'status' => '状态',
             'cover' => '封面',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

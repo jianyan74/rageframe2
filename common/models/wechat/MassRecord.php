@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\wechat;
 
 use Yii;
@@ -27,6 +26,27 @@ use Yii;
 class MassRecord extends \common\models\common\BaseModel
 {
     /**
+     * 消息类别
+     */
+    const MEDIA_TEXT = 'text';
+    const MEDIA_NEWS = 'news';
+    const MEDIA_IMAGES = 'image';
+    const MEDIA_VOICE = 'voice';
+    const MEDIA_VIDEO = 'video';
+
+    /**
+     * @var array
+     * 说明
+     */
+    public static $mediaTypeExplain = [
+        self::MEDIA_TEXT => '文字',
+        self::MEDIA_IMAGES => '图片',
+        self::MEDIA_NEWS => '图文',
+        self::MEDIA_VOICE => '语音',
+        self::MEDIA_VIDEO => '视频',
+    ];
+    
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -40,11 +60,13 @@ class MassRecord extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['fans_num', 'msg_id', 'tag_id', 'attachment_id', 'send_time', 'send_status', 'final_send_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['fans_num', 'msg_id', 'tag_id', 'attachment_id', 'send_status', 'final_send_time', 'status', 'created_at', 'updated_at'], 'integer'],
             [['tag_name'], 'string', 'max' => 50],
             [['msg_type', 'media_type'], 'string', 'max' => 10],
             [['content'], 'string', 'max' => 10000],
             [['media_id'], 'string', 'max' => 100],
+            [['error_content'], 'string', 'max' => 255],
+            [['send_time'], 'safe'],
         ];
     }
 
@@ -55,21 +77,22 @@ class MassRecord extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'tag_name' => 'Tag Name',
-            'fans_num' => 'Fans Num',
-            'msg_id' => 'Msg ID',
-            'msg_type' => 'Msg Type',
-            'content' => 'Content',
+            'fans_num' => '粉丝数量',
+            'msg_id' => '消息ID',
+            'msg_type' => '消息类别',
+            'content' => '内容',
             'tag_id' => '粉丝标签',
-            'attachment_id' => 'Attachment ID',
-            'media_id' => 'Media ID',
-            'media_type' => 'Type',
-            'send_time' => 'Send Time',
-            'send_status' => 'Send Status',
-            'final_send_time' => 'Final Send Time',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'tag_name' => '标签名称',
+            'attachment_id' => '资源id',
+            'media_id' => '微信资源id',
+            'media_type' => '资源类型',
+            'send_time' => '发送时间',
+            'send_status' => '发送状态',
+            'final_send_time' => '实际发送时间',
+            'error_content' => '报错原因',
+            'status' => '状态',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

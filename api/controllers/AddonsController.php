@@ -7,5 +7,8 @@ namespace api\controllers;
  */
 class AddonsController extends \common\controllers\AddonsController
 {
+    /**
+     * @var bool
+     */
     public $enableCsrfValidation = false;
 }

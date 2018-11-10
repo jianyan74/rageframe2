@@ -304,4 +304,45 @@ class StringHelper extends BaseStringHelper
         $str = $prefix ? $prefix : '';
         return $str . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, $length);
     }
+
+    /**
+     * 转utf-8
+     * @param $value
+     * @return string
+     */
+    public static function deCodeIconvForWindows($value)
+    {
+        if (self::isWindowsOS())
+        {
+            return iconv("gb2312", "utf-8", $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * 转gb2312
+     *
+     * @param $value
+     * @return string
+     */
+    public static function enCodeIconvForWindows($value)
+    {
+        if (self::isWindowsOS())
+        {
+            return iconv("utf-8", "gb2312", $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * 验证是否Windows
+     *
+     * @return bool
+     */
+    protected static function isWindowsOS()
+    {
+        return strncmp(PHP_OS, 'WIN', 3) === 0;
+    }
 }

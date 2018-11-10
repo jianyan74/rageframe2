@@ -44,4 +44,24 @@ class ReplyVoice extends \yii\db\ActiveRecord
             'media_id' => '语音',
         ];
     }
+
+    /**
+     * 关联素材
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttachment()
+    {
+        return $this->hasOne(Attachment::className(), ['media_id' => 'media_id']);
+    }
+
+    /**
+     * 关联规则
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRule()
+    {
+        return $this->hasOne(Rule::className(), ['id' => 'rule_id']);
+    }
 }

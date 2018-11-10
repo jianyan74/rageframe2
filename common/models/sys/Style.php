@@ -50,12 +50,13 @@ class Style extends \common\models\common\BaseModel
     /**
      * 获取样式
      *
-     * @return array|Style|null|\yii\db\ActiveRecord
+     * @param $manager_id
+     * @return array|bool|Style|null|\yii\db\ActiveRecord
      */
-    public static function getStyle()
+    public static function findByManagerId($manager_id)
     {
         $model = self::find()
-            ->where(['manager_id' => Yii::$app->user->id])
+            ->where(['manager_id' => $manager_id])
             ->one();
 
         if (!$model)

@@ -1,11 +1,11 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
-use common\helpers\ExcelHelper;
 use Yii;
 use yii\data\Pagination;
 use common\models\wechat\QrcodeStat;
 use common\components\CurdTrait;
+use common\helpers\ExcelHelper;
 
 /**
  * 微信二维码统计
@@ -86,17 +86,17 @@ class QrcodeStatController extends WController
             ->all();
 
         $header = [
-            ['ID', 'id', 'text'],
-            ['场景名称', 'name', 'text'],
-            ['openid', 'fans.openid', 'text'],
-            ['昵称', 'fans.nickname', 'text'],
-            ['场景值', 'scene_str', 'text'],
-            ['场景ID', 'scene_id', 'text'],
-            ['关注/扫描', 'type', 'selectd', ['' => '全部','1' => '关注','2' => '扫描']],
-            ['创建日期', 'field', 'date', 'Y-m-d H:i:s'],
+            ['ID', 'id'],
+            ['场景名称', 'name'],
+            ['openid', 'fans.openid'],
+            ['昵称', 'fans.nickname'],
+            ['场景值', 'scene_str'],
+            ['场景ID', 'scene_id'],
+            ['关注/扫描', 'type', 'selectd', ['' => '全部', '1' => '关注', '2' => '扫描']],
+            ['创建日期', 'created_at', 'date', 'Y-m-d H:i:s'],
         ];
 
         // 导出Excel
-        ExcelHelper::exportData($dataList, $header, '扫描统计_' . time());
+        return ExcelHelper::exportData($dataList, $header, '扫描统计_' . time());
     }
 }

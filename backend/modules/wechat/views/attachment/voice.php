@@ -21,14 +21,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 30px;">
                             <div class="normalPadding">
                                 <div style="height: 160px;text-align:center;" class="backgroundCover relativePosition mainPostCover">
-                                    <i class="fa fa-play-circle-o" style="font-size: 50px;margin:0 auto;padding-top: 30px"></i>
+                                    <i class="fa fa-music" style="font-size: 40px;margin:0 auto;padding-top: 40px"></i>
                                     <div class="bottomBar"><?= $model['file_name'] ?></div>
                                 </div>
                             </div>
                             <div class="flex-row hAlignCenter normalPadding postToolbar">
                                 <div class="flex-col"><a href="<?= Url::to(['send','attach_id' => $model['id'], 'mediaType' => $mediaType])?>"  title="群发" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-send"></i></a></div>
                                 <div class="flex-col"><a href="<?= Url::to(['preview','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" title="手机预览" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-search"></i></a></div>
-                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this);return false;" title="删除"><i class="fa fa-trash"></i></a></div>
+                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this, '删除后会删除素材对应的自动回复和等待群发');return false;" title="删除"><i class="fa fa-trash"></i></a></div>
                             </div>
                         </div>
                     </div>

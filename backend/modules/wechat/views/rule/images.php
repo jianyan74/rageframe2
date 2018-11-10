@@ -8,9 +8,10 @@ use yii\helpers\Url;
         <h5>回复内容</h5>
     </div>
     <div class="ibox-content">
-        <div class="col-sm-12">
+        <div class="form-group required">
+            <label class="control-label">图片</label>
             <div class="rule-photo-list">
-                <div class="img-box" data-toggle="modal" data-target="#baseModel" onclick="indexImage()">
+                <div class="img-box" data-toggle="modal" data-target="#baseModel" onclick="indexAttachment()">
                     <img src="<?= isset($moduleModel->attachment->media_url) ? Url::to(['analysis/image','attach' => $moduleModel->attachment->media_url]) : '/backend/resources/img/add-img.png'?>" id="image_url">
                     <div class="bottomBar"><?= isset($moduleModel->attachment->file_name) ? $moduleModel->attachment->file_name : '点击选择照片'?></div>
                 </div>
@@ -27,10 +28,10 @@ use yii\helpers\Url;
     </div>
 </div>
 
-<!--图片模板列表-->
+<!--模板列表-->
 <script type="text/html" id="listModelScript">
     {{each data as value i}}
-    <div class="normalPaddingRight" style="width:20%;margin-top: 10px;" data-image_url="{{value.image_url}}" data-file_name="{{value.file_name}}" data-media_id="{{value.media_id}}" onclick="selectImage($(this))">
+    <div class="normalPaddingRight" style="width:20%;margin-top: 10px;" data-image_url="{{value.image_url}}" data-file_name="{{value.file_name}}" data-media_id="{{value.media_id}}" onclick="selectAttachment($(this))">
         <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 20px;">
             <div class="normalPadding rule-ajax-img">
                 <div style="background-image: url({{value.image_url}}); height: 160px;" class="backgroundCover relativePosition mainPostCover">
@@ -55,30 +56,33 @@ use yii\helpers\Url;
        $('#w0').submit();
     }
 
-    function indexImage() {
+    // 首次打开加载资源
+    function indexAttachment() {
         if (page == 1){
-            getImages()
+            getAttachment()
         }
     }
 
-    function getImages() {
+    // 加载资源
+    function getAttachment() {
         $.ajax({
             type:"get",
-            url:"<?= \yii\helpers\Url::to(['select-images'])?>",
+            url:"<?= \yii\helpers\Url::to(['common/select-attachment'])?>",
             dataType: "json",
             data: {
-                page:page
+                page:page,
+                media_type: 'image'
             },
             success: function(data){
                 if (data.code == 200) {
-                    if(data.data.length > 0){
+                    if (data.data.length > 0){
                         page++;
                         var html = template('listModelScript', data);
                         // 渲染添加数据
-                        $('#imageList').append(html);
-                        $('#loadingImg').html('<span onclick="getImages()" class="btn btn-white">点击加载更多</span>');
+                        $('#attachmentList').append(html);
+                        $('#loadingAttachment').html('<span onclick="getAttachment()" class="btn btn-white">点击加载更多</span>');
                     } else {
-                        $('#loadingImg').text('没有更多数据了');
+                        $('#loadingAttachment').text('没有更多数据了');
                     }
                 } else {
                     rfAffirm(data.message);
@@ -88,10 +92,10 @@ use yii\helpers\Url;
     }
 
     // 获取选中的照片
-    function selectImage(that) {
+    function selectAttachment(that) {
         $('#image_url').attr('src', that.attr('data-image_url'));
         $('#media_id').val(that.attr('data-media_id'));
-        $('.bottomBar').text(that.attr('data-file_name'));
+        $('.rule-photo-list .bottomBar').text(that.attr('data-file_name'));
 
         $('#baseModel').modal('hide');
     }

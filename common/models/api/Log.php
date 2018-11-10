@@ -17,6 +17,7 @@ use common\models\member\MemberInfo;
  * @property string $get_data get数据
  * @property string $post_data post数据
  * @property string $ip ip地址
+ *  * @property string $req_id 对外id
  * @property int $error_code 报错code
  * @property string $error_msg 报错信息
  * @property string $error_data 报错日志
@@ -43,7 +44,7 @@ class Log extends \common\models\common\BaseModel
             [['member_id', 'error_code', 'status', 'ip', 'created_at', 'updated_at'], 'integer'],
             [['get_data', 'post_data', 'error_data'], 'string'],
             [['method'], 'string', 'max' => 20],
-            [['module', 'controller', 'action'], 'string', 'max' => 50],
+            [['module', 'controller', 'action', 'req_id'], 'string', 'max' => 50],
             [['url'], 'string', 'max' => 1000],
             [['error_msg'], 'string', 'max' => 200],
         ];
@@ -57,20 +58,21 @@ class Log extends \common\models\common\BaseModel
         return [
             'id' => 'ID',
             'member_id' => 'Member ID',
-            'method' => 'Method',
-            'module' => 'Module',
-            'controller' => 'Controller',
-            'action' => 'Action',
-            'url' => 'Url',
-            'get_data' => 'Get Data',
-            'post_data' => 'Post Data',
-            'ip' => 'Ip',
-            'error_code' => 'Error Code',
-            'error_msg' => 'Error Msg',
-            'error_data' => 'Error Data',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'method' => '提交方法',
+            'module' => '模块',
+            'controller' => '控制器',
+            'action' => '方法',
+            'url' => '访问链接',
+            'get_data' => 'Get 数据',
+            'post_data' => 'Post 数据',
+            'ip' => 'Ip地址',
+            'req_id' => '对外id',
+            'error_code' => '报错编码',
+            'error_msg' => '报错信息',
+            'error_data' => '报错内容',
+            'status' => '状态',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 
@@ -82,7 +84,7 @@ class Log extends \common\models\common\BaseModel
      * @param $error_data
      * @throws \yii\base\InvalidConfigException
      */
-    public static function record($error_code, $error_msg, $error_data)
+    public static function record($error_code, $error_msg, $error_data, $req_id)
     {
         $member_id = Yii::$app->user->id;
 
@@ -110,6 +112,7 @@ class Log extends \common\models\common\BaseModel
         $model->controller = $controller;
         $model->action = $action;
         $model->ip = ip2long(Yii::$app->request->userIP);
+        $model->req_id = $req_id;
         $model->error_code = $error_code;
         $model->error_msg = $error_msg;
         $model->error_data = json_encode($error_data);

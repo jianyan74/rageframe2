@@ -22,11 +22,7 @@ trait CurdTrait
      *
      * @var array
      */
-    protected $_ajaxUpdateField = [
-        'id',
-        'sort',
-        'status'
-    ];
+    protected $_ajaxUpdateField = ['sort', 'status'];
 
     /**
      * @throws InvalidConfigException
@@ -103,25 +99,22 @@ trait CurdTrait
     /**
      * 更新排序/状态字段
      *
+     * @param $id
      * @return array
      */
-    public function actionAjaxUpdate()
+    public function actionAjaxUpdate($id)
     {
-        $data = Yii::$app->request->get();
-        $insertData = [];
-        foreach ($this->_ajaxUpdateField as $item)
-        {
-            isset($data[$item]) && $insertData[$item] = $data[$item];
-        }
-
-        unset($data);
-
-        if (!($model = $this->modelClass::findOne($insertData['id'])))
+        if (!($model = $this->modelClass::findOne($id)))
         {
             return ResultDataHelper::result(404, '找不到数据');
         }
 
-        $model->attributes = $insertData;
+        $getData = Yii::$app->request->get();
+        foreach ($this->_ajaxUpdateField as $item)
+        {
+            isset($getData[$item]) && $model->$item = $getData[$item];
+        }
+
         if (!$model->save())
         {
             return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));

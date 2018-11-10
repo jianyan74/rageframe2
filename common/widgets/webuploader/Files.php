@@ -46,7 +46,7 @@ class Files extends InputWidget
     protected $boxId;
 
     /**
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function init()
     {
@@ -81,7 +81,7 @@ class Files extends InputWidget
             /**-------------- 自定义的参数 ----------------**/
             'uploadType' => 'file',
             'independentUrl' => false, // 独立上传地址,不受全局的地址上传影响
-            'callback' => null,
+            'callback' => null, // 上传成功回调js方法
             'name' => $this->name,
         ], $this->config);
 
@@ -115,10 +115,14 @@ class Files extends InputWidget
             }
         }
 
-        // 由于百度编辑器不能传递数组，所以转码成为json
-        if (isset($this->config['formData']['thumb']))
+        //  由于百度上传不能传递数组，所以转码成为json
+        !isset($this->config['formData']) && $this->config['formData'] = [];
+        foreach ($this->config['formData'] as $key => &$formDatum)
         {
-            $this->config['formData']['thumb'] = json_encode($this->config['formData']['thumb']);
+            if (!empty($formDatum) && is_array($formDatum))
+            {
+                $formDatum = json_encode($formDatum);
+            }
         }
 
         return $this->render('file', [

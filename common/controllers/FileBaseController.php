@@ -4,10 +4,8 @@ namespace common\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use common\helpers\StringHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
-use common\helpers\FileHelper;
 
 /**
  * 文件上传控制器
@@ -23,27 +21,6 @@ class FileBaseController extends Controller
      * @var bool
      */
     public $enableCsrfValidation = false;
-
-    /**
-     * 总切片大小
-     *
-     * @var
-     */
-    public $chunks;
-
-    /**
-     * 当前切片
-     *
-     * @var
-     */
-    public $chunk;
-
-    /**
-     * 切片唯一ID
-     *
-     * @var
-     */
-    public $guid;
 
     /**
      * 行为控制
@@ -64,18 +41,6 @@ class FileBaseController extends Controller
     }
 
     /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        $this->chunks = Yii::$app->request->post('chunks', null);
-        $this->chunk = Yii::$app->request->post('chunk');
-        $this->guid = Yii::$app->request->post('guid', null);
-
-        parent::init();
-    }
-
-    /**
      * 图片上传
      *
      * @return array
@@ -85,31 +50,12 @@ class FileBaseController extends Controller
     {
         try
         {
-            // 判断是否有切片上传直接接管
-            if ($this->chunks && $this->guid)
-            {
-                return ResultDataHelper::result(200, '上传成功', UploadHelper::chunks($this->guid, $this->chunk, $this->chunks, 'file', 'images'));
-            }
-
+            // 载入配置信息
+            UploadHelper::load(Yii::$app->request->post(), 'images');
             // 上传
-            $result = UploadHelper::upload('file', 'images');
+            $result = UploadHelper::file();
 
-            // 创建缩略图
-            $thumb = Yii::$app->request->post('thumb', null);
-            if ($thumb && !empty($thumbArr = json_decode($thumb, true)))
-            {
-                foreach ($thumbArr as $value)
-                {
-                    FileHelper::mkdirs($result['thumbAbsolutePath']);
-                    $thumbPath = $result['thumbAbsolutePath'] . $result['name'];
-                    $thumbPath = StringHelper::createThumbUrl($thumbPath, $value['widget'], $value['height']);
-                    UploadHelper::createThumb($result['absolutePath'] . $result['name'], $thumbPath, $value['widget'], $value['height']);
-                }
-            }
-
-            return ResultDataHelper::result(200, '上传成功', [
-                'urlPath' => $result['relativePath'] . $result['name'],
-            ]);
+            return ResultDataHelper::result(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
@@ -127,16 +73,12 @@ class FileBaseController extends Controller
     {
         try
         {
-            // 判断是否有切片上传直接接管
-            if ($this->chunks && $this->guid)
-            {
-                return ResultDataHelper::result(200, '上传成功', UploadHelper::chunks($this->guid, $this->chunk, $this->chunks, 'file', 'videos'));
-            }
+            // 载入配置信息
+            UploadHelper::load(Yii::$app->request->post(), 'videos');
+            // 上传
+            $result = UploadHelper::file();
 
-            $result = UploadHelper::upload('file', 'videos');
-            return ResultDataHelper::result(200, '上传成功', [
-                'urlPath' => $result['relativePath'] . $result['name'],
-            ]);
+            return ResultDataHelper::result(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
@@ -154,15 +96,12 @@ class FileBaseController extends Controller
     {
         try
         {
-            if ($this->chunks && $this->guid)
-            {
-                return ResultDataHelper::result(200, '上传成功', UploadHelper::chunks($this->guid, $this->chunk, $this->chunks, 'file', 'voices'));
-            }
+            // 载入配置信息
+            UploadHelper::load(Yii::$app->request->post(), 'voices');
+            // 上传
+            $result = UploadHelper::file();
 
-            $result = UploadHelper::upload('file', 'voices');
-            return ResultDataHelper::result(200, '上传成功', [
-                'urlPath' => $result['relativePath'] . $result['name'],
-            ]);
+            return ResultDataHelper::result(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
@@ -180,15 +119,11 @@ class FileBaseController extends Controller
     {
         try
         {
-            if ($this->chunks && $this->guid)
-            {
-                return ResultDataHelper::result(200, '上传成功', UploadHelper::chunks($this->guid, $this->chunk, $this->chunks, 'file', 'files'));
-            }
-
-            $result = UploadHelper::upload('file', 'files');
-            return ResultDataHelper::result(200, '上传成功', [
-                'urlPath' => $result['relativePath'] . $result['name'],
-            ]);
+            // 载入配置信息
+            UploadHelper::load(Yii::$app->request->post(), 'files');
+            // 上传
+            $result = UploadHelper::file();
+            return ResultDataHelper::result(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
@@ -206,7 +141,9 @@ class FileBaseController extends Controller
     {
         try
         {
-            return ResultDataHelper::result(200, '上传成功', UploadHelper::Base64Img(Yii::$app->request->post('image'), Yii::$app->request->post('extend', 'jpg')));
+            $base64Data = Yii::$app->request->post('image');
+            $extend = Yii::$app->request->post('extend', 'jpg');
+            return ResultDataHelper::result(200, '上传成功', UploadHelper::Base64Img($base64Data, $extend));
         }
         catch (\Exception $e)
         {
@@ -248,5 +185,29 @@ class FileBaseController extends Controller
         {
             return ResultDataHelper::result(404, $e->getMessage());
         }
+    }
+
+    /**
+     * 合并
+     *
+     * @return array
+     */
+    public function actionMerge()
+    {
+        $guid = Yii::$app->request->post('guid');
+        $mergeInfo = Yii::$app->cache->get(UploadHelper::$prefixForMergeCache . $guid);
+
+        if (!$mergeInfo)
+        {
+            return ResultDataHelper::result(404, '找不到文件信息, 合并文件失败');
+        }
+
+        UploadHelper::mergeFile($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
+
+        Yii::$app->cache->delete('upload-file-guid:' . $guid);
+
+        return ResultDataHelper::result(200, '合并完成', [
+            'urlPath' => $mergeInfo['relativePath']
+        ]);
     }
 }

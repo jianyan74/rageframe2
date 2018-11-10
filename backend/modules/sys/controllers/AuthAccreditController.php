@@ -96,28 +96,22 @@ class AuthAccreditController extends SController
     /**
      * 更新排序/状态字段
      *
+     * @param $id
      * @return array
      */
-    public function actionAjaxUpdate()
+    public function actionAjaxUpdate($id)
     {
-        $data = Yii::$app->request->get();
-        $insertData  = [];
-        foreach (['sort', 'status', 'id'] as $item)
-        {
-            if (isset($data[$item]))
-            {
-                $insertData[$item] = $data[$item];
-            }
-        }
-
-        unset($data);
-
-        if (!($model = AuthItem::findOne(['key' => $insertData['id']])))
+        if (!($model = AuthItem::findOne(['key' => $id])))
         {
             return ResultDataHelper::result(404, '找不到数据');
         }
 
-        $model->attributes = $insertData;
+        $getData = Yii::$app->request->get();
+        foreach (['id', 'sort', 'status'] as $item)
+        {
+            isset($getData[$item]) && $model->$item = $getData[$item];
+        }
+
         if (!$model->save())
         {
             return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));

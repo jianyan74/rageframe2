@@ -23,6 +23,10 @@ $form = ActiveForm::begin([
                     'extensions' => ['amr', 'mp3', 'wma', 'wav', 'amr'],
                     'mimeTypes' => 'audio/*',
                 ],
+                'formData' => [
+                    // 保留原名称
+                    'originalName' => true
+                ],
                 'fileSingleSizeLimit' => 5120 * 1024,// 大小限制
                 'independentUrl' => true,
             ]

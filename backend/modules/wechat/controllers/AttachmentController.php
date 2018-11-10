@@ -328,15 +328,16 @@ class AttachmentController extends WController
             $model->media_type = $attachmentModel->media_type;
             $model->final_send_time = time();
             $model->send_time = time();
-            $model->send_status = StatusEnum::ENABLED;
-            $model->send();
 
-            if ($error = Yii::$app->debris->getWechatPortBackError())
+            try
             {
-                return $this->message($error, $this->redirect(['attachment/index', 'type' => $mediaType]), 'error');
+                $model->send();
+                return $this->message('发送成功', $this->redirect(['attachment/index', 'type' => $mediaType]));
             }
-
-            return $this->message('发送成功', $this->redirect(['attachment/index', 'type' => $mediaType]));
+            catch (\Exception $e)
+            {
+                return $this->message($e->getMessage(), $this->redirect(['attachment/index', 'type' => $mediaType]), 'error');
+            }
         }
 
         return $this->renderAjax('send',[

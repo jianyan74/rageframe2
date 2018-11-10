@@ -86,9 +86,9 @@ AppAsset::register($this);
                 基本信息
             </div>
             <div class="modal-body">
-                <div class="inlineBlockContainer col3 vAlignTop" id="imageList"></div>
-                <div class="row text-center" id="loadingImg">
-                    <span onclick="getImages()" class="btn btn-white">点击加载更多</span>
+                <div class="inlineBlockContainer col3 vAlignTop" id="attachmentList"></div>
+                <div class="row text-center" id="loadingAttachment">
+                    <span onclick="getAttachment()" class="btn btn-white">点击加载更多</span>
                 </div>
             </div>
         </div>

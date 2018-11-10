@@ -19,6 +19,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </div>
                 </div>
                 <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="input-group m-b">
+                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入账号/姓名/手机号码'?>"/>
+                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                         <tr>

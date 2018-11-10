@@ -7,6 +7,7 @@ use common\models\sys\Manager;
 use common\models\sys\AuthAssignment;
 use common\models\sys\AuthItem;
 use backend\modules\sys\models\PasswdForm;
+use yii\data\Pagination;
 
 /**
  * 后台管理员控制器
@@ -16,12 +17,38 @@ use backend\modules\sys\models\PasswdForm;
  */
 class ManagerController extends SController
 {
+    use CurdTrait;
+
     /**
      * @var string
      */
     public $modelClass = 'common\models\sys\Manager';
 
-    use CurdTrait;
+    /**
+     * 首页
+     *
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $keyword = Yii::$app->request->get('keyword', null);
+
+        $data = Manager::find()
+            ->orFilterWhere(['like', 'username', $keyword])
+            ->orFilterWhere(['like', 'mobile', $keyword])
+            ->orFilterWhere(['like', 'realname', $keyword]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $models = $data->offset($pages->offset)
+            ->orderBy('type desc, id desc')
+            ->limit($pages->limit)
+            ->all();
+
+        return $this->render($this->action->id, [
+            'models' => $models,
+            'pages' => $pages,
+            'keyword' => $keyword,
+        ]);
+    }
 
     /**
      * 个人中心

@@ -90,19 +90,52 @@ $(function() {
 
             //当文件上传成功时触发
             uploader.on('uploadSuccess', function(file, data) {
+                console.log(data);
                 if (data.code == 200) {
                     data = data.data;
-                    //如果是单文件上传，则赋值相应的表单;
-                    if (config.uploadType == 'image') {
-                        addImage(parentObj, data, config);
-                    } else {
-                        addFile(parentObj, data, config);
+                    // 如果需要合并回调
+                    if (data.merge == true)
+                    {
+                        $.ajax({
+                            type : "post",
+                            url : mergeUrl,
+                            dataType : "json",
+                            data: {guid : data.guid},
+                            success: function(data){
+                                if(data.code == 200) {
+                                    data = data.data;
+                                    //如果是单文件上传，则赋值相应的表单;
+                                    if (config.uploadType == 'image') {
+                                        addImage(parentObj, data, config);
+                                    } else {
+                                        addFile(parentObj, data, config);
+                                    }
+
+                                    //回调
+                                    if (config.callback) {
+                                        $(document).trigger(config.callback, [parentObj, data, config]);
+                                    }
+                                } else {
+                                    rfError(data.message);
+                                }
+                            }
+                        });
+                    }
+                    else
+                     {
+                        //如果是单文件上传，则赋值相应的表单;
+                        if (config.uploadType == 'image') {
+                            addImage(parentObj, data, config);
+                        } else {
+                            addFile(parentObj, data, config);
+                        }
+
+                        //回调
+                        if (config.callback) {
+                            $(document).trigger(config.callback, [parentObj, data, config]);
+                        }
                     }
 
-                    //回调
-                    if (config.callback) {
-                        $(document).trigger(config.callback, [parentObj, data, config]);
-                    }
                 } else {
                     rfError(data.message);
                 }

@@ -136,9 +136,9 @@ class Rule extends \common\models\common\BaseModel
         // 关键字删除
         RuleKeyword::deleteAll(['rule_id' => $id]);
         // 规则统计
-        //RuleStat::deleteAll(['rule_id' => $id]);
+        RuleStat::deleteAll(['rule_id' => $id]);
         // 关键字规则统计
-        //RuleKeywordStat::deleteAll(['rule_id' => $id]);
+        RuleKeywordStat::deleteAll(['rule_id' => $id]);
 
         // 删除关联数据
         switch ($this->module)

@@ -45,7 +45,6 @@ class ReplyImages extends \yii\db\ActiveRecord
         ];
     }
 
-
     /**
      * 关联素材
      *
@@ -54,5 +53,15 @@ class ReplyImages extends \yii\db\ActiveRecord
     public function getAttachment()
     {
         return $this->hasOne(Attachment::className(), ['media_id' => 'media_id']);
+    }
+
+    /**
+     * 关联规则
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRule()
+    {
+        return $this->hasOne(Rule::className(), ['id' => 'rule_id']);
     }
 }

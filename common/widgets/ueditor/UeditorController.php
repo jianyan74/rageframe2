@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
+use common\helpers\StringHelper;
 use Imagine\Imagick\Image;
 
 /**
@@ -167,8 +168,10 @@ class UeditorController extends Controller
     {
         try
         {
-            $result = UploadHelper::upload('upfile', 'images');
-            return $this->result('SUCCESS', $result['relativePath'] . $result['name']);
+            UploadHelper::load([], 'images', 'upfile');
+            $result = UploadHelper::file();
+
+            return $this->result('SUCCESS', $result['urlPath']);
         }
         catch (\Exception $e)
         {
@@ -203,12 +206,18 @@ class UeditorController extends Controller
     {
         try
         {
-            $result = UploadHelper::upload('upfile', 'videos');
-            return $this->result('SUCCESS', $result['relativePath'] . $result['name']);
+            UploadHelper::load([], 'videos', 'upfile');
+            $result = UploadHelper::file();
+
+            return $this->result('SUCCESS', $result['urlPath']);
         }
         catch (\Exception $e)
         {
-            return $this->result();
+            return [
+                "state" => 'ERROR',
+                "url" => '',
+                "message" => $e->getMessage(),
+            ];
         }
     }
 
@@ -219,8 +228,10 @@ class UeditorController extends Controller
     {
         try
         {
-            $result = UploadHelper::upload('upfile', 'files');
-            return $this->result('SUCCESS', $result['relativePath'] . $result['name']);
+            UploadHelper::load([], 'files', 'upfile');
+            $result = UploadHelper::file();
+
+            return $this->result('SUCCESS', $result['urlPath']);
         }
         catch (\Exception $e)
         {
@@ -372,8 +383,11 @@ class UeditorController extends Controller
                         $pat = "/\.thumbnail\.(" . $allowFiles . ")$/i";
                     }
 
+                    $url = Yii::getAlias('@attachurl') . substr($childPath, strlen(Yii::getAlias('@attachment')));
+                    $url = StringHelper::deCodeIconvForWindows($url);
+
                     $files[] = [
-                        'url' => Yii::getAlias('@attachurl') . substr($childPath, strlen(Yii::getAlias('@attachment'))),
+                        'url' => $url,
                         'mtime' => filemtime($childPath)
                     ];
 

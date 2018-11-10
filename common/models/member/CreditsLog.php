@@ -58,8 +58,8 @@ class CreditsLog extends \common\models\common\BaseModel
             'new_num' => '新数据',
             'num' => '当前改动数据',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

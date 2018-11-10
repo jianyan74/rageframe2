@@ -34,6 +34,7 @@ return [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logFile' => '@runtime/logs/' . date('Y-m/d') . '.log',
                 ],
             ],
         ],
@@ -95,6 +96,7 @@ return [
                         'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
                         'POST qiniu' => 'qiniu', // 七牛上传
                         'POST oss' => 'oss', // 阿里云oss上传
+                        'POST merge' => 'merge', // 合并分片
                     ],
                 ],
                 [

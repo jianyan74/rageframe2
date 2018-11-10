@@ -49,8 +49,8 @@ class Cate extends \common\models\common\BaseModel
             'level' => '级别',
             'pid' => 'Pid',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

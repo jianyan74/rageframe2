@@ -1,6 +1,7 @@
 <?php
 namespace backend\modules\sys\controllers;
 
+use Yii;
 use yii\data\Pagination;
 use common\models\common\PayLog;
 use common\models\sys\ActionLog;
@@ -21,7 +22,12 @@ class LogController extends SController
      */
     public function actionApi()
     {
-        $data = ApiLog::find();
+        $error_code = Yii::$app->request->get('error_code', null);
+        $where = [];
+        $error_code == 1 && $where = ['<', 'error_code', 299];
+        $error_code == 2 && $where = ['>', 'error_code', 299];
+
+        $data = ApiLog::find()->filterWhere($where);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
@@ -30,7 +36,8 @@ class LogController extends SController
 
         return $this->render($this->action->id, [
             'models' => $models,
-            'pages' => $pages
+            'pages' => $pages,
+            'error_code' => $error_code,
         ]);
     }
 
@@ -89,7 +96,13 @@ class LogController extends SController
      */
     public function actionPay()
     {
-        $data = PayLog::find();
+        $pay_status = Yii::$app->request->get('pay_status', null);
+        $keyword = Yii::$app->request->get('keyword', null);
+
+        $data = PayLog::find()
+            ->filterWhere(['pay_status' => $pay_status])
+            ->orFilterWhere(['like', 'order_sn', $keyword])
+            ->orFilterWhere(['like', 'out_trade_no', $keyword]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
@@ -98,7 +111,9 @@ class LogController extends SController
 
         return $this->render($this->action->id, [
             'models' => $models,
-            'pages' => $pages
+            'pages' => $pages,
+            'pay_status' => $pay_status,
+            'keyword' => $keyword,
         ]);
     }
 

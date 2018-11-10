@@ -32,18 +32,14 @@ class MenuController extends WController
             ->limit($pages->limit)
             ->all();
 
-        // 判断下权限
-        if (!$models)
+        try
         {
-            try
-            {
-                // 查询下菜单
-                $this->app->menu->current();
-            }
-            catch (\Exception $e)
-            {
-                throw new NotFoundHttpException($e->getMessage());
-            }
+            // 查询下菜单
+            !$models && $this->app->menu->current();
+        }
+        catch (\Exception $e)
+        {
+            throw new NotFoundHttpException($e->getMessage());
         }
 
         return $this->render('index',[

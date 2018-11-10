@@ -20,7 +20,7 @@ demo
 // [名称, 字段名, 类型, 类型规则]
 $header = [
     ['ID', 'id', 'text'],
-    ['手机号码', 'mobile''], // 规则不填默认text
+    ['手机号码', 'mobile'], // 规则不填默认text
     ['openid', 'fans.openid', 'text'],
     ['昵称', 'fans.nickname', 'text'],
     ['关注/扫描', 'type', 'selectd', [1 => '关注', 2 => '扫描']],
@@ -48,10 +48,10 @@ $list = [
 
 ```
 // 简单使用
-ExcelHelper::exportData($list, $header);
+return ExcelHelper::exportData($list, $header);
 
 // 定制 默认导出xlsx 支持 : xlsx/xls/Html/CSV
-ExcelHelper::exportData($list, $header, '测试', 'xlsx');
+return ExcelHelper::exportData($list, $header, '测试', 'xlsx');
 ```
 
 ### 导入

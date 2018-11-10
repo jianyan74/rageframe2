@@ -48,7 +48,11 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
+                    // 日志存储到数据库
+                    // 'class' => 'yii\log\DbTarget',
+                    // 'logTable' => '{{%sys_log}}',
                     'levels' => ['error', 'warning'],
+                    'logFile' => '@runtime/logs/' . date('Y-m/d') . '.log',
                 ],
             ],
         ],

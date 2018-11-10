@@ -48,9 +48,9 @@ class RuleStat extends \common\models\common\BaseModel
             'rule_id' => 'Rule ID',
             'rule_name' => 'Rule Name',
             'hit' => 'Hit',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'status' => '状态',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

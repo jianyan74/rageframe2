@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <?php }else{ ?>
                                     <div class="flex-col"><a href="<?= Url::to(['news-edit','attach_id'=> $item['id'], 'link_type' => $item['link_type']])?>" title="编辑"><i class="fa fa-edit"></i></a></div>
                                 <?php } ?>
-                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id'=> $item['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this);return false;" title="删除"><i class="fa fa-trash"></i></a></div>
+                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id'=> $item['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this, '删除后会删除素材对应的自动回复和等待群发');return false;" title="删除"><i class="fa fa-trash"></i></a></div>
                             </div>
                         </div>
                     </div>

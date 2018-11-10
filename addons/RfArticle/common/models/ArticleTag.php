@@ -45,8 +45,8 @@ class ArticleTag extends \common\models\common\BaseModel
             'title' => '标题',
             'sort' => '排序',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

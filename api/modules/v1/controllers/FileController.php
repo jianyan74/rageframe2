@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 use Yii;
 use common\helpers\UploadHelper;
 use api\controllers\OnAuthController;
+use yii\web\NotFoundHttpException;
 
 /**
  * 资源上传控制器
@@ -23,10 +24,12 @@ class FileController extends OnAuthController
      */
     public function actionImages()
     {
-        $result = UploadHelper::upload('file', 'images');
-        return [
-            'urlPath' => $result['relativePath'] . $result['name'],
-        ];
+        // 载入配置信息
+        UploadHelper::load(Yii::$app->request->post(), 'images');
+        // 上传
+        $result = UploadHelper::file();
+
+        return $result;
     }
 
     /**
@@ -37,10 +40,12 @@ class FileController extends OnAuthController
      */
     public function actionVideos()
     {
-        $result = UploadHelper::upload('file', 'videos');
-        return [
-            'urlPath' => $result['relativePath'] . $result['name'],
-        ];
+        // 载入配置信息
+        UploadHelper::load(Yii::$app->request->post(), 'videos');
+        // 上传
+        $result = UploadHelper::file();
+
+        return $result;
     }
 
     /**
@@ -51,10 +56,12 @@ class FileController extends OnAuthController
      */
     public function actionVoices()
     {
-        $result = UploadHelper::upload('file', 'voices');
-        return [
-            'urlPath' => $result['relativePath'] . $result['name'],
-        ];
+        // 载入配置信息
+        UploadHelper::load(Yii::$app->request->post(), 'voices');
+        // 上传
+        $result = UploadHelper::file();
+
+        return $result;
     }
 
     /**
@@ -65,10 +72,12 @@ class FileController extends OnAuthController
      */
     public function actionFiles()
     {
-        $result = UploadHelper::upload('file', 'files');
-        return [
-            'urlPath' => $result['relativePath'] . $result['name'],
-        ];
+        // 载入配置信息
+        UploadHelper::load(Yii::$app->request->post(), 'files');
+        // 上传
+        $result = UploadHelper::file();
+
+        return $result;
     }
 
     /**
@@ -102,5 +111,30 @@ class FileController extends OnAuthController
     public function actionOss()
     {
         return UploadHelper::oss($_FILES['file']);
+    }
+
+    /**
+     * 合并
+     *
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionMerge()
+    {
+        $guid = Yii::$app->request->post('guid');
+        $mergeInfo = Yii::$app->cache->get(UploadHelper::$prefixForMergeCache . $guid);
+
+        if (!$mergeInfo)
+        {
+            throw new NotFoundHttpException('找不到文件信息, 合并文件失败');
+        }
+
+        UploadHelper::mergeFile($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
+
+        Yii::$app->cache->delete('upload-file-guid:' . $guid);
+
+        return [
+            'urlPath' => $mergeInfo['relativePath']
+        ];
     }
 }

@@ -10,6 +10,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'zh-CN', // 语言包
     'controllerNamespace' => 'frontend\controllers',
     // 'catchAll' => ['site/offline'], // 全拦截路由(比如维护时可用)
     'modules' => [
@@ -39,6 +40,7 @@ return [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logFile' => '@runtime/logs/' . date('Y-m/d') . '.log',
                 ],
             ],
         ],
@@ -55,6 +57,83 @@ return [
 
             ],
         ],
+        /** ------ i18n 国际化 ------ **/
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
+        /** ------ 第三方登录 ------ **/
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'qq' => [
+                    'class' => 'xj\oauth\QqAuth',
+                    'clientId' => '111',
+                    'clientSecret' => '111',
+
+                ],
+                'weibo' => [
+                    'class' => 'xj\oauth\WeiboAuth',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'weixin' => [
+                    'class' => 'xj\oauth\WeixinAuth',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'renren' => [
+                    'class' => 'xj\oauth\RenrenAuth',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                 'wechat' => [
+                     'class' => 'xj\oauth\WeixinMpAuth', //weixin mp
+                     'clientId' => '111',
+                     'clientSecret' => '',
+                 ],
+                'amazon' => [
+                    'class' => 'xj\oauth\AmazonAuth',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'github' => [
+                    'class' => 'yii\authclient\clients\GitHub',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'linkedin' => [
+                    'class' => 'yii\authclient\clients\LinkedIn',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'twitter' => [
+                    'class' => 'yii\authclient\clients\Twitter',
+                    // 'clientId' => '1',
+                    // 'clientSecret' => '1',
+                ],
+
+
+            ]
+        ]
     ],
     'controllerMap' => [
         // 文件上传公共控制器

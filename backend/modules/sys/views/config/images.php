@@ -10,7 +10,7 @@ use common\enums\StatusEnum;
         (<?= $row['remark']?>)
     <?php } ?>
     <div class="col-sm-push-10">
-        <?= \backend\widgets\webuploader\Image::widget([
+        <?= \common\widgets\webuploader\Images::widget([
             'name' => "config[".$row['name']."]",
             'value' => unserialize($row['value']),
             'config' => [

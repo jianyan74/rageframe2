@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
 $this->title = 'Api日志';
@@ -14,6 +15,18 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="tab-content">
             <div class="tab-pane active">
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="col-sm-5">
+                                    <?= Html::dropDownList('error_code', $error_code, ['' => '全部', 1 => '正常状态', 2 => '异常状态'], ['class' => 'form-control']);?>
+                                </div>
+                                <div class="input-group m-b">
+                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <table class="table table-hover">
                             <thead>

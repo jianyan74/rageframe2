@@ -7,8 +7,8 @@ return [
     ],
     // token有效期是否验证 默认不验证
     'user.accessTokenValidity' => false,
-    // api接口token有效期 默认2天
-    'user.accessTokenExpire' => 2 * 24 * 3600,
+    // api接口token有效期 默认 2 小时
+    'user.accessTokenExpire' => 2 * 60 * 60,
     // 不需要token验证的方法
     'user.optional' => [
 

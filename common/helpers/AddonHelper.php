@@ -130,16 +130,31 @@ class AddonHelper
             throw new NotFoundHttpException("模块不能为空");
         }
 
-        // 减少查询
+        // 减少模块内多次调用hook的查询
         if (isset(self::$addonModels[$addonName]))
         {
             $addonModel = self::$addonModels[$addonName];
         }
         else
         {
-            if (!($addonModel = Addons::findByName($addonName)))
+            // 获取缓存
+            if (!($addonModel = Yii::$app->cache->get('sys-addons:' . $addonName)))
             {
-                throw new NotFoundHttpException("模块不存在");
+                if (!($addonModel = Addons::findByName($addonName)))
+                {
+                    throw new NotFoundHttpException("模块不存在");
+                }
+
+                // 数据库依赖缓存
+                $dependency = new \yii\caching\DbDependency([
+                    'sql' => Addons::find()
+                        ->select('updated_at')
+                        ->where(['name' => $addonName])
+                        ->createCommand()
+                        ->getRawSql(),
+                ]);
+
+                Yii::$app->cache->set('sys-addons:' . $addonName, $addonModel, 360, $dependency);
             }
 
             self::$addonModels[$addonName] = $addonModel;

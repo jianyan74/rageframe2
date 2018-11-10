@@ -25,6 +25,10 @@ $form = ActiveForm::begin([
                     'extensions' => ['rm', 'rmvb', 'wmv', 'avi', 'mpg', 'mpeg', 'mp4'],
                     'mimeTypes' => 'video/*',
                 ],
+                'formData' => [
+                    // 保留原名称
+                    'originalName' => true
+                ],
                 'fileSingleSizeLimit' => 10240 * 1024 * 2,// 大小限制
                 'independentUrl' => true,
             ]

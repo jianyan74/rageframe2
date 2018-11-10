@@ -1,9 +1,7 @@
 <?php
-
 namespace common\models\common;
 
 use common\helpers\ArrayHelper;
-use Yii;
 
 /**
  * This is the model class for table "{{%common_provinces}}".

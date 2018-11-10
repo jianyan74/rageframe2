@@ -9,7 +9,7 @@ return [
 
     /** ------ 开发者信息 ------ **/
     'exploitName' => '简言',
-    'exploitVersions' => '2.0.50',
+    'exploitVersions' => '2.0.64',
     'exploitSysName' => 'RageFrame应用开发引擎',
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">github.com/jianyan74/rageframe2</a>',
@@ -32,6 +32,7 @@ return [
         '/menu-provinces/index',// 微信个性化菜单省市区
         '/wechat/rule/select-news',// 微信自动回复获取图文
         '/wechat/rule/select-images',// 微信自动回复获取图片
+        '/sys/style/update',// 系统主题更新
     ],
     // 不需要验证的方法
     'noAuthAction' => [

@@ -28,9 +28,9 @@ class SignSecretKeyController extends OffAuthController
     public function actionIndex()
     {
         $paraStr = EncryptionHelper::createUrlParam([
+            'appId' => 'doormen',
             'time' => time(),
             'nonceStr' => StringHelper::random(32),
-            'appId' => 'doormen',
             'mobile' => '15888888888',
         ], 'e3de3825cfbf');
 

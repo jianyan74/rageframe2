@@ -75,12 +75,29 @@ class Menu extends \common\models\common\BaseModel
      */
     public static function getList($status = false)
     {
-        $data = Menu::find()
-            ->andFilterWhere(['status' => $status]);
-
+        $data = Menu::find()->andFilterWhere(['status' => $status]);
+        // 关闭开发模式
         if (empty(Yii::$app->debris->config('sys_dev')))
         {
             $data = $data->andWhere(['dev' => StatusEnum::DISABLED]);
+        }
+
+        // 非总管理员菜单显示
+        if (Yii::$app->user->id != Yii::$app->params['adminAccount'])
+        {
+            // 查询用户权限
+            $authAssignment = AuthAssignment::finldByUserId(Yii::$app->user->id);
+
+            if (!empty($authAssignment['authItemChild']))
+            {
+                $urls = [];
+                foreach ($authAssignment['authItemChild'] as $item)
+                {
+                    $urls[] = $item['child'];
+                }
+
+                $data = $data->andWhere(['in', 'url', $urls]);
+            }
         }
 
         $models = $data->orderBy('cate_id asc,sort asc')

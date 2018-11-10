@@ -77,11 +77,11 @@ class FileHelper
         {
             if(substr($value, -1) == '/')
             {
-                @mkdir($value);
+                mkdir($value);
             }
             else
             {
-                @file_put_contents($value, '');
+                file_put_contents($value, '');
             }
         }
     }

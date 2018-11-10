@@ -86,25 +86,22 @@ class CurdController extends AddonsBaseController
     /**
      * 更新排序/状态字段
      *
+     * @param $id
      * @return array
      */
-    public function actionAjaxUpdate()
+    public function actionAjaxUpdate($id)
     {
-        $data = Yii::$app->request->get();
-        $insertData = [];
-        foreach (['id', 'sort', 'status'] as $item)
-        {
-            isset($data[$item]) && $insertData[$item] = $data[$item];
-        }
-
-        unset($data);
-
-        if (!($model = Curd::findOne($insertData['id'])))
+        if (!($model = Curd::findOne($id)))
         {
             return ResultDataHelper::result(404, '找不到数据');
         }
 
-        $model->attributes = $insertData;
+        $getData = Yii::$app->request->get();
+        foreach (['id', 'sort', 'status'] as $item)
+        {
+            isset($getData[$item]) && $model->$item = $getData[$item];
+        }
+
         if (!$model->save())
         {
             return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));

@@ -57,8 +57,8 @@ class AuthRule extends \common\models\common\BaseModel
             'name' => '规则名称',
             'className' => '规则类名',
             'data' => 'Data',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

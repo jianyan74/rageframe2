@@ -62,4 +62,14 @@ class ReplyNews extends \yii\db\ActiveRecord
     {
         return $this->hasOne(AttachmentNews::className(),['attachment_id' => 'attachment_id'])->where(['sort' => 0]);
     }
+
+    /**
+     * 关联规则
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRule()
+    {
+        return $this->hasOne(Rule::className(), ['id' => 'rule_id']);
+    }
 }

@@ -4,9 +4,10 @@ namespace backend\modules\member\controllers;
 use Yii;
 use common\components\CurdTrait;
 use common\models\member\MemberInfo;
+use yii\data\Pagination;
 
 /**
- * 会员信息控制器
+ * 会员管理
  * 
  * Class MemberController
  * @package backend\modules\member\controllers
@@ -15,7 +16,36 @@ class MemberController extends MController
 {
     use CurdTrait;
 
+    /**
+     * @var string
+     */
     public $modelClass = 'common\models\member\MemberInfo';
+
+    /**
+     * 首页
+     *
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $keyword = Yii::$app->request->get('keyword', null);
+
+        $data = MemberInfo::find()
+            ->orFilterWhere(['like', 'username', $keyword])
+            ->orFilterWhere(['like', 'mobile_phone', $keyword])
+            ->orFilterWhere(['like', 'realname', $keyword]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $models = $data->offset($pages->offset)
+            ->orderBy('id desc')
+            ->limit($pages->limit)
+            ->all();
+
+        return $this->render($this->action->id, [
+            'models' => $models,
+            'pages' => $pages,
+            'keyword' => $keyword,
+        ]);
+    }
 
     /**
      * 编辑/新增
@@ -42,7 +72,7 @@ class MemberController extends MController
             if ($modelInfo['password_hash'] != $model->password_hash)
             {
                 // 记录日志
-                Yii::$app->debris->log('updateMemberPwd', '修改用户密码|账号:' . $model->username, false);
+                Yii::$app->debris->log('updateMemberPwd', '创建/修改用户密码|账号:' . $model->username, false);
 
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
             }

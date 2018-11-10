@@ -143,28 +143,24 @@ class AddonsPlugController extends SController
     }
 
     /**
-     * ajax更新
+     * 更新排序/状态字段
      *
+     * @param $id
      * @return array
      */
-    public function actionAjaxUpdate()
+    public function actionAjaxUpdate($id)
     {
-        $data = Yii::$app->request->get();
-        $insertData = [];
-
-        foreach (['id', 'sort', 'status'] as $item)
-        {
-            isset($data[$item]) && $insertData[$item] = $data[$item];
-        }
-
-        unset($data);
-
-        if (!($model = Addons::findOne($insertData['id'])))
+        if (!($model = Addons::findOne($id)))
         {
             return ResultDataHelper::result(404, '找不到数据');
         }
 
-        $model->attributes = $insertData;
+        $getData = Yii::$app->request->get();
+        foreach (['id', 'sort', 'status'] as $item)
+        {
+            isset($getData[$item]) && $model->$item = $getData[$item];
+        }
+
         if (!$model->save())
         {
             return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
@@ -247,7 +243,7 @@ class AddonsPlugController extends SController
             return $this->message('实例化失败,插件不存在或检查插件名称', $this->redirect(['uninstall']), 'error');
         }
 
-        // 更新
+        // 更新配置
         $addonsConfig = new $class;
         isset($addonsConfig->menu) && AddonsBinding::careteEntry($addonsConfig->menu, 'menu', $addonName);
         isset($addonsConfig->cover) && AddonsBinding::careteEntry($addonsConfig->cover, 'cover', $addonName);

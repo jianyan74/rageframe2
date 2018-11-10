@@ -226,12 +226,13 @@ class AddonsController extends Controller
     /**
      * 更新排序/状态字段
      *
+     * @param $id
      * @return array
      */
-    public function actionAjaxUpdate()
+    public function actionAjaxUpdate($id)
     {
         $data = Yii::$app->request->get();
-        if (!($model = Rule::findOne($data['id'])))
+        if (!($model = Rule::findOne($id)))
         {
             return ResultDataHelper::result(404, '找不到数据');
         }

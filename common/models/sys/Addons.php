@@ -1,13 +1,12 @@
 <?php
 namespace common\models\sys;
 
-use common\helpers\StringHelper;
-use Overtrue\Pinyin\Pinyin;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\common\BaseModel;
 use common\helpers\AddonHelper;
-use common\helpers\ArrayHelper;
+use common\helpers\StringHelper;
+use Overtrue\Pinyin\Pinyin;
 
 /**
  * This is the model class for table "{{%sys_addons}}".
@@ -106,6 +105,9 @@ class Addons extends BaseModel
             ->one();
     }
 
+    /**
+     * @return array
+     */
     public static function getLocalList()
     {
         $addon_dir = Yii::getAlias('@addons');
@@ -172,10 +174,27 @@ class Addons extends BaseModel
             ->asArray()
             ->all();
 
+        // 创建分类数组
+        $groups = array_keys(Yii::$app->params['addonsGroup']);
         $addons = [];
+        foreach ($groups as $group)
+        {
+            !isset($addons[$group]) && $addons[$group] = [];
+        }
+
+        // 模块分类插入
         foreach ($models as $model)
         {
             $addons[$model['group']][] = $model;
+        }
+
+        // 删除空模块分类
+        foreach ($addons as $key => $vlaue)
+        {
+            if (empty($vlaue))
+            {
+                unset($addons[$key]);
+            }
         }
 
         return $addons;

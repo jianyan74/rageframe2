@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <div class="flex-row hAlignCenter normalPadding postToolbar">
                                 <div class="flex-col"><a href="<?= Url::to(['send','attach_id' => $model['id'], 'mediaType' => $mediaType])?>"  title="群发" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-send"></i></a></div>
                                 <div class="flex-col"><a href="<?= Url::to(['preview','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" title="手机预览" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-search"></i></a></div>
-                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this);return false;" title="删除"><i class="fa fa-trash"></i></a></div>
+                                <div class="flex-col"><a href="<?= Url::to(['delete','attach_id' => $model['id'], 'mediaType' => $mediaType])?>" onclick="rfDelete(this, '删除后会删除素材对应的自动回复和等待群发');return false;" title="删除"><i class="fa fa-trash"></i></a></div>
                             </div>
                         </div>
                     </div>

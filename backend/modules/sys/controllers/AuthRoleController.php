@@ -70,10 +70,10 @@ class AuthRoleController extends SController
         // 验证是否总管理员, 并获取自己的权限列表
         if (Yii::$app->params['adminAccount'] != Yii::$app->user->id)
         {
-            $itemNames = AuthAssignment::getUserItemName(Yii::$app->user->id);
-            if (isset($itemNames['itemNameChild']))
+            $itemNames = AuthAssignment::finldByUserId(Yii::$app->user->id);
+            if (!empty($itemNames['authItemChild']))
             {
-                foreach ($itemNames['itemNameChild'] as $child)
+                foreach ($itemNames['authItemChild'] as $child)
                 {
                     $userAuth[] = $child['child'];
                 }

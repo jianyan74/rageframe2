@@ -69,7 +69,7 @@ class FansTags extends \common\models\common\BaseModel
      * @param $id
      * @return mixed
      */
-    public static function getFindID($id)
+    public static function findById($id)
     {
         if (empty(($model = self::find()->one())))
         {

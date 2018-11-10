@@ -9,7 +9,7 @@ use yii\helpers\Url;
     'enableAjaxValidation' => true,
     'validationUrl' => Url::toRoute(['ajax-edit', 'name' => $model['name']]),
     'fieldConfig' => [
-        'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
+        'template' => "<div class='col-sm-3 text-right'>{label}</div><div class='col-sm-9'>{input}\n{hint}\n{error}</div>",
     ]
 ]); ?>
 

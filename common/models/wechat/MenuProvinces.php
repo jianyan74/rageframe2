@@ -2,6 +2,7 @@
 namespace common\models\wechat;
 
 use Yii;
+use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
 /**
@@ -44,21 +45,25 @@ class MenuProvinces extends \common\models\common\BaseModel
         return [
             'id' => 'ID',
             'title' => '标题',
-            'pid' => 'Pid',
+            'pid' => '父级id',
             'level' => '级别',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 
     /**
+     *
      * @param $pid
-     * @return MenuProvinces[]
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getFindPidList($pid)
+    public static function findListByPid($pid)
     {
-        return self::find()->where(['pid' => $pid])->orderBy('id asc')->all();
+        return self::find()
+            ->where(['pid' => $pid, 'status' => StatusEnum::ENABLED])
+            ->orderBy('id asc')
+            ->all();
     }
 
     /**
@@ -69,7 +74,7 @@ class MenuProvinces extends \common\models\common\BaseModel
      */
     public static function getMenuList($pid = 0)
     {
-        return ArrayHelper::map(self::getFindPidList($pid), 'title', 'title');
+        return ArrayHelper::map(self::findListByPid($pid), 'title', 'title');
     }
 
     /**
@@ -80,7 +85,7 @@ class MenuProvinces extends \common\models\common\BaseModel
      */
     public static function getMenuTitle($title)
     {
-        if($model = self::findOne(['title' => $title, 'level' => 2]))
+        if($model = self::findOne(['title' => $title, 'level' => 2, 'status' => StatusEnum::ENABLED]))
         {
             return self::getMenuList($model->id);
         }

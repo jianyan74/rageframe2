@@ -1,6 +1,7 @@
 <?php
 namespace api\behaviors;
 
+use common\helpers\StringHelper;
 use Yii;
 use yii\base\Behavior;
 use common\models\api\Log;
@@ -42,6 +43,7 @@ class beforeSend extends Behavior
 
         // 报错日志打印出来
         $responseData = [];
+        $req_id = StringHelper::uuid('uniqid');
         if ($response->statusCode >= 300 && ($exception = Yii::$app->getErrorHandler()->exception))
         {
             $responseData = [
@@ -57,6 +59,8 @@ class beforeSend extends Behavior
             {
                 $responseData['error-info'] = $exception->errorInfo;
             }
+
+            $response->data['req_id'] = $req_id;
         }
 
         // 格式化报错输入格式 默认为格式500状态码 其他可自行修改
@@ -67,7 +71,7 @@ class beforeSend extends Behavior
         }
 
         // 日志记录 可以考虑丢进队列去执行
-        Yii::$app->params['user.log'] && Log::record($response->data['code'], $response->data['message'], $responseData);
+        Yii::$app->params['user.log'] && Log::record($response->data['code'], $response->data['message'], $responseData, $req_id);
 
         unset($responseData);
         $response->format = yii\web\Response::FORMAT_JSON;

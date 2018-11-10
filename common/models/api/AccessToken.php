@@ -3,12 +3,11 @@
 namespace common\models\api;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use common\models\member\MemberInfo;
 use common\models\common\RateLimit;
 use common\helpers\ArrayHelper;
-use common\models\User;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 
 /**
  * 如果不想速率控制请直接继承 common\models\common\BaseModel
@@ -70,9 +69,9 @@ class AccessToken extends RateLimit
             'group' => '组别',
             'status' => '状态',
             'allowance' => 'Allowance',
-            'allowance_updated_at' => 'Allowance Updated At',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'allowance_updated_at' => 'Allowance 更新时间',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

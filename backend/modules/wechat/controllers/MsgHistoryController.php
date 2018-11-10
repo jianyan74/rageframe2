@@ -14,5 +14,8 @@ class MsgHistoryController extends WController
 {
     use CurdTrait;
 
+    /**
+     * @var string
+     */
     public $modelClass = 'common\models\wechat\MsgHistory';
 }

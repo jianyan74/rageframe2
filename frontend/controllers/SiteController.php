@@ -62,7 +62,27 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'successCallback'],
+            ],
         ];
+    }
+
+    /**
+     * Success Callback
+     * @param QqAuth|WeiboAuth $client
+     * @see http://wiki.connect.qq.com/get_user_info
+     * @see http://stuff.cebe.cc/yii2docs/yii-authclient-authaction.html
+     */
+    public function successCallback($client)
+    {
+        $id = $client->getId(); // qq | sina | weixin
+        $attributes = $client->getUserAttributes(); // basic info
+        $openid = $client->getOpenid(); //user openid
+        $userInfo = $client->getUserInfo(); // user extend info
+
+        var_dump($id, $attributes, $openid, $userInfo);
     }
 
     /**

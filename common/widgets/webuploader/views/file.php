@@ -1,6 +1,6 @@
 <?php
-$jsConfig = json_encode($config);
 
+$jsConfig = json_encode($config);
 ?>
 
 <div class="multi-container col-sm-12">
@@ -34,6 +34,10 @@ $jsConfig = json_encode($config);
         </ul>
     </div>
 </div>
+
+<script>
+    var mergeUrl = "<?= \yii\helpers\Url::to(['/file/merge']) ?>";
+</script>
 
 <?php $this->registerJs(<<<Js
     $(".upload-album-{$boxId}").InitMultiUploader({$jsConfig});

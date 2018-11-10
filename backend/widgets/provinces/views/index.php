@@ -19,7 +19,7 @@ $area = $form->field($model, $areaName)->dropDownList(Provinces::getCityList($mo
 ])
 ?>
 
-<?php if($template = 'short'){ ?>
+<?php if($template == 'short'){ ?>
     <div class="row">
         <div class="col-lg-4">
             <?= $provinces ?>

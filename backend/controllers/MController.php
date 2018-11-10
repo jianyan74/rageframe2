@@ -62,7 +62,7 @@ class MController extends \common\controllers\BaseController
         Yii::$app->debris->config('sys_page') && $this->_pageSize = Yii::$app->debris->config('sys_page');
 
         // 验证是否登录且验证是否超级管理员
-        if (!\Yii::$app->user->isGuest && Yii::$app->user->id === Yii::$app->params['adminAccount'])
+        if (!Yii::$app->user->isGuest && Yii::$app->user->id === Yii::$app->params['adminAccount'])
         {
             return true;
         }

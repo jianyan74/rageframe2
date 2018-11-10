@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                     性别: <?= Yii::$app->params['individuationMenuSex'][$model->sex];?><br>
                                                     手机系统: <?= Yii::$app->params['individuationMenuClientPlatformType'][$model->client_platform_type];?><br>
                                                     语言: <?= Yii::$app->params['individuationMenuLanguage'][$model->language];?><br>
-                                                    标签: <?= empty($model->tag_id) ? '全部粉丝' : \common\models\wechat\FansTags::getFindID($model->tag_id)['name'];?><br>
+                                                    标签: <?= empty($model->tag_id) ? '全部粉丝' : \common\models\wechat\FansTags::findById($model->tag_id)['name'];?><br>
                                                     地区: <?= empty($model->province . $model->city) ? '不限' : $model->province . '·' . $model->city;?>
                                                 <?php } ?>
                                             </td>
