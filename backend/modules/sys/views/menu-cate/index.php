@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <th>标题</th>
                                 <th>图标</th>
                                 <th>排序</th>
+                                <th>默认显示</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -37,6 +38,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <td><?= $model->title ?></td>
                                     <td><i class="fa <?= $model->icon ?>"></i></td>
                                     <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
+                                    <td><?= $model->is_default_show == 1 ? '是' : '否' ?></td>
                                     <td>
                                         <a href="<?= Url::to(['ajax-edit','id'=>$model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
                                         <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>

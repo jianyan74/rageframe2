@@ -286,7 +286,13 @@ class UeditorController extends Controller
      */
     public function actionListFile()
     {
-        return $this->manage($this->config['fileManagerAllowFiles'], $this->config['fileManagerListSize'], $this->config['fileManagerListPath']);
+        $prefix = Yii::$app->params['uploadConfig']['files']['fullPath'] == true ? Yii::$app->request->hostInfo : '';
+        return $this->manage(
+            $this->config['fileManagerAllowFiles'],
+            $this->config['fileManagerListSize'],
+            $this->config['fileManagerListPath'],
+            $prefix
+        );
     }
 
     /**
@@ -296,7 +302,13 @@ class UeditorController extends Controller
      */
     public function actionListImage()
     {
-        return $this->manage($this->config['imageManagerAllowFiles'], $this->config['imageManagerListSize'], $this->config['imageManagerListPath']);
+        $prefix = Yii::$app->params['uploadConfig']['images']['fullPath'] == true ? Yii::$app->request->hostInfo : '';
+        return $this->manage(
+            $this->config['imageManagerAllowFiles'],
+            $this->config['imageManagerListSize'],
+            $this->config['imageManagerListPath'],
+            $prefix
+        );
     }
 
     /**
@@ -307,7 +319,7 @@ class UeditorController extends Controller
      * @param $path
      * @return array
      */
-    protected function manage($allowFiles, $listSize, $path)
+    protected function manage($allowFiles, $listSize, $path, $prefix)
     {
         $allowFiles = substr(str_replace('.', '|', join('', $allowFiles)), 1);
         /* 获取参数 */
@@ -318,7 +330,8 @@ class UeditorController extends Controller
         /* 获取文件列表 */
         $path = Yii::getAlias('@attachment') . (substr($path, 0, 1) == '/' ? '' : '/') . $path;
 
-        $files = $this->getFiles($path, $allowFiles);
+        $files = [];
+        $files = $this->getFiles($path, $allowFiles, $files,$prefix);
         if (!count($files))
         {
             return  [
@@ -352,7 +365,7 @@ class UeditorController extends Controller
      * @param array $files
      * @return array|null
      */
-    protected function getFiles($path, $allowFiles, &$files = [])
+    protected function getFiles($path, $allowFiles, &$files = [], $prefix)
     {
         if (!is_dir($path) || in_array(basename($path), $this->ignoreDir))
         {
@@ -372,7 +385,7 @@ class UeditorController extends Controller
                 $childPath = $path . $file;
                 if (is_dir($childPath))
                 {
-                    $this->getFiles($childPath, $allowFiles, $files);
+                    $this->getFiles($childPath, $allowFiles, $files, $prefix);
                 }
                 else
                 {
@@ -387,7 +400,7 @@ class UeditorController extends Controller
                     $url = StringHelper::deCodeIconvForWindows($url);
 
                     $files[] = [
-                        'url' => $url,
+                        'url' => $prefix . $url,
                         'mtime' => filemtime($childPath)
                     ];
 

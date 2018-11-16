@@ -7,6 +7,7 @@ use common\helpers\ResultDataHelper;
 use common\models\sys\AuthItem;
 use common\models\sys\AuthItemChild;
 use common\models\sys\AuthAssignment;
+use common\helpers\ArrayHelper;
 
 /**
  * RBAC角色控制器
@@ -83,16 +84,16 @@ class AuthRoleController extends SController
         $auths = AuthItem::find()
             ->where(['type' => AuthItem::AUTH])
             ->andFilterWhere(['in', 'name', $userAuth])
-            ->with(['authItemChildren0' => function($query) use($name){
+            ->with(['authItemChildren0' => function($query) use($name) {
                 $query->andWhere(['parent' => $name]);
-            },
-            ])
+            }])
             ->orderBy('sort asc')
             ->asArray()
             ->all();
 
         $formAuth = []; // 全部权限
         $checkId = []; // 被授权成功的额权限
+        $tmpChildIds = [];
         foreach ($auths as $auth)
         {
             $tmp = [];
@@ -104,10 +105,20 @@ class AuthRoleController extends SController
             if (!empty($auth['authItemChildren0']))
             {
                 $checkId[] = $auth['key'];
+                $tmpChildIds[$auth['key']] = ArrayHelper::getChildsId($auths, $auth['key'], 'key', 'parent_key');
             }
 
             $formAuth[] = $tmp;
             unset($tmp);
+        }
+
+        // 做一次筛选，不然jstree会吧顶级分类下所有的子分类都选择了
+        foreach ($tmpChildIds as $key => $tmpChildId)
+        {
+            if (!empty($tmpChildId) && count(array_intersect($checkId, $tmpChildId)) != count($tmpChildId))
+            {
+                $checkId = array_merge(array_diff($checkId, [$key]));
+            }
         }
 
         if ($request->isAjax)

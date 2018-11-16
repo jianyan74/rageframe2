@@ -1,20 +1,20 @@
 <?php
-namespace addons\RfSignShoppingDay\assets;
+namespace addons\RfSignShoppingDay\wechat\assets;
 
 use yii\web\AssetBundle;
 
 /**
  * 静态资源管理
  *
- * Class WechatAsset
- * @package addons\RfSignShoppingDay\assets
+ * Class Asset
+ * @package addons\RfSignShoppingDay\wechat\assets
  */
-class WechatAsset extends AssetBundle
+class Asset extends AssetBundle
 {
     /**
      * @var string
      */
-    public $sourcePath = '@addons/RfSignShoppingDay/resources';
+    public $sourcePath = '@addons/RfSignShoppingDay/resources/wechat/';
 
     public $css = [
         'css/index.css',

@@ -2,6 +2,7 @@
 return [
     // 是否开启api log 日志记录
     'user.log' => true,
+    'user.log.level' => ['info', 'warning', 'error'], // 日志记录级别 正式环境只开启 warning和error即可
     'user.log.noPostData' => [ // 安全考虑，不接收Post存储到日志的路由
         'v1/site/login',
     ],

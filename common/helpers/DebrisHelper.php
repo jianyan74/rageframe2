@@ -104,4 +104,26 @@ class DebrisHelper
 
         return [$porintLeft, $pointTop];
     }
+
+    /**
+     * 调用这个方法前面干了什么
+     *
+     * @param bool $reverse
+     * @return array
+     */
+    public static function debug($reverse = false)
+    {
+        $debug = debug_backtrace();
+        $data = [];
+        foreach($debug as $e)
+        {
+            $function = isset($e['function']) ? $e['function'] : 'null function';
+            $class = isset($e['class']) ? $e['class'] : 'null class';
+            $file = isset($e['file']) ? $e['file'] : 'null file';
+            $line = isset($e['line']) ? $e['line'] : 'null';
+            $data[] = $file . '(' . $line . '),' . $class . '::' . $function . '()';
+        }
+
+        return $reverse == true ? array_reverse($data) : $data;
+    }
 }

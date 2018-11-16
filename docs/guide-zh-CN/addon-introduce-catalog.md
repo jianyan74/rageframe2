@@ -18,24 +18,29 @@
 --- --- controllers | 控制器目录
 --- --- --- SettingController.php | 配置文件控制器, 有配置项的话可选
 --- --- views | 视图目录
+--- --- asset | 资源配置目录
+--- --- ---  Asset.php | 后台静态资源载入器
 --- --- --- setting | 配置视图目录
 --- --- --- --- hook.php | 钩子视图文件
 --- --- --- --- display.php | 配置视图文件
 --- **frontend** | 模块前台应用
 --- --- controllers | 控制器目录
 --- --- views | 视图目录
+--- --- asset | 资源配置目录
+--- --- ---  Asset.php | 前台静态资源载入器
 --- **wechat** | 模块微信应用
 --- --- controllers | 控制器目录
 --- --- views | 视图目录
+--- --- asset | 资源配置目录
+--- --- ---  Asset.php | 微信静态资源载入器
 --- **api** | 模块api应用(主要用于小程序)
 --- --- controllers | 控制器目录
 --- **common** | 公用
 --- --- models | 公共模型层
---- **asset** | 资源配置目录
---- ---  BackendAsset.php | 后台静态资源载入器
---- ---  FrontendAsset.php | 前台静态资源载入器
---- ---  WechatAsset.php | 微信静态资源载入器
 --- **resources** | 资源(js/css/image)目录(不可修改命名)
+--- --- wechat | wechat资源文件
+--- --- frontend | frontend资源文件
+--- --- backend | backend资源文件
 --- AddonConfig.php | 模块配置文件(必须有)
 --- AddonMessage.php | 模块微信消息接收处理文件(可选)
 --- install.php | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)

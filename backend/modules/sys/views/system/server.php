@@ -2,7 +2,6 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-const LOADAVG = 'loadavg';
 $this->title = '服务器信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>

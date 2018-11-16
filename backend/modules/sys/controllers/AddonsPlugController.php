@@ -305,10 +305,15 @@ class AddonsPlugController extends SController
             $files[] = "{$addonDir}wechat/views/default/";
             $files[] = "{$addonDir}wechat/views/default/index.php";
             $files[] = "{$addonDir}resources/";
-            $files[] = "{$addonDir}assets/";
-            $files[] = "{$addonDir}assets/BackendAsset.php";
-            $files[] = "{$addonDir}assets/FrontendAsset.php";
-            $files[] = "{$addonDir}assets/WechatAsset.php";
+            $files[] = "{$addonDir}resources/backend/";
+            $files[] = "{$addonDir}resources/frontend/";
+            $files[] = "{$addonDir}resources/wechat/";
+            $files[] = "{$addonDir}backend/assets/";
+            $files[] = "{$addonDir}backend/assets/Asset.php";
+            $files[] = "{$addonDir}frontend/assets/";
+            $files[] = "{$addonDir}frontend/assets/Asset.php";
+            $files[] = "{$addonDir}wechat/assets/";
+            $files[] = "{$addonDir}wechat/assets/Asset.php";
 
             // 小程序支持
             if($model->is_mini_program)
@@ -341,7 +346,9 @@ class AddonsPlugController extends SController
             file_put_contents("{$addonDir}common/models/DefaultModel.php", $this->renderPartial('template/DefaultModel',['model' => $model, 'appID' => 'backend']));
 
             // 资源目录
-            file_put_contents("{$addonDir}resources/.gitkeep", '*');
+            file_put_contents("{$addonDir}resources/backend/.gitkeep", '*');
+            file_put_contents("{$addonDir}resources/frontend/.gitkeep", '*');
+            file_put_contents("{$addonDir}resources/wechat/.gitkeep", '*');
 
             // 写入默认视图
             file_put_contents("{$addonDir}backend/views/default/index.php", $this->renderPartial('template/view/index',['model' => $model, 'appID' => 'backend']));
@@ -349,9 +356,9 @@ class AddonsPlugController extends SController
             file_put_contents("{$addonDir}wechat/views/default/index.php", $this->renderPartial('template/view/index',['model' => $model, 'appID' => 'wechat']));
 
             // 写入前台/后台/微信资源
-            file_put_contents("{$addonDir}assets/BackendAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Backend']));
-            file_put_contents("{$addonDir}assets/FrontendAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Frontend']));
-            file_put_contents("{$addonDir}assets/WechatAsset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'Wechat']));
+            file_put_contents("{$addonDir}backend/assets/Asset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'backend']));
+            file_put_contents("{$addonDir}frontend/assets/Asset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'frontend']));
+            file_put_contents("{$addonDir}wechat/assets/Asset.php", $this->renderPartial('template/Asset',['model' => $model, 'appID' => 'wechat']));
 
             // 参数设置支持
             if($model->is_setting == true)

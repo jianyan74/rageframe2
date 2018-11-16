@@ -62,15 +62,15 @@ class ArrayHelper extends BaseArrayHelper
      * @param int $pid
      * @return array
      */
-    public static function getChildsId($cate, $pid)
+    public static function getChildsId($cate, $pid, $id = "id", $pidName = 'pid')
     {
         $arr = [];
         foreach ($cate as $v)
         {
-            if ($v['pid'] == $pid)
+            if ($v[$pidName] == $pid)
             {
-                $arr[] = $v['id'];
-                $arr = array_merge($arr, self::getChildsId($cate, $v['id']));
+                $arr[] = $v[$id];
+                $arr = array_merge($arr, self::getChildsId($cate, $v[$id], $id, $pidName));
             }
         }
 
