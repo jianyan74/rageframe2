@@ -1,9 +1,11 @@
 <?php
 namespace api\modules\v1\controllers\member;
 
+use common\helpers\ResultDataHelper;
 use Yii;
 use yii\web\NotFoundHttpException;
 use api\controllers\OnAuthController;
+use common\models\api\AccessToken;
 use common\enums\StatusEnum;
 use common\models\member\MemberInfo;
 
@@ -49,6 +51,29 @@ class InfoController extends OnAuthController
         }
 
         return $model;
+    }
+
+    /**
+     * 重置令牌
+     *
+     * @param $refresh_token
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
+     */
+    public function actionRefresh()
+    {
+        if (Yii::$app->request->post('refresh_token') != Yii::$app->user->identity->refresh_token)
+        {
+            return ResultDataHelper::api(422, '重置令牌错误!');
+        }
+
+        if ($member = MemberInfo::findIdentity(Yii::$app->user->identity->member_id))
+        {
+            return AccessToken::getAccessToken($member, Yii::$app->user->identity->group);
+        }
+
+        throw new NotFoundHttpException('令牌错误，找不到用户!');
     }
 
     /**

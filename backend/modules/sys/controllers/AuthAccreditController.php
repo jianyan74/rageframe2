@@ -103,7 +103,7 @@ class AuthAccreditController extends SController
     {
         if (!($model = AuthItem::findOne(['key' => $id])))
         {
-            return ResultDataHelper::result(404, '找不到数据');
+            return ResultDataHelper::json(404, '找不到数据');
         }
 
         $getData = Yii::$app->request->get();
@@ -114,10 +114,10 @@ class AuthAccreditController extends SController
 
         if (!$model->save())
         {
-            return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
         }
 
-        return ResultDataHelper::result(200, '修改成功');
+        return ResultDataHelper::json(200, '修改成功');
     }
 
     /**

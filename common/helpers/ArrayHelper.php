@@ -110,30 +110,28 @@ class ArrayHelper extends BaseArrayHelper
     public static function arraySort($arr, $keys, $type = 'asc')
     {
         $count = count($arr);
-        if($count <= 1)
+        if ($count <= 1)
         {
             return $arr;
         }
-        else
+
+        $keysvalue = [];
+        $new_array = [];
+
+        foreach ($arr as $k => $v)
         {
-            $keysvalue = [];
-            $new_array = [];
-
-            foreach ($arr as $k => $v)
-            {
-                $keysvalue[$k] = $v[$keys];
-            }
-
-            $type == 'asc' ? asort($keysvalue) : arsort($keysvalue);
-            reset($keysvalue);
-
-            foreach ($keysvalue as $k => $v)
-            {
-                $new_array[$k] = $arr[$k];
-            }
-
-            return $new_array;
+            $keysvalue[$k] = $v[$keys];
         }
+
+        $type == 'asc' ? asort($keysvalue) : arsort($keysvalue);
+        reset($keysvalue);
+
+        foreach ($keysvalue as $k => $v)
+        {
+            $new_array[$k] = $arr[$k];
+        }
+
+        return $new_array;
     }
 
     /**

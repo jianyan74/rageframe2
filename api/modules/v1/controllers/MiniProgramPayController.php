@@ -66,6 +66,6 @@ class MiniProgramPayController extends OnAuthController
             return $payment->jssdk->sdkConfig($result['prepay_id']);
         }
 
-        return ResultDataHelper::apiResult(422, $result['return_msg']);
+        return ResultDataHelper::api(422, $result['return_msg']);
     }
 }

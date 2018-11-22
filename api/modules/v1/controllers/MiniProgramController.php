@@ -57,7 +57,7 @@ class MiniProgramController extends \yii\rest\ActiveController
     {
         if (!$code)
         {
-            return ResultDataHelper::apiResult(422, '通信错误,请在微信重新发起请求');
+            return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
         }
 
         try
@@ -76,7 +76,7 @@ class MiniProgramController extends \yii\rest\ActiveController
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::apiResult(422, $e->getMessage());
+            return ResultDataHelper::api(422, $e->getMessage());
         }
     }
 
@@ -93,18 +93,18 @@ class MiniProgramController extends \yii\rest\ActiveController
 
         if (!$model->validate())
         {
-            return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
         }
 
         if (!($oauth = Yii::$app->cache->get($model->auth_key)))
         {
-            return ResultDataHelper::apiResult(422, 'auth_key已过期');
+            return ResultDataHelper::api(422, 'auth_key已过期');
         }
 
         $sign = sha1(htmlspecialchars_decode($model->rawData . $oauth['session_key']));
         if ($sign !== $model->signature)
         {
-            return ResultDataHelper::apiResult(422, '签名错误');
+            return ResultDataHelper::api(422, '签名错误');
         }
 
         $userinfo = $this->miniProgramApp->encryptor->decryptData($oauth['session_key'], $model->iv, $model->encryptedData);

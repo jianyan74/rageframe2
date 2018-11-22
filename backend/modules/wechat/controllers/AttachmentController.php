@@ -166,7 +166,7 @@ class AttachmentController extends WController
                 $news->save();
             }
 
-            return ResultDataHelper::result(200, '修改成功');
+            return ResultDataHelper::json(200, '修改成功');
         }
 
         return $this->render('news-edit',[
@@ -378,7 +378,7 @@ class AttachmentController extends WController
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
 
         // 系统内的素材
@@ -450,13 +450,13 @@ class AttachmentController extends WController
 
         if($total - $count > 0)
         {
-            return ResultDataHelper::result(200, '同步成功', [
+            return ResultDataHelper::json(200, '同步成功', [
                 'offset' => ($offset + 1) * $count,
                 'count' => $count + $count
             ]);
         }
 
-        return ResultDataHelper::result(201, '同步完成');
+        return ResultDataHelper::json(201, '同步完成');
     }
 
     /**

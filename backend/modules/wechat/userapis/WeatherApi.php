@@ -24,7 +24,7 @@ class WeatherApi implements WechatMessageInterface
     {
         if (!isset($message['Content']))
         {
-            return '小伙子你过分了';
+            return '小伙子你过分了，给点内容好不好';
         }
 
         $ret = preg_match('/(.+)天气/i', $message['Content'], $matchs);

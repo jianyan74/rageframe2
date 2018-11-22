@@ -123,8 +123,13 @@ AppAsset::register($this);
     // status => 1:启用;-1禁用;
     function rfStatus(obj){
         var id = $(obj).parent().parent().attr('id');
+
+        if (!id) {
+            id = $(obj).parent().parent().attr('data-key');
+        }
+
         var status = 0; self = $(obj);
-        if(self.hasClass("btn-primary")){
+        if (self.hasClass("btn-primary")) {
             status = 1;
         }
 
@@ -151,6 +156,11 @@ AppAsset::register($this);
 
     function rfSort(obj){
         var id = $(obj).parent().parent().attr('id');
+
+        if (!id) {
+            id = $(obj).parent().parent().attr('data-key');
+        }
+
         var sort = $(obj).val();
         if(isNaN(sort)){
             rfAffirm('排序只能为数字');

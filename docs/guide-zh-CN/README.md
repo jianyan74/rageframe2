@@ -71,16 +71,5 @@
 
 #### 附录
 
-- 文章学习
-- 推荐站点
-- PHP编程规范
-- MongoDb 安装及使用
-- Docker 配置文件说明
-- Composer 安装
-- Elasticsearch 安装及使用
-- Mysql 主从复制(读写分离)
-- Nginx 负载均衡
-- PHP 底层原理
-- Http 协议
-- TCP/IP 理解
+- [PHP编程规范](php-standard.md)
 - [网址收录](append-website.md)

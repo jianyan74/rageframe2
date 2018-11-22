@@ -27,6 +27,6 @@ class MenuProvincesController extends WController
             $str .= Html::tag('option', Html::encode($name), ['value' => $value]);
         }
 
-        return ResultDataHelper::result(200, '查询成功', $str);
+        return ResultDataHelper::json(200, '查询成功', $str);
     }
 }

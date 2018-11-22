@@ -17,7 +17,7 @@ class AddonHook
      *
      * @var string
      */
-    const hookPath = 'setting/hook';
+    const hookPath = 'setting/';
 
     /**
      * 实例化钩子
@@ -28,7 +28,7 @@ class AddonHook
      * @return bool
      * @throws NotFoundHttpException
      */
-    public static function to($addonsName, $params = [], $debug = false)
+    public static function to($addonsName, $params = [], $action = 'hook', $debug = false)
     {
         try
         {
@@ -37,9 +37,9 @@ class AddonHook
             $oldAddonBinding = Yii::$app->params['addonBinding'];
 
             // 初始化模块
-            AddonHelper::initAddon($addonsName, self::hookPath);
+            AddonHelper::initAddon($addonsName, self::hookPath . $action);
             // 解析路由
-            AddonHelper::analysisRoute(self::hookPath, 'backend');
+            AddonHelper::analysisRoute(self::hookPath . $action, 'backend');
 
             $class = Yii::$app->params['addonInfo']['controllersPath'];
             $controllerName = Yii::$app->params['addonInfo']['controllerName'];
@@ -54,6 +54,7 @@ class AddonHook
             Yii::$app->params['addonInfo'] = $oldAddonInfo;
             Yii::$app->params['addon'] = $oldAddon;
             Yii::$app->params['addonBinding'] = $oldAddonBinding;
+
             return $data;
         }
         catch (\Exception $e)

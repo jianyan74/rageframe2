@@ -1,5 +1,12 @@
 <?php
 return [
+    /** ------ 日志记录 ------ **/
+    'user.log' => false,
+    'user.log.level' => ['error'], // 级别 ['info', 'warning', 'error']
+    'user.log.noPostData' => [ // 安全考虑,不接收Post存储到日志的路由
+        'site/login',
+    ],
+
     /** ------ 非微信打开的时候是否开启微信模拟数据 ------ **/
     'simulateUser' => [
         'switch' => false,// 微信应用模拟用户检测开关

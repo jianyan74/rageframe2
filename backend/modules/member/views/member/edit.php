@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?= $form->field($model, 'realname')->textInput() ?>
                         <?= $form->field($model, 'nickname')->textInput() ?>
                         <?= $form->field($model, 'mobile_phone')->textInput() ?>
-                        <?= $form->field($model, 'sex')->radioList(['1' => '男','2' => '女']) ?>
+                        <?= $form->field($model, 'sex')->radioList(['1' => '男', '2' => '女']) ?>
                         <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Images', [
                             'config' => [
                                 // 可设置自己的上传地址, 不设置则默认地址
@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'readonly' => 'readonly',// 禁止输入
                             ]
                         ]); ?>
-                        <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']) ?>
+                        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain) ?>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-center">

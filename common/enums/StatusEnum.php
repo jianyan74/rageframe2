@@ -17,8 +17,7 @@ class StatusEnum
      * @var array
      */
     public static $listExplain = [
-        self::ENABLED => '显示',
-        self::DISABLED => '隐藏',
-        self::DELETE  => '删除',
+        self::ENABLED => '启用',
+        self::DISABLED => '禁用',
     ];
 }

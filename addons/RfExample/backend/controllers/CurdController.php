@@ -21,7 +21,13 @@ class CurdController extends AddonsBaseController
      */
     public function actionIndex()
     {
-        $data = Curd::find();
+        $title = Yii::$app->request->get('title');
+        $start_time = Yii::$app->request->get('start_time', date('Y-m-d', strtotime("-60 day")));
+        $end_time = Yii::$app->request->get('end_time', date('Y-m-d', strtotime("+1 day")));
+        
+        $data = Curd::find()
+            ->andFilterWhere(['like', 'title', $title])
+            ->andFilterWhere(['between','created_at', strtotime($start_time), strtotime($end_time)]);
         $pages = new Pagination([
             'totalCount' => $data->count(),
             'pageSize' => $this->_pageSize
@@ -34,6 +40,9 @@ class CurdController extends AddonsBaseController
         return $this->render('index',[
             'models' => $models,
             'pages' => $pages,
+            'title' => $title,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
         ]);
     }
 
@@ -93,7 +102,7 @@ class CurdController extends AddonsBaseController
     {
         if (!($model = Curd::findOne($id)))
         {
-            return ResultDataHelper::result(404, '找不到数据');
+            return ResultDataHelper::json(404, '找不到数据');
         }
 
         $getData = Yii::$app->request->get();
@@ -104,10 +113,10 @@ class CurdController extends AddonsBaseController
 
         if (!$model->save())
         {
-            return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
         }
 
-        return ResultDataHelper::result(200, '修改成功');
+        return ResultDataHelper::json(200, '修改成功');
     }
 
     /**

@@ -5,7 +5,7 @@ use Yii;
 use yii\data\Pagination;
 use common\models\common\PayLog;
 use common\models\sys\ActionLog;
-use common\models\api\Log as ApiLog;
+use common\models\common\Log;
 
 /**
  * 日志控制器
@@ -20,14 +20,14 @@ class LogController extends SController
      *
      * @return string
      */
-    public function actionApi()
+    public function actionLog()
     {
         $error_code = Yii::$app->request->get('error_code', null);
         $where = [];
         $error_code == 1 && $where = ['<', 'error_code', 299];
         $error_code == 2 && $where = ['>', 'error_code', 299];
 
-        $data = ApiLog::find()->filterWhere($where);
+        $data = Log::find()->filterWhere($where);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
@@ -47,9 +47,9 @@ class LogController extends SController
      * @param $id
      * @return string
      */
-    public function actionApiView($id)
+    public function actionLogView($id)
     {
-        $model = ApiLog::find()->where(['id' => $id])->one();
+        $model = Log::find()->where(['id' => $id])->one();
         return $this->renderAjax($this->action->id, [
             'model' => $model,
         ]);

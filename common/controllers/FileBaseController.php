@@ -55,11 +55,11 @@ class FileBaseController extends Controller
             // 上传
             $result = UploadHelper::file();
 
-            return ResultDataHelper::result(200, '上传成功', $result);
+            return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -78,11 +78,11 @@ class FileBaseController extends Controller
             // 上传
             $result = UploadHelper::file();
 
-            return ResultDataHelper::result(200, '上传成功', $result);
+            return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -101,11 +101,11 @@ class FileBaseController extends Controller
             // 上传
             $result = UploadHelper::file();
 
-            return ResultDataHelper::result(200, '上传成功', $result);
+            return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -123,11 +123,11 @@ class FileBaseController extends Controller
             UploadHelper::load(Yii::$app->request->post(), 'files');
             // 上传
             $result = UploadHelper::file();
-            return ResultDataHelper::result(200, '上传成功', $result);
+            return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -143,11 +143,11 @@ class FileBaseController extends Controller
         {
             $base64Data = Yii::$app->request->post('image');
             $extend = Yii::$app->request->post('extend', 'jpg');
-            return ResultDataHelper::result(200, '上传成功', UploadHelper::Base64Img($base64Data, $extend));
+            return ResultDataHelper::json(200, '上传成功', UploadHelper::Base64Img($base64Data, $extend));
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -161,11 +161,11 @@ class FileBaseController extends Controller
     {
         try
         {
-            return ResultDataHelper::result(200, '上传成功', UploadHelper::qiniu($_FILES['file']));
+            return ResultDataHelper::json(200, '上传成功', UploadHelper::qiniu($_FILES['file']));
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -179,11 +179,11 @@ class FileBaseController extends Controller
     {
         try
         {
-            return ResultDataHelper::result(200, '上传成功', UploadHelper::oss($_FILES['file']));
+            return ResultDataHelper::json(200, '上传成功', UploadHelper::oss($_FILES['file']));
         }
         catch (\Exception $e)
         {
-            return ResultDataHelper::result(404, $e->getMessage());
+            return ResultDataHelper::json(404, $e->getMessage());
         }
     }
 
@@ -199,14 +199,14 @@ class FileBaseController extends Controller
 
         if (!$mergeInfo)
         {
-            return ResultDataHelper::result(404, '找不到文件信息, 合并文件失败');
+            return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
         UploadHelper::mergeFile($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
 
         Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
-        return ResultDataHelper::result(200, '合并完成', [
+        return ResultDataHelper::json(200, '合并完成', [
             'urlPath' => $mergeInfo['relativePath']
         ]);
     }

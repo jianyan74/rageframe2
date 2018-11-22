@@ -9,7 +9,6 @@
   - 行为日志记录
   - 微信接口验证及报错获取
   - 解析 model 报错
-  - 变动用户积分/余额接口
 - 控制器底层方法
   - 解析 model 报错
 - 全局函数
@@ -82,16 +81,6 @@ Yii::$app->debris->getWechatPortBackError();
 Yii::$app->debris->analyErr($firstErrors);
 ```
 
-##### 变动用户积分/余额接口
-
-```
-/**
- * 变动积分
- * 
- * 用户id, 字段名称, 变动数量, 组别(选填), 备注(选填)
- */
-\common\models\member\CreditsLog::change(1, 'user_integral', 1, 'sign', '签到增加积分');
-```
 ### 控制器底层方法
 
 ##### 解析 model 报错

@@ -124,16 +124,16 @@ class ConfigController extends SController
                     $model->value = is_array($value) ? serialize($value) : $value;
                     if (!$model->save())
                     {
-                        return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+                        return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
                     }
                 }
                 else
                 {
-                    return ResultDataHelper::result(422, "配置不存在,请刷新页面");
+                    return ResultDataHelper::json(422, "配置不存在,请刷新页面");
                 }
             }
 
-            return ResultDataHelper::result(200, "修改成功");
+            return ResultDataHelper::json(200, "修改成功");
         }
 
         throw new NotFoundHttpException('请求出错!');

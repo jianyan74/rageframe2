@@ -22,20 +22,20 @@ use common\helpers\ResultDataHelper;
 * @param string $message 返回的报错信息
 * @param array|object $data 返回的数据结构
 */
-ResultDataHelper::result($code, $message, $data)
+ResultDataHelper::json($code, $message, $data)
 ```
 
 #### Api
 
 ```
 /**
-* 返回json数据格式
-*
-* @param int $code 状态码 需要符合 http 状态码规则
-* @param string $message 返回的报错信息
-* @param array|object $data 返回的数据结构
-*/
-ResultDataHelper::apiResult($code, $message, $data)
+ * 返回 array 数据格式 api 自动转为 json
+ *
+ * @param int $code 状态码 注意：要符合http状态码
+ * @param string $message 返回的报错信息
+ * @param array|object $data 返回的数据结构
+ */
+ResultDataHelper::api($code, $message, $data)
 ```
 
 #### 返回示例

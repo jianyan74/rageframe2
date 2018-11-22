@@ -72,15 +72,14 @@ group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
 请求地址(Post)
 
 ```
-/v1/site/refresh
+/v1/member/info/refresh?access-token=[登陆获取到access-token]
 ```
 
 参数
 
 参数名 | 参数类型 | 必填 | 默认 | 说明
 ---|---|---|---|---
-refresh_token | string| 是 | 无 | 登录获取到的重置令牌
-group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
+refresh_token | string| 是 | 无 | 重置令牌
 
 返回
 

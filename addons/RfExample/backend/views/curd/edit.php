@@ -4,6 +4,7 @@ use common\helpers\AddonUrl;
 use common\widgets\webuploader\Images;
 use common\widgets\webuploader\Files;
 use dosamigos\datetimepicker\DateTimePicker;
+use kartik\select2\Select2;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => 'Curd', 'url' => AddonUrl::to(['index'])];
@@ -21,6 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php $form = ActiveForm::begin([]); ?>
                     <?= $form->field($model, 'title')->textInput(); ?>
                     <?= $form->field($model, 'description')->textarea(); ?>
+                    <?= $form->field($model, 'tag')->widget(Select2::classname(), [
+                        'data' => [1 => "First", 2 => "Second", 3 => "Third", 4 => "Fourth", 5 => "Fifth"],
+                        'options' => ['placeholder' => '请选择'],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]);?>
                     <?= $form->field($model, 'sort')->textInput(); ?>
                     <div class="row">
                         <div class="col-sm-6">

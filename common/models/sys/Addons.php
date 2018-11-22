@@ -224,6 +224,7 @@ class Addons extends BaseModel
             $model->title_initial = ucwords($pinyin->abbr($title_initial));
         }
 
+        $model->updated_at = time();
         if (!$model->save())
         {
             $error = Yii::$app->debris->analyErr($model->getFirstErrors());

@@ -116,6 +116,32 @@ class AddonHelper
     }
 
     /**
+     * 获取模块的App路径名称
+     *
+     * @return mixed|string
+     */
+    public static function getAppName()
+    {
+        $appId = [
+            "app-backend" => 'backend',
+            "app-frontend" => 'frontend',
+            "app-wechat" => 'wechat',
+            "app-api" => 'api',
+        ];
+
+        $moduleId = Yii::$app->controller->module->id;
+
+        // 判断如果是模块进入之前返回模块所在的应用id
+        if ($moduleId == 'addons')
+        {
+            return !empty(Yii::$app->params['addonInfo']['moduleId']) ? Yii::$app->params['addonInfo']['moduleId'] : 'backend';
+        }
+
+        Yii::$app->params['addonInfo']['moduleId'] = $appId[$moduleId];
+        return isset($appId[$moduleId]) ? $appId[$moduleId] : 'backend';
+    }
+
+    /**
      * 初始化模块信息
      *
      * @param string $addonName 模块名称

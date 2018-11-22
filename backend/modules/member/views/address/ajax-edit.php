@@ -24,7 +24,7 @@ $form = ActiveForm::begin([
             // 'template' => 'short' //合并为一行显示
         ]); ?>
         <?= $form->field($model, 'detailed_address')->textarea() ?>
-        <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']) ?>
+        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

@@ -24,8 +24,6 @@ class WController extends BaseController
      */
     public function init()
     {
-        // 可在此处加入自己私有的微信配置
-
         parent::init();
 
         /** 检测到微信进入自动获取用户信息 **/
@@ -42,8 +40,5 @@ class WController extends BaseController
         {
             Yii::$app->params['wechatMember'] = Yii::$app->params['simulateUser']['userInfo'];
         }
-
-        // 查询用户并进行登录
-        // TODO 判断登录
     }
 }

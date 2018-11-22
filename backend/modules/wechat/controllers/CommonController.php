@@ -38,7 +38,7 @@ class CommonController extends WController
             }
         }
 
-        return ResultDataHelper::result(200, '获取数据成功', $models);
+        return ResultDataHelper::json(200, '获取数据成功', $models);
     }
 
     /**
@@ -63,6 +63,6 @@ class CommonController extends WController
             $model['image_url'] = Url::to(['analysis/image', 'attach' => $model['thumb_url']]);
         }
 
-        return ResultDataHelper::result(200, '获取数据成功', $models);
+        return ResultDataHelper::json(200, '获取数据成功', $models);
     }
 }

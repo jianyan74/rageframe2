@@ -11,6 +11,7 @@ CREATE TABLE `rf_addon_example_curd` (
   `position` int(11) NOT NULL DEFAULT '0' COMMENT '推荐位',
   `sex` tinyint(4) NOT NULL DEFAULT '1' COMMENT '性别1男2女',
   `content` text NOT NULL COMMENT '内容',
+  `tag` varchar(100) NOT NULL DEFAULT '' COMMENT '标签',
   `cover` varchar(100) NOT NULL DEFAULT '' COMMENT '图片',
   `covers` text NOT NULL COMMENT '图片组',
   `file` varchar(100) NOT NULL DEFAULT '' COMMENT '文件',
@@ -31,7 +32,7 @@ CREATE TABLE `rf_addon_example_curd` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_示例插件_curd';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_示例插件_curd';
 
 DROP TABLE IF EXISTS `rf_addon_example_cate`;
 CREATE TABLE `rf_addon_example_cate` (
@@ -44,7 +45,7 @@ CREATE TABLE `rf_addon_example_cate` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='扩展_示例插件_分类表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='扩展_示例插件_分类表';
 ";
 
 // 执行sql

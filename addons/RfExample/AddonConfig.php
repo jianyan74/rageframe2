@@ -22,6 +22,16 @@ class AddonConfig
     ];
 
     /**
+     * 可授权权限(Demo)
+     *
+     * @var array
+     */
+    public $authAccredit = [
+        'curd/index' => 'Curd首页',
+        'curd/edit' => 'Curd编辑',
+    ];
+
+    /**
      * 参数配置
      *
      * @var bool
@@ -94,8 +104,8 @@ class AddonConfig
             'icon' => ''
         ],
         [
-            'title' => '默认搜索',
-            'route' => 'search/index',
+            'title' => 'Curd For Grid',
+            'route' => 'grid-curd/index',
             'icon' => ''
         ],
         [
@@ -131,11 +141,6 @@ class AddonConfig
         [
             'title' => 'Excel导入数据',
             'route' => 'excel/index',
-            'icon' => ''
-        ],
-        [
-            'title' => '服务层调用',
-            'route' => 'servers/index',
             'icon' => ''
         ],
     ];

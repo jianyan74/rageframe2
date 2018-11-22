@@ -13,14 +13,7 @@ use common\models\sys\ActionLog;
  */
 class Debris
 {
-    /**
-     * 缓存前缀
-     *
-     * @var array
-     */
-    protected $_prefix = [
-        'cache' => "backendSysConfig", // 缓存
-    ];
+    const CACHE_PREFIX = 'backendSysConfig'; // 缓存前缀
 
     /**
      * 微信接口报错
@@ -64,7 +57,7 @@ class Debris
     protected function getConfigInfo($noCache)
     {
         // 获取缓存信息
-        $cacheKey = $this->_prefix['cache'];
+        $cacheKey = self::CACHE_PREFIX;
         if (!($info = Yii::$app->cache->get($cacheKey)) || $noCache == true)
         {
             $info = Config::getList();

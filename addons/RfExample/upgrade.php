@@ -36,7 +36,7 @@ function updateDatabaseField($version)
     {
         case '1.0.1' :
             // 增加测试 - 冗余的字段
-            $sql = "ALTER TABLE rf_addon_example_curd ADD COLUMN redundancy_field varchar(48) CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '冗余字段';";
+            $sql = "ALTER TABLE rf_addon_example_curd ADD COLUMN redundancy_field varchar(48) CHARACTER SET utf8mb4 COLLATE utf8_general_ci COMMENT '冗余字段';";
             Yii::$app->getDb()->createCommand($sql)->execute();
             break;
 

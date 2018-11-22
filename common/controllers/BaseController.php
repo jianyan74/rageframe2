@@ -49,8 +49,6 @@ class BaseController extends Controller
     {
         // 全部配置参数
         $config = Yii::$app->debris->configAll();
-        // 日志生成
-
 
         // 微信公众号
         Yii::$app->params['wechatConfig'] = ArrayHelper::merge([
@@ -84,7 +82,7 @@ class BaseController extends Controller
             'log' => [
                 'level' => 'debug',
                 'permission' => 0777,
-                'file' => $this->createWechatCatalogueLog('wechat'),
+                'file' => $this->createLogPath('wechat'),
             ],
             /**
              * 接口请求相关配置，超时时间等，具体可用参数请参考：
@@ -135,7 +133,7 @@ class BaseController extends Controller
             'response_type' => 'array',
             'log' => [
                 'level' => 'debug',
-                'file' => $this->createWechatCatalogueLog('miniprogram'),
+                'file' => $this->createLogPath('miniprogram'),
             ],
         ], Yii::$app->params['wechatMiniProgramConfig']);
     }
@@ -146,7 +144,7 @@ class BaseController extends Controller
      * @param $path
      * @return bool
      */
-    private function createWechatCatalogueLog($catalogue)
+    private function createLogPath($catalogue)
     {
         $path = Yii::getAlias('@backend') . '/runtime/easywechatLog/' . $catalogue . '/' . date('Y-m') . '/';
         $logFile = $path . date('d') . '.log';

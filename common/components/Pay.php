@@ -3,9 +3,9 @@ namespace common\components;
 
 use Yii;
 use yii\base\Component;
-use common\payment\AliPay;
-use common\payment\UnionPay;
-use common\payment\WechatPay;
+use common\components\payment\AliPay;
+use common\components\payment\UnionPay;
+use common\components\payment\WechatPay;
 use common\helpers\ArrayHelper;
 use common\helpers\UrlHelper;
 
@@ -22,12 +22,11 @@ class Pay extends Component
      */
     protected $_rfConfig;
 
-    /**
-     * Pay constructor.
-     */
-    public function __construct()
+    public function init()
     {
         $this->_rfConfig = Yii::$app->debris->configAll();
+
+        parent::init();
     }
 
     /**

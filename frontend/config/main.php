@@ -70,6 +70,12 @@ return [
                 ],
             ],
         ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function($event){
+                Yii::$app->services->errorLog->record($event->sender);
+            },
+        ],
         /** ------ 第三方登录 ------ **/
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
@@ -130,8 +136,6 @@ return [
                     // 'clientId' => '1',
                     // 'clientSecret' => '1',
                 ],
-
-
             ]
         ]
     ],

@@ -68,7 +68,7 @@ class MenuController extends WController
 
             if (!isset($postInfo['list']))
             {
-                return ResultDataHelper::result(422, '请添加菜单');
+                return ResultDataHelper::json(422, '请添加菜单');
             }
 
             $buttons = [];
@@ -100,7 +100,7 @@ class MenuController extends WController
             // 判断写入是否成功
             if (!$model->validate())
             {
-                return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
             }
 
             // 个性化菜单
@@ -118,27 +118,27 @@ class MenuController extends WController
 
                 if (($menuResult = $this->app->menu->create($buttons, $matchRule)) && isset($menuResult['errcode'])) // 自定义菜单
                 {
-                    return ResultDataHelper::result(422, $menuResult['errmsg']);
+                    return ResultDataHelper::json(422, $menuResult['errmsg']);
                 }
 
                 $model->menu_id = $menuResult['menuid'];
                 $model->save();
 
-                return ResultDataHelper::result(200, "修改成功");
+                return ResultDataHelper::json(200, "修改成功");
             }
 
             if (($menuResult = $this->app->menu->create($buttons)) && $menuResult['errcode'] != 0)
             {
-                return ResultDataHelper::result(422, $menuResult['errmsg']);
+                return ResultDataHelper::json(422, $menuResult['errmsg']);
             }
 
             // 判断写入是否成功
             if (!$model->save())
             {
-                return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
             }
 
-            return ResultDataHelper::result(200, "修改成功");
+            return ResultDataHelper::json(200, "修改成功");
         }
 
         return $this->render('edit', [
@@ -205,7 +205,7 @@ class MenuController extends WController
         Yii::$app->debris->analyWechatPortBack($list, false);
         if ($error = Yii::$app->debris->getWechatPortBackError())
         {
-            return ResultDataHelper::result(404, $error);
+            return ResultDataHelper::json(404, $error);
         }
 
         // 开始获取同步
@@ -239,7 +239,7 @@ class MenuController extends WController
             }
         }
 
-        return ResultDataHelper::result(200, '同步菜单成功');
+        return ResultDataHelper::json(200, '同步菜单成功');
     }
 
     /**

@@ -18,10 +18,17 @@ use common\helpers\FileHelper;
 class NotifyController extends Controller
 {
     /**
+     * 关闭csrf
+     *
      * @var bool
      */
     public $enableCsrfValidation = false;
 
+    /**
+     * 配置
+     *
+     * @var
+     */
     protected $config;
 
     public function init()
@@ -36,7 +43,7 @@ class NotifyController extends Controller
      *
      * @return mixed
      */
-    public function actionWechat()
+    public function actionEasyWechat()
     {
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
@@ -47,7 +54,7 @@ class NotifyController extends Controller
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)
         {
-            // 记录写入日志
+            // 记录写入文件日志
             $logPath = Yii::getAlias('@wechat') . "/runtime/pay_log/" . date('Y_m_d') . "/" . $message->openid . '.txt';
             FileHelper::writeLog($logPath, json_encode(ArrayHelper::toArray($message)));
 
@@ -167,7 +174,7 @@ class NotifyController extends Controller
     /**
      * 公用支付回调 - 微信
      */
-    public function actionWechat2()
+    public function actionWechat()
     {
         $response = Yii::$app->pay->wechat->notify();
         if ($response->isPaid())

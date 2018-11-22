@@ -1,8 +1,8 @@
 <?php
 namespace frontend\modules\member\controllers;
 
-use frontend\controllers\IController;
 use yii\filters\AccessControl;
+use frontend\controllers\IController;
 
 /**
  * Class MController

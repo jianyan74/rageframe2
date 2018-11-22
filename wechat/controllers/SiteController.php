@@ -1,11 +1,11 @@
 <?php
 namespace wechat\controllers;
 
-use common\helpers\UrlHelper;
 use Yii;
 use common\helpers\PayHelper;
 use common\helpers\StringHelper;
 use common\models\common\PayLog;
+use common\helpers\UrlHelper;
 
 /**
  * Site controller

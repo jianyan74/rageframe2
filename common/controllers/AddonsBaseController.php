@@ -5,7 +5,6 @@ use Yii;
 use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
 use common\helpers\AddonUrl;
-use common\components\ModuleIdToAddonAppTrait;
 
 /**
  * 模块基类控制器
@@ -15,8 +14,6 @@ use common\components\ModuleIdToAddonAppTrait;
  */
 class AddonsBaseController extends BaseController
 {
-    use ModuleIdToAddonAppTrait;
-
     /**
      * @var string
      */
@@ -116,7 +113,7 @@ class AddonsBaseController extends BaseController
         // 注入资源文件
         $this->registerClientResource();
 
-        return "@addons" . '/'. Yii::$app->params['addonInfo']['name'] . '/' . $this->getModuleIdToAddonApp() . '/views/' . $controller . $view;
+        return "@addons" . '/'. Yii::$app->params['addonInfo']['name'] . '/' . AddonHelper::getAppName() . '/views/' . $controller . $view;
     }
 
     /**
@@ -124,7 +121,7 @@ class AddonsBaseController extends BaseController
      */
     private function registerClientResource()
     {
-        $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . $this->getModuleIdToAddonApp() . '\\assets';
+        $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . AddonHelper::getAppName() . '\\assets';
         $assets = $assetsPath . '\\Asset';
 
         // 注册资源类名

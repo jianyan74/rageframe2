@@ -1,10 +1,6 @@
 <?php
 namespace common\models\member;
 
-use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\UnprocessableEntityHttpException;
-
 /**
  * This is the model class for table "{{%member_credits_log}}".
  *
@@ -61,55 +57,5 @@ class CreditsLog extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * 变动用户积分或者余额记录
-     *
-     * @param $member_id
-     * @param $field
-     * @param $num
-     * @param string $credit_group
-     * @param string $remark
-     * @return MemberInfo|null
-     * @throws NotFoundHttpException
-     * @throws UnprocessableEntityHttpException
-     * @throws \yii\db\Exception
-     */
-    public static function change($member_id, $field, $num, $credit_group = '', $remark = '')
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-
-        try
-        {
-            if ($member = MemberInfo::findOne($member_id))
-            {
-                $model = new self();
-                $model->member_id = $member->id;
-                $model = $model->loadDefaultValues();
-                $model->old_num = $member[$field];
-                $model->new_num = $member[$field] + $num;
-                $model->num = $num;
-                $model->credit_type = $field;
-                $model->credit_group = $credit_group;
-                $model->remark = $remark;
-
-                // 变动用户信息
-                $member->$field = $model->new_num;
-
-                if ($model->save() && $member->save())
-                {
-                    $transaction->commit();
-                    return $member;
-                }
-            }
-        }
-        catch(\Exception $e)
-        {
-            $transaction->rollBack();
-            throw new UnprocessableEntityHttpException($e);
-        }
-
-        throw new NotFoundHttpException('找不到用户');
     }
 }

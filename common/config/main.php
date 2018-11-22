@@ -76,8 +76,8 @@ return [
             // ... 您可以在这里配置组件的更多属性
         ],
         /** ------ 服务 ------ **/
-        'servers' => [
-            'class' => 'common\servers\Application',
+        'services' => [
+            'class' => 'common\services\Application',
         ]
     ],
 ];

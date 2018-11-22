@@ -13,4 +13,12 @@ use api\controllers\OffAuthController;
 class DefaultController extends OffAuthController
 {
     public $modelClass = '';
+
+    /**
+     * @return string|\yii\data\ActiveDataProvider
+     */
+    public function actionIndex()
+    {
+        return 'index';
+    }
 }

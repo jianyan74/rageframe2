@@ -3,6 +3,15 @@
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
 
+use kartik\daterange\DateRangePicker;
+use yii\widgets\ActiveForm;
+
+$addon = <<< HTML
+<span class="input-group-addon">
+    <i class="glyphicon glyphicon-calendar"></i>
+</span>
+HTML;
+
 $this->title = 'Curd';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
@@ -19,6 +28,39 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </div>
             </div>
             <div class="ibox-content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <?php $form = ActiveForm::begin([
+                            'action' => AddonUrl::to(['index']),
+                            'method' => 'get',
+                        ]); ?>
+                        <div class="col-sm-4">
+                            <div class="input-group drp-container">
+                                <?= DateRangePicker::widget([
+                                    'name' => 'queryDate',
+                                    'value' => $start_time . '-' . $end_time,
+                                    'readonly' => 'readonly',
+                                    'useWithAddon' => true,
+                                    'convertFormat' => true,
+                                    'startAttribute' => 'start_time',
+                                    'endAttribute' => 'end_time',
+                                    'startInputOptions' => ['value' => $start_time],
+                                    'endInputOptions' => ['value' => $end_time],
+                                    'pluginOptions' => [
+                                        'locale' => ['format' => 'Y-m-d'],
+                                    ]
+                                ]) . $addon;?>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group m-b">
+                                <input type="text" class="form-control" name="title" placeholder="标题" value="<?= $title ?>"/>
+                                <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                            </div>
+                        </div>
+                        <?php ActiveForm::end(); ?>
+                    </div>
+                </div>
                 <table class="table table-hover">
                     <thead>
                     <tr>

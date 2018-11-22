@@ -179,14 +179,14 @@ class QrcodeController extends WController
                 $shortUrl  = $url->shorten($postUrl);
                 if ($shortUrl['errcode'] == 0)
                 {
-                    return ResultDataHelper::result(200, '二维码转化成功', [
+                    return ResultDataHelper::json(200, '二维码转化成功', [
                         'short_url' => $shortUrl['short_url']
                     ]);
                 }
             }
             catch (\Exception $e)
             {
-                return ResultDataHelper::result(429, $e->getMessage());
+                return ResultDataHelper::json(429, $e->getMessage());
             }
         }
 

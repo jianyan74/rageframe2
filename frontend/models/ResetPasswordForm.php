@@ -3,10 +3,13 @@ namespace frontend\models;
 
 use yii\base\Model;
 use common\models\member\MemberInfo;
-use yii\base\InvalidParamException;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
- * Password reset form
+ * 密码重置表单
+ *
+ * Class ResetPasswordForm
+ * @package frontend\models
  */
 class ResetPasswordForm extends Model
 {
@@ -17,25 +20,23 @@ class ResetPasswordForm extends Model
      */
     private $_user;
 
-
     /**
-     * Creates a form model given a token.
-     *
-     * @param string $token
-     * @param array $config name-value pairs that will be used to initialize the object properties
-     * @throws \yii\base\InvalidParamException if token is empty or not valid
+     * ResetPasswordForm constructor.
+     * @param $token
+     * @param array $config
+     * @throws UnprocessableEntityHttpException
      */
     public function __construct($token, $config = [])
     {
         if (empty($token) || !is_string($token))
         {
-            throw new InvalidParamException('Password reset token cannot be blank.');
+            throw new UnprocessableEntityHttpException('密码重置令牌不能为空.');
         }
 
         $this->_user = MemberInfo::findByPasswordResetToken($token);
         if (!$this->_user)
         {
-            throw new InvalidParamException('Wrong password reset token.');
+            throw new UnprocessableEntityHttpException('密码重置令牌错误.');
         }
 
         parent::__construct($config);

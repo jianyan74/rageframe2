@@ -50,6 +50,13 @@ return [
 
             ],
         ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function($event) {
+                $response = $event->sender;
+                Yii::$app->services->errorLog->record($response);
+            },
+        ],
     ],
     'controllerMap' => [
         // 微信数据处理
@@ -59,10 +66,6 @@ return [
         // 文件上传公共控制器
         'file' => [
             'class' => 'common\controllers\FileBaseController',
-        ],
-        // 百度编辑器
-        'ueditor' => [
-            'class' => 'common\widgets\ueditor\UeditorController',
         ],
         // 插件渲染默认控制器
         'addons' => [

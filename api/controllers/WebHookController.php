@@ -23,7 +23,7 @@ class WebHookController extends OffAuthController
     {
         if (!($data = json_decode(Yii::$app->request->rawBody, true)) && !Yii::$app->request->isPost)
         {
-            return ResultDataHelper::apiResult(422, '请提交正确的格式信息');
+            return ResultDataHelper::api(422, '请提交正确的格式信息');
         }
 
         $savePath = Yii::$app->debris->config('webhook_gitee_save_path');
@@ -31,7 +31,7 @@ class WebHookController extends OffAuthController
 
         if ($data['password'] != Yii::$app->debris->config('webhook_gitee_password'))
         {
-            return ResultDataHelper::apiResult(422, 'webhook密码验证错误');
+            return ResultDataHelper::api(422, 'webhook密码验证错误');
         }
 
         if ($data['ref'] == 'refs/heads/master' && $data['total_commits_count'] > 0)
@@ -55,6 +55,6 @@ class WebHookController extends OffAuthController
             return '拉取成功';
         }
 
-        return ResultDataHelper::apiResult(422, '未有新版本更新');
+        return ResultDataHelper::api(422, '未有新版本更新');
     }
 }

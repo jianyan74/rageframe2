@@ -12,6 +12,7 @@
 - 文件上传控件
 - 多文件上传控件
 - 多Input框控件
+- Select2
 - 省市区控件
 - 百度编辑器
 
@@ -131,7 +132,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 
 ### 多图上传控件
 
-注意传入的value值为数组
+> 注意传入的value值为数组,例如: array('img1.jpg', 'img2.jpg')
 
 ```
 <?= $form->field($model, 'covers')->widget('common\widgets\webuploader\Images', [
@@ -170,7 +171,8 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 
 ### 多文件上传控件
 
-> 注意多文件上传不支持缩略图配置
+> 注意多文件上传不支持缩略图配置  
+> 注意传入的value值为数组,例如: array('img1.jpg', 'img2.jpg')
 
 ```
 <?= $form->field($model, 'files')->widget('common\widgets\webuploader\Files', [
@@ -233,6 +235,23 @@ use unclead\multipleinput\MultipleInput;
 ?>
 ```
 更多参考：https://github.com/unclead/yii2-multiple-input
+
+### Select2
+
+```
+use kartik\select2\Select2
+
+// Usage with ActiveForm and model
+echo $form->field($model, 'state_1')->widget(Select2::classname(), [
+    'data' => $data,
+    'options' => ['placeholder' => 'Select a state ...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]);
+```
+
+更多参考：http://demos.krajee.com/widget-details/select2
 
 ### 省市区控件
 

@@ -61,7 +61,7 @@ class LoginForm extends \common\models\common\LoginForm
                 // 记录行为日志
                 Yii::$app->debris->log('login', '限制IP登录', false);
 
-                $this->addError($attribute, '禁止登陆');
+                $this->addError($attribute, '登录失败');
             }
         }
     }

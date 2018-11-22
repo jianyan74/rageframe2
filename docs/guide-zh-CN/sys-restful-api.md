@@ -92,7 +92,7 @@ public function checkAccess($action, $model = null, $params = [])
  * @param string $message 返回的报错信息
  * @param array|object $data 返回的数据结构
  */
-api\controllers\ResultDataHelper::apiResult($code, $message, $data = []);
+api\controllers\ResultDataHelper::api($code, $message, $data = []);
 ```
 
 ### 解析Model首个报错信息

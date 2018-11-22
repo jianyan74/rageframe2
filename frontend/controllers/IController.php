@@ -15,7 +15,8 @@ class IController extends BaseController
      */
     public function init()
     {
-        // Yii::$app->language = 'en';  //指定使用哪个语言翻译
+        // 指定使用哪个语言翻译
+        // Yii::$app->language = 'en';
 
         parent::init();
     }

@@ -1,6 +1,6 @@
 <?php
 
-$this->title = 'Wechat';
+$this->title = 'Rageframe For Wechat';
 ?>
 
 <style>
@@ -62,7 +62,7 @@ $this->title = 'Wechat';
             Wechat
         </div>
         <div class="links">
-            <a href="#">欢迎进入微信</a>
+            <a href="#">欢迎进入微信应用</a>
         </div>
     </div>
 </div>

@@ -63,13 +63,13 @@ class IndexController extends IController
 
         if ($isStart == false || $isEnd == true)
         {
-            return ResultDataHelper::result(404, '活动未开始或者已结束');
+            return ResultDataHelper::json(404, '活动未开始或者已结束');
         }
 
         // 判断今日是否已抽奖
         if (Record::find()->where(['record_date' => date('Y-m-d'), 'openid' => Yii::$app->params['wechatMember']['id']])->count())
         {
-            return ResultDataHelper::result(404, '今日已抽奖');
+            return ResultDataHelper::json(404, '今日已抽奖');
         }
 
         // 记录今日抽奖步数和插入抽奖记录
@@ -81,13 +81,13 @@ class IndexController extends IController
         // 开始获取抽奖奖品
         if (!($awards = Award::find()->where(['status' => StatusEnum::ENABLED])->andWhere(['>', 'surplus_num', 0])->andWhere(['>', 'prob', 0])->all()))
         {
-            return ResultDataHelper::result(404, '奖品不足');
+            return ResultDataHelper::json(404, '奖品不足');
         }
 
         // 开始随机抽奖
         if (!($awardId = ArithmeticHelper::drawRandom($awards)))
         {
-            return ResultDataHelper::result(404, '未中奖');
+            return ResultDataHelper::json(404, '未中奖');
         }
 
         $award = Award::findOne($awardId);
@@ -104,7 +104,7 @@ class IndexController extends IController
 
         if ($dayMaxRecord >= $max_day_num)
         {
-            return ResultDataHelper::result(404, '未中奖');
+            return ResultDataHelper::json(404, '未中奖');
         }
 
         // 查询用户最多
@@ -114,7 +114,7 @@ class IndexController extends IController
 
         if ($dayMaxUserRecord >= $max_user_num)
         {
-            return ResultDataHelper::result(404, '未中奖');
+            return ResultDataHelper::json(404, '未中奖');
         }
 
         /********** 插入记录 start ********/
@@ -131,12 +131,12 @@ class IndexController extends IController
             $award->save();
 
             $transaction->commit();
-            return ResultDataHelper::result(200, '抽奖成功', $model);
+            return ResultDataHelper::json(200, '抽奖成功', $model);
         }
         catch (\Exception $e)
         {
             $transaction->rollBack();
-            return ResultDataHelper::result(404, '未中奖');
+            return ResultDataHelper::json(404, '未中奖');
         }
         /********** 插入记录 end **********/
     }
@@ -157,6 +157,6 @@ class IndexController extends IController
             $model['created_at'] = Yii::$app->formatter->asDate($model['created_at']);
         }
 
-        return ResultDataHelper::result(200, '获取成功', ['list' => $models]);
+        return ResultDataHelper::json(200, '获取成功', ['list' => $models]);
     }
 }

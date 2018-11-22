@@ -51,8 +51,9 @@ div.required label:before {
     color: #8c8c8c;
 }
 
-.navbar-top-menu-hover{
-    background-color: #eee;
+/* 导航菜单 */
+.nav > li > a:focus, .nav > li > a:hover, .navbar-top-menu-hover {
+    background-color: rgba(0,0,0,.03);
 }
 
 /* 分页 */

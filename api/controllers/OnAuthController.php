@@ -97,7 +97,7 @@ class OnAuthController extends ActiveController
         $model->member_id = Yii::$app->user->identity->member_id;
         if (!$model->save())
         {
-            return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
         }
 
         return $model;
@@ -116,7 +116,7 @@ class OnAuthController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         if (!$model->save())
         {
-            return ResultDataHelper::apiResult(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
         }
 
         return $model;

@@ -51,8 +51,7 @@ RageFrame项目创建于2016年4月16日，一个基于Yii2高级框架的快速
 
 ### 文档
 
-[本地文档](docs/guide-zh-CN/README.md)  
-[更新历史](docs/guide-zh-CN/start-update-log.md)
+[安装文档](docs/guide-zh-CN/start-installation.md) · [本地文档](docs/guide-zh-CN/README.md) · [更新历史](docs/guide-zh-CN/start-update-log.md)
 
 ### 问题反馈
 

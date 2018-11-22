@@ -39,11 +39,11 @@ class StatController extends WController
         FansStat::getFansStat();
 
         $request  = Yii::$app->request;
-        $from_date  = $request->get('from_date',date('Y-m-d',strtotime("-6 day")));
+        $from_date  = $request->get('from_date', date('Y-m-d', strtotime("-6 day")));
         $to_date  = $request->get('to_date',date('Y-m-d'));
 
         $models = FansStat::find()
-            ->where(['between','created_at',strtotime($from_date),strtotime($to_date)])
+            ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)])
             ->orderBy('created_at asc')
             ->asArray()
             ->all();

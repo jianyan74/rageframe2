@@ -5,7 +5,7 @@ $jsConfig = json_encode($config);
 
 <div class="multi-container col-sm-12">
     <div class="file-list">
-        <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>">
+        <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>" id="<?= $boxId?>">
             <?php if($config['pick']['multiple'] == true){ ?>
                 <?php foreach ($value as $vo){ ?>
                     <li>
@@ -41,6 +41,20 @@ $jsConfig = json_encode($config);
 
 <?php $this->registerJs(<<<Js
     $(".upload-album-{$boxId}").InitMultiUploader({$jsConfig});
+
+    var el = document.getElementById('{$boxId}');
+    var sortable = Sortable.create(el,{});
+    // 兼容老IE
+    document.body.ondrop = function (event) {
+        event = event || window.event;
+        if (event.preventDefault) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.returnValue = false;
+            event.cancelBubble = true;
+        }
+    };
 Js
 );
 ?>

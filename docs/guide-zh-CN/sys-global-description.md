@@ -23,9 +23,10 @@
 备份表
 
 ```
-
- #备份全部表
-php ./yii migrate/backup table1,table2,table3... #备份多张表
+ # 备份全部表
+php ./yii migrate/backup all
+ 
+php ./yii migrate/backup table1,table2,table3... # 备份多张表
 php ./yii migrate/backup table1 #备份一张表
 ```
 

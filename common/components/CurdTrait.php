@@ -1,6 +1,7 @@
 <?php
 namespace common\components;
 
+use common\enums\StatusEnum;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Response;
@@ -79,12 +80,32 @@ trait CurdTrait
     }
 
     /**
-     * 删除
+     * 伪删除
      *
      * @param $id
      * @return mixed
-     * @throws \Throwable
-     * @throws yii\db\StaleObjectException
+     */
+    public function actionDestroy($id)
+    {
+        if (!($model = $this->modelClass::findOne($id)))
+        {
+            return $this->message("找不到数据", $this->redirect(['index']), 'error');
+        }
+
+        $model->status = StatusEnum::DELETE;
+        if ($model->save())
+        {
+            return $this->message("删除成功", $this->redirect(['index']));
+        }
+
+        return $this->message("删除失败", $this->redirect(['index']), 'error');
+    }
+
+    /**
+     * 直接删除
+     *
+     * @param $id
+     * @return mixed
      */
     public function actionDelete($id)
     {
@@ -106,7 +127,7 @@ trait CurdTrait
     {
         if (!($model = $this->modelClass::findOne($id)))
         {
-            return ResultDataHelper::result(404, '找不到数据');
+            return ResultDataHelper::json(404, '找不到数据');
         }
 
         $getData = Yii::$app->request->get();
@@ -117,10 +138,10 @@ trait CurdTrait
 
         if (!$model->save())
         {
-            return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
         }
 
-        return ResultDataHelper::result(200, '修改成功');
+        return ResultDataHelper::json(200, '修改成功');
     }
 
     /**

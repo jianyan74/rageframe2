@@ -127,7 +127,7 @@ class SystemController extends SController
         $systemInfo['chartTime'] = $num_arr;
         if (Yii::$app->request->isAjax)
         {
-            return ResultDataHelper::result(200, '获取成功', $systemInfo);
+            return ResultDataHelper::json(200, '获取成功', $systemInfo);
         }
 
         return $this->render('server', [

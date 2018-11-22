@@ -26,9 +26,9 @@ class StyleController extends SController
 
         if ($model->save())
         {
-            return ResultDataHelper::result(200, '更改成功');
+            return ResultDataHelper::json(200, '更改成功');
         }
 
-        return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+        return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
     }
 }

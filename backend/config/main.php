@@ -91,7 +91,14 @@ return [
                     ]
                 ],
             ],
-        ]
+        ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function($event) {
+                $response = $event->sender;
+                Yii::$app->services->errorLog->record($response);
+            },
+        ],
     ],
     'controllerMap' => [
         // 文件上传公共控制器

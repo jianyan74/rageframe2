@@ -194,7 +194,7 @@ class FansController extends WController
             Fans::updateAll(['follow' => 1 ], ['in', 'openid', $fans]);
         }
 
-        return ResultDataHelper::result(200, '同步粉丝openid完成', [
+        return ResultDataHelper::json(200, '同步粉丝openid完成', [
             'total' => $fans_list['total'],
             'count' => !empty($fans_list['data']['openid']) ? $fans_count : 0,
             'next_openid' => $fans_list['next_openid'],
@@ -235,7 +235,7 @@ class FansController extends WController
                     Fans::sync($fans['openid']);
                 }
 
-                return ResultDataHelper::result(200, '同步完成', [
+                return ResultDataHelper::json(200, '同步完成', [
                     'page' => $page + 1
                 ]);
             }
@@ -247,7 +247,7 @@ class FansController extends WController
             $openids = $request->post('openids');
             if (empty($openids) || !is_array($openids))
             {
-                return ResultDataHelper::result(404, '请选择粉丝');
+                return ResultDataHelper::json(404, '请选择粉丝');
             }
 
             // 系统内的粉丝
@@ -266,6 +266,6 @@ class FansController extends WController
             }
         }
 
-        return ResultDataHelper::result(200, '同步完成');
+        return ResultDataHelper::json(200, '同步完成');
     }
 }

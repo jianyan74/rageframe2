@@ -85,6 +85,7 @@ class UploadHelper
             }
         }
 
+        // 切片上传
         if (isset(self::$config['chunks']) && isset(self::$config['guid']))
         {
             self::$action = 'chunks';

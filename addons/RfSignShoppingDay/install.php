@@ -20,7 +20,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_award` (
   `created_at` int(10) DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_奖品表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_奖品表';
 
 -- ----------------------------
 -- Table structure for rf_addon_sign_shopping_street_record
@@ -39,7 +39,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_record` (
   `updated_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`),
   KEY `openid` (`openid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_中奖记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_中奖记录表';
 
 -- ----------------------------
 -- Table structure for rf_addon_sign_shopping_street_stat
@@ -56,7 +56,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_stat` (
   `created_at` int(10) DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_访问记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_访问记录表';
 
 -- ----------------------------
 -- Table structure for rf_addon_sign_shopping_street_user
@@ -77,7 +77,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_user` (
   `updated_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`),
   KEY `openid` (`openid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_用户表';
 ";
 
 // 执行sql

@@ -12,12 +12,10 @@ return [
     'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
     'modules' => [
-        // 版本1
-        'v1' => [
+        'v1' => [ // 版本1
             'class' => 'api\modules\v1\Module',
         ],
-        // 版本2
-        'v2' => [
+        'v2' => [ // 版本2
             'class' => 'api\modules\v2\Module',
         ],
     ],
@@ -68,7 +66,6 @@ return [
                         'v1/mini-program-pay',
                         'v1/member/info',
                         'v1/member/address',
-                        'v1/live/room',
                         // 版本2
                         'v2/default',// 默认测试入口
                     ],

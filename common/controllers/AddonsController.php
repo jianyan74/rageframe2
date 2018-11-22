@@ -8,7 +8,6 @@ use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use common\helpers\ResultDataHelper;
 use common\helpers\AddonHelper;
-use common\components\ModuleIdToAddonAppTrait;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
 use backend\modules\wechat\models\RuleForm;
@@ -21,8 +20,6 @@ use backend\modules\wechat\models\RuleForm;
  */
 class AddonsController extends Controller
 {
-    use ModuleIdToAddonAppTrait;
-
     /**
      * @var string
      */
@@ -63,7 +60,7 @@ class AddonsController extends Controller
         // 初始化模块
         AddonHelper::initAddon($this->addonName, $this->route);
         // 解析路由
-        AddonHelper::analysisRoute($this->route, $this->getModuleIdToAddonApp());
+        AddonHelper::analysisRoute($this->route, AddonHelper::getAppName());
         // 替换
         Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
 
@@ -234,16 +231,16 @@ class AddonsController extends Controller
         $data = Yii::$app->request->get();
         if (!($model = Rule::findOne($id)))
         {
-            return ResultDataHelper::result(404, '找不到数据');
+            return ResultDataHelper::json(404, '找不到数据');
         }
 
         $model->attributes = $data;
         if (!$model->save())
         {
-            return ResultDataHelper::result(422, Yii::$app->debris->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::json(422, Yii::$app->debris->analyErr($model->getFirstErrors()));
         }
 
-        return ResultDataHelper::result(200, '修改成功');
+        return ResultDataHelper::json(200, '修改成功');
     }
 
     /**

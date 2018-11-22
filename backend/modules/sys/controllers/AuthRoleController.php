@@ -130,7 +130,7 @@ class AuthRoleController extends SController
             $model->description = Yii::$app->user->identity->username . "|添加了|" . $model->name . "|角色";
             if (!$model->save())
             {
-                return ResultDataHelper::result(422, $this->analyErr($model->getFirstErrors()));
+                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
             }
 
             $ids = $request->post('ids', []);
@@ -145,13 +145,13 @@ class AuthRoleController extends SController
 
                 if ((new AuthItemChild())->accredit($name, array_column($auths, 'name')))
                 {
-                    return ResultDataHelper::result(200, '提交成功');
+                    return ResultDataHelper::json(200, '提交成功');
                 }
 
-                return ResultDataHelper::result(404, '提交失败');
+                return ResultDataHelper::json(404, '提交失败');
             }
 
-            return ResultDataHelper::result(200, '提交成功');
+            return ResultDataHelper::json(200, '提交成功');
         }
 
         // 由于jstree会和系统的js引入冲突，先设置禁用掉

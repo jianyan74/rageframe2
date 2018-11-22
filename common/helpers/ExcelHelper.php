@@ -1,15 +1,17 @@
 <?php
 namespace common\helpers;
 
+use yii\web\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Html;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use yii\web\NotFoundHttpException;
 
 /**
+ * 导出导入Excel
+ *
  * Class ExcelHelper
  * @package common\helpers
  */
@@ -110,6 +112,62 @@ class ExcelHelper
     }
 
     /**
+     * 导出的另外一种形式(不建议使用)
+     *
+     * @param array $list
+     * @param array $header
+     * @param string $filename
+     * @return bool
+     */
+    public static function exportCsvData($list = [], $header = [], $filename = '')
+    {
+        if (!is_array ($list) || !is_array ($header))
+        {
+            return false;
+        }
+
+        !$filename && $filename = time();
+
+        $html = "\xEF\xBB\xBF";
+        foreach($header as $k => $v)
+        {
+            $html .= $v[0] . "\t ,";
+        }
+
+        $html .= "\n";
+
+        if(!empty($list))
+        {
+            $info = [];
+            $size = ceil(count($list) / 500);
+            for($i = 0; $i < $size; $i++)
+            {
+                $buffer = array_slice($list, $i * 500, 500);
+                foreach($buffer as $row)
+                {
+                    $data = [];
+                    foreach($header as $key => $value)
+                    {
+                        // 解析字段
+                        $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
+                        $data[] = str_replace(PHP_EOL, '', $realData);
+                    }
+
+                    $info[] = implode("\t ,", $data) . "\t ,";
+                    unset($data);
+                }
+            }
+
+            $html .= implode("\n", $info);
+        }
+
+        header("Content-type:text/csv");
+        header("Content-Disposition:attachment; filename={$filename}.csv");
+        echo $html;
+        exit();
+    }
+
+    /**
      * 导入
      *
      * @param $filePath
@@ -204,15 +262,15 @@ class ExcelHelper
                 break;
             // 日期
             case  'date' :
-                return date($array[3], $value);
+                return !empty($value) ? date($array[3], $value) : null;
                 break;
             // 选择框
             case  'selectd' :
-                return  isset($array[3][$value]) ? $array[3][$value] : null ;
+                return  $array[3][$value] ?? null ;
                 break;
             // 匿名函数
             case  'function' :
-                return call_user_func($array[3], $row);
+                return isset($array[3]) ? call_user_func($array[3], $row) : null;
                 break;
             // 默认
             default :
