@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m181122_084404_addon_example_curd extends Migration
+class m181123_060627_addon_example_curd extends Migration
 {
     public function up()
     {
@@ -19,6 +19,7 @@ class m181122_084404_addon_example_curd extends Migration
             'position' => 'int(11) NOT NULL DEFAULT \'0\' COMMENT \'推荐位\'',
             'sex' => 'tinyint(4) NOT NULL DEFAULT \'1\' COMMENT \'性别1男2女\'',
             'content' => 'text NOT NULL COMMENT \'内容\'',
+            'tag' => 'varchar(100) NOT NULL DEFAULT \'\' COMMENT \'标签\'',
             'cover' => 'varchar(100) NOT NULL DEFAULT \'\' COMMENT \'图片\'',
             'covers' => 'text NOT NULL COMMENT \'图片组\'',
             'file' => 'varchar(100) NOT NULL DEFAULT \'\' COMMENT \'文件\'',
