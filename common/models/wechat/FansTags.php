@@ -99,15 +99,8 @@ class FansTags extends \common\models\common\BaseModel
     public static function updateList()
     {
         $app = Yii::$app->wechat->app;
-
-        try
-        {
-            $list = $app->user_tag->list();
-        }
-        catch (\Exception $e)
-        {
-
-        }
+        $list = $app->user_tag->list();
+        Yii::$app->debris->getWechatError($list);
 
         $tags = $list['tags'];
         if (empty(($model = FansTags::find()->one())))
