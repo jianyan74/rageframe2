@@ -1,13 +1,13 @@
 <?php
 namespace common\components;
 
-use common\enums\StatusEnum;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use yii\base\InvalidConfigException;
 use common\helpers\ResultDataHelper;
+use common\enums\StatusEnum;
 
 /**
  * CURD基类特性
@@ -23,7 +23,7 @@ trait CurdTrait
      *
      * @var array
      */
-    protected $_ajaxUpdateField = ['sort', 'status'];
+    protected $ajaxUpdateField = ['sort', 'status'];
 
     /**
      * @throws InvalidConfigException
@@ -46,7 +46,7 @@ trait CurdTrait
     public function actionIndex()
     {
         $data = $this->modelClass::find();
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)
@@ -131,7 +131,7 @@ trait CurdTrait
         }
 
         $getData = Yii::$app->request->get();
-        foreach ($this->_ajaxUpdateField as $item)
+        foreach ($this->ajaxUpdateField as $item)
         {
             isset($getData[$item]) && $model->$item = $getData[$item];
         }

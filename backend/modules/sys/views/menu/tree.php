@@ -6,7 +6,7 @@ use common\helpers\ArrayHelper;
 <?php foreach($models as $k => $model){ ?>
     <tr id="<?= $model['id']?>" class="<?= $pid?>">
         <td>
-            <?php if(!empty($model['-'])){ ?>
+            <?php if (!empty($model['-'])){ ?>
                 <div class="fa fa-minus-square cf" style="cursor:pointer;"></div>
             <?php } ?>
         </td>
@@ -23,7 +23,7 @@ use common\helpers\ArrayHelper;
         <td><?= $model['url']?></td>
         <td><div class="fa <?= $model['menu_css']?>"></div></td>
         <td>
-            <?php if(!empty($model['dev'])){ ?>
+            <?php if (!empty($model['dev'])){ ?>
                 <span class="label label-info">显示</span>
             <?php } ?>
         </td>
@@ -38,7 +38,7 @@ use common\helpers\ArrayHelper;
             </a>
         </td>
     </tr>
-    <?php if(!empty($model['-'])){ ?>
+    <?php if (!empty($model['-'])){ ?>
         <?= $this->render('tree', [
             'models' => $model['-'],
             'parent_title' => $model['title'],

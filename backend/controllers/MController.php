@@ -18,7 +18,14 @@ class MController extends \common\controllers\BaseController
      *
      * @var
      */
-    public $app;
+    protected $app;
+
+    /**
+     * 服务
+     *
+     * @var
+     */
+    protected $services;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -28,6 +35,7 @@ class MController extends \common\controllers\BaseController
         parent::init();
 
         empty($this->app) && $this->app = Yii::$app->wechat->app;
+        empty($this->services) && $this->services = Yii::$app->services;
     }
 
     /**
@@ -59,7 +67,7 @@ class MController extends \common\controllers\BaseController
     public function beforeAction($action)
     {
         // 分页
-        Yii::$app->debris->config('sys_page') && $this->_pageSize = Yii::$app->debris->config('sys_page');
+        Yii::$app->debris->config('sys_page') && $this->pageSize = Yii::$app->debris->config('sys_page');
 
         // 验证是否登录且验证是否超级管理员
         if (!Yii::$app->user->isGuest && Yii::$app->user->id === Yii::$app->params['adminAccount'])
@@ -98,7 +106,7 @@ class MController extends \common\controllers\BaseController
      *
      * @param string $msgText 错误内容
      * @param string $skipUrl 跳转链接
-     * @param null $msgType 提示类型 [success/error/info/warning]
+     * @param string $msgType 提示类型 [success/error/info/warning]
      * @param int $closeTime 提示关闭时间
      * @return mixed
      */

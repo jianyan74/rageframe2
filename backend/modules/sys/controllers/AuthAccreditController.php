@@ -1,10 +1,10 @@
 <?php
 namespace backend\modules\sys\controllers;
 
-use common\helpers\ResultDataHelper;
 use yii;
 use common\models\sys\AuthItem;
 use common\helpers\ArrayHelper;
+use common\helpers\ResultDataHelper;
 
 /**
  * RBAC权限控制器
@@ -123,7 +123,7 @@ class AuthAccreditController extends SController
     /**
      * 返回模型
      *
-     * @param $id
+     * @param $name
      * @return mixed
      */
     protected function findModel($name)

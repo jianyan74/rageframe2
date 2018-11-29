@@ -79,6 +79,8 @@ return [
     'wechatOpenPlatformConfig' => [],
     // 微信企业微信配置 具体可参考EasyWechat
     'wechatWorkConfig' => [],
+    // 微信企业微信开放平台 具体可参考EasyWechat
+    'wechatOpenWorkConfig' => [],
 
     /** ------ 微信自定义接口配置-------------------**/
 

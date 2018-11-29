@@ -34,7 +34,7 @@ class ArticleController extends AddonsBaseController
     public function actionIndex()
     {
         $data = Article::find()->where(['>=', 'status', StatusEnum::DISABLED]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)
@@ -124,7 +124,7 @@ class ArticleController extends AddonsBaseController
     public function actionRecycle()
     {
         $data = Article::find()->where(['<', 'status', StatusEnum::DISABLED]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)

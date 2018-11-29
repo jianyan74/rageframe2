@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
+                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), []) ?>
                     <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
                 </div>
                 <div class="form-group">

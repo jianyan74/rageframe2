@@ -9,7 +9,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="tabs-container">
         <ul class="nav nav-tabs">
             <?php foreach ($cates as $cate){ ?>
-                <li class="<?php if($cate->id == $cate_id ){ echo 'active' ;}?>"><a href="<?= Url::to(['index','cate_id' => $cate->id])?>"> <?= $cate->title ?></a></li>
+                <li class="<?php if ($cate->id == $cate_id ){ echo 'active' ;}?>"><a href="<?= Url::to(['index','cate_id' => $cate->id])?>"> <?= $cate->title ?></a></li>
             <?php } ?>
             <li><a href="<?= Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
             <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['edit', 'cate_id' => $cate_id])?>" data-toggle='modal' data-target='#ajaxModal'>

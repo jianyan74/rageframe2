@@ -60,18 +60,12 @@ Yii::$app->debris->log($behavior, $remark, $noRecordData)
 
 ##### 微信接口验证及报错
 
-验证
-
 ```
-// 默认直接报错，如果想不直接报错请把true设置为false
-Yii::$app->debris->analyWechatPortBack($message, true);
-```
+// 默认直接报错
+Yii::$app->debris->getWechatError($message);
 
-报错获取
-
-```
-// 注意验证的时候不直接报错才可用
-Yii::$app->debris->getWechatPortBackError();
+// 如果想不直接报错并返回报错信息
+$error = Yii::$app->debris->getWechatError($message, false);
 ```
 
 ##### 解析 model 报错

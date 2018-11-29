@@ -119,14 +119,13 @@ class Menu extends \common\models\common\BaseModel
     }
 
     /**
-     * 删除子菜单
-     *
+     * 删除全部子类
+     * 
      * @return bool
      */
     public function beforeDelete()
     {
-        $menus = self::find()->all();
-        $ids = ArrayHelper::getChildsId($menus, $this->id);
+        $ids = ArrayHelper::getChildsId(self::find()->all(), $this->id);
         self::deleteAll(['in', 'id', $ids]);
 
         return parent::beforeDelete();

@@ -95,8 +95,7 @@ return [
         'response' => [
             'class' => 'yii\web\Response',
             'on beforeSend' => function($event) {
-                $response = $event->sender;
-                Yii::$app->services->errorLog->record($response);
+                Yii::$app->services->errorLog->record($event->sender);
             },
         ],
     ],
@@ -110,10 +109,6 @@ return [
         ],
         'provinces' => [
             'class' => 'backend\widgets\provinces\ProvincesController',
-        ],
-        // 插件渲染默认控制器
-        'addons' => [
-            'class' => 'common\controllers\AddonsController',
         ],
     ],
     'params' => $params,

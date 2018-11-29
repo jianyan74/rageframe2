@@ -16,6 +16,9 @@ class Application extends Service
         'member' => [ // 用户
             'class' => 'common\services\member\Member',
         ],
+        'easySms' => [ // 发送短信
+            'class' => 'common\services\common\EasySms',
+        ],
         'errorLog' => [ // 报错日志记录
             'class' => 'common\services\common\ErrorLog',
         ],

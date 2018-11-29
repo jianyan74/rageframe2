@@ -50,7 +50,7 @@ class MenuController extends SController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
 
         $model = $this->findModel($id);

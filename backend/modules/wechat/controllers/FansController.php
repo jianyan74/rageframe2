@@ -31,7 +31,7 @@ class FansController extends WController
         $where = [];
         if ($keyword)
         {
-            $where = ['or', ['like', 'f.openid', $keyword],['like', 'f.nickname', $keyword]];
+            $where = ['or', ['like', 'f.openid', $keyword], ['like', 'f.nickname', $keyword]];
         }
 
         // 关联角色查询
@@ -42,7 +42,7 @@ class FansController extends WController
             ->joinWith("tags AS t", true, 'LEFT JOIN')
             ->filterWhere(['t.tag_id' => $tag_id]);
 
-        $pages  = new Pagination(['totalCount' =>$data->count(), 'pageSize' => $this->_pageSize]);
+        $pages  = new Pagination(['totalCount' =>$data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->with('tags','member')
             ->orderBy('followtime desc, unfollowtime desc')
@@ -75,6 +75,33 @@ class FansController extends WController
         $model = Fans::findOne($id);
 
         return $this->renderAjax('view',[
+            'model' => $model
+        ]);
+    }
+
+    /**
+     * 粉丝详情
+     *
+     * @param $id
+     * @return array|string
+     */
+    public function actionSendMessage($id)
+    {
+        $model = Fans::findOne($id);
+
+        if (Yii::$app->request->isAjax)
+        {
+            $message = Yii::$app->request->get('content');
+            $result = $this->app->customer_service->message($message)->to($model['openid'])->send();
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return ResultDataHelper::json(422, $error);
+            }
+
+            return ResultDataHelper::json(200, '发送成功');
+        }
+
+        return $this->render('send-message',[
             'model' => $model
         ]);
     }

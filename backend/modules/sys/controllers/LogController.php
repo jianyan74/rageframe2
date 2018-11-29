@@ -16,11 +16,11 @@ use common\models\common\Log;
 class LogController extends SController
 {
     /**
-     * api日志
+     * 报错日志
      *
      * @return string
      */
-    public function actionLog()
+    public function actionError()
     {
         $error_code = Yii::$app->request->get('error_code', null);
         $where = [];
@@ -28,7 +28,7 @@ class LogController extends SController
         $error_code == 2 && $where = ['>', 'error_code', 299];
 
         $data = Log::find()->filterWhere($where);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy('id desc')
@@ -42,12 +42,12 @@ class LogController extends SController
     }
 
     /**
-     * api日志详情
+     * 报错日志详情
      *
      * @param $id
      * @return string
      */
-    public function actionLogView($id)
+    public function actionErrorView($id)
     {
         $model = Log::find()->where(['id' => $id])->one();
         return $this->renderAjax($this->action->id, [
@@ -63,7 +63,7 @@ class LogController extends SController
     public function actionAction()
     {
         $data = ActionLog::find();
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy('id desc')
@@ -103,7 +103,7 @@ class LogController extends SController
             ->filterWhere(['pay_status' => $pay_status])
             ->orFilterWhere(['like', 'order_sn', $keyword])
             ->orFilterWhere(['like', 'out_trade_no', $keyword]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy('id desc')

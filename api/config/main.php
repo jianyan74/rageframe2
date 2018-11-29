@@ -124,5 +124,11 @@ return [
             'errorAction' => 'message/error',
         ],
     ],
+    'controllerMap' => [
+        // 插件渲染默认控制器
+        'addons' => [
+            'class' => 'common\controllers\AddonsController',
+        ],
+    ],
     'params' => $params,
 ];

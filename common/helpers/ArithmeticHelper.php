@@ -29,7 +29,7 @@ class ArithmeticHelper
         }
 
         // 判断最大红包乘数量是否小于总金额
-        if($max * $num < $money)
+        if ($max * $num < $money)
         {
             return $data;
         }
@@ -77,7 +77,7 @@ class ArithmeticHelper
 
         foreach($proArr as $k => $v)
         {
-            if($rand < $v)
+            if ($rand < $v)
             {
                 return $awards[$k][$key];
                 break;
@@ -97,9 +97,9 @@ class ArithmeticHelper
     public static function drawBitslap($awards = [], $prob = 'prob')
     {
         $proArr = [];
-        if($awards)
+        if ($awards)
         {
-            foreach($awards as $key => $value)
+            foreach ($awards as $key => $value)
             {
                 $proArr[$key] = $value[$prob];
             }

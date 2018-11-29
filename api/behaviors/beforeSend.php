@@ -34,6 +34,7 @@ class beforeSend extends Behavior
             'data' => $response->data,
         ];
 
+        // 记录日志
         $errData = Yii::$app->services->errorLog->record($response, true);
 
         // 格式化报错输入格式

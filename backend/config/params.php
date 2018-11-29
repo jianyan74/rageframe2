@@ -9,6 +9,9 @@ return [
     'user.log.level' => ['error'], // 级别 ['info', 'warning', 'error']
     'user.log.noPostData' => [ // 安全考虑,不接收Post存储到日志的路由
         'site/login',
+        'sys/manager/up-password',
+        'sys/manager/ajax-edit',
+        'member/member/ajax-edit',
     ],
 
     /** ------ 总管理员配置 ------ **/
@@ -16,7 +19,7 @@ return [
 
     /** ------ 开发者信息 ------ **/
     'exploitName' => '简言',
-    'exploitVersions' => '2.0.75',
+    'exploitVersions' => '2.0.85',
     'exploitSysName' => 'RageFrame应用开发引擎',
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">github.com/jianyan74/rageframe2</a>',

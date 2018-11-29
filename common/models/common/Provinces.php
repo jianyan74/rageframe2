@@ -57,12 +57,12 @@ class Provinces extends \yii\db\ActiveRecord
             'short_title' => '简称',
             'areacode' => 'Areacode',
             'zipcode' => 'Zipcode',
-            'pinyin' => 'Pinyin',
+            'pinyin' => '拼音',
             'lng' => 'Lng',
             'lat' => 'Lat',
-            'level' => 'Level',
+            'level' => '级别',
             'position' => 'Position',
-            'sort' => 'Sort',
+            'sort' => '排序',
         ];
     }
     /**
@@ -88,7 +88,7 @@ class Provinces extends \yii\db\ActiveRecord
      */
     public static function getCityName($id)
     {
-        if($provinces =  Provinces::findOne($id))
+        if ($provinces = Provinces::findOne($id))
         {
             return $provinces['title'];
         }

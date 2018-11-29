@@ -128,7 +128,7 @@ class StatController extends WController
             ->groupBy(['rule_id'])
             ->where(['between','created_at',strtotime($from_date),strtotime($to_date)]);
 
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->with('rule')
             ->orderBy('updated_at desc')
@@ -159,7 +159,7 @@ class StatController extends WController
             ->groupBy(['keyword_id'])
             ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)]);
 
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->with(['rule','ruleKeyword'])
             ->orderBy('updated_at desc')

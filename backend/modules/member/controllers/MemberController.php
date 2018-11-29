@@ -2,9 +2,9 @@
 namespace backend\modules\member\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use common\components\CurdTrait;
 use common\models\member\MemberInfo;
-use yii\data\Pagination;
 
 /**
  * 会员管理
@@ -34,7 +34,7 @@ class MemberController extends MController
             ->orFilterWhere(['like', 'username', $keyword])
             ->orFilterWhere(['like', 'mobile_phone', $keyword])
             ->orFilterWhere(['like', 'realname', $keyword]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)
@@ -55,7 +55,7 @@ class MemberController extends MController
      */
     public function actionAjaxEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
         $model->scenario = 'backendCreate';

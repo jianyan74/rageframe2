@@ -23,7 +23,7 @@ class ArrayHelper extends BaseArrayHelper
         $arr = [];
         foreach($items as $v)
         {
-            if($v[$pidName] == $pid)
+            if ($v[$pidName] == $pid)
             {
                 $v['-'] = self::itemsMerge($items, $id, $v[$id], $pidName);
                 $arr[] = $v;
@@ -56,28 +56,6 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
-     * 传递一个父级分类ID返回所有子分类ID
-     *
-     * @param $cate
-     * @param int $pid
-     * @return array
-     */
-    public static function getChildsId($cate, $pid, $id = "id", $pidName = 'pid')
-    {
-        $arr = [];
-        foreach ($cate as $v)
-        {
-            if ($v[$pidName] == $pid)
-            {
-                $arr[] = $v[$id];
-                $arr = array_merge($arr, self::getChildsId($cate, $v[$id], $id, $pidName));
-            }
-        }
-
-        return $arr;
-    }
-
-    /**
      * 传递一个父级分类ID返回所有子分类
      *
      * @param $cate
@@ -93,6 +71,28 @@ class ArrayHelper extends BaseArrayHelper
             {
                 $arr[] = $v;
                 $arr = array_merge($arr, self::getChilds($cate, $v['id']));
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 传递一个父级分类ID返回所有子分类ID
+     *
+     * @param $cate
+     * @param int $pid
+     * @return array
+     */
+    public static function getChildsId($cate, $pid, $id = "id", $pidName = 'pid')
+    {
+        $arr = [];
+        foreach ($cate as $v)
+        {
+            if ($v[$pidName] == $pid)
+            {
+                $arr[] = $v[$id];
+                $arr = array_merge($arr, self::getChildsId($cate, $v[$id], $id, $pidName));
             }
         }
 
@@ -167,9 +167,9 @@ class ArrayHelper extends BaseArrayHelper
         for ($i = 1; $i < $level; $i++)
         {
             $str .= '　　';
-            if($i == $level - 1)
+            if ($i == $level - 1)
             {
-                if(isset($models[$k + 1]))
+                if (isset($models[$k + 1]))
                 {
                     return $str . "├──";
                 }

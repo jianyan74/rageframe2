@@ -234,7 +234,7 @@ class StringHelper extends BaseStringHelper
         $array = [];
         for ($i = 0; $i < strlen($str); $i++)
         {
-            if($str[$i] == strtolower($str[$i]))
+            if ($str[$i] == strtolower($str[$i]))
             {
                 $array[] = $str[$i];
             }
@@ -306,31 +306,23 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
-     * 转utf-8
      * @param $value
+     * @param string $iconv
      * @return string
      */
-    public static function deCodeIconvForWindows($value)
+    public static function iconvForWindows($value, $iconv = "gb2312")
     {
         if (self::isWindowsOS())
         {
-            return iconv("gb2312", "utf-8", $value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * 转gb2312
-     *
-     * @param $value
-     * @return string
-     */
-    public static function enCodeIconvForWindows($value)
-    {
-        if (self::isWindowsOS())
-        {
-            return iconv("utf-8", "gb2312", $value);
+            switch ($iconv)
+            {
+                case "gb2312" : // utf-8转gb2312
+                    return iconv("utf-8", "gb2312", $value);
+                    break;
+                case "utf-8" : // gb2312转utf-8
+                    return iconv("gb2312", "utf-8", $value);
+                    break;
+            }
         }
 
         return $value;

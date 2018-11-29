@@ -1,10 +1,10 @@
 <?php
 namespace backend\modules\sys\controllers;
 
-use common\helpers\ArrayHelper;
 use Yii;
-use backend\modules\sys\models\Database;
+use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
+use backend\modules\sys\models\Database;
 
 /**
  * 数据备份还原
@@ -140,14 +140,14 @@ class DataBaseController extends SController
         // 备份指定表
         $database = new Database($file,$config);
         $start = $database->backup($tables[$id], $start);
-        if($start === false)
+        if ($start === false)
         {
             return ResultDataHelper::json(404, '备份出错！');
         }
-        else if ($start === 0)
+        elseif ($start === 0)
         {
             // 下一表
-            if(isset($tables[++$id]))
+            if (isset($tables[++$id]))
             {
                 $tab = ['id' => $id, 'start' => 0];
                 return ResultDataHelper::json(200, '备份完成', [
@@ -214,7 +214,7 @@ class DataBaseController extends SController
             return ResultDataHelper::json(200, "数据表'{$tables}'优化完成！");
         }
 
-        return ResultDataHelper::json(404, "数据表'{$tables}'优化出错！错误信息:". $list['Msg_text']);
+        return ResultDataHelper::json(404, "数据表'{$tables}'优化出错！错误信息:" . $list['Msg_text']);
     }
 
     /**
@@ -226,7 +226,7 @@ class DataBaseController extends SController
      */
     public function actionRepair()
     {
-        $tables = Yii::$app->request->post('tables','');
+        $tables = Yii::$app->request->post('tables', '');
         if (!$tables)
         {
             return ResultDataHelper::json(404, '请指定要修复的表！');
@@ -250,7 +250,7 @@ class DataBaseController extends SController
             return ResultDataHelper::json(200, "数据表'{$tables}'修复完成！");
         }
 
-        return ResultDataHelper::json(404, "数据表'{$tables}'修复出错！错误信息:". $list['Msg_text']);
+        return ResultDataHelper::json(404, "数据表'{$tables}'修复出错！错误信息:" . $list['Msg_text']);
     }
 
     /********************************************************************************/
@@ -281,7 +281,7 @@ class DataBaseController extends SController
                 $time = "{$name[3]}:{$name[4]}:{$name[5]}";
                 $part = $name[6];
 
-                if(isset($list["{$date} {$time}"]))
+                if (isset($list["{$date} {$time}"]))
                 {
                     $info = $list["{$date} {$time}"];
                     $info['part'] = max($info['part'], $part);
@@ -317,8 +317,8 @@ class DataBaseController extends SController
 
         $config = $this->config;
         // 获取备份文件信息
-        $name  = date('Ymd-His', $time) . '-*.sql*';
-        $path  = realpath($config['path']) . DIRECTORY_SEPARATOR . $name;
+        $name = date('Ymd-His', $time) . '-*.sql*';
+        $path = realpath($config['path']) . DIRECTORY_SEPARATOR . $name;
         $files = glob($path);
 
         $list = [];
@@ -351,6 +351,9 @@ class DataBaseController extends SController
 
     /**
      * 开始还原到数据库
+     *
+     * @return array
+     * @throws \yii\db\Exception
      */
     public function actionRestoreStart()
     {
@@ -373,7 +376,7 @@ class DataBaseController extends SController
         {
             return ResultDataHelper::json(200, "备份文件可能已经损坏，请检查！");
         }
-        else if($start === 0)
+        elseif ($start === 0)
         {
             // 下一卷
             if (isset($list[++$part]))
@@ -391,7 +394,7 @@ class DataBaseController extends SController
         }
         else
         {
-            if($start[1])
+            if ($start[1])
             {
                 $rate = floor(100 * ($start[0] / $start[1]));
                 return ResultDataHelper::json(200, "正在还原...#{$part} ({$rate}%)", [

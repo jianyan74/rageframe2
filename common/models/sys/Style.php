@@ -62,7 +62,7 @@ class Style extends \common\models\common\BaseModel
         if (!$model)
         {
             $model = new self();
-            $model->manager_id = Yii::$app->user->id;
+            $model->manager_id = $manager_id;
             $model->save();
         }
 

@@ -20,11 +20,11 @@ class Pay extends Component
      *
      * @var
      */
-    protected $_rfConfig;
+    protected $rfConfig;
 
     public function init()
     {
-        $this->_rfConfig = Yii::$app->debris->configAll();
+        $this->rfConfig = Yii::$app->debris->configAll();
 
         parent::init();
     }
@@ -39,12 +39,12 @@ class Pay extends Component
     public function alipay(array $config = [])
     {
         return new AliPay(ArrayHelper::merge([
-            'app_id' => $this->_rfConfig['alipay_appid'],
+            'app_id' => $this->rfConfig['alipay_appid'],
             'notify_url' => UrlHelper::toFront(['notify/ali']),
             'return_url' => '',
-            'ali_public_key' => $this->_rfConfig['alipay_cert_path'],
+            'ali_public_key' => $this->rfConfig['alipay_cert_path'],
             // 加密方式： ** RSA2 **
-            'private_key' => $this->_rfConfig['alipay_key_path'],
+            'private_key' => $this->rfConfig['alipay_key_path'],
         ], $config));
     }
 
@@ -57,11 +57,11 @@ class Pay extends Component
     public function wechat(array $config = [])
     {
         return new WechatPay(ArrayHelper::merge([
-            'app_id' => $this->_rfConfig['wechat_appid'], // 公众号 APPID
-            'mch_id' => $this->_rfConfig['wechat_mchid'],
-            'api_key' => $this->_rfConfig['wechat_api_key'],
-            'cert_client' => $this->_rfConfig['wechat_cert_path'], // optional，退款等情况时用到
-            'cert_key' => $this->_rfConfig['wechat_key_path'],// optional，退款等情况时用到
+            'app_id' => $this->rfConfig['wechat_appid'], // 公众号 APPID
+            'mch_id' => $this->rfConfig['wechat_mchid'],
+            'api_key' => $this->rfConfig['wechat_api_key'],
+            'cert_client' => $this->rfConfig['wechat_cert_path'], // optional，退款等情况时用到
+            'cert_key' => $this->rfConfig['wechat_key_path'],// optional，退款等情况时用到
         ], $config));
     }
 
@@ -75,11 +75,11 @@ class Pay extends Component
     public function union(array $config = [])
     {
         return new UnionPay(ArrayHelper::merge([
-            'mch_id' => $this->_rfConfig['union_mchid'],
+            'mch_id' => $this->rfConfig['union_mchid'],
             'notify_url' => UrlHelper::toFront(['notify/union']),
             'return_url' => '',
-            'cert_id' => $this->_rfConfig['union_cert_id'],
-            'private_key' => $this->_rfConfig['union_private_key'],
+            'cert_id' => $this->rfConfig['union_cert_id'],
+            'private_key' => $this->rfConfig['union_private_key'],
         ], $config));
     }
 

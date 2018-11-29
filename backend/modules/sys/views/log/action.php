@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     <td><?= $model->url; ?></td>
                                     <td><?= long2ip($model->ip); ?></td>
                                     <td>
-                                        <?php if(long2ip($model->ip) == '127.0.0.1'){ ?>
+                                        <?php if (long2ip($model->ip) == '127.0.0.1'){ ?>
                                             本地
                                         <?php }else{ ?>
                                             <?= $model->country; ?>·<?= $model->provinces; ?>·<?= $model->city; ?>

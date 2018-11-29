@@ -14,14 +14,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="tabs-left">
                     <ul class="nav nav-tabs">
                         <?php foreach ($cates as $k => $cate){ ?>
-                            <li <?php if($k == 0){ ?>class="active"<?php } ?>>
+                            <li <?php if ($k == 0){ ?>class="active"<?php } ?>>
                                 <a aria-expanded="false" href="#tab-<?= $cate['id'] ?>" data-toggle="tab"> <?= $cate['title'] ?></a>
                             </li>
                         <?php } ?>
                     </ul>
                     <div class="tab-content ">
                         <?php foreach ($cates as $k => $cate){ ?>
-                            <div id="tab-<?= $cate['id'] ?>" class="tab-pane <?php if($k == 0){ ?>active<?php } ?>">
+                            <div id="tab-<?= $cate['id'] ?>" class="tab-pane <?php if ($k == 0){ ?>active<?php } ?>">
                                 <div class="panel-body">
                                     <?php $form = ActiveForm::begin(['id' => 'form-tab-' . $cate['id']]); ?>
                                     <?php foreach ($cate['-'] as $item){ ?>

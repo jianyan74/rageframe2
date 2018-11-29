@@ -36,6 +36,20 @@ class AddonConfig
     ];
 
     /**
+     * 可授权权限
+     *
+     * 例子：
+     *  array(
+     *      'index/index' => '首页',
+     *      'index/edit' => '首页编辑',
+     *  )
+     * @var array
+     */
+    public $authItem = [
+
+    ];
+
+    /**
      * 参数配置
      *
      * @var bool

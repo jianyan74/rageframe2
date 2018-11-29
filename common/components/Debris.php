@@ -4,6 +4,7 @@ namespace common\components;
 use Yii;
 use common\models\sys\Config;
 use common\models\sys\ActionLog;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * 碎片组件
@@ -14,13 +15,6 @@ use common\models\sys\ActionLog;
 class Debris
 {
     const CACHE_PREFIX = 'backendSysConfig'; // 缓存前缀
-
-    /**
-     * 微信接口报错
-     *
-     * @var
-     */
-    protected $_wechatError = false;
 
     /**
      * 返回配置名称
@@ -62,7 +56,7 @@ class Debris
         {
             $info = Config::getList();
             // 设置缓存
-            Yii::$app->cache->set($cacheKey, $info);
+            Yii::$app->cache->set($cacheKey, $info, 300);
         }
 
         return $info;
@@ -95,42 +89,30 @@ class Debris
     /**
      * 解析微信是否报错
      *
-     * @param $message
-     * @param bool $directError 是否直接报错
+     * @param array $message 微信回调数据
+     * @param bool $direct 是否直接报错
      * @return bool
-     * @throws \Exception
+     * @throws UnprocessableEntityHttpException
      */
-    public function analyWechatPortBack($message, $directError = true)
+    public function getWechatError($message, $direct = true)
     {
-        if (isset($message['errcode']))
+        if (isset($message['errcode']) && $message['errcode'] != 0)
         {
             // token过期 强制重新从微信服务器获取 token.
             if ($message['errcode'] == 40001)
             {
-                $app = Yii::$app->wechat->app;
-                $accessToken = $app->access_token;
-                $accessToken->getToken(true);
+                Yii::$app->wechat->app->access_token->getToken(true);
             }
 
-            if ($directError)
+            if ($direct)
             {
-                throw new \Exception($message['errmsg']);
+                throw new UnprocessableEntityHttpException($message['errmsg']);
             }
 
-            $this->_wechatError = $message['errmsg'];
+            return $message['errmsg'];
         }
 
-        return true;
-    }
-
-    /**
-     * 返回微信错误
-     *
-     * @return mixed
-     */
-    public function getWechatPortBackError()
-    {
-        return $this->_wechatError;
+        return false;
     }
 
     /**
@@ -148,6 +130,6 @@ class Debris
 
         $errors = array_values($firstErrors)[0];
 
-        return $errors ?? '操作失败';
+        return $errors ?? '未捕获到错误信息';
     }
 }

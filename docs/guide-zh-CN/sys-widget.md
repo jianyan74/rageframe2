@@ -272,5 +272,15 @@ echo $form->field($model, 'state_1')->widget(Select2::classname(), [
 
 ```
 <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
+
+// 自定义配置参数用法
+<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
+      'config' => [
+          // 'serverUrl' => \yii\helpers\Url::to(['/ueditor/oss-upload']), // 上传到oss 目前只支持文件/视频/图片上传
+          // 'serverUrl' => \yii\helpers\Url::to(['/ueditor/qiniu-upload']), // 上传到七牛 目前只支持文件/视频/图片上传
+      ],
+]) ?>
 ```
+
+更多文档：http://fex.baidu.com/ueditor/#start-start
 

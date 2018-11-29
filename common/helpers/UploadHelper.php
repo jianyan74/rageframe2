@@ -21,7 +21,7 @@ class UploadHelper
      *
      * @var array
      */
-    protected static $config = [];
+    public static $config = [];
 
     /**
      * 当前文件信息
@@ -178,6 +178,7 @@ class UploadHelper
         $name = 'rf_' . time() . StringHelper::randomNum() . $originalExc;
         $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
         $result = $ossClient->uploadFile($bucket, $name, $file['tmp_name']);
+
         // 私有获取图片信息
         // $singUrl = $ossClient->signUrl($bucket, $name, 60*60*24);
 
@@ -238,7 +239,7 @@ class UploadHelper
 
         // 返回数据
         $fullPathName = self::$filePath['absolutePath'] . self::$filePath['name'];
-        $fullPathName = StringHelper::enCodeIconvForWindows($fullPathName);
+        $fullPathName = StringHelper::iconvForWindows($fullPathName);
         if (!self::$fileInfo->saveAs($fullPathName))
         {
             throw new NotFoundHttpException('文件上传失败');
@@ -325,7 +326,7 @@ class UploadHelper
         $fullPathName = self::$filePath['tmpAbsolutePath'] . $chunk . '.' . self::$fileInfo->getExtension();
         $fileName = $guid . '.' . self::$fileInfo->getExtension();
 
-        $fullPathName = StringHelper::enCodeIconvForWindows($fullPathName);
+        $fullPathName = StringHelper::iconvForWindows($fullPathName);
         if (self::$fileInfo->saveAs($fullPathName))
         {
             $urlPath = self::$filePath['relativePath'] . $fileName;
@@ -368,8 +369,12 @@ class UploadHelper
 
         // 新名称
         $newBaseName = $config['prefix'] . StringHelper::randomNum(time());
-        $config['originalName'] == true && $newBaseName = self::$fileInfo->getBaseName();
-        $name = $newBaseName . '.' . self::$fileInfo->getExtension();
+        $name = $newBaseName;
+        if ($config['originalName'] == true && !empty(self::$fileInfo))
+        {
+            $newBaseName = self::$fileInfo->getBaseName();
+            $name = $newBaseName . '.' . self::$fileInfo->getExtension();
+        }
 
         // 文件路径
         $filePath = $config['path'] . date($config['subName'], time()) . "/";
@@ -457,95 +462,87 @@ class UploadHelper
 
     /**
      * 拉取远程图片
+     *
+     * @param $imgUrl
+     * @throws NotFoundHttpException
      */
-    public static function saveRemote()
+    public static function saveRemote($imgUrl)
     {
-//        $imgUrl = htmlspecialchars($this->fileField);
-//        $imgUrl = str_replace("&amp;", "&", $imgUrl);
-//
-//        //http开头验证
-//        if (strpos($imgUrl, "http") !== 0) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_HTTP_LINK");
-//            return;
-//        }
-//
-//        preg_match('/(^https?:\/\/[^:\/]+)/', $imgUrl, $matches);
-//        $host_with_protocol = count($matches) > 1 ? $matches[1] : '';
-//
-//        // 判断是否是合法 url
-//        if (!filter_var($host_with_protocol, FILTER_VALIDATE_URL)) {
-//            $this->stateInfo = $this->getStateInfo("INVALID_URL");
-//            return;
-//        }
-//
-//        preg_match('/^https?:\/\/(.+)/', $host_with_protocol, $matches);
-//        $host_without_protocol = count($matches) > 1 ? $matches[1] : '';
-//
-//        // 此时提取出来的可能是 IP 也有可能是域名，先获取 IP
-//        $ip = gethostbyname($host_without_protocol);
-//
-//        // 判断是否允许私有 IP
-//        if (!$this->allowIntranet && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) {
-//            $this->stateInfo = $this->getStateInfo("INVALID_IP");
-//            return;
-//        }
-//
-//        //获取请求头并检测死链
-//        $heads = get_headers($imgUrl, 1);
-//        if (!(stristr($heads[0], "200") && stristr($heads[0], "OK"))) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_DEAD_LINK");
-//            return;
-//        }
-//        //格式验证(扩展名验证和Content-Type验证)
-//        $fileType = strtolower(strrchr($imgUrl, '.'));
-//        if (!in_array($fileType, $this->config['allowFiles']) || !isset($heads['Content-Type']) || !stristr($heads['Content-Type'], "image")) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_HTTP_CONTENTTYPE");
-//            return;
-//        }
-//
-//        //打开输出缓冲区并获取远程图片
-//        ob_start();
-//        $context = stream_context_create(
-//            [
-//                'http' => [
-//                    'follow_location' => false // don't follow redirects
-//                ]
-//            ]
-//        );
-//        readfile($imgUrl, false, $context);
-//        $img = ob_get_contents();
-//        ob_end_clean();
-//        preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
-//
-//        $this->oriName = $m ? $m[1] : "";
-//
-//        $this->fileSize = strlen($img);
-//        $this->fileType = $this->getFileExt();
-//        $this->fullName = $this->getFullName();
-//        $this->filePath = $this->getFilePath();
-//        $this->fileName = $this->getFileName();
-//        $dirname = dirname($this->filePath);
-//
-//        //检查文件大小是否超出限制
-//        if (!$this->checkSize()) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
-//            return;
-//        }
-//
-//        //创建目录失败
-//        if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
-//            return;
-//        } else if (!is_writeable($dirname)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
-//            return;
-//        }
-//
-//        //移动文件
-//        if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
-//            $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
-//        } else { //移动成功
-//            $this->stateInfo = $this->stateMap[0];
-//        }
+        $config = self::$config;
+        $imgUrl = str_replace("&amp;", "&", htmlspecialchars($imgUrl));
+        // http开头验证
+        if (strpos($imgUrl, "http") !== 0)
+        {
+            throw new NotFoundHttpException('不是一个http地址');
+        }
+
+        preg_match('/(^https?:\/\/[^:\/]+)/', $imgUrl, $matches);
+        $host_with_protocol = count($matches) > 1 ? $matches[1] : '';
+
+        // 判断是否是合法 url
+        if (!filter_var($host_with_protocol, FILTER_VALIDATE_URL))
+        {
+            throw new NotFoundHttpException('Url不合法');
+        }
+
+        preg_match('/^https?:\/\/(.+)/', $host_with_protocol, $matches);
+        $host_without_protocol = count($matches) > 1 ? $matches[1] : '';
+
+        // 此时提取出来的可能是 IP 也有可能是域名，先获取 IP
+        $ip = gethostbyname($host_without_protocol);
+
+        // 获取请求头并检测死链
+        $heads = get_headers($imgUrl, 1);
+        if (!(stristr($heads[0], "200") && stristr($heads[0], "OK")))
+        {
+            throw new NotFoundHttpException('文件获取失败');
+        }
+
+        // 格式验证(扩展名验证和Content-Type验证)
+        $fileType = StringHelper::clipping($imgUrl, '.', 1);
+        if (!in_array($fileType, $config['extensions']) || !isset($heads['Content-Type']) || !stristr($heads['Content-Type'], "image"))
+        {
+            throw new NotFoundHttpException('格式验证失败');
+        }
+
+        //打开输出缓冲区并获取远程图片
+        ob_start();
+        $context = stream_context_create(
+            [
+                'http' => [
+                    'follow_location' => false // don't follow redirects
+                ]
+            ]
+        );
+        readfile($imgUrl, false, $context);
+        $img = ob_get_contents();
+        ob_end_clean();
+        preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
+
+
+        $filePath = self::getFilePath();
+        if (strlen($img) > $config['maxSize'])
+        {
+            throw new NotFoundHttpException('文件大小超出网站限制');
+        }
+
+        if (!FileHelper::mkdirs($filePath['absolutePath']))
+        {
+            throw new NotFoundHttpException('文件夹创建失败，请确认是否开启attachment文件夹写入权限');
+        }
+
+        // 原始名称
+        $oriName = $m ? $m[1] : "";
+
+        // 移动文件
+        $fileName = $filePath['name'] . '.' . $fileType;
+        $fileFullPath = $filePath['absolutePath'] . $fileName;
+        if (!(file_put_contents($fileFullPath, $img) && file_exists($fileFullPath)))
+        {
+            throw new NotFoundHttpException('文件移动失败');
+        }
+
+        $relativePath = $filePath['relativePath'] . $fileName;
+        return $config['fullPath'] == true ? Yii::$app->request->hostInfo . $relativePath : $relativePath;
     }
 }

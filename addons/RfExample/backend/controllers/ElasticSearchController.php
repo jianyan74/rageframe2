@@ -55,7 +55,7 @@ class ElasticSearchController extends AddonsBaseController
         $data = ElasticSearchCurd::find();
         $pages = new Pagination([
             'totalCount' => $data->count(),
-            'pageSize' => $this->_pageSize
+            'pageSize' => $this->pageSize
         ]);
 
         // sort 字段按照desc的方式进行排序
@@ -127,6 +127,7 @@ class ElasticSearchController extends AddonsBaseController
      *
      * @param $id
      * @return ElasticSearchCurd|null
+     * @throws \Exception
      */
     protected function findModel($id)
     {

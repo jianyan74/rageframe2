@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
         <?= $this->render('_nav', [
-            'type' => 'log'
+            'type' => 'error'
         ]) ?>
         <div class="tab-content">
             <div class="tab-pane active">
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     </td>
                                     <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                     <td>
-                                        <a href="<?= Url::to(['log-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>
+                                        <a href="<?= Url::to(['error-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>
                                     </td>
                                 </tr>
                             <?php } ?>

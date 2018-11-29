@@ -56,7 +56,7 @@ class ConfigController extends SController
             ->orFilterWhere(['in', 'cate_id', $cateIds])
             ->orFilterWhere(['like', 'title', $keyword])
             ->orFilterWhere(['like', 'name', $keyword]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('cate_id asc,sort asc')
             ->with('cate')
@@ -78,13 +78,13 @@ class ConfigController extends SController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()))
         {
-            if($request->isAjax)
+            if ($request->isAjax)
             {
                 Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);

@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="form-group">
                 <div class="hAlignCenter">
-                    <?php if($type == 1 || (empty($model['id']) && $type == 2)){ ?>
+                    <?php if ($type == 1 || (empty($model['id']) && $type == 2)){ ?>
                         <a class="btn btn-primary" @click="submitForm">保存</a>
                     <?php } ?>
                     <a class="btn btn-white" @click="back">返回</a>
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-        <?php if($type == Menu::TYPE_INDIVIDUATION){ ?>
+        <?php if ($type == Menu::TYPE_INDIVIDUATION){ ?>
             <div class="col-sm-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ])->label('省/直辖市') ?>
                             </div>
                             <div class="col-sm-6">
-                                <?php if($model->isNewRecord){?>
+                                <?php if ($model->isNewRecord){?>
                                     <?= $form->field($model, 'city')->dropDownList([],['prompt' => '不限'])->label('市') ?>
                                 <?php }else{ ?>
                                     <?= $form->field($model, 'city')->dropDownList([$model->city => $model->city],['disabled' => true])->label('省/直辖市') ?>

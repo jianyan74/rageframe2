@@ -132,15 +132,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <?= extension_loaded('mongodb')
                                     ? '<span class="label label-primary">mongodb支持</span>'
                                     : '<span class="label label-default">mongodb不支持</span>'; ?>
-                                <?= extension_loaded('ffmpeg')
-                                    ? '<span class="label label-primary">ffmpeg支持</span>'
-                                    : '<span class="label label-default">ffmpeg不支持</span>'; ?>
                             </td>
                         </tr>
                         <tr>
                             <td>禁用的函数</td>
                             <td >
-                                <?php if(is_array($disable_functions)){ ?>
+                                <?php if (is_array($disable_functions)){ ?>
                                     <?php foreach ($disable_functions as $function){ ?>
                                         <span class="label label-default"><?= $function; ?></span>
                                     <?php } ?>

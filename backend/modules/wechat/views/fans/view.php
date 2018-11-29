@@ -26,7 +26,7 @@ use common\models\wechat\Fans;
         <tr>
             <td>是否关注</td>
             <td>
-                <?php if($model->follow == Fans::FOLLOW_OFF){ ?>
+                <?php if ($model->follow == Fans::FOLLOW_OFF){ ?>
                     <span class="label label-danger">已取消</span>
                 <?php }else{ ?>
                     <span class="label label-info">已关注</span>
@@ -36,7 +36,7 @@ use common\models\wechat\Fans;
         <tr>
             <td>关注/取消时间</td>
             <td>
-                <?php if($model->follow == Fans::FOLLOW_OFF){ ?>
+                <?php if ($model->follow == Fans::FOLLOW_OFF){ ?>
                     <?= Yii::$app->formatter->asDatetime($model->unfollowtime) ?>
                 <?php }else{ ?>
                     <?= Yii::$app->formatter->asDatetime($model->followtime) ?>

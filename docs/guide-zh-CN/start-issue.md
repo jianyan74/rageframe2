@@ -10,6 +10,8 @@
 - 小程序Post提交服务器无法接收到数据
 - Windows环境打开后台微信报错
 - 如何配置权限管理的路由和菜单绑定
+- 数据迁移出现 Specified key was too long; max key length is 767 bytes 
+- Api应用增加了控制器方法，还是出现404
 
 #### 出现 vendor/bower/jquery/dist 找不到的解决方案
 
@@ -61,3 +63,11 @@ header: {
 #### 如何配置权限管理的路由和菜单绑定
 
 只要把权限路由和菜单的路由统一，就能自由控制菜单显示了，比如菜单路由 menu-sys 那么权限这边也要相对应的加上 menu-sys
+
+#### 数据迁移出现 Specified key was too long; max key length is 767 bytes 
+
+> 由于数据库版本问题，解决方法找到数据迁移目录下的那张表，修改编码 utf8mb4 为 utf8
+
+#### Api应用增加了控制器方法，还是出现404
+
+> 由于开启了Rulepip，所有的控制器方法都需要在main里面去配置rule，且单独的方法(不是CURD)也需要单独配置

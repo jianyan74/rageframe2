@@ -19,7 +19,7 @@ class BaseController extends Controller
      *
      * @var int
      */
-    protected $_pageSize = 10;
+    protected $pageSize = 10;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -146,11 +146,12 @@ class BaseController extends Controller
      */
     private function createLogPath($catalogue)
     {
-        $path = Yii::getAlias('@backend') . '/runtime/easywechatLog/' . $catalogue . '/' . date('Y-m') . '/';
-        $logFile = $path . date('d') . '.log';
-        FileHelper::mkdirs($path);
+        $logPath = Yii::getAlias('@runtime') . '\\wechat-' . $catalogue. '\\' . date('Y-m') . '\\';
 
-        return $logFile;
+        FileHelper::mkdirs($logPath);
+        $logPath .= date('d') . '.log';
+
+        return $logPath;
     }
 
     /**

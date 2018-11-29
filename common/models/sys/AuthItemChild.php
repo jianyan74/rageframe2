@@ -52,7 +52,7 @@ class AuthItemChild extends \yii\db\ActiveRecord
      *
      * @param string $parent 角色名称
      * @param array $auth 授权的路由数组
-     * @return int
+     * @return bool|int
      * @throws \yii\db\Exception
      */
     public function accredit($parent, $auth)

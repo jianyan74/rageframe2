@@ -82,4 +82,17 @@ class ArticleCate extends \common\models\common\BaseModel
 
         return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($cates), 'id', 'title');
     }
+
+    /**
+     * 删除全部子类
+     *
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        $ids = ArrayHelper::getChildsId(self::find()->all(), $this->id);
+        self::deleteAll(['in', 'id', $ids]);
+
+        return parent::beforeDelete();
+    }
 }

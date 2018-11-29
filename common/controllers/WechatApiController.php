@@ -38,7 +38,7 @@ class WechatApiController extends BaseController
         {
             // 激活公众号
             case 'GET':
-                if(WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce')))
+                if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce')))
                 {
                     return $request->get('echostr');
                 }

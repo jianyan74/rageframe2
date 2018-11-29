@@ -31,7 +31,7 @@ class AuthRuleController extends SController
     public function actionIndex()
     {
         $data = AuthRule::find();
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('created_at desc')
             ->limit($pages->limit)

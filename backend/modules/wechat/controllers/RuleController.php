@@ -36,7 +36,7 @@ class RuleController extends WController
             ->andFilterWhere(['module' => $module])
             ->andFilterWhere(['like', 'name', $keyword]);
 
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('sort asc,created_at desc')
             ->limit($pages->limit)

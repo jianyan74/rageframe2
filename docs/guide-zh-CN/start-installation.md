@@ -12,7 +12,7 @@
 - PHP cURL 扩展
 - PHP OpenSSL 扩展
 - PHP fileinfo 拓展 素材管理模块需要用到
-- Mysql >= 5.6
+- Mysql >= 5.7
 - Apache 或 Nginx
 - Composer (用于管理第三方扩展包)
 - 安装CA证书 (windows开发环境下)

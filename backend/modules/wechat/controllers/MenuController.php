@@ -26,23 +26,16 @@ class MenuController extends WController
     {
         $type = Yii::$app->request->get('type', Menu::TYPE_CUSTOM);
         $data = Menu::find()->where(['type' => $type]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('status desc, id desc')
             ->limit($pages->limit)
             ->all();
 
-        try
-        {
-            // 查询下菜单
-            !$models && $this->app->menu->current();
-        }
-        catch (\Exception $e)
-        {
-            throw new NotFoundHttpException($e->getMessage());
-        }
+        // 查询下菜单
+        !$models && Yii::$app->debris->getWechatError($this->app->menu->current());
 
-        return $this->render('index',[
+        return $this->render('index', [
             'pages' => $pages,
             'models' => $models,
             'type' => $type,
@@ -72,10 +65,9 @@ class MenuController extends WController
             }
 
             $buttons = [];
-            foreach ($postInfo['list'] as &$button)
-            {
+            foreach ($postInfo['list'] as &$button) {
                 $arr = [];
-                if(isset($button['sub_button']))
+                if (isset($button['sub_button']))
                 {
                     $arr['name'] = $button['name'];
                     foreach ($button['sub_button'] as &$sub)
@@ -104,7 +96,7 @@ class MenuController extends WController
             }
 
             // 个性化菜单
-            if($model->type == Menu::TYPE_INDIVIDUATION)
+            if ($model->type == Menu::TYPE_INDIVIDUATION)
             {
                 $matchRule = [
                     "tag_id" => $model->tag_id,
@@ -116,9 +108,11 @@ class MenuController extends WController
                     "city" => trim($model->city),
                 ];
 
-                if (($menuResult = $this->app->menu->create($buttons, $matchRule)) && isset($menuResult['errcode'])) // 自定义菜单
+                // 创建自定义菜单
+                $menuResult = $this->app->menu->create($buttons, $matchRule);
+                if ($error = Yii::$app->debris->getWechatError($menuResult, false))
                 {
-                    return ResultDataHelper::json(422, $menuResult['errmsg']);
+                    return ResultDataHelper::json(422, $error);
                 }
 
                 $model->menu_id = $menuResult['menuid'];
@@ -127,9 +121,10 @@ class MenuController extends WController
                 return ResultDataHelper::json(200, "修改成功");
             }
 
-            if (($menuResult = $this->app->menu->create($buttons)) && $menuResult['errcode'] != 0)
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($this->app->menu->create($buttons), false))
             {
-                return ResultDataHelper::json(422, $menuResult['errmsg']);
+                return ResultDataHelper::json(422, $error);
             }
 
             // 判断写入是否成功
@@ -185,7 +180,12 @@ class MenuController extends WController
             $model->save();
 
             // 创建微信菜单
-            $this->app->menu->create(unserialize($model->menu_data));
+            $createReturn = $this->app->menu->create(unserialize($model->menu_data));
+            // 解析微信接口是否报错
+            if ($error = Yii::$app->debris->getWechatError($createReturn, false))
+            {
+                return $this->message($error, $this->redirect(['index']), 'error');
+            }
         }
 
         return $this->redirect(['index']);
@@ -202,8 +202,7 @@ class MenuController extends WController
         // 获取菜单列表
         $list = $this->app->menu->list();
         // 解析微信接口是否报错
-        Yii::$app->debris->analyWechatPortBack($list, false);
-        if ($error = Yii::$app->debris->getWechatPortBackError())
+        if ($error = Yii::$app->debris->getWechatError($list, false))
         {
             return ResultDataHelper::json(404, $error);
         }

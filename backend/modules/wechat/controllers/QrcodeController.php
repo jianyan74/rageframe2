@@ -21,7 +21,7 @@ class QrcodeController extends WController
     public function actionIndex()
     {
         $data = Qrcode::find();
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)
@@ -153,9 +153,8 @@ class QrcodeController extends WController
     {
         $id = Yii::$app->request->get('id');
         $model = Qrcode::findOne($id);
+        $url = $this->app->qrcode->url($model['ticket']);
 
-        $qrcode = $this->app->qrcode;
-        $url = $qrcode->url($model['ticket']);
         header("Cache-control:private");
         header('content-type:image/jpeg');
         header('content-disposition: attachment;filename="' . $model['name'] . '_' . time() . '.jpg"');
@@ -172,22 +171,17 @@ class QrcodeController extends WController
         if (Yii::$app->request->isAjax)
         {
             $postUrl = Yii::$app->request->post('shortUrl', '');
+
             // 长链接转短链接
-            $url = $this->app->url;
-            try
+            $shortUrl = $this->app->url->shorten($postUrl);
+            if ($error = Yii::$app->debris->getWechatError($shortUrl, false))
             {
-                $shortUrl  = $url->shorten($postUrl);
-                if ($shortUrl['errcode'] == 0)
-                {
-                    return ResultDataHelper::json(200, '二维码转化成功', [
-                        'short_url' => $shortUrl['short_url']
-                    ]);
-                }
+                return ResultDataHelper::json(422, $error);
             }
-            catch (\Exception $e)
-            {
-                return ResultDataHelper::json(429, $e->getMessage());
-            }
+
+            return ResultDataHelper::json(200, '二维码转化成功', [
+                'short_url' => $shortUrl['short_url']
+            ]);
         }
 
         return $this->render('long-url', [

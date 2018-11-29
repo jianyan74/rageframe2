@@ -2,7 +2,7 @@
 
 namespace common\models\sys;
 
-use Yii;
+use common\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%sys_auth_item}}".
@@ -129,6 +129,21 @@ class AuthItem extends \common\models\common\BaseModel
     public function getParents()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('{{%sys_auth_item_child}}', ['child' => 'name']);
+    }
+
+    /**
+     * 删除子权限
+     *
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        $data = self::find()->asArray()->all();
+        $keys = ArrayHelper::getChildsId($data, $this->key, 'key', 'parent_key');
+
+        self::deleteAll(['in', 'key', $keys]);
+
+        return parent::beforeDelete();
     }
 
     /**

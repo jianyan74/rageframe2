@@ -138,11 +138,9 @@ class RuleKeyword extends \yii\db\ActiveRecord
                 // 文字回复
                 case  Rule::RULE_MODULE_TEXT :
                     return new Text($model->content);
-
                     break;
                 // 图文回复
                 case  Rule::RULE_MODULE_NEWS :
-
                     $news = $model->news;
                     $newsList = [];
                     if (!$news) return false;
@@ -157,12 +155,10 @@ class RuleKeyword extends \yii\db\ActiveRecord
                     }
 
                     return new News($newsList);
-
                     break;
                 // 图片回复
                 case  Rule::RULE_MODULE_IMAGES :
                     return new Image($model->media_id);
-
                     break;
                 // 视频回复
                 case Rule::RULE_MODULE_VIDEO :
@@ -170,21 +166,17 @@ class RuleKeyword extends \yii\db\ActiveRecord
                         'title' => $model->title,
                         'description' => $model->description,
                     ]);
-
                     break;
                 // 语音回复
                 case Rule::RULE_MODULE_VOICE :
                     return new Voice($model->media_id);
-
                     break;
                 // 自定义接口回复
                 case Rule::RULE_MODULE_USER_API :
-
                     if ($apiContent = ReplyUserApi::getApiData($model, Yii::$app->params['wechatMessage']))
                     {
                         return $apiContent;
                     }
-
                     return $model->default;
 
                     break;
@@ -192,7 +184,6 @@ class RuleKeyword extends \yii\db\ActiveRecord
                 default :
                     $class = AddonHelper::getAddonMessage($keyword->module);
                     return ExecuteHelper::map($class, 'run', Yii::$app->params['wechatMessage']);
-
                     break;
             }
         }

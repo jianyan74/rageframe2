@@ -13,11 +13,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="tabs-container">
                 <div class="tabs-right">
                     <ul class="nav nav-tabs">
-                        <li <?php if($tag_id == ''){ ?>class="active"<?php } ?>>
+                        <li <?php if ($tag_id == ''){ ?>class="active"<?php } ?>>
                             <a href="<?= Url::to(['index'])?>"> 全部粉丝(<strong class="text-danger"><?= $all_fans ?></strong>)</a>
                         </li>
                         <?php foreach ($fansTags as $k => $tag){ ?>
-                            <li <?php if($tag['id'] == $tag_id){ ?>class="active"<?php } ?>>
+                            <li <?php if ($tag['id'] == $tag_id){ ?>class="active"<?php } ?>>
                                 <a href="<?= Url::to(['index','tag_id' => $tag['id']])?>"> <?= $tag['name'] ?>(<strong class="text-danger"><?= $tag['count'] ?></strong>)</a>
                             </li>
                         <?php } ?>
@@ -26,9 +26,19 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="tab-pane active">
                             <div class="panel-body">
                                 <div class="col-sm-12">
-                                    <div class="ibox float-e-margins">
+                                    <div class="col-sm-3">
                                         <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>
                                         <span class="btn btn-white" onclick="getAllFans()"> 同步全部粉丝信息</span>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                            <div class="input-group m-b">
+                                                <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入昵称/粉丝编号'?>"/>
+                                                <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="ibox float-e-margins">
                                         <table class="table table-hover">
                                             <thead>
                                             <tr>
@@ -53,21 +63,21 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                     <td><?= $model->nickname ?></td>
                                                     <td><?= $model->sex == 1 ? '男' : '女' ?></td>
                                                     <td>
-                                                        <?php if($model->follow == Fans::FOLLOW_OFF){ ?>
+                                                        <?php if ($model->follow == Fans::FOLLOW_OFF){ ?>
                                                             <span class="label label-danger">已取消</span>
                                                         <?php }else{ ?>
                                                             <span class="label label-info">已关注</span>
                                                         <?php } ?>
                                                     </td>
                                                     <td>
-                                                        <?php if($model->follow == Fans::FOLLOW_OFF){ ?>
+                                                        <?php if ($model->follow == Fans::FOLLOW_OFF){ ?>
                                                             <?= Yii::$app->formatter->asDatetime($model->unfollowtime) ?>
                                                         <?php }else{ ?>
                                                             <?= Yii::$app->formatter->asDatetime($model->followtime) ?>
                                                         <?php } ?>
                                                     </td>
                                                     <td>
-                                                        <?php if($model['tags']){ ?>
+                                                        <?php if ($model['tags']){ ?>
                                                             <?php foreach ($model['tags'] as $value){ ?>
                                                                 <span class="label label-success"><?= $allTag[$value['tag_id']]; ?></span>
                                                             <?php } ?>
@@ -77,12 +87,13 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                         <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #0f0f0f"><i class="fa fa-sort-down"></i></a>
                                                         <select class="form-control m-b groups" style="display: none">
                                                             <?php foreach ($fansTags as $value){ ?>
-                                                                <option value="<?= $value['id'] ?>" <?php if($value['id'] == $model->group_id){ ?>selected<?php } ?>><?= $value['name'] ?></option>
+                                                                <option value="<?= $value['id'] ?>" <?php if ($value['id'] == $model->group_id){ ?>selected<?php } ?>><?= $value['name'] ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </td>
                                                     <td><?= $model->openid ?></td>
                                                     <td>
+                                                        <a href="<?= Url::to(['send-message','id'=>$model->id])?>"><span class="btn btn-white btn-sm">发送消息</span></a>
                                                         <a href="<?= Url::to(['view','id'=>$model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">用户详情</span></a>
                                                     </td>
                                                 </tr>

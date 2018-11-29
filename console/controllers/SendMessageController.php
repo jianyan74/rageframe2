@@ -92,7 +92,7 @@ class SendMessageController extends Controller
                 $result = $app->broadcasting->$method($sendContent);
 
                 // 校验报错
-                Yii::$app->debris->analyWechatPortBack($result);
+                Yii::$app->debris->getWechatError($result);
 
                 $model->final_send_time = time();
                 $model->send_status = StatusEnum::ENABLED;

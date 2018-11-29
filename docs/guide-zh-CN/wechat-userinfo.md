@@ -27,7 +27,7 @@ $user = $app->user->get($openId);
  *
  * @var bool
  */
-public $_openGetWechatUser= false
+public $openGetWechatUser= false
 ```
 
 **如果想静默授权获取用户信息怎么办？**

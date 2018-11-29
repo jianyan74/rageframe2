@@ -22,6 +22,7 @@ class MongoDbCurdController extends AddonsBaseController
      *
      * @param $id
      * @return MongoDbCurd|null
+     * @throws \Exception
      */
     protected function findModel($id)
     {

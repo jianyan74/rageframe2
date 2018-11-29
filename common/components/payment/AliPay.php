@@ -10,14 +10,14 @@ use Omnipay\Omnipay;
  */
 class AliPay
 {
-    protected $_config;
+    protected $config;
 
     /**
      * 类型
      *
      * @var array
      */
-    protected $_type = [
+    protected $type = [
         'pc' => 'Alipay_AopPage',
         'app' => 'Alipay_AopApp',
         'f2f' => 'Alipay_AopF2F',
@@ -26,23 +26,23 @@ class AliPay
 
     public function __construct($config)
     {
-        $this->_config = $config;
+        $this->config = $config;
     }
 
     /**
      * 实例化类
      *
-     * @param $type
+     * @param string $type
      * @return mixed
      */
     private function _create($type = 'Alipay_AopApp')
     {
         $gateway = Omnipay::create($type);
         $gateway->setSignType('RSA2'); // RSA/RSA2/MD5
-        $gateway->setAppId($this->_config['app_id']);
-        $gateway->setAlipayPublicKey($this->_config['ali_public_key']);
-        $gateway->setPrivateKey($this->_config['private_key']);
-        $gateway->setNotifyUrl($this->_config['notify_url']);
+        $gateway->setAppId($this->config['app_id']);
+        $gateway->setAlipayPublicKey($this->config['ali_public_key']);
+        $gateway->setPrivateKey($this->config['private_key']);
+        $gateway->setNotifyUrl($this->config['notify_url']);
 
         return $gateway;
     }

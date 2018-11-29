@@ -78,7 +78,7 @@ class SendForm extends MassRecord
 
         if (!empty($result))
         {
-            Yii::$app->debris->analyWechatPortBack($result);
+            Yii::$app->debris->getWechatError($result);
             $this->msg_id = $result['msg_id'];
             $this->send_status = StatusEnum::ENABLED;
         }

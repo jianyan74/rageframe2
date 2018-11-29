@@ -110,7 +110,7 @@ class Manager extends \common\models\common\User
     public static function getManagers()
     {
         return self::find()
-            ->where(['<>','id',Yii::$app->user->id])
+            ->where(['<>', 'id', Yii::$app->user->id])
             ->asArray()
             ->all();
     }

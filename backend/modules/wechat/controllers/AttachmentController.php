@@ -188,8 +188,12 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $material = $this->app->material;
-            $result = $material->uploadImage(StringHelper::getLocalFilePath($model->local_url));
+            $result = $this->app->material->uploadImage(StringHelper::getLocalFilePath($model->local_url));
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return $this->message($error, $this->redirect(['index', 'type' => 'image']), 'error');
+            }
 
             Attachment::add($model->local_url, 'image', $result['url'], $result['media_id']);
 
@@ -212,8 +216,13 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $material = $this->app->material;
-            $result = $material->uploadVoice(StringHelper::getLocalFilePath($model->local_url, 'voices'));
+            $result = $this->app->material->uploadVoice(StringHelper::getLocalFilePath(StringHelper::iconvForWindows($model->local_url), 'voices'));
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return $this->message($error, $this->redirect(['index', 'type' => 'voice']), 'error');
+            }
+
             Attachment::add($model->local_url, 'voice', '', $result['media_id']);
 
             return $this->redirect(['index', 'type' => 'voice']);
@@ -235,8 +244,13 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()))
         {
             // 本地前缀
-            $material = $this->app->material;
-            $result = $material->uploadVideo(StringHelper::getLocalFilePath($model->local_url, 'videos'), $model->file_name, $model->description);
+            $result = $this->app->material->uploadVideo(StringHelper::getLocalFilePath($model->local_url, 'videos'), $model->file_name, $model->description);
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return $this->message($error, $this->redirect(['index', 'type' => 'video']), 'error');
+            }
+
             Attachment::add($model->local_url, 'video', '', $result['media_id'], $model->file_name);
 
             return $this->redirect(['index', 'type' => 'video']);
@@ -263,9 +277,12 @@ class AttachmentController extends WController
         if ($model->delete())
         {
             // 删除微信服务器数据
-            $material = $this->app->material;
-            // 验证
-            $material->delete($model['media_id']);
+            $result = $this->app->material->delete($model['media_id']);
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return $this->message($error, $this->redirect(['index', 'type' => $mediaType]), 'error');
+            }
 
             return $this->message("删除成功", $this->redirect(['index', 'type' => $mediaType]));
         }
@@ -296,11 +313,15 @@ class AttachmentController extends WController
                 'card' => 'previewCard',
             ];
 
-            $broadcast = $this->app->broadcasting;
             $method = $preview[$attachment->media_type];
             // 1:openid预览 2:微信号预览
             $model->type == 1 && $method = $method . 'ByName';
-            $broadcast->$method($attachment->media_id, $model->content);
+            $result = $this->app->broadcasting->$method($attachment->media_id, $model->content);
+            // 验证微信报错
+            if ($error = Yii::$app->debris->getWechatError($result, false))
+            {
+                return $this->message($error, $this->redirect(['index', 'type' => $mediaType]), 'error');
+            }
 
             return $this->message("发送成功", $this->redirect(['index', 'type' => $mediaType]));
         }
@@ -360,11 +381,10 @@ class AttachmentController extends WController
         // 查找素材
         try
         {
-            $material = $this->app->material;
-            $lists = $material->list($type, $offset, $count);
+            $lists = $this->app->material->list($type, $offset, $count);
 
             // 解析微信接口是否报错.报错则抛出错误信息
-            Yii::$app->debris->analyWechatPortBack($lists);
+            Yii::$app->debris->getWechatError($lists);
 
             $total = $lists['total_count'];
             // 素材列表
@@ -448,7 +468,7 @@ class AttachmentController extends WController
                 break;
         }
 
-        if($total - $count > 0)
+        if ($total - $count > 0)
         {
             return ResultDataHelper::json(200, '同步成功', [
                 'offset' => ($offset + 1) * $count,

@@ -136,7 +136,7 @@ class ExcelHelper
 
         $html .= "\n";
 
-        if(!empty($list))
+        if (!empty($list))
         {
             $info = [];
             $size = ceil(count($list) / 500);
@@ -291,14 +291,14 @@ class ExcelHelper
     protected static function formattingField($row, $field)
     {
         $newField = explode('.', $field);
-        if(count($newField) == 1)
+        if (count($newField) == 1)
         {
             return $row[$field];
         }
 
         foreach ($newField as $item)
         {
-            if(isset($row[$item]))
+            if (isset($row[$item]))
             {
                 $row = $row[$item];
             }

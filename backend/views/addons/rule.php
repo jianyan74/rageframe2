@@ -24,10 +24,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
                                             <span class="label label-info">优先级：<?= $model->sort; ?></span>
-                                    <?php if(RuleKeyword::verifyTake($model->ruleKeyword)){ ?>
+                                    <?php if (RuleKeyword::verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
-                                    <?php if($model->status == StatusEnum::ENABLED){ ?>
+                                    <?php if ($model->status == StatusEnum::ENABLED){ ?>
                                         <span class="label label-info" onclick="statusRule(this)">已启用</span>
                                     <?php }else{ ?>
                                         <span class="label label-danger" onclick="statusRule(this)">已禁用</span>
@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true" style="">
                                 <div class="panel-body">
                                     <div class="col-lg-9 tooltip-demo">
-                                        <?php if($model->ruleKeyword){ ?>
+                                        <?php if ($model->ruleKeyword){ ?>
                                             <?php foreach($model->ruleKeyword as $rule){
-                                                if($rule->type != RuleKeyword::TYPE_TAKE){ ?>
+                                                if ($rule->type != RuleKeyword::TYPE_TAKE){ ?>
                                                     <span class="simple_tag" data-toggle="tooltip" data-placement="bottom" title="<?= RuleKeyword::$typeExplain[$rule->type]; ?>"><?= $rule->content?></span>
                                                 <?php }
                                             }

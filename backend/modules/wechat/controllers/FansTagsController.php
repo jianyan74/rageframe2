@@ -31,7 +31,7 @@ class FansTagsController extends WController
             {
                 if ($value)
                 {
-                    $this->app->user_tag->update($key,$value);
+                    $this->app->user_tag->update($key, $value);
                 }
                 else
                 {

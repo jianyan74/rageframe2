@@ -48,6 +48,18 @@ class AddonsController extends Controller
     }
 
     /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function beforeAction($action)
+    {
+        // 关闭csrf
+        $action->id == 'execute' && $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
+    /**
      * 跳转插件详情页面
      *
      * @return mixed

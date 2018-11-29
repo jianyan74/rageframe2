@@ -57,7 +57,7 @@ class XunsearchController extends AddonsBaseController
         $data = Xunsearch::find()->where($condition);
         $pages = new Pagination([
             'totalCount' => $data->count(),
-            'pageSize' => $this->_pageSize
+            'pageSize' => $this->pageSize
         ]);
 
         $models = $data->offset($pages->offset)
@@ -115,6 +115,7 @@ class XunsearchController extends AddonsBaseController
      *
      * @param $id
      * @return Xunsearch|null
+     * @throws \Exception
      */
     protected function findModel($id)
     {

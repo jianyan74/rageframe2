@@ -1,6 +1,8 @@
 <?php
 namespace backend\modules\sys\models;
 
+use Yii;
+
 /**
  * Class Database
  * @package backend\modules\sys\models
@@ -63,7 +65,7 @@ class Database
                 $this->config['compress'] ? @gzclose($this->fp) : @fclose($this->fp);
                 $this->fp = null;
                 $this->file['part']++;
-                session('backup_file', $this->file);
+                Yii::$app->session->set('backup_file', $this->file);
                 $this->create();
             }
         }
@@ -96,9 +98,9 @@ class Database
         $sql = "-- -----------------------------\n";
         $sql .= "-- Yii MySQL Data Transfer \n";
         $sql .= "-- \n";
-        $sql .= "-- Host     : " . \Yii::$app->db->dsn . "\n";
-        $sql .= "-- Port     : " . \Yii::$app->db->dsn . "\n";
-        $sql .= "-- Database : " . \Yii::$app->db->dsn . "\n";
+        $sql .= "-- Host     : " . Yii::$app->db->dsn . "\n";
+        $sql .= "-- Port     : " . Yii::$app->db->dsn . "\n";
+        $sql .= "-- Database : " . Yii::$app->db->dsn . "\n";
         $sql .= "-- \n";
         $sql .= "-- Part : #{$this->file['part']}\n";
         $sql .= "-- Date : " . date("Y-m-d H:i:s") . "\n";
@@ -204,9 +206,6 @@ class Database
      */
     public function import($start)
     {
-        // 还原数据
-        $db = \Yii::$app->db;
-
         if ($this->config['compress'])
         {
             $gz = gzopen($this->file[1], 'r');
@@ -229,7 +228,7 @@ class Database
             $sql .= $this->config['compress'] ? gzgets($gz) : fgets($gz);
             if (preg_match('/.*;$/', trim($sql)))
             {
-                if (false !== $db->createCommand($sql)->execute())
+                if (false !== Yii::$app->db->createCommand($sql)->execute())
                 {
                     $start += strlen($sql);
                 }

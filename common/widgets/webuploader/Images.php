@@ -47,6 +47,7 @@ class Images extends InputWidget
 
     /**
      * @throws InvalidConfigException
+     * @throws \Exception
      */
     public function init()
     {

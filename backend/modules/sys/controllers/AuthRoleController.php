@@ -25,7 +25,7 @@ class AuthRoleController extends SController
     public function actionIndex()
     {
         $data = AuthItem::find()->where(['type' => AuthItem::ROLE]);
-        $pages = new Pagination(['totalCount' =>$data->count(), 'pageSize' =>$this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -67,6 +67,82 @@ class AuthRoleController extends SController
         $name = $request->get('name');
         $model = $this->findModel($name);
 
+        // 获取当前用户权限
+        list($formAuth, $checkId) = $this->getUserAuth($name);
+
+        if ($request->isAjax)
+        {
+            $name = $request->post('name');
+            $model = $this->findModel($request->post('originalName', ''));
+            $model->type = AuthItem::ROLE;
+            $model->name = $name;
+            $model->description = Yii::$app->user->identity->username . "|添加了|" . $model->name . "|角色";
+            if (!$model->save())
+            {
+                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
+            }
+
+            $ids = $request->post('ids', []);
+            if (!empty($ids))
+            {
+                $auths = AuthItem::find()
+                    ->where(['type' => AuthItem::AUTH])
+                    ->andWhere(['in', 'key', $ids])
+                    ->select('name')
+                    ->asArray()
+                    ->all();
+
+                if ((new AuthItemChild())->accredit($name, array_column($auths, 'name')))
+                {
+                    return ResultDataHelper::json(200, '提交成功');
+                }
+
+                return ResultDataHelper::json(404, '提交失败');
+            }
+
+            return ResultDataHelper::json(200, '提交成功');
+        }
+
+        // jq冲突禁用
+        $this->forbiddenJq();
+
+        return $this->render('edit', [
+            'model' => $model,
+            'formAuth' => $formAuth,
+            'checkId' => $checkId,
+            'name' => $name
+        ]);
+    }
+
+    /**
+     * 由于jstree会和系统的js引入冲突，先设置禁用掉
+     *
+     * @throws yii\base\InvalidConfigException
+     */
+    private function forbiddenJq()
+    {
+        Yii::$app->set('assetManager', [
+            'class' => 'yii\web\AssetManager',
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'sourcePath' => null,
+                    'js' => [
+
+                    ]
+                ],
+            ],
+        ]);
+
+    }
+
+    /**
+     * 获取当前用户权限
+     *
+     * @param $name
+     * @return array
+     */
+    private function getUserAuth($name)
+    {
         $userAuth = [];
         // 验证是否总管理员, 并获取自己的权限列表
         if (Yii::$app->params['adminAccount'] != Yii::$app->user->id)
@@ -121,58 +197,7 @@ class AuthRoleController extends SController
             }
         }
 
-        if ($request->isAjax)
-        {
-            $name = $request->post('name');
-            $model = $this->findModel($request->post('originalName', ''));
-            $model->type = AuthItem::ROLE;
-            $model->name = $name;
-            $model->description = Yii::$app->user->identity->username . "|添加了|" . $model->name . "|角色";
-            if (!$model->save())
-            {
-                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
-            }
-
-            $ids = $request->post('ids', []);
-            if (!empty($ids))
-            {
-                $auths = AuthItem::find()
-                    ->where(['type' => AuthItem::AUTH])
-                    ->andWhere(['in', 'key', $ids])
-                    ->select('name')
-                    ->asArray()
-                    ->all();
-
-                if ((new AuthItemChild())->accredit($name, array_column($auths, 'name')))
-                {
-                    return ResultDataHelper::json(200, '提交成功');
-                }
-
-                return ResultDataHelper::json(404, '提交失败');
-            }
-
-            return ResultDataHelper::json(200, '提交成功');
-        }
-
-        // 由于jstree会和系统的js引入冲突，先设置禁用掉
-        Yii::$app->set('assetManager', [
-            'class' => 'yii\web\AssetManager',
-            'bundles' => [
-                'yii\web\JqueryAsset' => [
-                    'sourcePath' => null,
-                    'js' => [
-
-                    ]
-                ],
-            ],
-        ]);
-
-        return $this->render('edit', [
-            'model' => $model,
-            'formAuth' => $formAuth,
-            'checkId' => $checkId,
-            'name' => $name
-        ]);
+        return [$formAuth, $checkId];
     }
 
     /**

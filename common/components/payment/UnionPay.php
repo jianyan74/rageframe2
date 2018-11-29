@@ -12,14 +12,14 @@ use Omnipay\Omnipay;
  */
 class UnionPay
 {
-    protected $_config;
+    protected $config;
 
     /**
      * UnionPay constructor.
      */
     public function __construct($config)
     {
-        $this->_config = $config;
+        $this->config = $config;
     }
 
     /**
@@ -31,12 +31,12 @@ class UnionPay
     private function create($type = 'UnionPay_Express')
     {
         $gateway = Omnipay::create($type);
-        $gateway->setMerId($this->_config['mch_id']);
-        $gateway->setCertId($this->_config['cert_id']);
-        $gateway->setPublicKey($this->_config['public_key']); // path or content
-        $gateway->setPrivateKey($this->_config['private_key']); // path or content
-        $gateway->setReturnUrl($this->_config['return_url']);
-        $gateway->setNotifyUrl($this->_config['notify_url']);
+        $gateway->setMerId($this->config['mch_id']);
+        $gateway->setCertId($this->config['cert_id']);
+        $gateway->setPublicKey($this->config['public_key']); // path or content
+        $gateway->setPrivateKey($this->config['private_key']); // path or content
+        $gateway->setReturnUrl($this->config['return_url']);
+        $gateway->setNotifyUrl($this->config['notify_url']);
 
         return $gateway;
     }

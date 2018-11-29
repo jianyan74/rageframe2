@@ -9,7 +9,7 @@ use backend\modules\member\models\AddressForm;
 /**
  * 收货地址
  *
- * Class AddressFormController
+ * Class AddressController
  * @package backend\modules\member\controllers
  */
 class AddressController extends MController
@@ -34,7 +34,7 @@ class AddressController extends MController
     public function actionIndex()
     {
         $data = AddressForm::find()->andWhere(['member_id' => $this->member_id]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)

@@ -73,7 +73,7 @@ AppAsset::register($this);
                             </a>
                         </li>
                         <?php foreach ($menuCates as $cate){ ?>
-                            <?php if($cate['status'] == StatusEnum::ENABLED){ ?>
+                            <?php if ($cate['status'] == StatusEnum::ENABLED) { ?>
                                 <li class="dropdown">
                                     <a class="navbar-top-menu <?= $cate['is_default_show'] == StatusEnum::ENABLED ? 'navbar-top-menu-hover' : '' ?>" href="#" menu-type="<?= $cate['id']; ?>">
                                         <i class="fa <?= $cate['icon']; ?>"></i><?= $cate['title']; ?>
@@ -81,7 +81,7 @@ AppAsset::register($this);
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                        <?php if(Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED){ ?>
+                        <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED) { ?>
                             <li class="dropdown">
                                 <a class="navbar-top-menu" href="#" menu-type="addons">
                                     <i class="fa fa-th-large"></i>应用中心

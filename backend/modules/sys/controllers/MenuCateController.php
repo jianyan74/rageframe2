@@ -28,7 +28,7 @@ class MenuCateController extends SController
     public function actionIndex()
     {
         $data = MenuCate::find();
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('sort asc')
             ->limit($pages->limit)

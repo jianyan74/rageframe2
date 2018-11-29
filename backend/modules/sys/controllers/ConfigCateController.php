@@ -29,7 +29,7 @@ class ConfigCateController extends SController
     public function actionIndex()
     {
         $models = ConfigCate::find()
-            ->orderBy('sort Asc,created_at Asc')
+            ->orderBy('sort asc, created_at asc')
             ->asArray()
             ->all();
 
@@ -45,7 +45,7 @@ class ConfigCateController extends SController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
         $model->level = $request->get('level', null) ?? $model->level; // 级别

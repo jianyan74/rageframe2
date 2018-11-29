@@ -27,11 +27,11 @@ class QrcodeStatController extends WController
      */
     public function actionIndex()
     {
-        $request  = Yii::$app->request;
-        $type = $request->get('type','');
-        $keyword  = $request->get('keyword','');
-        $from_date  = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
-        $to_date  = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
+        $request = Yii::$app->request;
+        $type = $request->get('type', '');
+        $keyword = $request->get('keyword', '');
+        $from_date = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
+        $to_date = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
 
         $data = QrcodeStat::find()
             ->andFilterWhere(['like', 'name', $keyword])
@@ -41,7 +41,7 @@ class QrcodeStatController extends WController
         $attention_data = clone $data;
         $scan_data = clone $data;
 
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->limit($pages->limit)

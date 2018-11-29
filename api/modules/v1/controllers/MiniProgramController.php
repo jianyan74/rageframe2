@@ -29,8 +29,8 @@ class MiniProgramController extends \yii\rest\ActiveController
 
     public function init()
     {
-        $path = Yii::getAlias('@api') . '/runtime/easywechatLog/miniProgram/' . date('Y-m') . '/';
-        FileHelper::mkdirs($path);
+        $logPath = Yii::getAlias('@runtime') . '\\wechat-miniProgram\\' . date('Y-m') . '\\';
+        FileHelper::mkdirs($logPath);
 
         Yii::$app->params['wechatMiniProgramConfig'] = [
             'app_id' => Yii::$app->debris->config('miniprogram_appid'),
@@ -41,7 +41,7 @@ class MiniProgramController extends \yii\rest\ActiveController
             'response_type' => 'array',
             'log' => [
                 'level' > 'debug',
-                'file' => $path . date('d') . '.log',
+                'file' => $logPath . date('d') . '.log',
             ],
         ];
 
@@ -51,7 +51,9 @@ class MiniProgramController extends \yii\rest\ActiveController
     /**
      * 通过 Code 换取 SessionKey
      *
-     * @return mixed
+     * @param $code
+     * @return array|mixed
+     * @throws \yii\base\Exception
      */
     public function actionSessionKey($code)
     {
@@ -60,31 +62,25 @@ class MiniProgramController extends \yii\rest\ActiveController
             return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
         }
 
-        try
-        {
-            $oauth = $this->miniProgramApp->auth->session($code);
-            // 解析是否接口报错
-            Yii::$app->debris->analyWechatPortBack($oauth);
+        $oauth = $this->miniProgramApp->auth->session($code);
+        // 解析是否接口报错
+        Yii::$app->debris->getWechatError($oauth);
 
-            // 缓存数据
-            $auth_key = Yii::$app->security->generateRandomString() . '_' . time();
-            Yii::$app->cache->set($auth_key, ArrayHelper::toArray($oauth), 7195);
+        // 缓存数据
+        $auth_key = Yii::$app->security->generateRandomString() . '_' . time();
+        Yii::$app->cache->set($auth_key, ArrayHelper::toArray($oauth), 7195);
 
-            return [
-                'auth_key' => $auth_key // 临时缓存token
-            ];
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::api(422, $e->getMessage());
-        }
+        return [
+            'auth_key' => $auth_key // 临时缓存token
+        ];
     }
 
     /**
      * 加密数据进行解密 || 进行登录认证
      *
-     * @return array|bool
+     * @return array|mixed
      * @throws \yii\base\Exception
+     * @throws \Exception
      */
     public function actionDecode()
     {

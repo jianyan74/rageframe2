@@ -56,7 +56,7 @@ class IndexController extends AddonsBaseController
             ->where(['>=', 'status', StatusEnum::DISABLED])
             ->andFilterWhere(['like', 'title', $keyword])
             ->andFilterWhere(['cate_id' => $cate_id]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $articles = $data->offset($pages->offset)
             ->orderBy('id desc')
             ->with(['tags'])

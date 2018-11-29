@@ -44,16 +44,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <td><?= $vo['version'] ?></td>
                                         <td><?= $vo['author'] ?></td>
                                         <td>
-                                            <?php if($vo['is_mini_program'] == true){ ?>
+                                            <?php if ($vo['is_mini_program'] == true){ ?>
                                                 <span class="label label-info">Api/小程序</span>
                                             <?php } ?>
-                                            <?php if($vo['is_setting'] == true){ ?>
+                                            <?php if ($vo['is_setting'] == true){ ?>
                                                 <span class="label label-info">全局设置</span>
                                             <?php } ?>
-                                            <?php if($vo['is_rule'] == true){ ?>
+                                            <?php if ($vo['is_rule'] == true){ ?>
                                                 <span class="label label-info">嵌入规则</span>
                                             <?php } ?>
-                                            <?php if($vo['is_hook'] == true){ ?>
+                                            <?php if ($vo['is_hook'] == true){ ?>
                                                 <span class="label label-info">钩子</span>
                                             <?php } ?>
                                         </td>

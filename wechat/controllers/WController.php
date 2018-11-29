@@ -17,7 +17,7 @@ class WController extends BaseController
      *
      * @var bool
      */
-    protected $_openGetWechatUser = true;
+    protected $openGetWechatUser = true;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -27,7 +27,7 @@ class WController extends BaseController
         parent::init();
 
         /** 检测到微信进入自动获取用户信息 **/
-        if ($this->_openGetWechatUser && Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized())
+        if ($this->openGetWechatUser && Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized())
         {
             return Yii::$app->wechat->authorizeRequired()->send();
         }

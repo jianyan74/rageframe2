@@ -53,8 +53,7 @@ return [
         'response' => [
             'class' => 'yii\web\Response',
             'on beforeSend' => function($event) {
-                $response = $event->sender;
-                Yii::$app->services->errorLog->record($response);
+                Yii::$app->services->errorLog->record($event->sender);
             },
         ],
     ],

@@ -3,9 +3,10 @@ namespace backend\models;
 
 use Yii;
 use common\models\sys\Manager;
-use yii\helpers\Html;
 
 /**
+ * 登录表单
+ *
  * Class LoginForm
  * @package backend\models
  */
@@ -52,11 +53,11 @@ class LoginForm extends \common\models\common\LoginForm
     public function validateIp($attribute)
     {
         $ip = Yii::$app->request->userIP;
-        $ipList = Yii::$app->debris->config('sys_allow_ip');
-        if (!empty($ipList))
+        $allowIp = Yii::$app->debris->config('sys_allow_ip');
+        if (!empty($allowIp))
         {
-            $value = explode(",", $ipList);
-            if (!in_array($ip, $value))
+            $ipList = explode(",", $allowIp);
+            if (!in_array($ip, $ipList))
             {
                 // 记录行为日志
                 Yii::$app->debris->log('login', '限制IP登录', false);

@@ -2,6 +2,7 @@
 namespace common\models\sys;
 
 use common\enums\StatusEnum;
+use common\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%sys_menu_cate}}".
@@ -78,6 +79,19 @@ class MenuCate extends \common\models\common\BaseModel
             ->one();
 
         return $model ? $model->id : null;
+    }
+
+    /**
+     * 删除全部子类
+     *
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        $ids = ArrayHelper::getChildsId(self::find()->all(), $this->id);
+        self::deleteAll(['in', 'id', $ids]);
+
+        return parent::beforeDelete();
     }
 
     /**

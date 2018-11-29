@@ -2,12 +2,12 @@
 namespace backend\modules\sys\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use common\components\CurdTrait;
 use common\models\sys\Manager;
 use common\models\sys\AuthAssignment;
 use common\models\sys\AuthItem;
 use backend\modules\sys\models\PasswdForm;
-use yii\data\Pagination;
 
 /**
  * 后台管理员控制器
@@ -37,7 +37,7 @@ class ManagerController extends SController
             ->orFilterWhere(['like', 'username', $keyword])
             ->orFilterWhere(['like', 'mobile', $keyword])
             ->orFilterWhere(['like', 'realname', $keyword]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->_pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('type desc, id desc')
             ->limit($pages->limit)
@@ -112,9 +112,9 @@ class ManagerController extends SController
         // 用户id
         $user_id = $request->get('user_id');
         // 角色
-        $role = AuthItem::find()->where(['type'=>AuthItem::ROLE])->all();
+        $role = AuthItem::find()->where(['type' => AuthItem::ROLE])->all();
         // 模型
-        $model = AuthAssignment::find()->where(['user_id'=>$user_id])->one();
+        $model = AuthAssignment::find()->where(['user_id' => $user_id])->one();
 
         if (!$model)
         {

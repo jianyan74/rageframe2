@@ -204,7 +204,7 @@ class AddonsPlugController extends SController
      */
     public function actionUpgrade()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $addonName = $request->get('name');
         $class = AddonHelper::getAddonConfig($addonName);
         if (!class_exists($class))
@@ -369,6 +369,7 @@ class AddonsPlugController extends SController
                 file_put_contents("{$addonDir}backend/views/setting/hook.php", $this->renderPartial('template/view/hook', ['model' => $model]));
                 file_put_contents("{$addonDir}backend/views/setting/display.php", $this->renderPartial('template/view/display', ['model' => $model]));
             }
+
             // 写入微信消息回复
             if($model->wechat_message == true)
             {

@@ -85,7 +85,7 @@ class MemberInfo extends \common\models\common\User
             'password_hash' => '密码',
             'auth_key' => '授权登录key',
             'password_reset_token' => '密码重置token',
-            'type' => 'Type',
+            'type' => '类型',
             'nickname' => '昵称',
             'realname' => '真实姓名',
             'head_portrait' => '头像',

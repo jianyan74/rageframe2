@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="tabs-container">
                 <ul class="nav nav-tabs">
                     <?php foreach ($types as $key => $value){ ?>
-                        <li <?php if($key == $type){ ?>class="active"<?php } ?>><a href="<?= Url::to(['index', 'type' => $key])?>"> <?= $value ?></a></li>
+                        <li <?php if ($key == $type){ ?>class="active"<?php } ?>><a href="<?= Url::to(['index', 'type' => $key])?>"> <?= $value ?></a></li>
                     <?php } ?>
                     <div class="pull-right">
                         <a class="btn btn-primary btn-xs" id="getNewMenu">
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                             <td><?= $model->id?></td>
                                             <td><?= $model->title?></td>
                                             <td>
-                                                <?php if($model->type == 1){ ?>
+                                                <?php if ($model->type == 1){ ?>
                                                     全部粉丝
                                                 <?php }else{ ?>
                                                     性别: <?= Yii::$app->params['individuationMenuSex'][$model->sex];?><br>
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <?php if($model->status == 1){ ?>
+                                                <?php if ($model->status == 1){ ?>
                                                     <font color="green">菜单生效中</font>
                                                 <?php }else{ ?>
                                                     <a href="<?= Url::to(['save','id' => $model->id])?>" class="color-default">生效并置顶</a>
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                             <td>
 
                                                 <a href="<?= Url::to(['edit','id'=>$model->id,'type' => $model->type])?>"><span class="btn btn-info btn-sm"><?= $model->type == 2 ? '查看': '编辑';?></span></a>
-                                                <?php if($model->status == 0 || $model->type == 2){ ?>
+                                                <?php if ($model->status == 0 || $model->type == 2){ ?>
                                                     <a href="<?= Url::to(['delete','id'=>$model->id,'type' => $model->type])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                                 <?php } ?>
                                             </td>

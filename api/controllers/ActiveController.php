@@ -19,21 +19,21 @@ class ActiveController extends \yii\rest\ActiveController
      *
      * @var int
      */
-    protected $_pageSize = 10;
+    protected $pageSize = 10;
 
     /**
      * 启始位移
      *
      * @var int
      */
-    protected $_offset = 0;
+    protected $offset = 0;
 
     /**
      * 获取每页数量
      *
      * @var
      */
-    protected $_limit;
+    protected $limit;
 
     /**
      * 行为验证
@@ -115,8 +115,8 @@ class ActiveController extends \yii\rest\ActiveController
 
         // 分页
         $page = Yii::$app->request->get('page', 1);
-        $this->_limit = Yii::$app->request->get('per-page', $this->_pageSize);
-        $this->_offset = ($page - 1) * $this->_pageSize;
+        $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
+        $this->offset = ($page - 1) * $this->pageSize;
 
         return true;
     }
