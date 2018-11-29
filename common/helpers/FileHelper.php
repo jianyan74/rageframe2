@@ -32,10 +32,11 @@ class FileHelper
      * @param $content
      * @return bool|int
      */
-     public static function writeLog($path, $content)
-     {
-         return file_put_contents(self::mkdirs(dirname($path)), "\r\n" . $content, FILE_APPEND);
-     }
+    public static function writeLog($path, $content)
+    {
+        self::mkdirs(dirname($path));
+        return file_put_contents($path, "\r\n" . $content, FILE_APPEND);
+    }
 
     /**
      * 获取文件夹大小
