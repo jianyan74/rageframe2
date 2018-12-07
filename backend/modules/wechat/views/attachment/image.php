@@ -11,13 +11,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <?= $this->render('_nav', [
         'allMediaType' => $allMediaType,
         'mediaType' => $mediaType,
+        'keywords' => $keywords,
         'count' => $pages->totalCount
     ]); ?>
     <div class="row">
         <div class="col-sm-12">
             <div class="inlineBlockContainer col3 vAlignTop">
                 <?php foreach ($models as $model){ ?>
-                    <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
+                    <div class="normalPaddingRight" style="width:20%;">
                         <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 20px;">
                             <div class="normalPadding">
                                 <div style="background-image: url(<?= Url::to(['analysis/image','attach' => $model['media_url']]) ?>); height: 160px" class="backgroundCover relativePosition mainPostCover">

@@ -41,7 +41,8 @@ class NotifyController extends Controller
     /**
      * EasyWechat支付回调 - 微信
      *
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
      */
     public function actionEasyWechat()
     {
@@ -103,6 +104,9 @@ class NotifyController extends Controller
 
     /**
      * EasyWechat支付回调 - 小程序
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
      */
     public function actionMiniProgram()
     {

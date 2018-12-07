@@ -91,7 +91,8 @@ use common\helpers\HtmlHelper;
                             <input class="avatar-data" name="avatar_data" type="hidden">
                             <button class="btn btn-primary"  type="button" style="height: 35px;" onClick="$('input[id=avatarInput]').click();">图片选择</button>
                             <span id="avatar-name" style="display: none"></span>
-                            <input class="avatar-input hide" id="avatarInput" name="avatar_file" type="file" accept="image/*"></div>
+                            <input class="avatar-input hide" id="avatarInput" name="avatar_file" type="file" accept="image/*">
+                        </div>
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="avatar-wrapper"></div>
@@ -126,7 +127,7 @@ use common\helpers\HtmlHelper;
     </div>
 </div>
 
-<script src="/backend/resources/other/cropper/bootstrap.min.js"></script>
+<?php Yii::$app->view->registerJsFile('/backend/resources/js/bootstrap.min.js?v=3.3.7'); ?>
 <script src="/backend/resources/other/cropper/cropper.js"></script>
 <script src="/backend/resources/other/cropper/sitelogo.js"></script>
 <script src="/backend/resources/other/cropper/html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
@@ -173,16 +174,19 @@ use common\helpers\HtmlHelper;
         var data = {};
         data.image = src;
         data.jid = $('#jid').val();
+        data.takeOverAction = 'local';
         $.ajax({
-            url     : "<?= Url::to(['/file/base64-img'])?>",
+            url     : "<?= Url::to(['/file/base64'])?>",
             type    : "post",
             dataType: 'json',
             data    : data,
             success : function(data) {
                 if(data.code == 200) {
                     data = data.data;
-                    $('#manager-head_portrait').val(data.urlPath);
-                    $('.img-circle').attr('src',data.urlPath);
+                    $('#manager-head_portrait').val(data.url);
+                    $('.img-circle').attr('src',data.url);
+                }else{
+                    rfError(data.message)
                 }
             }
         });

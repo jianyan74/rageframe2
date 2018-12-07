@@ -39,7 +39,7 @@ class ReplyAddon extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'rule_id' => 'Rule ID',
+            'rule_id' => '规则ID',
             'addon' => '模块标识',
         ];
     }

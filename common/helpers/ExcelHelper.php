@@ -54,7 +54,7 @@ class ExcelHelper
         for($i = 0; $i < $size; $i++)
         {
             $buffer = array_slice($list, $i * 500, 500);
-            foreach($buffer as $row)
+            foreach($buffer as $k => $row)
             {
                 $span = 1;
                 foreach($header as $key => $value)
@@ -67,6 +67,7 @@ class ExcelHelper
                 }
 
                 $column++;
+                unset($buffer[$k]);
             }
         }
 
@@ -143,7 +144,7 @@ class ExcelHelper
             for($i = 0; $i < $size; $i++)
             {
                 $buffer = array_slice($list, $i * 500, 500);
-                foreach($buffer as $row)
+                foreach($buffer as $k => $row)
                 {
                     $data = [];
                     foreach($header as $key => $value)
@@ -154,7 +155,7 @@ class ExcelHelper
                     }
 
                     $info[] = implode("\t ,", $data) . "\t ,";
-                    unset($data);
+                    unset($data, $buffer[$k]);
                 }
             }
 

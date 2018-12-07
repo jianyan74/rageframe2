@@ -35,7 +35,7 @@ use common\helpers\StringHelper;
 StringHelper::uuid($type = 'time', $name = 'php.net');
 ```
 
-### 日期和时间戳互转
+### 日期转时间戳
 
 ```
 /**

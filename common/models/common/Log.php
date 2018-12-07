@@ -84,38 +84,10 @@ class Log extends \common\models\common\BaseModel
      * @param $error_data
      * @throws \yii\base\InvalidConfigException
      */
-    public static function record($error_code, $error_msg, $error_data, $req_id)
+    public static function record($data)
     {
-        $member_id = Yii::$app->user->id;
-
-        $url = Yii::$app->request->getUrl();
-        $url = explode('?', $url);
-
         $model = new self();
-        $model->member_id = $member_id ?? 0;
-        $model->url = $url[0];
-        $model->get_data = json_encode(Yii::$app->request->get());
-
-        $module = $controller = $action = '';
-        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
-        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
-        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
-
-        $route = $module . '/' . $controller . '/' . $action;
-        if (!in_array($route, Yii::$app->params['user.log.noPostData']))
-        {
-            $model->post_data = json_encode(Yii::$app->request->post());
-        }
-
-        $model->method = Yii::$app->request->method;
-        $model->module = $module;
-        $model->controller = $controller;
-        $model->action = $action;
-        $model->ip = ip2long(Yii::$app->request->userIP);
-        $model->req_id = $req_id;
-        $model->error_code = $error_code;
-        $model->error_msg = $error_msg;
-        $model->error_data = json_encode($error_data);
+        $model->attributes = $data;
         $model->save();
     }
 

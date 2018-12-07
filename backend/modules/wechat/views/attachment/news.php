@@ -35,9 +35,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <?= $this->render('_nav', [
         'allMediaType' => $allMediaType,
         'mediaType' => $mediaType,
+        'keywords' => $keywords,
         'count' => $pages->totalCount
     ])?>
-    <div class="row">
+    <div class="row" style="margin-top: 25px">
         <div class="col-sm-12">
             <div class="inlineBlockContainer col5 vAlignTop separateChildren">
                 <?php foreach ($models as $item){ ?>

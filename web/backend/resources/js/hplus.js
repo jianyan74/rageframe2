@@ -217,12 +217,15 @@ $(function () {
     $('#switchtags').click(function () {
         if ($('#switchtags').is(':checked')) {
             $('#rftags').hide();
+            $('#rftags').removeClass('J_menuTabs');
+            $('#rftagsIndexLink').nextAll().remove();
 
             if (localStorageSupport) {
                 localStorage.setItem("switchtags", 'on');
             }
         } else {
             $('#rftags').show();
+            $('#rftags').addClass('J_menuTabs');
 
             if (localStorageSupport) {
                 localStorage.setItem("switchtags", 'off');
@@ -256,7 +259,7 @@ $(function () {
         updateStyle(3);
         return false;
     });
-    
+
     // 更改主题
     function updateStyle(skin_id) {
         $.ajax({
@@ -318,6 +321,7 @@ $(function () {
 
         if (switchtags == 'on') {
             $('#rftags').hide();
+            $('#rftags').removeClass('J_menuTabs');
         }
     }
 });

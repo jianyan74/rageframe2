@@ -102,7 +102,7 @@ AppAsset::register($this);
                 <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-angle-double-left"></i></button>
                 <nav class="page-tabs J_menuTabs" id="rftags">
                     <div class="page-tabs-content">
-                        <a href="javascript:;" class="active J_menuTab" data-id="<?= Url::to(['main/system']); ?>">首页</a>
+                        <a href="javascript:;" class="active J_menuTab" data-id="<?= Url::to(['main/system']); ?>" id="rftagsIndexLink">首页</a>
                         <!--默认主页需在对应的选项卡a元素上添加data-id="默认主页的url"-->
                     </div>
                 </nav>

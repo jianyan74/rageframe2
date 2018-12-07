@@ -23,9 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'sort')->textInput(); ?>
                     <?= $form->field($model, 'cover')->widget(Images::className(), [
                         'config' => [
-                            //可设置自己的上传地址, 不设置则默认地址
-                            // 'server' => Url::to(['/file/qiniu']),//七牛上传 (二选一)
-                            // 'server' => Url::to(['/file/ali-oss']),//阿里云Oss上传
+                            // 可设置自己的上传地址, 不设置则默认地址
+                            // 'server' => '',
                             'pick' => [
                                 'multiple' => false,
                             ],

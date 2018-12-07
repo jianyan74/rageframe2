@@ -24,6 +24,7 @@ class beforeSend extends Behavior
      * 格式化返回
      *
      * @param $event
+     * @throws \yii\base\InvalidConfigException
      */
     public function beforeSend($event)
     {

@@ -26,12 +26,15 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="tab-pane active">
                             <div class="panel-body">
                                 <div class="col-sm-12">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-6">
                                         <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>
                                         <span class="btn btn-white" onclick="getAllFans()"> 同步全部粉丝信息</span>
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-6">
                                         <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                            <div class="col-sm-5">
+                                                <?= \yii\helpers\Html::dropDownList('follow', $follow, [1 => '已关注', -1 => '未关注'], ['class' => 'form-control']);?>
+                                            </div>
                                             <div class="input-group m-b">
                                                 <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入昵称/粉丝编号'?>"/>
                                                 <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
@@ -103,12 +106,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <?= LinkPager::widget([
-                                                    'pagination'        => $pages,
-                                                    'maxButtonCount'    => 5,
-                                                    'firstPageLabel'    => "首页",
-                                                    'lastPageLabel'     => "尾页",
-                                                    'nextPageLabel'     => "下一页",
-                                                    'prevPageLabel'     => "上一页",
+                                                    'pagination' => $pages,
+                                                    'maxButtonCount' => 5,
+                                                    'firstPageLabel' => "首页",
+                                                    'lastPageLabel' => "尾页",
+                                                    'nextPageLabel' => "下一页",
+                                                    'prevPageLabel' => "上一页",
                                                 ]);?>
                                             </div>
                                         </div>

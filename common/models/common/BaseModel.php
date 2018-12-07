@@ -48,6 +48,25 @@ class BaseModel extends ActiveRecord
     }
 
     /**
+     * 获取查询数据
+     *
+     * @param array $where 条件
+     * @param array $fields 字段
+     * @param string $orderby 排序
+     * @param array $with 关联
+     * @return array|ActiveRecord[]
+     */
+    public static function getMultiDate($where = [], $fields = ['id'], $orderby = 'id asc', $with = [])
+    {
+        return self::find()
+            ->where($where)
+            ->select($fields)
+            ->with($with)
+            ->orderby($orderby)
+            ->all();
+    }
+
+    /**
      * 查询 model 基于 id
      *
      * @param $id

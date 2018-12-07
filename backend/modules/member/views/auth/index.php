@@ -2,7 +2,7 @@
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
-$this->title = '会员信息';
+$this->title = '第三方用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
@@ -12,18 +12,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5><?= $this->title; ?></h5>
-                    <div class="ibox-tools">
-                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
-                            <i class="fa fa-plus"></i>  创建
-                        </a>
-                    </div>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-sm-4">
                             <form action="" method="get" class="form-horizontal" role="form" id="form">
                                 <div class="input-group m-b">
-                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入账号/姓名/手机号码/ID'?>"/>
+                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入昵称'?>"/>
                                     <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
                                 </div>
                             </form>
@@ -34,12 +29,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr>
                             <th>#</th>
                             <th>头像</th>
-                            <th>登录账号</th>
-                            <th>真实姓名</th>
-                            <th>手机号码</th>
-                            <th>邮箱</th>
-                            <th>访问次数</th>
-                            <th>最后登陆</th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>来源</th>
+                            <th>绑定账号</th>
+                            <th>生日</th>
+                            <th>所在地区</th>
+                            <th>创建时间</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -50,22 +46,26 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <td class="feed-element">
                                     <img src="<?= \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>" class="img-circle">
                                 </td>
-                                <td><?= $model->username?></td>
-                                <td><?= $model->realname?></td>
-                                <td><?= $model->mobile_phone?></td>
-                                <td><?= $model->email?></td>
-                                <td><?= $model->visit_count?></td>
+                                <td><?= $model->nickname?></td>
+                                <td><?= $model->sex == 1 ? '男' : '女' ?></td>
+                                <td><?= $model->oauth_client?></td>
                                 <td>
-                                    IP：<?= $model->last_ip?><br>
-                                    最后登录：<?= Yii::$app->formatter->asDatetime($model->last_time)?><br>
-                                    注册时间：<?= Yii::$app->formatter->asDatetime($model->created_at)?>
+                                    <?php if(!empty($model->member)){?>
+                                        ID：<?= $model->member->id ?><br>
+                                        昵称：<?= $model->member->nickname ?><br>
+                                        账号：<?= $model->member->username ?><br>
+                                        手机：<?= $model->member->mobile_phone ?>
+                                    <?php }else{ ?>
+                                        未绑定
+                                    <?php } ?>
                                 </td>
+                                <td><?= $model->birthday?></td>
+                                <td><?= $model->country?>·<?= $model->province?>·<?= $model->city?></td>
+                                <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <a href="<?= Url::to(['ajax-edit','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">账号密码</span></a>
-                                    <a href="<?= Url::to(['address/index','member_id' => $model->id])?>"><span class="btn btn-info btn-sm">收货地址</span></a>
                                     <a href="<?= Url::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>
                                     <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
-                                    <a href="<?= Url::to(['delete','id' => $model->id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
+                                    <a href="<?= Url::to(['destroy','id' => $model->id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                 </td>
                             </tr>
                         <?php } ?>

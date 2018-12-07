@@ -38,11 +38,9 @@ return [
         ],
         /** ------ 队列设置 ------ **/
         'queue' => [
-            'class' => 'yii\queue\file\Queue',
-            'path' => '@runtime/queue',
-            // 'class' => 'yii\queue\redis\Queue',
-            // 'redis' => 'redis', // 连接组件或它的配置
-            // 'channel' => 'queue', // Queue channel key
+             'class' => 'yii\queue\redis\Queue',
+             'redis' => 'redis', // 连接组件或它的配置
+             'channel' => 'queue', // Queue channel key
             'as log' => 'yii\queue\LogBehavior',// 日志
         ],
         /** ------ 全文搜索引擎 ------ **/

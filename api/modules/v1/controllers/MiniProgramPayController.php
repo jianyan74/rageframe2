@@ -41,7 +41,8 @@ class MiniProgramPayController extends OnAuthController
     /**
      * 生成微信JSAPI支付的Demo方法 默认禁止外部访问 测试请修改方法类型
      *
-     * @return bool|\yii\data\ActiveDataProvider
+     * @return array|mixed|\yii\data\ActiveDataProvider
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()

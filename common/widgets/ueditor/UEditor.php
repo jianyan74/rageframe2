@@ -36,6 +36,11 @@ class UEditor extends \yii\widgets\InputWidget
     public $value;
 
     /**
+     * @var array
+     */
+    public $formData = [];
+
+    /**
      * @throws \yii\base\InvalidConfigException
      */
     public function init()
@@ -77,6 +82,9 @@ class UEditor extends \yii\widgets\InputWidget
         ];
 
         $this->config = ArrayHelper::merge($config, $this->config);
+        $this->formData = ArrayHelper::merge([
+            'takeOverAction' => 'local',
+        ], $this->formData);
     }
 
     /**
@@ -87,15 +95,31 @@ class UEditor extends \yii\widgets\InputWidget
         $id = $this->hasModel() ? Html::getInputId($this->model, $this->attribute) : $this->id;
         $config = Json::encode($this->config);
 
+        //  由于百度上传不能传递数组，所以转码成为json
+        !isset($this->formData) && $this->formData = [];
+        foreach ($this->formData as $key => &$formDatum)
+        {
+            if (!empty($formDatum) && is_array($formDatum))
+            {
+                $formDatum = json_encode($formDatum);
+            }
+        }
+
+        $formData = Json::encode($this->formData);
+        
         //ready部分代码，是为了缩略图管理。UEditor本身就很大，在后台直接加载大文件图片会很卡。
         $script = <<<UEDITOR
-        UE.getEditor('{$id}',{$config}).ready(function(){
+        var ue = UE.getEditor('{$id}',{$config}).ready(function(){
             this.addListener( "beforeInsertImage", function ( type, imgObjs ) {
                 for(var i=0;i < imgObjs.length;i++){
                     imgObjs[i].src = imgObjs[i].src.replace(".thumbnail","");
                 }
             });
-    });
+            
+        this.execCommand('serverparam', function(editor) {
+                    return {$formData};
+                });
+        });
 UEDITOR;
 
         $this->getView()->registerJs($script);

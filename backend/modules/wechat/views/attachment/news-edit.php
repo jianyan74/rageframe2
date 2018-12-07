@@ -278,7 +278,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $(document).on('setUploadedImg', function(e, parentObj, data, config){
                         if(config.name == 'thumb_url')
                         {
-                            self.crtPost.thumb_url = data.urlPath;
+                            self.crtPost.thumb_url = data.url;
                         }
                     });
 

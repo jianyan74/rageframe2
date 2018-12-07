@@ -103,8 +103,7 @@ use kartik\daterange\DateRangePicker;
 <?= $form->field($model, 'cover')->widget('common\widgets\webuploader\Images', [
      'config' => [
           // 可设置自己的上传地址, 不设置则默认地址
-          // 'server' => Url::to(['/file/qiniu']),//七牛上传 (二选一)
-          // 'server' => Url::to(['/file/ali-oss']),//阿里云Oss上传
+          // 'server' => '',
          'pick' => [
              'multiple' => false,
          ],
@@ -119,7 +118,8 @@ use kartik\daterange\DateRangePicker;
                     'widget' => 200,
                     'height' => 200,
                 ],
-            ]
+            ],
+            'takeOverAction ' => 'local',// 默认本地 qiniu/oss 上传
         ],
          'chunked' => false,// 开启分片上传
          'chunkSize' => 512 * 1024,// 分片大小
@@ -275,10 +275,18 @@ echo $form->field($model, 'state_1')->widget(Select2::classname(), [
 
 // 自定义配置参数用法
 <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
-      'config' => [
-          // 'serverUrl' => \yii\helpers\Url::to(['/ueditor/oss-upload']), // 上传到oss 目前只支持文件/视频/图片上传
-          // 'serverUrl' => \yii\helpers\Url::to(['/ueditor/qiniu-upload']), // 上传到七牛 目前只支持文件/视频/图片上传
+     'config' => [
+
       ],
+    'formData' => [
+        'takeOverAction' => 'local', // 默认本地 支持qiniu/oss 上传
+        'thumb' => [ // 图片缩略图
+            [
+                'widget' => 100,
+                'height' => 100,
+            ],
+        ]
+    ],
 ]) ?>
 ```
 

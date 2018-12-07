@@ -24,7 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     //重新定义分页样式
-                    'layout'=> '{items}<div class="text-right tooltip-demo">{pager}</div>',
+                    'layout'=> '{summary}{items}<div class="text-right tooltip-demo">{pager}</div>',
+                    'tableOptions' => ['class' => 'table table-hover'],
                     'pager'=>[
                         //'options'=>['class' => 'hidden']//关闭分页
                         'maxButtonCount' => 5,

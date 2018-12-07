@@ -57,7 +57,8 @@ class Images extends InputWidget
             'compress' => false, // 压缩
             'auto' => true, // 自动上传
             'formData' => [
-                 'guid' => null,
+                'guid' => null,
+                'takeOverAction' => 'local', // 默认本地 可修改 qiniu/oss 上传
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,

@@ -68,7 +68,7 @@ class SiteController extends WController
      * 生成微信JSAPI支付的Demo方法 默认禁止外部访问 测试请修改方法类型
      *
      * @return string
-     * @throws Yii\base\ErrorException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \yii\base\InvalidConfigException
      */
     private function actionDemo()
@@ -91,6 +91,24 @@ class SiteController extends WController
         if ($result['return_code'] == 'SUCCESS')
         {
             $config = $payment->jssdk->sdkConfig($result['prepay_id']);
+
+            /**
+             * 注意：如果需要调用扫码支付 请设置 trade_type 为 NATIVE
+             *
+             * 结果示例：weixin://wxpay/bizpayurl?sign=XXXXX&appid=XXXXX&mch_id=XXXXX&product_id=XXXXXX&time_stamp=XXXXXX&nonce_str=XXXXX
+             */
+
+             /**
+                $content = $payment->scheme($result['prepay_id']);
+                $qr = Yii::$app->get('qr');
+                Yii::$app->response->format = Response::FORMAT_RAW;
+                Yii::$app->response->headers->add('Content-Type', $qr->getContentType());
+
+                return $qr->setText($content)
+                    ->setSize(150)
+                    ->setMargin(7)
+                    ->writeString();
+            */
         }
         else
         {

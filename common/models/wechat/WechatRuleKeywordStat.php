@@ -47,12 +47,12 @@ class WechatRuleKeywordStat extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'rule_id' => 'Rule ID',
-            'keyword_id' => 'Keyword ID',
-            'rule_name' => 'Rule Name',
-            'keyword_type' => 'Keyword Type',
-            'keyword_content' => 'Keyword Content',
-            'hit' => 'Hit',
+            'rule_id' => '规则ID',
+            'keyword_id' => '关键字id',
+            'rule_name' => '规则名称',
+            'keyword_type' => '关键字类型',
+            'keyword_content' => '关键字内容',
+            'hit' => '触发次数',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',

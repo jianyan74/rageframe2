@@ -62,10 +62,6 @@ return [
         'api' => [
             'class' => 'common\controllers\WechatApiController',
         ],
-        // 文件上传公共控制器
-        'file' => [
-            'class' => 'common\controllers\FileBaseController',
-        ],
         // 插件渲染默认控制器
         'addons' => [
             'class' => 'common\controllers\AddonsController',

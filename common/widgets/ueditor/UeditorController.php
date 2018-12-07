@@ -83,6 +83,10 @@ class UeditorController extends Controller
             'fileMaxSize' => Yii::$app->params['uploadConfig']['files']['maxSize'],
             'imageManagerListPath' => Yii::$app->params['uploadConfig']['images']['path'],
             'fileManagerListPath' => Yii::$app->params['uploadConfig']['files']['path'],
+            'scrawlFieldName' => 'image',
+            'videoFieldName' => 'file',
+            'fileFieldName' => 'file',
+            'imageFieldName' => 'file',
         ];
 
         $configPath = Yii::getAlias('@common') . "/widgets/ueditor/";
@@ -114,48 +118,6 @@ class UeditorController extends Controller
     }
 
     /**
-     * @return array|mixed
-     */
-    public function actionOssUpload()
-    {
-        Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
-
-        $action = strtolower(Yii::$app->request->get('action', 'config'));
-        $actions = $this->actions;
-        $actions['uploadimage'] = 'oss';
-        $actions['uploadvideo'] = 'oss';
-        $actions['uploadfile'] = 'oss';
-
-        if (isset($actions[$action]))
-        {
-            return $this->run($actions[$action]);
-        }
-
-        return $this->result('找不到方法');
-    }
-
-    /**
-     * @return array|mixed
-     */
-    public function actionQiniuUpload()
-    {
-        Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
-
-        $action = strtolower(Yii::$app->request->get('action', 'config'));
-        $actions = $this->actions;
-        $actions['uploadimage'] = 'qiniu';
-        $actions['uploadvideo'] = 'qiniu';
-        $actions['uploadfile'] = 'qiniu';
-
-        if (isset($actions[$action]))
-        {
-            return $this->run($actions[$action]);
-        }
-
-        return $this->result('找不到方法');
-    }
-
-    /**
      * 显示配置信息
      */
     public function actionConfig()
@@ -172,10 +134,13 @@ class UeditorController extends Controller
     {
         try
         {
-            UploadHelper::load([], 'images', 'upfile');
-            $result = UploadHelper::file();
+            $upload = new UploadHelper(Yii::$app->request->get(), 'images');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
+            // 上传
+            $url = $upload->save();
 
-            return $this->result('SUCCESS', $result['urlPath']);
+            return $this->result('SUCCESS', $url);
         }
         catch (\Exception $e)
         {
@@ -192,8 +157,19 @@ class UeditorController extends Controller
     {
         try
         {
-            $resUpload = UploadHelper::Base64Img(Yii::$app->request->post('upfile'));
-            return $this->result('SUCCESS', $resUpload['urlPath']);
+            // 保存扩展名称
+            $extend = Yii::$app->request->post('extend', 'jpg');
+            $data = Yii::$app->request->post('image');
+
+            $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+            $upload->uploadFileName = 'file';
+            $upload->verify([
+                'extension' => $extend,
+                'size' => strlen($data),
+            ]);
+
+            $url = $upload->save('base64');
+            return $this->result('SUCCESS', $url);
         }
         catch (\Exception $e)
         {
@@ -210,10 +186,13 @@ class UeditorController extends Controller
     {
         try
         {
-            UploadHelper::load([], 'videos', 'upfile');
-            $result = UploadHelper::file();
+            $upload = new UploadHelper(Yii::$app->request->get(), 'videos');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
+            // 上传
+            $url = $upload->save();
 
-            return $this->result('SUCCESS', $result['urlPath']);
+            return $this->result('SUCCESS', $url);
         }
         catch (\Exception $e)
         {
@@ -228,48 +207,13 @@ class UeditorController extends Controller
     {
         try
         {
-            UploadHelper::load([], 'files', 'upfile');
-            $result = UploadHelper::file();
+            $upload = new UploadHelper(Yii::$app->request->get(), 'files');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
+            // 上传
+            $url = $upload->save();
 
-            return $this->result('SUCCESS', $result['urlPath']);
-        }
-        catch (\Exception $e)
-        {
-            return $this->result($e->getMessage());
-        }
-    }
-
-    /**
-     * 七牛云存储
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionQiniu()
-    {
-        try
-        {
-            $result = UploadHelper::qiniu($_FILES['upfile']);
-            return $this->result('SUCCESS', $result['urlPath']);
-        }
-        catch (\Exception $e)
-        {
-            return $this->result($e->getMessage());
-        }
-    }
-
-    /**
-     * 阿里云OSS上传
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionOss()
-    {
-        try
-        {
-            $result = UploadHelper::oss($_FILES['upfile']);
-            return $this->result('SUCCESS', $result['urlPath']);
+            return $this->result('SUCCESS', $url);
         }
         catch (\Exception $e)
         {
@@ -287,14 +231,21 @@ class UeditorController extends Controller
     {
         /* 上传配置 */
         $source = Yii::$app->request->post('source', []);
-        UploadHelper::$config = Yii::$app->params['uploadConfig']['images'];
+
+        $upload = new UploadHelper(Yii::$app->request->get(), 'images');
+        $upload->uploadFileName = 'file';
+
         foreach ($source as $imgUrl)
         {
             try
             {
+                $upload->verifyRemote($imgUrl);
+                // 上传
+                $url = $upload->save('remote');
+
                 $list[] = [
                     'state' => 'SUCCESS',
-                    'url' => UploadHelper::saveRemote($imgUrl),
+                    'url' => $url,
                     'source' => $imgUrl
                 ];
             }

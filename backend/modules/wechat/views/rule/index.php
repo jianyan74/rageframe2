@@ -18,15 +18,29 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         <div class="tab-content">
             <div class="tab-pane active">
                 <div class="panel-body">
-                    <div class="btn-group">
-                        <a class="btn <?= !$module ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index'])?>">全部</a>
-                        <?php foreach ($modules as $key => $mo){ ?>
-                            <a class="btn <?= $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module'=>$key])?>"><?= $mo?></a>
-                        <?php } ?>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="btn-group">
+                                <a class="btn <?= !$module ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index'])?>">全部</a>
+                                <?php foreach ($modules as $key => $mo){ ?>
+                                    <a class="btn <?= $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module'=>$key])?>"><?= $mo?></a>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                <div class="input-group m-b">
+                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入规则'?>"/>
+                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-1">
+                            <a class="btn btn-primary btn-xs pull-right" onclick="openEdit()">
+                                <i class="fa fa-plus"></i>  创建
+                            </a>
+                        </div>
                     </div>
-                    <a class="btn btn-primary btn-xs pull-right h6" onclick="openEdit()">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
                     <div class="hr-line-dashed"></div>
                     <?php foreach($models as $model){ ?>
                         <div class="panel panel-default">
@@ -135,4 +149,3 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         });
     }
 </script>
-

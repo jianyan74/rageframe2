@@ -19,13 +19,6 @@ use common\enums\StatusEnum;
 trait CurdTrait
 {
     /**
-     * 授权可ajax更新的字段
-     *
-     * @var array
-     */
-    protected $ajaxUpdateField = ['sort', 'status'];
-
-    /**
      * @throws InvalidConfigException
      */
     public function init()
@@ -125,13 +118,19 @@ trait CurdTrait
      */
     public function actionAjaxUpdate($id)
     {
+        // 兼容Grid多主键
+        if (!is_numeric($id) && ($idArr = json_decode($id, true)))
+        {
+            $id = $idArr['id'];
+        }
+
         if (!($model = $this->modelClass::findOne($id)))
         {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
         $getData = Yii::$app->request->get();
-        foreach ($this->ajaxUpdateField as $item)
+        foreach (['sort', 'status'] as $item)
         {
             isset($getData[$item]) && $model->$item = $getData[$item];
         }

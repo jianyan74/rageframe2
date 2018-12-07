@@ -11,14 +11,15 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <?= $this->render('_nav', [
         'allMediaType' => $allMediaType,
         'mediaType' => $mediaType,
+        'keywords' => $keywords,
         'count' => $pages->totalCount
     ]); ?>
     <div class="row">
         <div class="col-sm-12">
             <div class="inlineBlockContainer col3 vAlignTop">
                 <?php foreach ($models as $model){ ?>
-                    <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
-                        <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 30px;">
+                    <div class="normalPaddingRight" style="width:20%;">
+                        <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 20px;">
                             <div class="normalPadding">
                                 <div style="height: 160px;text-align:center;" class="backgroundCover relativePosition mainPostCover">
                                     <i class="fa fa-play-circle-o" style="font-size: 50px;margin:0 auto;padding-top: 30px"></i>

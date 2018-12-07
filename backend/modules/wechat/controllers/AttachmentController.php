@@ -28,9 +28,12 @@ class AttachmentController extends WController
      */
     public function actionIndex()
     {
+        $keywords = Yii::$app->request->get('keywords', '');
         $type = Yii::$app->request->get('type', Attachment::TYPE_NEWS);
 
-        $data = Attachment::find()->where(['media_type' => $type, 'status' => StatusEnum::ENABLED]);
+        $data = Attachment::find()
+            ->where(['media_type' => $type, 'status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['like', 'file_name', $keywords]);
         $pages = new Pagination(['totalCount' =>$data->count(), 'pageSize' => 15]);
         $type == Attachment::TYPE_NEWS && $data = $data->with('news');
         $models = $data->offset($pages->offset)
@@ -42,6 +45,7 @@ class AttachmentController extends WController
             'models' => $models,
             'pages' => $pages,
             'mediaType' => $type,
+            'keywords' => $keywords,
             'allMediaType' => Attachment::$typeExplain,
         ]);
     }

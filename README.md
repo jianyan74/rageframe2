@@ -50,6 +50,10 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 账号：demo  
 密码：123456
 
+### 官网
+
+http://www.rageframe.com
+
 ### 文档
 
 [安装文档](docs/guide-zh-CN/start-installation.md) · [本地文档](docs/guide-zh-CN/README.md) · [更新历史](docs/guide-zh-CN/start-update-log.md)

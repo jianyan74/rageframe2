@@ -13,27 +13,6 @@ class PasswordResetRequestForm extends Model
     public $email;
 
     /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-
-        Yii::$app->set('mailer', [
-            'class' => 'yii\swiftmailer\Mailer',
-            'viewPath' => '@common/mail',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => Yii::$app->debris->config('smtp_host'),
-                'username' => Yii::$app->debris->config('smtp_username'),
-                'password' => Yii::$app->debris->config('smtp_password'),
-                'port' => Yii::$app->debris->config('smtp_port'),
-                'encryption' => empty(Yii::$app->debris->config('smtp_encryption')) ? 'tls' : 'ssl',
-            ],
-        ]);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function rules()
@@ -73,15 +52,11 @@ class PasswordResetRequestForm extends Model
             }
         }
 
-        return Yii::$app
+        $subject = 'Password reset for ' . Yii::$app->name;
+        $template = 'passwordResetToken';
+        // 发送邮件
+        return Yii::$app->services
             ->mailer
-            ->compose(
-                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Password reset for ' . Yii::$app->name)
-            ->send();
+            ->send($user, $this->email, $subject, $template);
     }
 }

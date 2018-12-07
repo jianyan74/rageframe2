@@ -32,9 +32,10 @@ class Service extends BaseObject
      */
     public function getChildService($childServiceName)
     {
-        if (!$this->_childService[$childServiceName])
+        if (!isset($this->_childService[$childServiceName]))
         {
             $childService = $this->childService;
+
             if (isset($childService[$childServiceName]))
             {
                 $service = $childService[$childServiceName];

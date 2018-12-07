@@ -271,6 +271,19 @@ class RuleKeyword extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param string $fields
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getList($fields = 'id, content')
+    {
+        return self::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->select($fields)
+            ->asArray()
+            ->all();
+    }
+
+    /**
      * 验证是否有直接接管
      *
      * @param $ruleKeyword

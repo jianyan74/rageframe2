@@ -84,6 +84,7 @@ class SiteController extends Controller
      * 登录
      *
      * @return string|\yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionLogin()
     {
@@ -112,6 +113,7 @@ class SiteController extends Controller
      * 退出登陆
      *
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionLogout()
     {

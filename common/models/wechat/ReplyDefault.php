@@ -31,6 +31,7 @@ class ReplyDefault extends BaseModel
         return [
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['follow_content', 'default_content'], 'string', 'max' => 200],
+            [['follow_content', 'default_content'], 'trim'],
         ];
     }
 

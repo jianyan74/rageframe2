@@ -63,6 +63,7 @@ class OffAuthController extends \yii\rest\ActiveController
         // 分页
         $page = Yii::$app->request->get('page', 1);
         $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
+        $this->limit > 100 && $this->limit = 100;
         $this->offset = ($page - 1) * $this->pageSize;
 
         return parent::beforeAction($action);

@@ -107,7 +107,7 @@ class AuthAccreditController extends SController
         }
 
         $getData = Yii::$app->request->get();
-        foreach (['id', 'sort', 'status'] as $item)
+        foreach (['key', 'sort', 'status'] as $item)
         {
             isset($getData[$item]) && $model->$item = $getData[$item];
         }

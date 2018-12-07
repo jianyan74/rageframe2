@@ -72,9 +72,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                     <?= $form->field($model, 'cover')->widget(Images::className(), [
                         'config' => [
-                            //可设置自己的上传地址, 不设置则默认地址
-                            // 'server' => Url::to(['/file/qiniu']),//七牛上传 (二选一)
-                            // 'server' => Url::to(['/file/ali-oss']),//阿里云Oss上传
+                            // 可设置自己的上传地址, 不设置则默认地址
+                            // 'server' => '',
                             'pick' => [
                                 'multiple' => false,
                             ],
@@ -90,7 +89,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'widget' => 200,
                                         'height' => 200,
                                     ],
-                                ]
+                                ],
+                                'takeOverAction' => 'local',// 默认本地 支持qiniu/oss 上传
                             ],
                             'chunked' => false,// 开启分片上传
                             'chunkSize' => 512 * 1024,// 分片大小
@@ -98,9 +98,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                     <?= $form->field($model, 'covers')->widget(Images::className(), [
                         'config' => [
-                            //可设置自己的上传地址, 不设置则默认地址
-                            // 'server' => Url::to(['/file/qiniu']),//七牛上传 (二选一)
-                            // 'server' => Url::to(['/file/ali-oss']),//阿里云Oss上传
+                            // 可设置自己的上传地址, 不设置则默认地址
+                            // 'server' => '',
                             'pick' => [
                                 'multiple' => true,
                             ],
@@ -126,9 +125,21 @@ $this->params['breadcrumbs'][] = $this->title;
                             'pick' => [
                                 'multiple' => true,
                             ],
+                            'chunked' => false,// 开启分片上传
+                            'chunkSize' => 512 * 1024,// 分片大小
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), []) ?>
+                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
+                        'formData' => [
+                            'takeOverAction' => 'local', // 默认本地 支持qiniu/oss 上传
+                            'thumb' => [
+                                [
+                                    'widget' => 100,
+                                    'height' => 100,
+                                ],
+                            ]
+                        ],
+                    ]) ?>
                     <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
                 </div>
                 <div class="form-group">

@@ -64,16 +64,16 @@ class AuthAssignment extends \common\models\common\BaseModel
     }
 
     /**
-     * @param $user_id      -用户id
-     * @param $item_name    -权限名称
+     * @param int $user_id 用户id
+     * @param string $item_name 权限名称
      */
-    public function setAuthRole($user_id,$item_name)
+    public function setAuthRole($user_id, $item_name)
     {
         $this::deleteAll(['user_id'=>$user_id]);
 
         $authAssignment = new $this;
-        $authAssignment->user_id    = $user_id;
-        $authAssignment->item_name  = $item_name;
+        $authAssignment->user_id  = $user_id;
+        $authAssignment->item_name = $item_name;
 
         return $authAssignment->save() ? true : false ;
     }
@@ -91,7 +91,7 @@ class AuthAssignment extends \common\models\common\BaseModel
         }
 
         $model = $this::find()
-            ->where(['user_id'=>$user_id])
+            ->where(['user_id' => $user_id])
             ->one();
 
         return $model ? $model->item_name : false ;

@@ -27,8 +27,12 @@ class WechatApiController extends BaseController
     /**
      * 处理微信消息
      *
-     * @return array|bool|mixed
+     * @return array|mixed
      * @throws NotFoundHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\BadRequestException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \ReflectionException
      */
     public function actionIndex()
     {

@@ -2,9 +2,10 @@
 namespace api\modules\v1\controllers;
 
 use Yii;
-use common\helpers\UploadHelper;
-use api\controllers\OnAuthController;
 use yii\web\NotFoundHttpException;
+use common\helpers\UploadHelper;
+use common\helpers\ResultDataHelper;
+use api\controllers\OnAuthController;
 
 /**
  * 资源上传控制器
@@ -19,15 +20,19 @@ class FileController extends OnAuthController
     /**
      * 图片上传
      *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
+     * @return array|mixed|string
+     * @throws NotFoundHttpException
+     * @throws \OSS\Core\OssException
      */
     public function actionImages()
     {
-        // 载入配置信息
-        UploadHelper::load(Yii::$app->request->post(), 'images');
+        $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+        $upload->uploadFileName = 'file';
+        $upload->verify();
         // 上传
-        $result = UploadHelper::file();
+        $url = $upload->save();
+
+        $result = is_array($url) ? $url : ['url' => $url];
 
         return $result;
     }
@@ -35,15 +40,19 @@ class FileController extends OnAuthController
     /**
      * 视频上传
      *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
+     * @return array|mixed|string
+     * @throws NotFoundHttpException
+     * @throws \OSS\Core\OssException
      */
     public function actionVideos()
     {
-        // 载入配置信息
-        UploadHelper::load(Yii::$app->request->post(), 'videos');
+        $upload = new UploadHelper(Yii::$app->request->post(), 'videos');
+        $upload->uploadFileName = 'file';
+        $upload->verify();
         // 上传
-        $result = UploadHelper::file();
+        $url = $upload->save();
+
+        $result = is_array($url) ? $url : ['url' => $url];
 
         return $result;
     }
@@ -51,15 +60,19 @@ class FileController extends OnAuthController
     /**
      * 语音上传
      *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
+     * @return array|mixed|string
+     * @throws NotFoundHttpException
+     * @throws \OSS\Core\OssException
      */
     public function actionVoices()
     {
-        // 载入配置信息
-        UploadHelper::load(Yii::$app->request->post(), 'voices');
+        $upload = new UploadHelper(Yii::$app->request->post(), 'voices');
+        $upload->uploadFileName = 'file';
+        $upload->verify();
         // 上传
-        $result = UploadHelper::file();
+        $url = $upload->save();
+
+        $result = is_array($url) ? $url : ['url' => $url];
 
         return $result;
     }
@@ -67,15 +80,19 @@ class FileController extends OnAuthController
     /**
      * 文件上传
      *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
+     * @return array|mixed|string
+     * @throws NotFoundHttpException
+     * @throws \OSS\Core\OssException
      */
     public function actionFiles()
     {
-        // 载入配置信息
-        UploadHelper::load(Yii::$app->request->post(), 'files');
+        $upload = new UploadHelper(Yii::$app->request->post(), 'files');
+        $upload->uploadFileName = 'file';
+        $upload->verify();
         // 上传
-        $result = UploadHelper::file();
+        $url = $upload->save();
+
+        $result = is_array($url) ? $url : ['url' => $url];
 
         return $result;
     }
@@ -84,33 +101,26 @@ class FileController extends OnAuthController
      * base64编码的图片上传
      *
      * @return array
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
+     * @throws \OSS\Core\OssException
      */
-    public function actionBase64Img()
+    public function actionBase64()
     {
-        return UploadHelper::Base64Img(Yii::$app->request->post('image'), Yii::$app->request->post('extend', 'jpg'));
-    }
+        // 保存扩展名称
+        $extend = Yii::$app->request->post('extend', 'jpg');
 
-    /**
-     * 七牛云存储
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionQiniu()
-    {
-        return UploadHelper::qiniu($_FILES['file']);
-    }
+        $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+        $upload->uploadFileName = 'file';
+        $upload->verify([
+            'extension' => $extend,
+            'size' => strlen(Yii::$app->request->post('image', '')),
+        ]);
 
-    /**
-     * 阿里云OSS上传
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionOss()
-    {
-        return UploadHelper::oss($_FILES['file']);
+        $url =  $upload->save('base64');
+
+        $result = is_array($url) ? $url : ['url' => $url];
+
+        return $result;
     }
 
     /**
@@ -126,15 +136,15 @@ class FileController extends OnAuthController
 
         if (!$mergeInfo)
         {
-            throw new NotFoundHttpException('找不到文件信息, 合并文件失败');
+            return ResultDataHelper::api(404, '找不到文件信息, 合并文件失败');
         }
 
-        UploadHelper::mergeFile($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
+        UploadHelper::merge($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
 
         Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
         return [
-            'urlPath' => $mergeInfo['relativePath']
+            'url' => $mergeInfo['relativePath']
         ];
     }
 }

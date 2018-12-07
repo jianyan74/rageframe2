@@ -3,7 +3,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = '编辑';
-$this->params['breadcrumbs'][] = ['label' => '会员信息', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '第三方用户', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
@@ -21,9 +21,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </div>
                 <div class="ibox-content">
                     <div class="col-md-12">
-                        <?= $form->field($model, 'realname')->textInput() ?>
                         <?= $form->field($model, 'nickname')->textInput() ?>
-                        <?= $form->field($model, 'mobile_phone')->textInput() ?>
+                        <?= $form->field($model, 'oauth_client')->textInput([
+                            'readonly' => 'readonly'
+                        ]) ?>
                         <?= $form->field($model, 'sex')->radioList(['1' => '男', '2' => '女']) ?>
                         <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Images', [
                             'config' => [
@@ -45,8 +46,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'chunkSize' => 512 * 1024,// 分片大小
                             ]
                         ]);?>
-                        <?= $form->field($model, 'qq')->textInput() ?>
-                        <?= $form->field($model, 'email')->textInput() ?>
+                        <?= $form->field($model, 'country')->textInput() ?>
+                        <?= $form->field($model, 'province')->textInput() ?>
+                        <?= $form->field($model, 'city')->textInput() ?>
                         <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker',[
                             'language'  => 'zh-CN',
                             'layout'=>'{picker}{input}',

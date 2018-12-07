@@ -2,7 +2,7 @@
 namespace common\services\common;
 
 use Yii;
-use Overtrue\EasySms\EasySms as Sms;
+use Overtrue\EasySms\EasySms;
 use common\services\Service;
 use common\models\common\SmsLog;
 use yii\web\UnprocessableEntityHttpException;
@@ -11,7 +11,7 @@ use yii\web\UnprocessableEntityHttpException;
  * Class Sms
  * @package common\services\common
  */
-class EasySms extends Service
+class Sms extends Service
 {
     /**
      * @var array
@@ -54,15 +54,14 @@ class EasySms extends Service
      *
      * @param $mobile
      * @param $code
+     * @param int $member_id
      * @throws UnprocessableEntityHttpException
      */
-    public function send($mobile, $code)
+    public function send($mobile, $code, $member_id = 0)
     {
-        $log = $this->getLogModel();
-
         try
         {
-            $easySms = new Sms($this->config);
+            $easySms = new EasySms($this->config);
             $result = $easySms->send($mobile, [
                 'template' => '',
                 'data' => [
@@ -70,28 +69,39 @@ class EasySms extends Service
                 ],
             ]);
 
-            $log->save();
+            $this->saveLog([
+                'mobile' => $mobile,
+                'content' => $code,
+                'member_id' => $member_id,
+                'error_code' => 200,
+                'error_msg' => 'ok',
+                'error_data' => json_encode($result),
+            ]);
         }
         catch (\Exception $e)
         {
-            $log->error_code = 422;
-            $log->error_msg = $e->getMessage();
-            $log->save();
+            $this->saveLog([
+                'mobile' => $mobile,
+                'content' => $code,
+                'member_id' => $member_id,
+                'error_code' => 422,
+                'error_msg' => '发送失败',
+                'error_data' => $e->getMessage(),
+            ]);
 
             throw new UnprocessableEntityHttpException('短信发送失败');
         }
     }
 
     /**
-     * @return SmsLog
+     * @param array $data
+     * @return bool
      */
-    private function getLogModel()
+    public function saveLog($data = [])
     {
         $log = new SmsLog();
         $log = $log->loadDefaultValues();
-        $log->error_code = 200;
-        $log->error_msg = '发送成功';
-
-        return $log;
+        $log->attributes = $data;
+        return $log->save();
     }
 }

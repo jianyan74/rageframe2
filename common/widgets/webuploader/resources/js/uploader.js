@@ -76,9 +76,9 @@ $(function() {
             uploader.on('uploadProgress', function(file, percentage) {
                 var progressObj = parentObj.children(".upload-progress");
 
-                percentage = percentage.toFixed(2);
-                progressObj.find(".progress-bar").width(percentage * 100 + "%");
-                progressObj.find(".progress-bar").html(percentage * 100 + "%");
+                percentage = Math.floor(percentage * 100);
+                progressObj.find(".progress-bar").width(percentage + "%");
+                progressObj.find(".progress-bar").html(percentage + "%");
             });
 
             //当文件上传出错时触发
@@ -182,10 +182,10 @@ $(function() {
         var boxId = parentObj.parent().attr('data-boxId');
         var name = parentObj.parent().attr('data-name');
         var newLi = $('<li>'
-            + '<input type="hidden" name="'+ name +'" value="'+ data.urlPath +'" />'
+            + '<input type="hidden" name="'+ name +'" value="'+ data.url +'" />'
             + '<div class="img-box">'
-            + '<a data-fancybox="rfUploadImg" href="'+ data.urlPath +'">'
-            + '<div class="backgroundCover" style="background-image: url(' + data.urlPath + ');height: 110px"/>'
+            + '<a data-fancybox="rfUploadImg" href="'+ data.url +'">'
+            + '<div class="backgroundCover" style="background-image: url(' + data.url + ');height: 110px"/>'
             + '</a>'
             + '<i class="delimg" data-multiple="'+ multiple +'"></i>'
             + '</div>'
@@ -207,9 +207,9 @@ $(function() {
         var boxId = parentObj.parent().attr('data-boxId');
         var name = parentObj.parent().attr('data-name');
 
-        var arr = data.urlPath.split('.');
+        var arr = data.url.split('.');
         var newLi = $('<li>'
-            + '<input type="hidden" name="'+ name +'" value="'+ data.urlPath +'" />'
+            + '<input type="hidden" name="'+ name +'" value="'+ data.url +'" />'
             + '<div class="img-box">'
             + '<i class="fa fa-file"></i>'
             + '<i> .'+ arr[arr.length - 1] +'</i>'

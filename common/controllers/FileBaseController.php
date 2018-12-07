@@ -8,15 +8,13 @@ use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
 
 /**
- * 文件上传控制器
- *
  * Class FileBaseController
  * @package common\controllers
  */
 class FileBaseController extends Controller
 {
     /**
-     * 关闭csrf验证
+     * 关闭Csrf验证
      *
      * @var bool
      */
@@ -24,6 +22,8 @@ class FileBaseController extends Controller
 
     /**
      * 行为控制
+     *
+     * @return array
      */
     public function behaviors()
     {
@@ -50,57 +50,13 @@ class FileBaseController extends Controller
     {
         try
         {
-            // 载入配置信息
-            UploadHelper::load(Yii::$app->request->post(), 'images');
+            $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
             // 上传
-            $result = UploadHelper::file();
+            $url = $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $result);
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
-        }
-    }
-
-    /**
-     * 视频上传
-     *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function actionVideos()
-    {
-        try
-        {
-            // 载入配置信息
-            UploadHelper::load(Yii::$app->request->post(), 'videos');
-            // 上传
-            $result = UploadHelper::file();
-
-            return ResultDataHelper::json(200, '上传成功', $result);
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
-        }
-    }
-
-    /**
-     * 语音上传
-     *
-     * @return array
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function actionVoices()
-    {
-        try
-        {
-            // 载入配置信息
-            UploadHelper::load(Yii::$app->request->post(), 'voices');
-            // 上传
-            $result = UploadHelper::file();
-
+            $result = is_array($url) ? $url : ['url' => $url];
             return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
@@ -119,10 +75,13 @@ class FileBaseController extends Controller
     {
         try
         {
-            // 载入配置信息
-            UploadHelper::load(Yii::$app->request->post(), 'files');
+            $upload = new UploadHelper(Yii::$app->request->post(), 'files');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
             // 上传
-            $result = UploadHelper::file();
+            $url = $upload->save();
+
+            $result = is_array($url) ? $url : ['url' => $url];
             return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
@@ -132,54 +91,79 @@ class FileBaseController extends Controller
     }
 
     /**
-     * base64编码的图片上传
+     * 视频上传
      *
      * @return array
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionBase64Img()
+    public function actionVideos()
     {
         try
         {
-            $base64Data = Yii::$app->request->post('image');
+            $upload = new UploadHelper(Yii::$app->request->post(), 'videos');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
+            // 上传
+            $url = $upload->save();
+
+            $result = is_array($url) ? $url : ['url' => $url];
+            return ResultDataHelper::json(200, '上传成功', $result);
+        }
+        catch (\Exception $e)
+        {
+            return ResultDataHelper::json(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * 语音上传
+     *
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionVoices()
+    {
+        try
+        {
+            $upload = new UploadHelper(Yii::$app->request->post(), 'voices');
+            $upload->uploadFileName = 'file';
+            $upload->verify();
+            // 上传
+            $url = $upload->save();
+
+            $result = is_array($url) ? $url : ['url' => $url];
+            return ResultDataHelper::json(200, '上传成功', $result);
+        }
+        catch (\Exception $e)
+        {
+            return ResultDataHelper::json(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * base64编码的上传
+     *
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionBase64()
+    {
+        try
+        {
+            // 保存扩展名称
             $extend = Yii::$app->request->post('extend', 'jpg');
-            return ResultDataHelper::json(200, '上传成功', UploadHelper::Base64Img($base64Data, $extend));
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
-        }
-    }
 
-    /**
-     * 七牛云存储
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionQiniu()
-    {
-        try
-        {
-            return ResultDataHelper::json(200, '上传成功', UploadHelper::qiniu($_FILES['file']));
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
-        }
-    }
+            $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+            $upload->uploadFileName = 'file';
+            $upload->verify([
+                'extension' => $extend,
+                'size' => strlen(Yii::$app->request->post('image', '')),
+            ]);
 
-    /**
-     * 阿里云OSS上传
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function actionOss()
-    {
-        try
-        {
-            return ResultDataHelper::json(200, '上传成功', UploadHelper::oss($_FILES['file']));
+            $url =  $upload->save('base64');
+
+            $result = is_array($url) ? $url : ['url' => $url];
+            return ResultDataHelper::json(200, '上传成功', $result);
         }
         catch (\Exception $e)
         {
@@ -202,12 +186,12 @@ class FileBaseController extends Controller
             return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
-        UploadHelper::mergeFile($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
+        UploadHelper::merge($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
 
         Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
         return ResultDataHelper::json(200, '合并完成', [
-            'urlPath' => $mergeInfo['relativePath']
+            'url' => $mergeInfo['relativePath']
         ]);
     }
 }

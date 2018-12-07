@@ -31,6 +31,7 @@ class MemberController extends MController
         $keyword = Yii::$app->request->get('keyword', null);
 
         $data = MemberInfo::find()
+            ->orFilterWhere(['like', 'id', $keyword])
             ->orFilterWhere(['like', 'username', $keyword])
             ->orFilterWhere(['like', 'mobile_phone', $keyword])
             ->orFilterWhere(['like', 'realname', $keyword]);

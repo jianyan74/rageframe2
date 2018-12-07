@@ -17,8 +17,6 @@ class ExecuteHelper
      */
     public static function map($class, $method, $params)
     {
-        // TODO 记录报错日志
-
         if (!class_exists($class))
         {
             throw new NotFoundHttpException($class . '未找到');

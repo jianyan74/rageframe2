@@ -6,7 +6,7 @@ use common\widgets\webuploader\Files;
 use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
-$this->params['breadcrumbs'][] = ['label' => 'Curd', 'url' => AddonUrl::to(['index'])];
+$this->params['breadcrumbs'][] = ['label' => '奖品管理', 'url' => AddonUrl::to(['index'])];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
