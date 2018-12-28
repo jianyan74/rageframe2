@@ -67,6 +67,7 @@ class AuthRoleController extends SController
             // 校验是否在自己的权限下
             $useAuth = Yii::$app->services->sys->auth->getUserAuth();
             $allAuth = array_merge(array_intersect(array_column($useAuth, 'name'), array_column($addAuths, 'name')));
+
             if (!(AuthItemChild::accredit($model->name, $allAuth)))
             {
                 return ResultDataHelper::json(404, '权限提交失败');
@@ -93,7 +94,7 @@ class AuthRoleController extends SController
              *
              * 由于数据与预期的不符手动写入Post数据
              */
-            Yii::$app->request->setBodyParams(ArrayHelper::merge($request->post(), ['userTreeIds' => $allAuth]));
+            Yii::$app->request->setBodyParams(ArrayHelper::merge($request->post(), ['userTrees' => $allAuth]));
             Yii::$app->services->sys->log('authEdit', '新增/编辑角色 or 权限');
 
             return ResultDataHelper::json(200, '提交成功');
@@ -105,6 +106,11 @@ class AuthRoleController extends SController
 
         // 插件权限管理
         list($plugTreeData, $plugTreeCheckIds) = $sysAuth->getAddonsAuthJsTreeData($name);
+
+         // $userTreeData = ArrayHelper::itemsMerge($userTreeData, 'id', 0, 'parent');
+
+
+         // p($userTreeData);die();
 
         // jq冲突禁用
         $this->forbiddenJq();

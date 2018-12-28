@@ -90,17 +90,16 @@ class Menu extends \common\models\common\BaseModel
         {
             // 查询用户权限
             $authAssignment = AuthAssignment::finldByUserId(Yii::$app->user->id);
-
+            $urls = [];
             if (!empty($authAssignment['authItemChild']))
             {
-                $urls = [];
                 foreach ($authAssignment['authItemChild'] as $item)
                 {
                     $urls[] = $item['child'];
                 }
-
-                $data = $data->andWhere(['in', 'url', $urls]);
             }
+
+            $data = $data->andWhere(['in', 'url', $urls]);
         }
 
         $models = $data->orderBy('cate_id asc, sort asc')

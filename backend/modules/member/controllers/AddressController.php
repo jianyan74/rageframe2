@@ -73,21 +73,25 @@ class AddressController extends MController
     }
 
     /**
-     * 删除
+     * 伪删除
      *
      * @param $id
      * @return mixed
-     * @throws \Throwable
-     * @throws yii\db\StaleObjectException
      */
-    public function actionDelete($id)
+    public function actionDestroy($id)
     {
-        if ($this->findModel($id)->delete())
+        if (!($model = Address::findOne($id)))
         {
-            return $this->message("删除成功", $this->redirect(['index', 'member_id' => $this->member_id]));
+            return $this->message("找不到数据", $this->redirect(['index']), 'error');
         }
 
-        return $this->message("删除失败", $this->redirect(['index', 'member_id' => $this->member_id]), 'error');
+        $model->status = StatusEnum::DELETE;
+        if ($model->save())
+        {
+            return $this->message("删除成功", $this->redirect(['index']));
+        }
+
+        return $this->message("删除失败", $this->redirect(['index']), 'error');
     }
 
     /**

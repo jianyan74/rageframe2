@@ -330,7 +330,6 @@ class Auth extends Service
      */
     public function getUserAuth()
     {
-        $childs = [];
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
             $role = $this->getRole();
@@ -340,11 +339,17 @@ class Auth extends Service
                 ->all();
 
             $childs = array_column($models, 'child');
+
+            return AuthItem::find()
+                ->where(['type' => AuthItem::AUTH])
+                ->andWhere(['in', 'name', $childs])
+                ->orderBy('sort asc')
+                ->asArray()
+                ->all();
         }
 
         return AuthItem::find()
             ->where(['type' => AuthItem::AUTH])
-            ->andFilterWhere(['in', 'name', $childs])
             ->orderBy('sort asc')
             ->asArray()
             ->all();
