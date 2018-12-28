@@ -107,11 +107,6 @@ class AuthRoleController extends SController
         // 插件权限管理
         list($plugTreeData, $plugTreeCheckIds) = $sysAuth->getAddonsAuthJsTreeData($name);
 
-         // $userTreeData = ArrayHelper::itemsMerge($userTreeData, 'id', 0, 'parent');
-
-
-         // p($userTreeData);die();
-
         // jq冲突禁用
         $this->forbiddenJq();
 

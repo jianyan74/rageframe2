@@ -55,12 +55,12 @@ $this->params['breadcrumbs'][] = $this->title;
         showCheckboxTree(plugTreeData, plugTreeId, plugTreeCheckIds);
 
         /**
-        * 带checkbox的树形控件使用说明
-        * @data 应该是一个js数组
-        * @id: 将树渲染到页面的某个div上，此div的id
-        * @checkId:需要默认勾选的数节点id；1.checkId="all"，表示勾选所有节点 2.checkId=[1,2]表示勾选id为1,2的节点
-        * 节点的id号由url传入json串中的id决定
-        */
+         * 带checkbox的树形控件使用说明
+         * @data 应该是一个js数组
+         * @id: 将树渲染到页面的某个div上，此div的id
+         * @checkId:需要默认勾选的数节点id；1.checkId="all"，表示勾选所有节点 2.checkId=[1,2]表示勾选id为1,2的节点
+         * 节点的id号由url传入json串中的id决定
+         */
         function showCheckboxTree(data, id, checkId){
 
             for (var i = 0; i < data.length; i++){
@@ -140,18 +140,36 @@ $this->params['breadcrumbs'][] = $this->title;
             $("#"+treeId).jstree('open_all');
 
             var ids = [];
-            $("#"+treeId).find("li").each(function(){
-                var liId = $(this).attr("id");
-                if ($("#" + liId + " > a").hasClass("jstree-clicked") || $("#" + liId + " > a > i").hasClass("jstree-undetermined")) {
-                    // 还原匹配后的字符串id
-                    liId = liId.replace(/---/g, '/');
-                    liId = liId.replace(/--/g, ':');
+            var treeNode = $("#"+treeId).jstree(true).get_selected(true);
 
-                    ids.push(liId);
+            for (var i = 0; i < treeNode.length; i++) {
+
+                var node = treeNode[i];
+                var nodeId = checkMatch(node.original.id);
+
+                // 判断是否重复
+                if($.inArray(nodeId, ids) == -1) {
+                    ids.push(nodeId);
                 }
-            });
+
+                for (var j = 0; j < node.parents.length; j++) {
+                    // 判断是否重复
+                    var parentId = checkMatch(node.parents[j]);
+                    if (parentId != "#" && $.inArray(parentId, ids) == -1) {
+                        ids.push(parentId);
+                    }
+                }
+            }
 
             return ids;
+        }
+
+        // 转换字符串
+        function checkMatch(checkId) {
+            checkId = checkId.replace(/---/g, '/');
+            checkId = checkId.replace(/--/g, ':');
+
+            return checkId;
         }
 
         // 提交表单
