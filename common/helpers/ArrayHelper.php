@@ -13,19 +13,19 @@ class ArrayHelper extends BaseArrayHelper
      * 递归数组
      *
      * @param array $items
-     * @param string $id
+     * @param string $idField
      * @param int $pid
-     * @param string $pidName
+     * @param string $pidField
      * @return array
      */
-    public static function itemsMerge(array $items, $id = "id", $pid = 0, $pidName = 'pid')
+    public static function itemsMerge(array $items, $idField = "id", $pid = 0, $pidField = 'pid')
     {
         $arr = [];
         foreach($items as $v)
         {
-            if ($v[$pidName] == $pid)
+            if ($v[$pidField] == $pid)
             {
-                $v['-'] = self::itemsMerge($items, $id, $v[$id], $pidName);
+                $v['-'] = self::itemsMerge($items, $idField, $v[$idField], $pidField);
                 $arr[] = $v;
             }
         }
@@ -81,18 +81,20 @@ class ArrayHelper extends BaseArrayHelper
      * 传递一个父级分类ID返回所有子分类ID
      *
      * @param $cate
-     * @param int $pid
+     * @param $pid
+     * @param string $idField
+     * @param string $pidField
      * @return array
      */
-    public static function getChildsId($cate, $pid, $id = "id", $pidName = 'pid')
+    public static function getChildIds($cate, $pid, $idField = "id", $pidField = 'pid')
     {
         $arr = [];
         foreach ($cate as $v)
         {
-            if ($v[$pidName] == $pid)
+            if ($v[$pidField] == $pid)
             {
-                $arr[] = $v[$id];
-                $arr = array_merge($arr, self::getChildsId($cate, $v[$id], $id, $pidName));
+                $arr[] = $v[$idField];
+                $arr = array_merge($arr, self::getChildIds($cate, $v[$idField], $idField, $pidField));
             }
         }
 
@@ -152,22 +154,22 @@ class ArrayHelper extends BaseArrayHelper
         return $new_array;
     }
 
-
     /**
      * 根据级别和数组返回字符串
      *
-     * @param $level
+     * @param int $level 级别
      * @param array $models
      * @param $k
+     * @param int $treeStat 开始计算
      * @return bool|string
      */
-    public static function itemsLevel($level, array $models, $k)
+    public static function itemsLevel($level, array $models, $k, $treeStat = 1)
     {
         $str = '';
         for ($i = 1; $i < $level; $i++)
         {
             $str .= '　　';
-            if ($i == $level - 1)
+            if ($i == $level - $treeStat)
             {
                 if (isset($models[$k + 1]))
                 {
@@ -185,21 +187,24 @@ class ArrayHelper extends BaseArrayHelper
      * 必须经过递归才能进行重组为下拉框
      *
      * @param $models
+     * @param string $idField
+     * @param string $titleField
+     * @param int $treeStat
      * @return array
      */
-    public static function itemsMergeDropDown($models)
+    public static function itemsMergeDropDown($models, $idField = 'id', $titleField = 'title', $treeStat = 1)
     {
         $arr = [];
         foreach ($models as $k => $model)
         {
             $arr[] = [
-                'id' => $model['id'],
-                'title' => self::itemsLevel($model['level'], $models, $k) . " " . $model['title'],
+                $idField => $model[$idField],
+                $titleField => self::itemsLevel($model['level'], $models, $k, $treeStat) . " " . $model[$titleField],
             ];
 
             if (!empty($model['-']))
             {
-                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-']));
+                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-'], $idField, $titleField));
             }
         }
 

@@ -1,7 +1,7 @@
 <?php
 namespace common\models\common;
 
-use Yii;
+use common\models\sys\Manager;
 use common\models\member\MemberInfo;
 
 /**
@@ -97,5 +97,13 @@ class Log extends \common\models\common\BaseModel
     public function getMember()
     {
         return $this->hasOne(MemberInfo::className(), ['id' => 'member_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getManager()
+    {
+        return $this->hasOne(Manager::className(), ['id' => 'member_id']);
     }
 }

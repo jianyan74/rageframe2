@@ -1,8 +1,6 @@
 <?php
-
 namespace common\models\wechat;
 
-use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\sys\Addons;
 

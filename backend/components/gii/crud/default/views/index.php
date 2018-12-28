@@ -14,6 +14,7 @@ echo "<?php\n";
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
 use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
 <?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
@@ -32,9 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="ibox-title">
                     <h5><?= "<?= " ?>Html::encode($this->title) ?></h5>
                     <div class="ibox-tools">
-                        <a class="btn btn-primary btn-xs" href="<?= "<?= " ?>Url::to(['edit']) ?>">
-                            <i class="fa fa-plus"></i> 创建
-                        </a>
+                        <?= "<?= " ?>HtmlHelper::create(['edit']) ?>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -81,18 +80,13 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'template' => '{edit} {status} {delete}',
                 'buttons' => [
                 'edit' => function($url, $model, $key){
-                        return Html::a('<span class="btn btn-info btn-sm">编辑</span>',
-                        ['edit', 'id' => $key]);
+                        return HtmlHelper::edit($model['edit', 'id' => $key]);
                 },
                'status' => function($url, $model, $key){
-                        return \common\helpers\HtmlHelper::statusSpan($model['status']);
+                        return HtmlHelper::status($model['status']);
                   },
                 'delete' => function($url, $model, $key){
-                        return Html::a('<span class="btn btn-warning btn-sm">删除</span>',
-                        ['delete', 'id' => $key],
-                            [
-                                'onclick' => 'rfDelete(this);return false;'
-                            ]);
+                        return HtmlHelper::delete($model['delete', 'id' => $key]);
                 },
                 ]
             ]

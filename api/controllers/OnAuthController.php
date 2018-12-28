@@ -12,6 +12,7 @@ use common\helpers\ResultDataHelper;
  *
  * Class OnAuthController
  * @package api\controllers
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
  */
 class OnAuthController extends ActiveController
 {
@@ -69,6 +70,8 @@ class OnAuthController extends ActiveController
     }
 
     /**
+     * 首页
+     *
      * @return ActiveDataProvider
      */
     public function actionIndex()
@@ -88,10 +91,11 @@ class OnAuthController extends ActiveController
     /**
      * 创建
      *
-     * @return bool
+     * @return mixed|\yii\db\ActiveRecord
      */
     public function actionCreate()
     {
+        /* @var $model \yii\db\ActiveRecord */
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->identity->member_id;
@@ -107,7 +111,7 @@ class OnAuthController extends ActiveController
      * 更新
      *
      * @param $id
-     * @return bool|mixed
+     * @return mixed|\yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
@@ -126,7 +130,7 @@ class OnAuthController extends ActiveController
      * 删除
      *
      * @param $id
-     * @return mixed
+     * @return bool
      * @throws NotFoundHttpException
      */
     public function actionDelete($id)
@@ -140,7 +144,7 @@ class OnAuthController extends ActiveController
      * 单个显示
      *
      * @param $id
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     public function actionView($id)
@@ -150,11 +154,12 @@ class OnAuthController extends ActiveController
 
     /**
      * @param $id
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     protected function findModel($id)
     {
+        /* @var $model \yii\db\ActiveRecord */
         if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED])->one()))
         {
             throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');

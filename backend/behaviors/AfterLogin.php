@@ -29,13 +29,14 @@ class AfterLogin extends Behavior
     }
 
     /**
-     * 登录事件
+     * 登录后触发事件
      *
      * @param $event
      * @return mixed
      */
     public function afterLogin($event)
     {
+        /* @var $model \yii\db\ActiveRecord */
         $model = $event->identity;
         $model->visit_count += 1;;
         $model->last_time = time();

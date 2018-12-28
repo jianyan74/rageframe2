@@ -17,7 +17,10 @@ $form = ActiveForm::begin([
     </div>
     <div class="modal-body">
         <?= $form->field($model, 'username')->textInput() ?>
-        <?= $form->field($model, 'password_hash')->passwordInput() ?>
+        <?= $form->field($model, 'password')->passwordInput() ?>
+        <?php if($model->id != Yii::$app->params['adminAccount']){?>
+            <?= $form->field($model, 'auth_key')->dropDownList(\common\helpers\ArrayHelper::map($roles, 'key', 'name')) ?>
+        <?php } ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

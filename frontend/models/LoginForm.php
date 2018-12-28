@@ -1,7 +1,7 @@
 <?php
 namespace frontend\models;
 
-use Yii;
+use common\enums\StatusEnum;
 use common\models\member\MemberInfo;
 
 /**
@@ -26,6 +26,7 @@ class LoginForm extends \common\models\common\LoginForm
         return [
             'username' => '登录帐号',
             'password' => '登录密码',
+            'rememberMe' => '记住我',
         ];
     }
 
@@ -40,7 +41,7 @@ class LoginForm extends \common\models\common\LoginForm
         {
             if (strpos($this->username, "@"))
             {
-                $this->_user = MemberInfo::findOne(['email'=>$this->username]); //email 登录
+                $this->_user = MemberInfo::findOne(['email'=>$this->username, 'status' => StatusEnum::ENABLED]); // email 登录
             }
             else
             {

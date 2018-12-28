@@ -1,6 +1,8 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use common\enums\StatusEnum;
+use common\enums\WhetherEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -20,8 +22,8 @@ $form = ActiveForm::begin([
     <?= $form->field($model, 'title')->textInput() ?>
     <?= $form->field($model, 'icon')->textInput()->hint('详情请参考：<a href="http://fontawesome.dashgame.com" target="_blank">http://fontawesome.dashgame.com</a>')?>
     <?= $form->field($model, 'sort')->textInput() ?>
-    <?= $form->field($model, 'is_default_show')->radioList(['1' => '是','0' => '否'])->hint('默认菜单导航显示') ?>
-    <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']) ?>
+    <?= $form->field($model, 'is_default_show')->radioList(WhetherEnum::$listExplain)->hint('默认菜单导航显示') ?>
+    <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

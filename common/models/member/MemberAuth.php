@@ -1,6 +1,7 @@
 <?php
 namespace common\models\member;
 
+use common\enums\StatusEnum;
 use Yii;
 
 /**
@@ -49,6 +50,7 @@ class MemberAuth extends \common\models\common\BaseModel
             [['oauth_client'], 'string', 'max' => 20],
             [['oauth_client_user_id', 'country', 'province', 'city'], 'string', 'max' => 100],
             [['nickname', 'head_portrait'], 'string', 'max' => 200],
+            ['member_id', 'isBinding']
         ];
     }
 
@@ -74,6 +76,27 @@ class MemberAuth extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
+    }
+
+    /**
+     * 验证绑定
+     *
+     * @param $attribute
+     */
+    public function isBinding($attribute)
+    {
+        $model = self::find()
+            ->where([
+                'status' => StatusEnum::ENABLED,
+                'member_id' => $this->member_id,
+                'oauth_client_user_id' => $this->oauth_client_user_id,
+            ])
+            ->one();
+
+        if ($model && $model->id != $this->id)
+        {
+            $this->addError($attribute, '用户已绑定请不要重复绑定');
+        }
     }
 
     /**

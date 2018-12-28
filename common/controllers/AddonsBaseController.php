@@ -121,8 +121,8 @@ class AddonsBaseController extends BaseController
      */
     private function registerClientResource()
     {
-        $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . AddonHelper::getAppName() . '\\assets';
-        $assets = $assetsPath . '\\Asset';
+        $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . AddonHelper::getAppName() . '\\' . 'assets';
+        $assets = $assetsPath . '\\' .'Asset';
 
         // 注册资源类名
         Yii::$app->params['addonInfo']['assetBundlesName'] = $assets;

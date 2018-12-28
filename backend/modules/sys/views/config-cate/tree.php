@@ -15,7 +15,7 @@ use common\helpers\ArrayHelper;
             <?= $model['title']?>
             <!--禁止显示二级分类再次添加三级分类-->
             <?php if ($model['pid'] == 0){ ?>
-                <a href="<?= Url::to(['edit','pid' => $model['id'], 'parent_title' => $model['title'], 'level' => $model['level'] + 1])?>" data-toggle='modal' data-target='#ajaxModal'>
+                <a href="<?= Url::to(['ajax-edit','pid' => $model['id'], 'parent_title' => $model['title'], 'level' => $model['level'] + 1])?>" data-toggle='modal' data-target='#ajaxModal'>
                     <i class="fa fa-plus-circle"></i>
                 </a>
             <?php } ?>
@@ -24,11 +24,11 @@ use common\helpers\ArrayHelper;
             <input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)">
         </td>
         <td>
-            <a href="<?= Url::to(['edit','id' => $model['id'],'parent_title' => $parent_title, 'level' => $model['level']])?>" data-toggle='modal' data-target='#ajaxModal'>
+            <a href="<?= Url::to(['ajax-edit','id' => $model['id'], 'parent_title' => $parent_title, 'level' => $model['level']])?>" data-toggle='modal' data-target='#ajaxModal'>
                 <span class="btn btn-info btn-sm">编辑</span>
             </a>
-            <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
-            <a href="<?= Url::to(['delete','id'=>$model['id']])?>"  onclick="rfDelete(this);return false;">
+            <?= \common\helpers\HtmlHelper::status($model['status']); ?>
+            <a href="<?= Url::to(['delete','id' => $model['id']])?>" onclick="rfDelete(this);return false;">
                 <span class="btn btn-warning btn-sm">删除</span>
             </a>
         </td>
@@ -38,6 +38,6 @@ use common\helpers\ArrayHelper;
             'models' => $model['-'],
             'parent_title' => $model['title'],
             'pid' => $model['id']." ".$pid,
-        ])?>
+        ]) ?>
     <?php } ?>
 <?php } ?>

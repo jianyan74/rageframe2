@@ -1,5 +1,7 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\helpers\Json;
 
 ?>
 
@@ -20,15 +22,15 @@ use yii\helpers\Url;
         </tr>
         <tr>
             <td>模块</td>
-            <td><?= $model['module']?></td>
+            <td><?= Html::encode($model['module'])?></td>
         </tr>
         <tr>
             <td>控制器方法</td>
-            <td><?= $model->controller; ?>/<?= $model->action; ?></td>
+            <td><?= Html::encode($model->controller); ?>/<?= Html::encode($model->action); ?></td>
         </tr>
         <tr>
             <td>Url</td>
-            <td><?= $model['url']?></td>
+            <td><?= Html::encode($model['url'])?></td>
         </tr>
         <tr>
             <td>IP</td>
@@ -39,7 +41,7 @@ use yii\helpers\Url;
             <td style="max-width: 700px">
                 <?php
                 echo "<pre>";
-                print_r(json_decode($model['get_data'], true))
+                print_r(Json::decode($model['get_data']))
                 ?>
             </>
         </tr>
@@ -48,7 +50,7 @@ use yii\helpers\Url;
             <td style="max-width: 700px">
                 <?php
                 echo "<pre>";
-                print_r(json_decode($model['post_data'], true))
+                print_r(Json::decode($model['post_data']))
                 ?>
             </td>
         </tr>

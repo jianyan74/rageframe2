@@ -20,6 +20,8 @@ class FansController extends WController
      * 粉丝首页
      *
      * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionIndex()
     {
@@ -42,7 +44,7 @@ class FansController extends WController
             ->joinWith("tags AS t", true, 'LEFT JOIN')
             ->filterWhere(['t.tag_id' => $tag_id]);
 
-        $pages  = new Pagination(['totalCount' =>$data->count(), 'pageSize' => $this->pageSize]);
+        $pages  = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->with('tags','member')
             ->orderBy('followtime desc, unfollowtime desc')
@@ -84,6 +86,12 @@ class FansController extends WController
      *
      * @param $id
      * @return array|string
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionSendMessage($id)
     {
@@ -108,8 +116,11 @@ class FansController extends WController
 
     /**
      * 贴标签
+     *
      * @param $fan_id
      * @return string|Response
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionMoveTag($fan_id)
     {
@@ -170,6 +181,7 @@ class FansController extends WController
      * 获取全部粉丝
      *
      * @return array
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws yii\db\Exception
      */
     public function actionGetAllFans()

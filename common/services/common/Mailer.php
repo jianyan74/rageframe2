@@ -4,6 +4,7 @@ namespace common\services\common;
 use Yii;
 use common\queues\MailerJob;
 use common\services\Service;
+use yii\base\InvalidConfigException;
 
 /**
  * Class Mailer
@@ -48,7 +49,23 @@ class Mailer extends Service
 
             return $messageId;
         }
-        else
+
+        return $this->realSend($user, $email, $subject, $template);
+    }
+
+    /**
+     * 发送
+     *
+     * @param $user
+     * @param $email
+     * @param $subject
+     * @param $template
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function realSend($user, $email, $subject, $template)
+    {
+        try
         {
             $this->setConfig();
             $result = Yii::$app->mailer
@@ -58,8 +75,16 @@ class Mailer extends Service
                 ->setSubject($subject)
                 ->send();
 
+            Yii::info($result);
+
             return $result;
         }
+        catch (InvalidConfigException $e)
+        {
+            Yii::error($e->getMessage());
+        }
+
+        return false;
     }
 
     /**

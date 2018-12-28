@@ -41,46 +41,12 @@ class MailerJob extends BaseObject implements \yii\queue\JobInterface
     public $template;
 
     /**
-     * 配置
-     *
-     * @var
-     */
-    protected $config = [];
-
-    /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->config = Yii::$app->debris->configAll();
-
-        Yii::$app->set('mailer', [
-            'class' => 'yii\swiftmailer\Mailer',
-            'viewPath' => '@common/mail',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => $this->config['smtp_host'],
-                'username' => $this->config['smtp_username'],
-                'password' => $this->config['smtp_password'],
-                'port' => $this->config['smtp_port'],
-                'encryption' => empty($this->config['smtp_encryption']) ? 'tls' : 'ssl',
-            ],
-        ]);
-    }
-
-    /**
      * @param \yii\queue\Queue $queue
-     * @return bool|mixed|void
+     * @return mixed|void
+     * @throws \yii\base\InvalidConfigException
      */
     public function execute($queue)
     {
-        $result = Yii::$app->mailer
-            ->compose($this->template, ['user' => $this->user])
-            ->setFrom([$this->config['smtp_username'] => $this->config['smtp_name']])
-            ->setTo($this->email)
-            ->setSubject($this->subject)
-            ->send();
+        $result = Yii::$app->services->mailer->realSend($this->user, $this->email, $this->subject, $this->template);
     }
 }

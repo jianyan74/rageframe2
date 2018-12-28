@@ -71,7 +71,7 @@ class NotifyController extends Controller
             // 判断订单组别来源 比如课程、购物或者其他
             if ($orderInfo['order_group'] == PayLog::ORDER_GROUP)
             {
-                // 查找订单
+                /* @var $order \yii\db\ActiveRecord */
                 if (!($order = Order::fineOne(['order_sn' => $orderInfo['order_sn']])))
                 {
                     return true;
@@ -81,11 +81,11 @@ class NotifyController extends Controller
             // return_code 表示通信状态，不代表支付状态
             if ($message['return_code'] === 'SUCCESS')
             {
-                if (array_get($message, 'result_code') === 'SUCCESS')// 用户支付成功
+                if (array_get($message, 'result_code') === 'SUCCESS') // 用户支付成功
                 {
                     $order->pay_status = StatusEnum::ENABLED;
                 }
-                else if (array_get($message, 'result_code') === 'FAIL')// 用户支付失败
+                elseif (array_get($message, 'result_code') === 'FAIL') // 用户支付失败
                 {
                     $order->pay_status = StatusEnum::DELETE;
                 }
@@ -177,6 +177,8 @@ class NotifyController extends Controller
 
     /**
      * 公用支付回调 - 微信
+     *
+     * @return bool|string
      */
     public function actionWechat()
     {

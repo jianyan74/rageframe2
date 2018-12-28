@@ -1,9 +1,7 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
 use common\enums\StatusEnum;
-use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%wechat_msg_history}}".

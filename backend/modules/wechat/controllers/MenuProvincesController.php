@@ -21,7 +21,7 @@ class MenuProvincesController extends WController
     {
         $model = MenuProvinces::getMenuTitle($title);
 
-        $str = Html::tag('option', '不限', ['value' => '']) ;
+        $str = Html::tag('option', '不限', ['value' => '']);
         foreach($model as $value => $name)
         {
             $str .= Html::tag('option', Html::encode($name), ['value' => $value]);

@@ -47,7 +47,6 @@
         "jianyan74/yii2-easy-wechat": "^1.0",
         "unclead/yii2-multiple-input": "~2.0",
         "zhuzhichao/ip-location-zh": "^2.4",
-        "hightman/xunsearch": "*@beta",
         "phpoffice/phpspreadsheet": "^1.3",
         "jpush/jpush": "*"
     },

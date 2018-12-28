@@ -26,10 +26,11 @@ class FileController extends FileBaseController
      * string media_id 资源id
      * string type images/videos/voices 资源类型
      * @return array
-     * @throws NotFoundHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionDownload()
@@ -40,9 +41,10 @@ class FileController extends FileBaseController
         $config = Yii::$app->params['uploadConfig'][$type];
         $stream = Yii::$app->wechat->app->media->get($mediaId);
 
+        // 验证接口是否报错
         if ($error = Yii::$app->debris->getWechatError($stream, false))
         {
-            return ResultDataHelper::json(404, $error);
+            return ResultDataHelper::json(422, $error);
         }
 
         // 文件后缀
@@ -55,13 +57,13 @@ class FileController extends FileBaseController
 
         if (!FileHelper::mkdirs($absolutePath))
         {
-            throw new NotFoundHttpException('文件夹创建失败，请确认是否开启attachment文件夹写入权限');
+            return ResultDataHelper::json(422, '文件夹创建失败，请确认是否开启attachment文件夹写入权限');
         }
 
         // 移动文件
         if (!$stream->save($absolutePath, $fileFullName))
         {
-            return ResultDataHelper::json(404, '上传失败');
+            return ResultDataHelper::json(422, '文件移动失败');
         }
 
         return ResultDataHelper::json(200, '上传成功', [

@@ -139,12 +139,13 @@ use common\helpers\HtmlHelper;
         var target = $(e.target);
         var Size = target[0].files[0].size / 1024;
         if(Size > filemaxsize) {
-            alert('图片过大，请重新选择!');
+            rfError('图片过大，请重新选择!');
             $(".avatar-wrapper").childre().remove;
             return false;
         }
         if(!this.files[0].type.match(/image.*/)) {
-            alert('请选择正确的图片!')
+            rfError('请选择正确的图片!');
+            return false;
         } else {
             var filename = document.querySelector("#avatar-name");
             var texts = document.querySelector("#avatarInput").value;
@@ -156,15 +157,20 @@ use common\helpers\HtmlHelper;
     });
 
     $(".avatar-save").on("click", function() {
-        var img_lg = document.getElementById('imageHead');
         // 截图小的显示框内的内容
-        html2canvas(img_lg, {
+        var targetDom = $("#imageHead");
+        var copyDom = targetDom.clone();
+        copyDom.width(targetDom.width() + "px");
+        copyDom.height(targetDom.height() + "px");
+        $('body').append(copyDom);
+        html2canvas(copyDom, {
             allowTaint  : true,
             taintTest   : false,
             onrendered  : function(canvas) {
                 canvas.id = "mycanvas";
                 var dataUrl = canvas.toDataURL();
                 var base64 = dataUrl.split(',');
+                copyDom.remove();
                 imagesAjax(base64[1]);
             }
         });
@@ -176,10 +182,10 @@ use common\helpers\HtmlHelper;
         data.jid = $('#jid').val();
         data.takeOverAction = 'local';
         $.ajax({
-            url     : "<?= Url::to(['/file/base64'])?>",
-            type    : "post",
-            dataType: 'json',
-            data    : data,
+            url : "<?= Url::to(['/file/base64'])?>",
+            type : "post",
+            dataType : 'json',
+            data : data,
             success : function(data) {
                 if(data.code == 200) {
                     data = data.data;

@@ -48,9 +48,13 @@ class QrcodeStatController extends WController
             ->all();
 
         // 关注统计
-        $attention_count = $attention_data->andWhere(['type' => QrcodeStat::TYPE_ATTENTION])->count();
+        $attention_count = $attention_data
+            ->andWhere(['type' => QrcodeStat::TYPE_ATTENTION])
+            ->count();
         // 扫描统计
-        $scan_count = $scan_data->andWhere(['type' => QrcodeStat::TYPE_SCAN])->count();
+        $scan_count = $scan_data
+            ->andWhere(['type' => QrcodeStat::TYPE_SCAN])
+            ->count();
 
         return $this->render('index',[
             'models' => $models,

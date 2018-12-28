@@ -3,6 +3,8 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 $this->title = '自动回复';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -19,6 +21,22 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="tab-pane active">
                 <div class="panel-body">
                     <div class="row">
+                        <?php $form = ActiveForm::begin([
+                            'action' => Url::to(['index']),
+                            'method' => 'get'
+                        ]); ?>
+                        <div class="col-sm-3">
+                            <div class="input-group m-b">
+                                <?= Html::textInput('keyword', $keyword, [
+                                    'placeholder' => '请输入规则',
+                                    'class' => 'form-control'
+                                ])?>
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
+                        </div>
+                        <?php ActiveForm::end(); ?>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-8">
                             <div class="btn-group">
                                 <a class="btn <?= !$module ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index'])?>">全部</a>
@@ -27,15 +45,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <form action="" method="get" class="form-horizontal" role="form" id="form">
-                                <div class="input-group m-b">
-                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入规则'?>"/>
-                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-lg-1">
+                        <div class="col-lg-4">
                             <a class="btn btn-primary btn-xs pull-right" onclick="openEdit()">
                                 <i class="fa fa-plus"></i>  创建
                             </a>

@@ -2,8 +2,9 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use common\helpers\AddonUrl;
+use common\helpers\AddonHtmlHelper;
 
-$this->title = 'Curd For Grid';
+$this->title = 'Curd Grid';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -13,9 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="ibox-title">
                 <h5><?= $this->title; ?></h5>
                 <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
+                    <?= AddonHtmlHelper::create(['edit']); ?>
                 </div>
             </div>
             <div class="ibox-content">
@@ -35,14 +34,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         'prevPageLabel' => "上一页",
                     ],
                     'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'visible' => false, // 不显示#
+                        ],
+                        'id',
                         'title',
                         // 'cate_id',
                         'sort',
                         // 'position',
                         [
                             'attribute' => 'sex',
-                            'value'=>function ($model, $key, $index, $column){
+                            'value' => function ($model, $key, $index, $column){
                                 return $model->sex == 1 ? '男' : '女';
                             },
                             'filter' => Html::activeDropDownList($searchModel,
@@ -60,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         // 'cover',
                         // 'covers',
                         // 'attachfile',
-                         'keywords',
+                        'keywords',
                         // 'description',
                         // 'price',
                         // 'views',
@@ -78,22 +81,20 @@ $this->params['breadcrumbs'][] = $this->title;
                             'filter' => false, //不显示搜索框
                             'format' => ['date', 'php:Y-m-d'],
                         ],
-
                         // 'updated_at',
-
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
                             'template'=> '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return Html::a(Html::tag('span', '编辑', ['class' => "btn btn-info btn-sm"]), AddonUrl::to(['edit','id' => $model->id]));
+                                    return AddonHtmlHelper::edit(['edit','id' => $model->id]);
                                 },
                                 'status' => function ($url, $model, $key) {
-                                    return $model['status'] == 0 ? '<span class="btn btn-primary btn-sm" onclick="rfStatus(this)">启用</span>': '<span class="btn btn-default btn-sm"  onclick="rfStatus(this)">禁用</span>';
+                                    return AddonHtmlHelper::status($model->status);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return Html::a(Html::tag('span', '删除', ['class' => "btn btn-warning btn-sm"]), AddonUrl::to(['delete','id' => $model->id]),['onclick' => "rfDelete(this);return false;"]);
+                                    return AddonHtmlHelper::delete(['edit','id' => $model->id]);
                                 },
                             ],
                         ],

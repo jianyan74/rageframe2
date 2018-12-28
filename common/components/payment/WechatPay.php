@@ -45,10 +45,11 @@ class WechatPay
      * 实例化类
      *
      * @param $type
-     * @return mixed
+     * @return \Omnipay\WechatPay\AppGateway
      */
     private function create($type)
     {
+        /* @var $gateway \Omnipay\WechatPay\AppGateway */
         $gateway = Omnipay::create($type);
         $gateway->setAppId($this->config['app_id']);
         $gateway->setMchId($this->config['mch_id']);
@@ -62,7 +63,7 @@ class WechatPay
     /**
      * 回调
      *
-     * @return mixed
+     * @return \Omnipay\WechatPay\Message\CompletePurchaseResponse
      */
     public function notify()
     {

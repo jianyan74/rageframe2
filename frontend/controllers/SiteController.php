@@ -132,7 +132,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
+     * 联系我们
      *
      * @return mixed
      */
@@ -159,7 +159,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays about page.
+     * 关于
      *
      * @return mixed
      */
@@ -169,6 +169,8 @@ class SiteController extends Controller
     }
 
     /**
+     * 注册
+     *
      * @return string|\yii\web\Response
      * @throws \yii\base\Exception
      */
@@ -189,6 +191,8 @@ class SiteController extends Controller
     }
 
     /**
+     * 发送重置密码邮件
+     *
      * @return string|\yii\web\Response
      * @throws \yii\base\Exception
      */
@@ -213,6 +217,8 @@ class SiteController extends Controller
     }
 
     /**
+     * 密码重置
+     *
      * @param $token
      * @return string|\yii\web\Response
      * @throws BadRequestHttpException

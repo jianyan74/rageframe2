@@ -129,6 +129,7 @@ class RuleKeyword extends \yii\db\ActiveRecord
                 Rule::RULE_MODULE_ADDON => 'common\models\wechat\ReplyAddon',
             ];
 
+            /* @var $model \yii\db\ActiveRecord */
             $model = $modelList[$keyword->module]::find()
                 ->where(['rule_id' => $keyword->rule_id])
                 ->one();
@@ -177,8 +178,8 @@ class RuleKeyword extends \yii\db\ActiveRecord
                     {
                         return $apiContent;
                     }
-                    return $model->default;
 
+                    return $model->default;
                     break;
                 // 默认为模块回复
                 default :

@@ -31,7 +31,9 @@ class RuleController extends WController
         $module = $request->get('module', null);
         $keyword = $request->get('keyword', null);
 
-        $data = Rule::find()->where(['>=', 'status', StatusEnum::DISABLED])->with('ruleKeyword')
+        $data = Rule::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->with('ruleKeyword')
             ->andWhere(['in', 'module', array_keys(Rule::$moduleExplain)])
             ->andFilterWhere(['module' => $module])
             ->andFilterWhere(['like', 'name', $keyword]);

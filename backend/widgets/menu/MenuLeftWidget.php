@@ -20,7 +20,7 @@ class MenuLeftWidget extends Widget
     public function run()
     {
         return $this->render('menu-left', [
-            'models'=> Menu::getList(StatusEnum::ENABLED),
+            'models'=> Menu::getAuthShowList(StatusEnum::ENABLED),
             'addonsMenu' => Addons::getListMenu(),
         ]);
     }

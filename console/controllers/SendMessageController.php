@@ -73,6 +73,8 @@ class SendMessageController extends Controller
 
     /**
      * 群发消息
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function actionIndex()
     {

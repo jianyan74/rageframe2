@@ -2,7 +2,6 @@
 namespace common\models\sys;
 
 use Yii;
-use Zhuzhichao\IpLocationZh\Ip;
 
 /**
  * This is the model class for table "{{%sys_action_log}}".
@@ -77,44 +76,6 @@ class ActionLog extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * 记录用户行为日志
-     *
-     * @param $behavior
-     * @param $remark
-     * @param $noRecordData
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function record($behavior, $remark, $noRecordData)
-    {
-        $url = Yii::$app->request->getUrl();
-        $url = explode('?', $url);
-
-        $model = new self();
-        $model->manager_id = Yii::$app->user->id ?? 0;
-        $model->behavior = $behavior;
-        $model->remark = $remark;
-        $model->url = $url[0];
-        $model->get_data = json_encode(Yii::$app->request->get());
-        $model->post_data = $noRecordData == true ? json_encode(Yii::$app->request->post()) : json_encode([]);
-        $model->method = Yii::$app->request->method;
-        $model->module = Yii::$app->controller->module->id;
-        $model->controller = Yii::$app->controller->id;
-        $model->action = Yii::$app->controller->action->id;
-        $model->ip = Yii::$app->request->userIP;
-
-        // ip转地区
-        if (!empty($model->ip) && ($ipData = Ip::find($model->ip)))
-        {
-            $model->country = $ipData[0];
-            $model->provinces = $ipData[1];
-            $model->city = $ipData[2];
-        }
-
-        $model->ip = ip2long($model->ip);
-        $model->save();
     }
 
     /**

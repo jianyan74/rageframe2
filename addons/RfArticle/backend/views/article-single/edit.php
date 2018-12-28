@@ -28,22 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'sort')->textInput(); ?>
                     <?= $form->field($model, 'cover')->widget(Images::className(), [
                         'config' => [
-                            // 可设置自己的上传地址, 不设置则默认地址
-                            // 'server' => '',
                             'pick' => [
                                 'multiple' => false,
-                            ],
-                            // 不配置则不生成缩略图
-                            'formData' => [
-                                'thumb' => [
-                                    [
-                                        'widget' => 100,
-                                        'height' => 100,
-                                    ],
-                                ]
-                            ],
-                            'chunked' => false,// 开启分片上传
-                            'chunkSize' => 512 * 1024,// 分片大小
+                            ]
                         ]
                     ]); ?>
                     <?= $form->field($model, 'description')->textarea(); ?>

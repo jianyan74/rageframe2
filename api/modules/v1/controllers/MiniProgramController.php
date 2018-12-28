@@ -2,6 +2,7 @@
 namespace api\modules\v1\controllers;
 
 use Yii;
+use api\controllers\OffAuthController;
 use api\modules\v1\models\MiniProgramLoginForm;
 use common\models\member\MemberInfo;
 use common\models\api\AccessToken;
@@ -15,8 +16,9 @@ use common\helpers\FileHelper;
  *
  * Class MiniProgramController
  * @package api\modules\v1\controllers
+ * @property \yii\db\ActiveRecord $modelClass;
  */
-class MiniProgramController extends \yii\rest\ActiveController
+class MiniProgramController extends OffAuthController
 {
     public $modelClass = '';
 
@@ -29,7 +31,7 @@ class MiniProgramController extends \yii\rest\ActiveController
 
     public function init()
     {
-        $logPath = Yii::getAlias('@runtime') . '\\wechat-miniProgram\\' . date('Y-m') . '\\';
+        $logPath = Yii::getAlias('@runtime') . DIRECTORY_SEPARATOR . 'wechat-miniProgram' . DIRECTORY_SEPARATOR . date('Y-m') . DIRECTORY_SEPARATOR;
         FileHelper::mkdirs($logPath);
 
         Yii::$app->params['wechatMiniProgramConfig'] = [
@@ -53,7 +55,12 @@ class MiniProgramController extends \yii\rest\ActiveController
      *
      * @param $code
      * @return array|mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\base\Exception
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSessionKey($code)
     {
@@ -147,13 +154,19 @@ class MiniProgramController extends \yii\rest\ActiveController
     }
 
     /**
-     * 解析错误
+     * 权限验证
      *
-     * @param $fistErrors
-     * @return string
+     * @param string $action 当前的方法
+     * @param null $model 当前的模型类
+     * @param array $params $_GET变量
+     * @throws \yii\web\BadRequestHttpException
      */
-    public function analyErr($firstErrors)
+    public function checkAccess($action, $model = null, $params = [])
     {
-        return Yii::$app->debris->analyErr($firstErrors);
+        // 方法名称
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
+        {
+            throw new \yii\web\BadRequestHttpException('权限不足');
+        }
     }
 }

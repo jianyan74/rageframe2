@@ -2,6 +2,10 @@
 use yii\helpers\Url;
 use common\helpers\AddonUrl;
 use common\enums\StatusEnum;
+use \common\helpers\StringHelper;
+
+$addonName = Yii::$app->params['addon']['name'];
+$addonName = StringHelper::toUnderScore($addonName);
 ?>
 
 <div class="ibox-content">
@@ -11,21 +15,21 @@ use common\enums\StatusEnum;
             <ul class="folder-list p-xs">
                 <?php if(!empty(Yii::$app->params['addonBinding']['cover'])){ ?>
                     <li>
-                        <a href="<?= Url::to(['/addons/cover', 'addon' => Yii::$app->params['addon']['name']])?>" title="应用入口">
+                        <a href="<?= Url::to(['/addons/cover', 'addon' => $addonName])?>" title="应用入口">
                             <i class="fa fa-arrow-circle-right"></i>应用入口
                         </a>
                     </li>
                 <?php } ?>
                 <?php if($addon['is_rule'] == StatusEnum::ENABLED){ ?>
                     <li>
-                        <a href="<?= Url::to(['/addons/rule', 'addon' => Yii::$app->params['addon']['name']])?>" title="规则管理">
+                        <a href="<?= Url::to(['/addons/rule', 'addon' => $addonName])?>" title="规则管理">
                             <i class="fa fa-gavel"></i>规则管理
                         </a>
                     </li>
                 <?php } ?>
                 <?php if($addon['is_setting'] == StatusEnum::ENABLED){ ?>
                     <li>
-                        <a href="<?= AddonUrl::to(['setting/display', 'addon' => Yii::$app->params['addon']['name']])?>" title="参数设置">
+                        <a href="<?= AddonUrl::to(['setting/display', 'addon' => $addonName])?>" title="参数设置">
                             <i class="fa fa-cog"></i>参数设置
                         </a>
                     </li>

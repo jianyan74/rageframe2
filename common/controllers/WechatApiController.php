@@ -106,8 +106,9 @@ class WechatApiController extends BaseController
      * @param $message
      * @return bool|mixed
      * @throws NotFoundHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function event($message)
+    protected function event($message)
     {
         Yii::$app->params['msgHistory']['event'] = $message['Event'];
 

@@ -1,7 +1,8 @@
 <?php
 namespace common\models\member;
 
-use Yii;
+use common\enums\StatusEnum;
+use common\models\common\Provinces;
 use common\models\common\BaseModel;
 
 /**
@@ -12,7 +13,9 @@ use common\models\common\BaseModel;
  * @property int $provinces 省id
  * @property int $city 市id
  * @property int $area 区id
- * @property string $detailed_address 详细地址
+ * @property int $is_default 是否默认
+ * @property string $address_name 地址
+ * @property string $address_details 详细地址
  * @property int $zip_code 邮编
  * @property string $realname 真实姓名
  * @property string $tel 家庭号码
@@ -38,8 +41,8 @@ class Address extends BaseModel
     {
         return [
             [['member_id', 'provinces', 'city', 'area', 'realname', 'mobile'], 'required'],
-            [['member_id', 'provinces', 'city', 'area', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['detailed_address'], 'string', 'max' => 255],
+            [['is_default', 'member_id', 'provinces', 'city', 'area', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['address_details', 'address_name'], 'string', 'max' => 255],
             [['realname'], 'string', 'max' => 100],
             [['tel', 'mobile'], 'string', 'max' => 20],
             ['mobile', 'match', 'pattern' => '/^[1][3578][0-9]{9}$/','message' => '不是一个有效的手机号码'],
@@ -57,7 +60,9 @@ class Address extends BaseModel
             'provinces' => '省',
             'city' => '市',
             'area' => '区',
-            'detailed_address' => '详细地址',
+            'address_name' => '地址',
+            'address_details' => '详细地址',
+            'is_default' => '默认地址',
             'zip_code' => '邮编',
             'realname' => '真实姓名',
             'tel' => '电话',
@@ -76,5 +81,21 @@ class Address extends BaseModel
     public function getMember()
     {
         return $this->hasOne(MemberInfo::className(), ['id' => 'member_id']);
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        $this->address_name = Provinces::getCityListName([$this->provinces, $this->city, $this->area]);
+
+        if ($this->is_default == StatusEnum::ENABLED)
+        {
+            self::updateAll(['is_default' => StatusEnum::DISABLED], ['is_default' => StatusEnum::ENABLED, 'member_id' => $this->member_id]);
+        }
+
+        return parent::beforeSave($insert);
     }
 }

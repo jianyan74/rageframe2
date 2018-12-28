@@ -12,6 +12,9 @@ use common\helpers\UrlHelper;
 /**
  * Class Pay
  * @package common\components
+ * @property \common\components\payment\WechatPay $wechat
+ * @property \common\components\payment\AliPay $alipay
+ * @property \common\components\payment\UnionPay $union
  */
 class Pay extends Component
 {

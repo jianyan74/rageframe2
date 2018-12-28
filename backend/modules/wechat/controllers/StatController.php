@@ -38,9 +38,9 @@ class StatController extends WController
         // 更新微信统计数据
         FansStat::getFansStat();
 
-        $request  = Yii::$app->request;
-        $from_date  = $request->get('from_date', date('Y-m-d', strtotime("-6 day")));
-        $to_date  = $request->get('to_date',date('Y-m-d'));
+        $request = Yii::$app->request;
+        $from_date = $request->get('from_date', date('Y-m-d', strtotime("-6 day")));
+        $to_date = $request->get('to_date',date('Y-m-d'));
 
         $models = FansStat::find()
             ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)])
@@ -150,9 +150,9 @@ class StatController extends WController
      */
     public function actionRuleKeyword()
     {
-        $request  = Yii::$app->request;
-        $from_date  = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
-        $to_date  = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
+        $request = Yii::$app->request;
+        $from_date = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
+        $to_date = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
 
         $data = RuleKeywordStat::find()
             ->select(['keyword_id','sum(hit) as hit','max(rule_id) as rule_id','max(updated_at) as updated_at'])

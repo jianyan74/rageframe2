@@ -13,7 +13,7 @@ class AddonHook
     public $layout = null;
 
     /**
-     * 钩子渲染
+     * 默认钩子渲染控制器
      *
      * @var string
      */
@@ -24,6 +24,7 @@ class AddonHook
      *
      * @param string $addonsName 模块名称
      * @param array $params 传递参数
+     * @param string $action 默认钩子方法
      * @param bool $debug 是否开启报错
      * @return bool
      * @throws NotFoundHttpException

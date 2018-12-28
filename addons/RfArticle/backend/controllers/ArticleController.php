@@ -2,14 +2,15 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\controllers\AddonsBaseController;
-use common\components\CurdTrait;
+use yii\data\Pagination;
 use common\enums\StatusEnum;
+use common\components\CurdTrait;
+use common\models\common\SearchModel;
+use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\ArticleTag;
 use addons\RfArticle\common\models\ArticleTagMap;
 use addons\RfArticle\common\models\Article;
-use yii\data\Pagination;
 
 /**
  * 文章管理
@@ -29,20 +30,29 @@ class ArticleController extends AddonsBaseController
     /**
      * 首页
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
      */
     public function actionIndex()
     {
-        $data = Article::find()->where(['>=', 'status', StatusEnum::DISABLED]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->all();
+        $searchModel = new SearchModel([
+            'model' => Article::className(),
+            'scenario' => 'default',
+            'partialMatchAttributes' => ['title'], // 模糊查询
+            'defaultOrder' => [
+                'sort' => SORT_ASC,
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
+
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
-            'models' => $models,
-            'pages' => $pages
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 

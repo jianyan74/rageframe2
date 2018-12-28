@@ -90,7 +90,7 @@ class ExcelHelper
                 $writer->save('php://output');
                 break;
 
-            case 'Csv' :
+            case 'csv' :
                 $writer = new Csv($spreadsheet);
                 header('Pragma:public');
                 header("Content-type:text/csv;");
@@ -99,7 +99,7 @@ class ExcelHelper
                 exit();
                 break;
 
-            case 'Html' :
+            case 'html' :
                 $writer = new Html($spreadsheet);
                 header('Pragma:public');
                 header("Content-Type:text/html;");

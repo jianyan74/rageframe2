@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="ibox-title">
                 <h5><?= $this->title; ?></h5>
                 <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['export'])?>"><i class="fa fa-mail-forward"></i>  导出表格</a>
+                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['export'])?>"><i class="fa fa-mail-forward"></i>  导出记录</a>
                 </div>
             </div>
             <div class="ibox-content">

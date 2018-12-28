@@ -54,7 +54,7 @@ rfSuccess(title,text)
         <input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)">
     </td>
     <td>
-        <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
+        <?= \common\helpers\HtmlHelper::status($model['status']); ?>
     </td>
 </tr>
 ```

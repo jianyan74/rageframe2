@@ -1,7 +1,7 @@
 <?php
-
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
+use common\helpers\AddonHtmlHelper;
 
 use kartik\daterange\DateRangePicker;
 use yii\widgets\ActiveForm;
@@ -22,9 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <h5><?= $this->title; ?></h5>
                 <div class="ibox-tools">
                     <a href="<?= AddonUrl::to(['export'])?>">导出Excel</a>
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
+                    <?= AddonHtmlHelper::create(['edit']); ?>
                 </div>
             </div>
             <div class="ibox-content">
@@ -82,9 +80,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 结束：<?= Yii::$app->formatter->asDatetime($model->end_time); ?>
                             </td>
                             <td>
-                                <a href="<?= AddonUrl::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                <?= \common\helpers\HtmlHelper::statusSpan($model['status']);?>
-                                <a href="<?= AddonUrl::to(['delete','id'=> $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                <?= AddonHtmlHelper::edit(['edit','id' => $model->id]); ?>
+                                <?= AddonHtmlHelper::status($model['status']); ?>
+                                <?= AddonHtmlHelper::delete(['delete','id' => $model->id]); ?>
                             </td>
                         </tr>
                     <?php } ?>

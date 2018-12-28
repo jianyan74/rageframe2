@@ -15,7 +15,7 @@ class Member extends Service
     /**
      * 用户
      *
-     * @var
+     * @var \common\models\member\MemberInfo
      */
     protected $member;
 

@@ -24,7 +24,7 @@ return [
             'idParam' => '__wechat',
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the wechat
+            // 用于登录微信的会话cookie的名称
             'name' => 'advanced-wechat',
         ],
         'log' => [
@@ -43,9 +43,9 @@ return [
         /** ------ 路由配置 ------ **/
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
-            'enablePrettyUrl' => true,  //这个是生成路由 ?r=site/about--->/site/about
+            'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
             'showScriptName' => false,
-            'suffix' => '.html',//静态
+            'suffix' => '.html',// 静态
             'rules' =>[
 
             ],

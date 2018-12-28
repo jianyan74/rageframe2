@@ -57,7 +57,6 @@ return [
                          * 默认登录测试控制器(Post)
                          * http://当前域名/api/v1/site/login
                          */
-                        'web-hook',// git自动更新钩子
                         // 'sign-secret-key',
                         // 版本1
                         'v1/default',// 默认测试入口
@@ -66,19 +65,18 @@ return [
                         'v1/mini-program-pay',
                         'v1/member/info',
                         'v1/member/address',
+                        'v1/member/auth',
                         // 版本2
                         'v2/default',// 默认测试入口
                     ],
                     'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
                     'extraPatterns' => [
-                        'POST gitee' => 'gitee', // 码云钩子
                         'POST login' => 'login',// 登录获取token
                         'POST refresh' => 'refresh',// 重置token
-                        // 测试查询可删除 http://当前域名/api/v1/member/member/search
+                        // 测试查询可删除 例如：http://www.rageframe.com/api/v1/default/search
                         'GET search' => 'search',
                         'GET session-key' => 'session-key',// 小程序获取session key
                         'POST decode' => 'decode',// 解密获取小程序用户信息数据
-                        'POST find-token-by-openid' => 'find-token-by-openid',// 通过openid返回token
                     ],
                 ],
                 [
@@ -111,7 +109,7 @@ return [
         ],
         'response' => [
             'class' => 'yii\web\Response',
-            'as beforeSend' => 'api\behaviors\beforeSend',
+            'as beforeSend' => 'api\behaviors\BeforeSend',
         ],
         'request' => [
             'csrfParam' => '_csrf-api',

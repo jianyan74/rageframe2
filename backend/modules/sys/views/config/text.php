@@ -8,5 +8,5 @@ use common\enums\StatusEnum;
     <?php if($row['is_hide_remark'] != StatusEnum::ENABLED){ ?>
         (<?= $row['remark']?>)
     <?php } ?>
-    <?= Html::input('text','config[' . $row['name'] . ']', $row['value'], ['class' => 'form-control']);?>
+    <?= Html::input('text', 'config[' . $row['name'] . ']', $row['value'], ['class' => 'form-control']);?>
 </div>

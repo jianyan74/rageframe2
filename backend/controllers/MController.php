@@ -10,6 +10,9 @@ use yii\filters\AccessControl;
  *
  * Class MController
  * @package backend\controllers
+ * @property \yii\db\ActiveRecord $modelClass;
+ * @property \EasyWeChat\OfficialAccount\Application $app;
+ * @property \common\services\Application $services;
  */
 class MController extends \common\controllers\BaseController
 {

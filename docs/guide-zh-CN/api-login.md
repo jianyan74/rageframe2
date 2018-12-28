@@ -15,11 +15,11 @@
 
 参数
 
-参数名 | 参数类型 | 必填 | 默认 | 说明
----|---|---|---|---
-username | string| 是 | 无 | 账号
-password | string| 是 | 无 | 密码
-group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
+参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
+---|---|---|---|---|---
+username | string| 是 | 无 | 账号 |
+password | string| 是 | 无 | 密码 | 
+group | string| 是 | 无 | 组别 | app:app,wechat:微信,miniProgram:小程序
 
 
 返回
@@ -72,14 +72,15 @@ group | string| 是 | 无 | 组别[app:app,wechat:微信,miniProgram:小程序]
 请求地址(Post)
 
 ```
-/v1/member/info/refresh?access-token=[登陆获取到access-token]
+/v1/site/refresh
 ```
 
 参数
 
-参数名 | 参数类型 | 必填 | 默认 | 说明
----|---|---|---|---
-refresh_token | string| 是 | 无 | 重置令牌
+参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
+---|---|---|---|---|---
+refresh_token | string| 是 | 无 | 重置令牌 |
+group | string| 是 | 无 | 组别 | app:app,wechat:微信,miniProgram:小程序
 
 返回
 

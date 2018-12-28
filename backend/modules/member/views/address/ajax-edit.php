@@ -1,6 +1,6 @@
 <?php
-use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -21,9 +21,10 @@ $form = ActiveForm::begin([
             'provincesName' => 'provinces',// 省字段名
             'cityName' => 'city',// 市字段名
             'areaName' => 'area',// 区字段名
-            // 'template' => 'short' //合并为一行显示
+            'template' => 'short' //合并为一行显示
         ]); ?>
-        <?= $form->field($model, 'detailed_address')->textarea() ?>
+        <?= $form->field($model, 'address_details')->textarea() ?>
+        <?= $form->field($model, 'is_default')->checkbox() ?>
         <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain) ?>
     </div>
     <div class="modal-footer">

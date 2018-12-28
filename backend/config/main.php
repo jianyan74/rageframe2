@@ -86,9 +86,7 @@ return [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,
-                    'js' => [
-                        '/backend/resources/js/jquery.min.js?2.1.4',
-                    ]
+                    'js' => []
                 ],
             ],
         ],

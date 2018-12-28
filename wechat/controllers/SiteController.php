@@ -8,7 +8,8 @@ use common\models\common\PayLog;
 use common\helpers\UrlHelper;
 
 /**
- * Site controller
+ * Class SiteController
+ * @package wechat\controllers
  */
 class SiteController extends WController
 {
@@ -81,7 +82,7 @@ class SiteController extends WController
             'body' => '支付简单说明',
             'detail' => '支付详情',
             'notify_url' => UrlHelper::toFront(['notify/wechat']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-            'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, 1, PayLog::PAY_TYPE_WECHAT, 'JSAPI'), // 支付
+            'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, PayLog::PAY_TYPE_WECHAT), // 支付
             'total_fee' => $totalFee,
             'openid' => 'okFAZ0-5AbCyvn1m_ujTxmUwzlYo', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
         ];

@@ -31,7 +31,7 @@ return [
             'idParam' => '__frontend',
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
+            // 用于登录前台的会话cookie的名称
             'name' => 'advanced-frontend',
         ],
         'log' => [
@@ -50,9 +50,9 @@ return [
         /** ------ 路由配置 ------ **/
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
-            'enablePrettyUrl' => true,  //这个是生成路由 ?r=site/about--->/site/about
+            'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
             'showScriptName' => false,
-            'suffix' => '.html',//静态
+            'suffix' => '.html',// 静态
             'rules' =>[
 
             ],
@@ -102,7 +102,7 @@ return [
                     'clientSecret' => '',
                 ],
                  'wechat' => [
-                     'class' => 'xj\oauth\WeixinMpAuth', //weixin mp
+                     'class' => 'xj\oauth\WeixinMpAuth', // weixin mp
                      'clientId' => '111',
                      'clientSecret' => '',
                  ],
@@ -144,6 +144,7 @@ return [
         'file' => [
             'class' => 'common\controllers\FileBaseController',
         ],
+        // 百度编辑器控制器
         'ueditor' => [
             'class' => 'common\widgets\ueditor\UeditorController',
         ],

@@ -13,8 +13,6 @@
   - 解析 model 报错
 - 全局函数
   - 打印调试
-- WebHook
-  - Gitee 码云
 
 ### 公用方法
 
@@ -55,7 +53,7 @@ Yii::$app->debris->p();
  * @param bool $noRecordData 是否记录 post 数据 [true||false]
  * @throws \yii\base\InvalidConfigException
  */
-Yii::$app->debris->log($behavior, $remark, $noRecordData)
+Yii::$app->services->sys->log($behavior, $remark, $noRecordData)
 ```
 
 ##### 微信接口验证及报错
@@ -92,10 +90,3 @@ $this->analyErr($firstErrors);
 // 注意只能在开发模式下使用，生产模式没有此函数
 p($array);
 ```
-  
-### WebHook
-
-##### Gitee 码云
-
-1、先到 后台网站设置->WebHook->Gitee 填写好对应的git地址、绝对路径，密码  
-2、到 码云项目主页->管理->WebHooks->添加 填写的Post地址为 `http://[你的域名]/api/web-hook/gitee`

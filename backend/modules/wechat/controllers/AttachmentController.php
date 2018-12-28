@@ -53,7 +53,9 @@ class AttachmentController extends WController
     /**
      * 图文编辑
      *
-     * @return string|array
+     * @return array|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
     public function actionNewsEdit()
     {
@@ -184,9 +186,14 @@ class AttachmentController extends WController
     /**
      * 图片添加
      *
-     * @return string|\yii\web\Response
+     * @return mixed|string|\yii\web\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function actionImageAdd()
+    public function actionImageCreate()
     {
         $model = new Attachment;
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
@@ -204,7 +211,7 @@ class AttachmentController extends WController
             return $this->redirect(['index', 'type' => 'image']);
         }
 
-        return $this->renderAjax('image-add',[
+        return $this->renderAjax('image-create',[
             'model' => $model
         ]);
     }
@@ -212,9 +219,14 @@ class AttachmentController extends WController
     /**
      * 音频添加
      *
-     * @return string|\yii\web\Response
+     * @return mixed|string|\yii\web\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function actionVoiceAdd()
+    public function actionVoiceCreate()
     {
         $model = new Attachment;
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
@@ -232,7 +244,7 @@ class AttachmentController extends WController
             return $this->redirect(['index', 'type' => 'voice']);
         }
 
-        return $this->renderAjax('voice-add',[
+        return $this->renderAjax('voice-create',[
             'model' => $model
         ]);
     }
@@ -240,9 +252,14 @@ class AttachmentController extends WController
     /**
      * 视频添加
      *
-     * @return string|\yii\web\Response
+     * @return mixed|string|\yii\web\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function actionVideoAdd()
+    public function actionVideoCreate()
     {
         $model = new VideoForm();
         if ($model->load(Yii::$app->request->post()))
@@ -260,7 +277,7 @@ class AttachmentController extends WController
             return $this->redirect(['index', 'type' => 'video']);
         }
 
-        return $this->renderAjax('video-add',[
+        return $this->renderAjax('video-create',[
             'model' => $model
         ]);
     }
@@ -271,8 +288,13 @@ class AttachmentController extends WController
      * @param $attach_id
      * @param $mediaType
      * @return mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionDelete($attach_id, $mediaType)
     {
@@ -298,7 +320,13 @@ class AttachmentController extends WController
      * 手机预览
      *
      * @param $attach_id
+     * @param $mediaType
      * @return mixed|string
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionPreview($attach_id, $mediaType)
     {
@@ -341,6 +369,9 @@ class AttachmentController extends WController
      * @param $attach_id
      * @param $mediaType
      * @return mixed|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSend($attach_id, $mediaType)
     {
@@ -377,8 +408,9 @@ class AttachmentController extends WController
      * @param string $type 素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
      * @param int $offset 从全部素材的该偏移位置开始返回，可选，默认 0，0 表示从第一个素材 返回
      * @param int $count 返回素材的数量，可选，默认 20, 取值在 1 到 20 之间
+     * @return array
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\db\Exception
-     * @return mixed
      */
     public function actionGetAllAttachment($type, $offset = 0, $count = 20)
     {
@@ -457,7 +489,7 @@ class AttachmentController extends WController
                 {
                     if (empty($newSystemMaterial) || empty($newSystemMaterial[$vo['media_id']]))
                     {
-                        $mediaUrl = isset($vo['url']) ? $vo['url'] : '';
+                        $mediaUrl = $vo['url'] ?? '';
                         $addMaterial[] = [$vo['name'], $vo['media_id'], $mediaUrl, $type, Attachment::MODEL_PERM, $vo['update_time'], time()];
                     }
                 }

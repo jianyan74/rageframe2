@@ -49,9 +49,15 @@ class ErrorLog extends Service
     private $req_id;
 
     /**
+     * 不记录的状态码
+     *
+     * @var array
+     */
+    public $exceptCode = [];
+
+    /**
      * 日志记录
      *
-     * 注意：可以考虑丢入到队列去执行
      *
      * @param $response
      * @param bool $showReqId
@@ -83,7 +89,8 @@ class ErrorLog extends Service
             $this->statusText = $response->statusText;
             $this->req_id = $req_id;
 
-            $this->insertLog();
+            // 排除状态码
+            !in_array($this->statusCode, $this->exceptCode) && $this->insertLog();
         }
 
         return $this->errData;
@@ -160,12 +167,12 @@ class ErrorLog extends Service
             return 'info';
         }
 
-        if ($statusCode >= 300 && $statusCode < 500)
+        if ($statusCode >= 300 && $statusCode < 400)
         {
             return 'warning';
         }
 
-        if ($statusCode >= 500)
+        if ($statusCode >= 400)
         {
             return 'error';
         }

@@ -134,17 +134,18 @@ class Manager extends \common\models\common\User
     {
         if ($this->isNewRecord)
         {
-            $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
             $this->auth_key = Yii::$app->security->generateRandomString();
-        }
-        else
-        {
-            if (isset(Yii::$app->user->identity) && Yii::$app->user->identity['password_hash'] != $this->password_hash)
-            {
-                $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
-            }
         }
         
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        AuthAssignment::deleteAll(['user_id' => $this->id]);
+        return parent::beforeDelete();
     }
 }

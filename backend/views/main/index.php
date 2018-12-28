@@ -39,7 +39,7 @@ AppAsset::register($this);
                                     <?php if (Yii::$app->user->id == Yii::$app->params['adminAccount']){; ?>
                                         超级管理员
                                     <?php }else{ ?>
-                                        <?= isset(Yii::$app->user->identity->assignment->item_name) ? Yii::$app->user->identity->assignment->item_name : '未授权'?>
+                                        <?= Yii::$app->user->identity->assignment->item_name ?? '游客'?>
                                     <?php } ?>
                                     <b class="caret"></b>
                                 </span>

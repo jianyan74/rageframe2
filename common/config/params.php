@@ -70,13 +70,9 @@ return [
     /** ------ 微信配置 ------ **/
 
     // 微信配置 具体可参考EasyWechat
-    'wechatConfig' => [
-        'debug'  => true,// Debug 模式 当值为 false 时，所有的日志都不会记录
-    ],
+    'wechatConfig' => [],
     // 微信支付配置 具体可参考EasyWechat
-    'wechatPaymentConfig' => [
-        'sandbox' => false,// 设置为 false 或注释则关闭沙箱模式
-    ],
+    'wechatPaymentConfig' => [],
     // 微信小程序配置 具体可参考EasyWechat
     'wechatMiniProgramConfig' => [],
     // 微信开放平台第三方平台配置 具体可参考EasyWechat
@@ -86,9 +82,9 @@ return [
     // 微信企业微信开放平台 具体可参考EasyWechat
     'wechatOpenWorkConfig' => [],
 
-    /** ------ 微信自定义接口配置-------------------**/
+    /** ------ 微信自定义接口配置------------------- **/
 
     'userApiPath' => Yii::getAlias('@root') . '/backend/modules/wechat/userapis', // 自定义接口路径
     'userApiNamespace' => '\backend\modules\wechat\userapis', // 命名空间
-    'userApiCachePrefixKey' => 'reply:user:api:', // 缓存前缀
+    'userApiCachePrefixKey' => 'reply:user-api:', // 缓存前缀
 ];

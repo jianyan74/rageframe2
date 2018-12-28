@@ -43,7 +43,7 @@ class ConfigCateController extends SController
      *
      * @return array|mixed|string|yii\web\Response
      */
-    public function actionEdit()
+    public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id');
@@ -64,7 +64,7 @@ class ConfigCateController extends SController
                 : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
         }
 
-        return $this->renderAjax('edit', [
+        return $this->renderAjax('ajax-edit', [
             'model' => $model,
             'parent_title' => $request->get('parent_title', '无'),
         ]);

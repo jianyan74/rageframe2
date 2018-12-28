@@ -38,10 +38,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <td><?= $model->title ?></td>
                                     <td><i class="fa <?= $model->icon ?>"></i></td>
                                     <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
-                                    <td><?= $model->is_default_show == 1 ? '是' : '否' ?></td>
+                                    <td><?= \common\helpers\HtmlHelper::whether($model->is_default_show) ?></td>
                                     <td>
                                         <a href="<?= Url::to(['ajax-edit','id'=>$model->id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
-                                        <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
+                                        <?= \common\helpers\HtmlHelper::status($model['status']); ?>
                                         <a href="<?= Url::to(['delete','id'=>$model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                                     </td>
                                 </tr>

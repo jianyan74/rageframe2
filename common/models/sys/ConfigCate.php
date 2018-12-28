@@ -1,8 +1,6 @@
 <?php
-
 namespace common\models\sys;
 
-use Yii;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
@@ -57,42 +55,42 @@ class ConfigCate extends \common\models\common\BaseModel
     }
 
     /**
-     * 关联配置
+     * 获取递归列表
      *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getConfig()
-    {
-        return $this->hasMany(Config::className(), ['cate_id' => 'id'])->where(['status' => StatusEnum::ENABLED])->orderBy('sort asc, id desc');
-    }
-
-    /**
      * @return array
      */
-    public static function getConfigList()
+    public static function getItemsMergeList()
     {
         $models = self::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->with(['config'])
             ->orderBy('sort asc,id desc')
             ->asArray()
-            ->with('config')
             ->all();
 
         return ArrayHelper::itemsMerge($models);
     }
 
     /**
+     * 获取下拉文本框列表
+     *
      * @return array
      */
-    public static function getList()
+    public static function getDropDownList()
     {
-        $models = self::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->orderBy('sort asc,id desc')
-            ->asArray()
-            ->all();
-
-        $models = ArrayHelper::itemsMerge($models);
+        $models = static::getItemsMergeList();
         return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+    }
+
+    /**
+     * 关联配置
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getConfig()
+    {
+        return $this->hasMany(Config::className(), ['cate_id' => 'id'])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->orderBy('sort asc, id desc');
     }
 }

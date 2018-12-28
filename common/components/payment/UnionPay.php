@@ -25,11 +25,12 @@ class UnionPay
     /**
      * 实例化类
      *
-     * @param $type
-     * @return mixed
+     * @param string $type
+     * @return \Omnipay\UnionPay\ExpressGateway
      */
     private function create($type = 'UnionPay_Express')
     {
+        /* @var $gateway \Omnipay\UnionPay\ExpressGateway */
         $gateway = Omnipay::create($type);
         $gateway->setMerId($this->config['mch_id']);
         $gateway->setCertId($this->config['cert_id']);
@@ -56,6 +57,7 @@ class UnionPay
 
     /**
      * APP
+     *
      * @param $order
      * @param bool $debug
      * @return mixed
@@ -70,6 +72,7 @@ class UnionPay
 
     /**
      * PC/Wap
+     *
      * @param $order
      * @param bool $debug
      * @return mixed

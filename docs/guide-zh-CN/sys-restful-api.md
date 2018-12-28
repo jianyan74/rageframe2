@@ -5,6 +5,7 @@
 - 继承的基类说明
 - 速率和参数配置
 - 不需要速率控制设置
+- 签名验证
 - Url权限配置
 - 方法权限验证
 - 返回数据格式修改
@@ -47,6 +48,23 @@ return [
 
 找到 `common\models\api\AccessToken` 让其直接继承 `common\models\common\BaseModel` 即可
 
+### 签名验证
+
+> 可自行修改 `api/config/params.php` 配置
+
+测试控制器：`api\controllersSignSecretKeyController`，注意要先开启路由规则匹配才能访问
+
+```
+return [
+    // 签名验证默认不关闭验证，如果开启需了解签名生成及验证
+    'user.httpSignValidity' => false,
+    // 签名授权公钥秘钥
+    'user.httpSignAccount' => [
+        'doormen' => 'e3de3825cfbf',
+    ],
+];
+```
+
 ### Url权限配置
 
 > 系统默认都是严格校验url方式注意在 `api/config/main.php的urlManager`里添加规则，否则访问都是404。
@@ -77,7 +95,7 @@ public function checkAccess($action, $model = null, $params = [])
 
 ### 返回数据格式修改
 
-> 请自行修改 `api\behaviors\beforeSend` 行为  
+> 请自行修改 `api\behaviors\BeforeSend` 行为  
 > 注意: 有些前端没有接触过状态码在Http头里面返回所以可以 在 beforeSend 数据处理后开启 `$response->statusCode = 200`;
 
 ### 自定义code返回

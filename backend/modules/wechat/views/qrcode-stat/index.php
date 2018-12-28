@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\LinkPager;
+use yii\widgets\ActiveForm;
 use kartik\daterange\DateRangePicker;
 use common\models\wechat\QrcodeStat;
 
@@ -30,7 +31,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <form action="" method="get" class="form-horizontal" role="form" id="form">
+                                    <?php $form = ActiveForm::begin([
+                                        'action' => Url::to(['index']),
+                                        'method' => 'get'
+                                    ]); ?>
                                         <div class="col-sm-4">
                                             <div class="input-group drp-container">
                                                 <?= DateRangePicker::widget([
@@ -54,11 +58,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="input-group m-b">
-                                                <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '场景名称'?>"/>
-                                                <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                                                <?= Html::textInput('keyword', $keyword, [
+                                                    'placeholder' => '场景名称',
+                                                    'class' => 'form-control'
+                                                ])?>
+                                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
                                             </div>
                                         </div>
-                                    </form>
+                                    <?php ActiveForm::end(); ?>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="ibox-tools">

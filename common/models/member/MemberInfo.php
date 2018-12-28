@@ -2,6 +2,7 @@
 
 namespace common\models\member;
 
+use common\enums\StatusEnum;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
@@ -26,7 +27,6 @@ use yii\behaviors\TimestampBehavior;
  * @property string $accumulate_money 累积消费
  * @property string $frozen_money 累积金额
  * @property int $user_integral 当前积分
- * @property string $address_id 默认地址
  * @property int $visit_count 访问次数
  * @property string $home_phone 家庭号码
  * @property string $mobile_phone 手机号码
@@ -59,7 +59,7 @@ class MemberInfo extends \common\models\common\User
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
             [['username'], 'unique', 'on' => ['backendCreate']],
-            [['type', 'sex', 'user_integral', 'address_id', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['type', 'sex', 'user_integral', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['user_money', 'accumulate_money', 'frozen_money'], 'number'],
             [['username', 'qq', 'home_phone', 'mobile_phone'], 'string', 'max' => 20],
@@ -97,7 +97,6 @@ class MemberInfo extends \common\models\common\User
             'accumulate_money' => '累计金额',
             'frozen_money' => '冻结金额',
             'user_integral' => '积分',
-            'address_id' => '默认收货地址id',
             'visit_count' => '登录总次数',
             'home_phone' => '家庭号码',
             'mobile_phone' => '手机号码',
@@ -127,17 +126,11 @@ class MemberInfo extends \common\models\common\User
     }
 
     /**
-     * 设置默认收货地址
-     *
-     * @param $address_id
+     * 关联第三方绑定
      */
-    public static function setDefaultAddress($member_id, $address_id)
+    public function getAuth()
     {
-        if ($model = self::findOne($member_id))
-        {
-            $model->address_id = $address_id;
-            $model->save();
-        }
+        $this->hasMany(MemberAuth::className(), ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
     }
 
     /**
@@ -149,6 +142,8 @@ class MemberInfo extends \common\models\common\User
     {
         if ($this->isNewRecord)
         {
+            $this->last_ip = Yii::$app->request->getUserIP();
+            $this->last_time = time();
             $this->auth_key = Yii::$app->security->generateRandomString();
         }
 

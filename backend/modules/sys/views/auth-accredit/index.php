@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         </tr>
                         </thead>
                         <tbody>
-                        <?= $this->render('auth_tree', [
+                        <?= $this->render('tree', [
                             'models'=>$models,
                             'parent_title' =>"无",
                             'parent_key' => 0,

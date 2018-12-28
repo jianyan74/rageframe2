@@ -15,6 +15,7 @@ use common\helpers\ArrayHelper;
  * @property string $menu_css 样式
  * @property int $sort 排序
  * @property int $level 级别
+ * @property string $params 参数
  * @property string $cate_id menu:菜单;sys:系统菜单
  * @property int $dev 开发者[0:都可见;开发模式可见]
  * @property int $status 状态[-1:删除;0:禁用;1启用]
@@ -43,6 +44,7 @@ class Menu extends \common\models\common\BaseModel
             ['url', 'default', 'value' => "#"],
             [['pid','sort'], 'default', 'value' => 0],
             [['level'], 'default', 'value' => 1],
+            [['params'], 'safe'],
         ];
     }
 
@@ -59,8 +61,9 @@ class Menu extends \common\models\common\BaseModel
             'menu_css' => '图标css',
             'sort' => '排序',
             'level' => '级别',
+            'params' => '参数',
             'cate_id' => '分类',
-            'dev' => '开发模式可见',
+            'dev' => '仅开发模式可见',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
@@ -73,7 +76,7 @@ class Menu extends \common\models\common\BaseModel
      * @param bool $status 状态
      * @return array
      */
-    public static function getList($status = false)
+    public static function getAuthShowList($status = false)
     {
         $data = Menu::find()->andFilterWhere(['status' => $status]);
         // 关闭开发模式
@@ -100,10 +103,25 @@ class Menu extends \common\models\common\BaseModel
             }
         }
 
-        $models = $data->orderBy('cate_id asc,sort asc')
+        $models = $data->orderBy('cate_id asc, sort asc')
             ->with('cate')
             ->asArray()
             ->all();
+
+        // 让 url 支持参数传递
+        foreach ($models as &$model)
+        {
+            $params = unserialize($model['params']);
+            empty($params) && $params = [];
+            $model['fullUrl'][] = $model['url'];
+            foreach ($params as $param)
+            {
+                if (!empty($param['key']))
+                {
+                    $model['fullUrl'][$param['key']] = $param['value'];
+                }
+            }
+        }
 
         return ArrayHelper::itemsMerge($models, 'id');
     }
@@ -125,7 +143,7 @@ class Menu extends \common\models\common\BaseModel
      */
     public function beforeDelete()
     {
-        $ids = ArrayHelper::getChildsId(self::find()->all(), $this->id);
+        $ids = ArrayHelper::getChildIds(self::find()->all(), $this->id);
         self::deleteAll(['in', 'id', $ids]);
 
         return parent::beforeDelete();

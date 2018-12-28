@@ -59,10 +59,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         </td>
                                         <td><?= $vo['brief_introduction'] ?> <a href="javascript:void(0);" class="show-description">详细介绍</a></td>
                                         <td>
-                                            <a href="<?= Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置');return false;"><span class="btn btn-info btn-sm">更新配置</span></a>
+                                            <a href="<?= Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置和权限, 更新后权限需要重新授权角色');return false;"><span class="btn btn-info btn-sm">更新配置</span></a>
                                             <a href="<?= Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-info btn-sm">更新数据</span></a>
                                             <a href="<?= Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
-                                            <?= \common\helpers\HtmlHelper::statusSpan($vo['status']) ?>
+                                            <?= \common\helpers\HtmlHelper::status($vo['status']) ?>
                                             <a href="<?= Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
                                         </td>
                                     </tr>

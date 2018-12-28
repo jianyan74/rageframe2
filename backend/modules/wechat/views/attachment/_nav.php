@@ -1,5 +1,6 @@
 <?php
-
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
 
@@ -13,13 +14,19 @@ use yii\helpers\Url;
     </div>
     <div class="col-sm-3">
         <?php if($mediaType != 'news'){ ?>
-        <form action="" method="get" class="form-horizontal" role="form" id="form">
+            <?php $form = ActiveForm::begin([
+                'action' => Url::to(['index']),
+                'method' => 'get'
+            ]); ?>
             <div class="input-group m-b">
-                <input type="text" class="form-control" name="keywords" placeholder="<?= $keywords ? $keywords : '请输入关键字'?>"/>
-                <input type="hidden" name="type" value="<?= $mediaType ?>">
-                <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
+                <?= Html::textInput('keywords', $keywords, [
+                    'placeholder' => '请输入关键字',
+                    'class' => 'form-control'
+                ])?>
+                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
             </div>
-        </form>
+            <?= Html::hiddenInput('type' , $mediaType)?>
+            <?php ActiveForm::end(); ?>
         <?php } ?>
     </div>
     <div class="col-sm-2">
@@ -33,7 +40,7 @@ use yii\helpers\Url;
                     <i class="fa fa-plus"></i> 创建
                 </a>
             <?php }else{ ?>
-                <a class="btn btn-primary btn-xs" href="<?= Url::to([ $mediaType . '-add','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
+                <a class="btn btn-primary btn-xs" href="<?= Url::to([ $mediaType . '-create','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
                     <i class="fa fa-plus"></i>  创建
                 </a>
             <?php } ?>

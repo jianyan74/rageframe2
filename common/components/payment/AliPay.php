@@ -33,10 +33,11 @@ class AliPay
      * 实例化类
      *
      * @param string $type
-     * @return mixed
+     * @return \Omnipay\Alipay\BaseAbstractGateway
      */
-    private function _create($type = 'Alipay_AopApp')
+    private function create($type = 'Alipay_AopApp')
     {
+        /* @var $gateway \Omnipay\Alipay\BaseAbstractGateway */
         $gateway = Omnipay::create($type);
         $gateway->setSignType('RSA2'); // RSA/RSA2/MD5
         $gateway->setAppId($this->config['app_id']);
@@ -63,7 +64,7 @@ class AliPay
     {
         $order['product_code'] = 'FAST_INSTANT_TRADE_PAY';
 
-        $gateway = $this->_create('Alipay_AopPage');
+        $gateway = $this->create('Alipay_AopPage');
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -106,7 +107,7 @@ class AliPay
     {
         $order['product_code'] = 'QUICK_MSECURITY_PAY';
 
-        $gateway = $this->_create('Alipay_AopApp');
+        $gateway = $this->create('Alipay_AopApp');
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -125,7 +126,7 @@ class AliPay
      */
     public function f2f($order)
     {
-        $gateway = $this->_create('Alipay_AopF2F');
+        $gateway = $this->create('Alipay_AopF2F');
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -146,7 +147,7 @@ class AliPay
     {
         $order['product_code'] = 'QUICK_WAP_PAY';
 
-        $gateway = $this->_create('Alipay_AopWap');
+        $gateway = $this->create('Alipay_AopWap');
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -174,7 +175,7 @@ class AliPay
      */
     public function refund(array $info)
     {
-        $gateway = $this->_create();
+        $gateway = $this->create();
         $request = $gateway->refund();
         $response = $request->setBizContent($info);
 
@@ -188,7 +189,7 @@ class AliPay
      */
     public function capture()
     {
-        $gateway = $this->_create('Alipay_AopF2F');
+        $gateway = $this->create('Alipay_AopF2F');
         $request = $gateway->capture();
 
         return $request;
@@ -201,7 +202,7 @@ class AliPay
      */
     public function notify()
     {
-        $gateway = $this->_create();
+        $gateway = $this->create();
         $request = $gateway->completePurchase();
         $request->setParams(array_merge(Yii::$app->request->post(), Yii::$app->request->get()));//Optional
 

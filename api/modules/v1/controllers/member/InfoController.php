@@ -1,34 +1,20 @@
 <?php
 namespace api\modules\v1\controllers\member;
 
-use common\helpers\ResultDataHelper;
-use Yii;
 use yii\web\NotFoundHttpException;
 use api\controllers\OnAuthController;
-use common\models\api\AccessToken;
 use common\enums\StatusEnum;
-use common\models\member\MemberInfo;
 
 /**
  * 会员接口
  *
  * Class InfoController
  * @package api\modules\v1\controllers\member
+ * @property \yii\db\ActiveRecord $modelClass;
  */
 class InfoController extends OnAuthController
 {
     public $modelClass = 'common\models\member\MemberInfo';
-
-    /**
-     * 测试查询方法
-     *
-     * @throws NotFoundHttpException
-     * @throws \yii\db\Exception
-     */
-    public function actionSearch()
-    {
-        return '测试查询';
-    }
 
     /**
      * 单个显示
@@ -39,7 +25,7 @@ class InfoController extends OnAuthController
      */
     public function actionView($id)
     {
-        $model = MemberInfo::find()
+        $model = $this->modelClass::find()
             ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
             ->select(['id', 'username', 'nickname', 'realname', 'head_portrait', 'sex', 'qq', 'email', 'birthday', 'user_money', 'user_integral', 'status', 'created_at'])
             ->asArray()
@@ -51,29 +37,6 @@ class InfoController extends OnAuthController
         }
 
         return $model;
-    }
-
-    /**
-     * 重置令牌
-     *
-     * @param $refresh_token
-     * @return array
-     * @throws NotFoundHttpException
-     * @throws \yii\base\Exception
-     */
-    public function actionRefresh()
-    {
-        if (Yii::$app->request->post('refresh_token') != Yii::$app->user->identity->refresh_token)
-        {
-            return ResultDataHelper::api(422, '重置令牌错误!');
-        }
-
-        if ($member = MemberInfo::findIdentity(Yii::$app->user->identity->member_id))
-        {
-            return AccessToken::getAccessToken($member, Yii::$app->user->identity->group);
-        }
-
-        throw new NotFoundHttpException('令牌错误，找不到用户!');
     }
 
     /**

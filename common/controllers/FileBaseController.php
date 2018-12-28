@@ -186,12 +186,19 @@ class FileBaseController extends Controller
             return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
-        UploadHelper::merge($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
+        try
+        {
+            UploadHelper::merge($mergeInfo['ultimatelyFilePath'], $mergeInfo['tmpAbsolutePath'], 1, $mergeInfo['extension']);
 
-        Yii::$app->cache->delete('upload-file-guid:' . $guid);
+            Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
-        return ResultDataHelper::json(200, '合并完成', [
-            'url' => $mergeInfo['relativePath']
-        ]);
+            return ResultDataHelper::json(200, '合并完成', [
+                'url' => $mergeInfo['relativePath']
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return ResultDataHelper::json(404, $e->getMessage());
+        }
     }
 }

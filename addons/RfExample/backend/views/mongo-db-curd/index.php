@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             </td>
                             <td>
                                 <a href="<?= AddonUrl::to(['edit','id' => $model->_id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                <?= \common\helpers\HtmlHelper::statusSpan($model['status']);?>
+                                <?= \common\helpers\HtmlHelper::status($model['status']);?>
                                 <a href="<?= AddonUrl::to(['delete','id'=> $model->_id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
                             </td>
                         </tr>

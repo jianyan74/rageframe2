@@ -3,7 +3,6 @@ namespace common\components;
 
 use Yii;
 use common\models\sys\Config;
-use common\models\sys\ActionLog;
 use yii\web\UnprocessableEntityHttpException;
 
 /**
@@ -63,19 +62,6 @@ class Debris
     }
 
     /**
-     * 行为日志
-     *
-     * @param string $behavior 行为
-     * @param string $remark 备注
-     * @param bool $noRecordData 是否记录post数据
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function log($behavior, $remark, $noRecordData = true)
-    {
-        ActionLog::record($behavior, $remark, $noRecordData);
-    }
-
-    /**
      * 打印
      *
      * @param $array
@@ -93,6 +79,10 @@ class Debris
      * @param bool $direct 是否直接报错
      * @return bool
      * @throws UnprocessableEntityHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getWechatError($message, $direct = true)
     {

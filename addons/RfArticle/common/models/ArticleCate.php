@@ -90,7 +90,7 @@ class ArticleCate extends \common\models\common\BaseModel
      */
     public function beforeDelete()
     {
-        $ids = ArrayHelper::getChildsId(self::find()->all(), $this->id);
+        $ids = ArrayHelper::getChildIds(self::find()->all(), $this->id);
         self::deleteAll(['in', 'id', $ids]);
 
         return parent::beforeDelete();

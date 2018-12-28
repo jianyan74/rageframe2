@@ -28,18 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             'pick' => [
                                 'multiple' => false,
                             ],
-                            // 不配置则不生成缩略图
-                            'formData' => [
-                                // 不配置则不生成缩略图
-                                'thumb' => [
-                                    [
-                                        'widget' => 100,
-                                        'height' => 100,
-                                    ],
-                                ]
-                            ],
-                            'chunked' => false,// 开启分片上传
-                            'chunkSize' => 512 * 1024,// 分片大小
                         ]
                     ]); ?>
                     <div class="row">

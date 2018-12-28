@@ -1,58 +1,78 @@
 <?php
-use yii\widgets\LinkPager;
+use yii\grid\GridView;
 use common\helpers\AddonUrl;
+use common\helpers\AddonHtmlHelper;
 
 $this->title = '文章管理';
-$this->params['breadcrumbs'][] = ['label' => $this->title];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5><?= $this->title; ?></h5>
                 <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
+                    <?= AddonHtmlHelper::create(['edit']); ?>
                 </div>
             </div>
             <div class="ibox-content">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>标题</th>
-                        <th>排序</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($models as $model){ ?>
-                        <tr id = <?= $model->id; ?>>
-                            <td><?= $model->id; ?></td>
-                            <td><?= $model->title; ?></td>
-                            <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']; ?>" onblur="rfSort(this)"></td>
-                            <td>
-                                <a href="<?= AddonUrl::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>
-                                <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
-                                <a href="<?= AddonUrl::to(['hide','id'=>$model->id])?>"><span class="btn btn-warning btn-sm">删除</span></a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <?= LinkPager::widget([
-                            'pagination' => $pages,
-                            'maxButtonCount' => 5,
-                            'firstPageLabel' => "首页",
-                            'lastPageLabel' => "尾页",
-                            'nextPageLabel' => "下一页",
-                            'prevPageLabel'=> "上一页",
-                        ]);?>
-                    </div>
-                </div>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    //重新定义分页样式
+                    'layout'=> '{summary}{items}<div class="text-right tooltip-demo">{pager}</div>',
+                    'tableOptions' => ['class' => 'table table-hover'],
+                    'pager'=>[
+                        //'options'=>['class' => 'hidden']//关闭分页
+                        'maxButtonCount' => 5,
+                        'firstPageLabel' => "首页",
+                        'lastPageLabel' => "尾页",
+                        'nextPageLabel' => "下一页",
+                        'prevPageLabel' => "上一页",
+                    ],
+                    'columns' => [
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'visible' => false, // 不显示#
+                        ],
+                        'id',
+                        'title',
+                        [
+                            'attribute' => 'sort',
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                return AddonHtmlHelper::sort($model->sort);
+                            },
+                            'format' => 'raw',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
+                        [
+                            'label'=> '创建日期',
+                            'attribute' => 'created_at',
+                            'filter' => false, //不显示搜索框
+                            'format' => ['date', 'php:Y-m-d H:i:s'],
+                        ],
+                        // 'updated_at',
+                        [
+                            'header' => "操作",
+                            'class' => 'yii\grid\ActionColumn',
+                            'template'=> '{edit} {status} {delete}',
+                            'buttons' => [
+                                'edit' => function ($url, $model, $key) {
+                                    return AddonHtmlHelper::edit(['edit', 'id' => $model->id]);
+                                },
+                                'status' => function ($url, $model, $key) {
+                                    return AddonHtmlHelper::status($model->status);
+                                },
+                                'delete' => function ($url, $model, $key) {
+                                    return AddonHtmlHelper::delete(['hide', 'id' => $model->id]);
+                                },
+                            ],
+                        ],
+                    ],
+
+                ]); ?>
             </div>
         </div>
     </div>

@@ -55,10 +55,10 @@ class AuthItemChild extends \yii\db\ActiveRecord
      * @return bool|int
      * @throws \yii\db\Exception
      */
-    public function accredit($parent, $auth)
+    public static function accredit($parent, $auth)
     {
         // 删除原先所有权限
-        $this::deleteAll(['parent' => $parent]);
+        self::deleteAll(['parent' => $parent]);
 
         $data = [];
         foreach ($auth as $value)
@@ -70,10 +70,10 @@ class AuthItemChild extends \yii\db\ActiveRecord
         {
             // 批量插入数据
             $field = ['parent', 'child'];
-            return Yii::$app->db->createCommand()->batchInsert($this::tableName(), $field, $data)->execute();
+            return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $field, $data)->execute();
         }
 
-        return false;
+        return true;
     }
 
     /**

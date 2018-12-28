@@ -27,7 +27,7 @@ composer global require "fxp/composer-asset-plugin:^1.4.0"
 
 #### 配置成功后首页访问正常，其他页面访问报404错误
 
-请配置对应的伪静态配置
+请配置对应的伪静态配置或者在路由后面带上 .html 后缀
 
 #### 为什么访问gii访问不到报错
 

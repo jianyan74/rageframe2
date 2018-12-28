@@ -15,6 +15,7 @@ use common\enums\StatusEnum;
  * 注意：会覆盖父类的继承方法，注意使用
  * Trait CurdTrait
  * @package backend\components
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
  */
 trait CurdTrait
 {
@@ -38,7 +39,8 @@ trait CurdTrait
      */
     public function actionIndex()
     {
-        $data = $this->modelClass::find();
+        $data = $this->modelClass::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -95,10 +97,12 @@ trait CurdTrait
     }
 
     /**
-     * 直接删除
+     * 删除
      *
      * @param $id
      * @return mixed
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -111,7 +115,7 @@ trait CurdTrait
     }
 
     /**
-     * 更新排序/状态字段
+     * ajax更新排序/状态
      *
      * @param $id
      * @return array
@@ -144,13 +148,13 @@ trait CurdTrait
     }
 
     /**
-     * 编辑/新增
+     * ajax编辑/新增
      *
-     * @return array|mixed|string|Response
+     * @return array
      */
     public function actionAjaxEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
         if ($model->load($request->post()))
@@ -175,10 +179,11 @@ trait CurdTrait
      * 返回模型
      *
      * @param $id
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      */
     protected function findModel($id)
     {
+        /* @var $model \yii\db\ActiveRecord */
         if (empty($id) || empty(($model = $this->modelClass::findOne($id))))
         {
             $model = new $this->modelClass;

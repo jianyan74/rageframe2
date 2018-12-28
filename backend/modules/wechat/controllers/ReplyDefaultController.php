@@ -16,6 +16,8 @@ class ReplyDefaultController extends WController
 {
     /**
      * 首页
+     *
+     * @return mixed|string
      */
     public function actionIndex()
     {

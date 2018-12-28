@@ -48,7 +48,7 @@ class MenuController extends SController
      *
      * @return array|mixed|string|\yii\web\Response
      */
-    public function actionEdit()
+    public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id');
@@ -57,6 +57,7 @@ class MenuController extends SController
         $model->level = $request->get('level', null) ?? $model->level; // 级别
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
         $model->cate_id = $request->get('cate_id', 0) ?? $model->cate_id; // 分类id
+        $model->params = unserialize($model->params);
 
         if ($model->load($request->post()))
         {
@@ -66,12 +67,13 @@ class MenuController extends SController
                 return \yii\widgets\ActiveForm::validate($model);
             }
 
+            $model->params = serialize($model->params);
             return $model->save()
                 ? $this->redirect(['index', 'cate_id' => $model->cate_id])
                 : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index', 'cate_id' => $model->cate_id]), 'error');
         }
 
-        return $this->renderAjax('edit', [
+        return $this->renderAjax('ajax-edit', [
             'model' => $model,
             'parent_title' => $request->get('parent_title', '无'),
         ]);

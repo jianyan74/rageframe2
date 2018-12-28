@@ -7,17 +7,19 @@ use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
 use common\helpers\ResultDataHelper;
+use api\behaviors\HttpSignAuth;
 
 /**
  * 无需授权访问基类
  *
  * Class AController
  * @package api\controllers
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
  */
 class OffAuthController extends \yii\rest\ActiveController
 {
     /**
-     * 普通获取每页数量
+     * 默认每页数量
      *
      * @var int
      */
@@ -31,7 +33,7 @@ class OffAuthController extends \yii\rest\ActiveController
     protected $offset = 0;
 
     /**
-     * 获取每页数量
+     * 实际每页数量
      *
      * @var
      */
@@ -45,6 +47,10 @@ class OffAuthController extends \yii\rest\ActiveController
         $behaviors = parent::behaviors();
         // 跨域支持
         $behaviors['class'] = Cors::className();
+        // 进行签名验证，前提开启了签名验证
+        $behaviors['signTokenValidate'] = [
+            'class' => HttpSignAuth::className(),
+        ];
 
         return $behaviors;
     }
@@ -103,6 +109,8 @@ class OffAuthController extends \yii\rest\ActiveController
     }
 
     /**
+     * 首页
+     *
      * @return ActiveDataProvider
      */
     public function actionIndex()
@@ -122,10 +130,11 @@ class OffAuthController extends \yii\rest\ActiveController
     /**
      * 创建
      *
-     * @return bool
+     * @return mixed|\yii\db\ActiveRecord
      */
     public function actionCreate()
     {
+        /* @var $model \yii\db\ActiveRecord */
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->identity->member_id;
@@ -141,7 +150,7 @@ class OffAuthController extends \yii\rest\ActiveController
      * 更新
      *
      * @param $id
-     * @return bool|mixed
+     * @return mixed|\yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
@@ -160,7 +169,7 @@ class OffAuthController extends \yii\rest\ActiveController
      * 删除
      *
      * @param $id
-     * @return mixed
+     * @return bool
      * @throws NotFoundHttpException
      */
     public function actionDelete($id)
@@ -174,7 +183,7 @@ class OffAuthController extends \yii\rest\ActiveController
      * 单个显示
      *
      * @param $id
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     public function actionView($id)
@@ -184,11 +193,12 @@ class OffAuthController extends \yii\rest\ActiveController
 
     /**
      * @param $id
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
      */
     protected function findModel($id)
     {
+        /* @var $model \yii\db\ActiveRecord */
         if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED])->one()))
         {
             throw new NotFoundHttpException('请求的数据不存在.');

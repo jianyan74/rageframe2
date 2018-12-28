@@ -31,8 +31,8 @@ class AuthAssignment extends \common\models\common\BaseModel
     {
         return [
             [['item_name', 'user_id'], 'required'],
-            [['created_at'], 'integer'],
-            [['item_name', 'user_id'], 'string', 'max' => 64],
+            [['created_at', 'user_id'], 'integer'],
+            [['item_name'], 'string', 'max' => 64],
             [['item_name', 'user_id'], 'unique', 'targetAttribute' => ['item_name', 'user_id']],
             [['item_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['item_name' => 'name']],
         ];
@@ -58,24 +58,22 @@ class AuthAssignment extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['user_id' => $id])
-            ->with('authItemChild')
+            ->with(['authItemChild', 'addonsAuthItemChild'])
             ->asArray()
             ->one();
     }
 
     /**
-     * @param int $user_id 用户id
-     * @param string $item_name 权限名称
+     * @param $itemNames
+     * @return array|null|ActiveRecord
      */
-    public function setAuthRole($user_id, $item_name)
+    public static function finldItemNames($itemNames)
     {
-        $this::deleteAll(['user_id'=>$user_id]);
-
-        $authAssignment = new $this;
-        $authAssignment->user_id  = $user_id;
-        $authAssignment->item_name = $item_name;
-
-        return $authAssignment->save() ? true : false ;
+        return self::find()
+            ->where(['in', 'item_name', $itemNames])
+            ->select('user_id')
+            ->asArray()
+            ->one();
     }
 
     /**
@@ -115,6 +113,16 @@ class AuthAssignment extends \common\models\common\BaseModel
     public function getAuthItemChild()
     {
         return $this->hasMany(AuthItemChild::className(), ['parent' => 'item_name']);
+    }
+
+    /**
+     * 关联插件模块权限列表
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddonsAuthItemChild()
+    {
+        return $this->hasMany(AddonsAuthItemChild::className(), ['parent' => 'item_name']);
     }
 
     /**

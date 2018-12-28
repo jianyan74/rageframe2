@@ -22,6 +22,11 @@ class LoginForm extends \common\models\common\LoginForm
     public $attempts = 3;
 
     /**
+     * @var bool
+     */
+    public $rememberMe = false;
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -49,6 +54,7 @@ class LoginForm extends \common\models\common\LoginForm
      * 验证ip地址是否正确
      *
      * @param $attribute
+     * @throws \yii\base\InvalidConfigException
      */
     public function validateIp($attribute)
     {
@@ -60,7 +66,7 @@ class LoginForm extends \common\models\common\LoginForm
             if (!in_array($ip, $ipList))
             {
                 // 记录行为日志
-                Yii::$app->debris->log('login', '限制IP登录', false);
+                Yii::$app->services->sys->log('login', '限制IP登录', false);
 
                 $this->addError($attribute, '登录失败');
             }
@@ -95,6 +101,7 @@ class LoginForm extends \common\models\common\LoginForm
      * 登陆
      *
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function login()
     {
@@ -106,7 +113,7 @@ class LoginForm extends \common\models\common\LoginForm
         }
 
         // 记录行为日志
-        Yii::$app->debris->log('login', '账号或者密码错误|用户名:' . $this->username, false);
+        Yii::$app->services->sys->log('login', '账号或者密码错误|用户名:' . $this->username, false);
 
         $counter = Yii::$app->session->get('loginCaptchaRequired') + 1;
         Yii::$app->session->set('loginCaptchaRequired', $counter);

@@ -11,6 +11,9 @@ class RuleForm extends Rule
 {
     public $keyword;
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         $rule = parent::rules();

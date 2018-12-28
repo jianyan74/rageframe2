@@ -52,6 +52,14 @@ class SendForm extends MassRecord
 
     /**
      * 群发消息
+     *
+     * @param bool $immediately
+     * @return bool
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function send($immediately = true)
     {

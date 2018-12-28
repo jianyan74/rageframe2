@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Json;
 
 ?>
 
@@ -12,11 +13,11 @@ use yii\helpers\Url;
         <tbody>
         <tr>
             <td>行为</td>
-            <td><?= $model['behavior']?></td>
+            <td><?= $model['behavior'] ?></td>
         </tr>
         <tr>
             <td>提交方法</td>
-            <td><?= $model['method']?></td>
+            <td><?= $model['method'] ?></td>
         </tr>
         <tr>
             <td>用户</td>
@@ -47,7 +48,7 @@ use yii\helpers\Url;
             <td style="max-width: 700px">
                 <?php
                 echo "<pre>";
-                print_r(json_decode($model['get_data'], true))
+                print_r(Json::decode($model['get_data']))
                 ?>
             </>
         </tr>
@@ -56,7 +57,7 @@ use yii\helpers\Url;
             <td style="max-width: 700px">
                 <?php
                 echo "<pre>";
-                print_r(json_decode($model['post_data'], true))
+                print_r(Json::decode($model['post_data']))
                 ?>
             </td>
         </tr>

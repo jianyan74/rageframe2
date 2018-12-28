@@ -18,6 +18,7 @@
 - [表单控件](sys-widget.md)
 - [组件调用](sys-subassembly.md)
 - [系统JS](sys-js-method.md)
+- [权限控制](sys-auth.md)
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
 - [服务层Server](sys-service.md)
@@ -60,6 +61,7 @@
 - FileHelper - 文件辅助类
 - DateHelper - 日期格式辅助类
 - PayHelper - 支付辅助类
+- [HtmlHelper](helper-html.md) - Html辅助类
 - [StringHelper](helper-string.md) - 字符串辅助类
 - [UrlHelper](helper-url.md) - Url生成辅助类
 - RegularHelper - 正则验证辅助类
@@ -68,8 +70,12 @@
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
 - [AddonHelper](helper-addon.md) - 模块辅助类
 - [AddonUrl](helper-addon-url.md) - 模块Url生成辅助类
+- [AddonHtmlHelper](helper-addon-html.md) - 模块Html辅助类
 
 #### 附录
 
+- [SearchModel](component-search-model.md)
+- CurdTrait
+- [代码提示/线上性能优化](system-optimize.md)
 - [PHP编程规范](php-standard.md)
 - [网址收录](append-website.md)

@@ -245,6 +245,16 @@ class Addons extends BaseModel
     }
 
     /**
+     * 关联绑定的入口
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBindingCover()
+    {
+        return $this->hasMany(AddonsBinding::className(), ['addons_name' => 'name'])->where(['entry' => 'cover'])->orderBy('id asc');
+    }
+
+    /**
      * 关联绑定的菜单和导航
      *
      * @return \yii\db\ActiveQuery
@@ -255,11 +265,33 @@ class Addons extends BaseModel
     }
 
     /**
+     * 关联权限
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthItem()
+    {
+        return $this->hasMany(AddonsAuthItem::className(), ['addons_name' => 'name']);
+    }
+
+    /**
+     * 关联权限的菜单
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthItemChild()
+    {
+        return $this->hasOne(AddonsAuthItemChild::className(), ['addons_name' => 'name']);
+    }
+
+    /**
      * 卸载插件的时候清理安装的信息
      */
     public function afterDelete()
     {
         AddonsBinding::deleteAll(['addons_name' => $this->name]);
+        AddonsAuthItemChild::deleteAll(['addons_name' => $this->name]);
+        AddonsAuthItem::deleteAll(['addons_name' => $this->name]);
         // Rule::deleteAll($this->name);
         parent::afterDelete();
     }

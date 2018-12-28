@@ -2,7 +2,6 @@
 namespace backend\modules\wechat\models;
 
 use yii\base\Model;
-use common\models\wechat\Setting;
 
 /**
  * Class HistoryForm

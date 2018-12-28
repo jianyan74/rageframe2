@@ -3,8 +3,8 @@
 namespace common\models\api;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 use common\models\member\MemberInfo;
 use common\models\common\RateLimit;
 use common\helpers\ArrayHelper;
@@ -33,6 +33,14 @@ class AccessToken extends RateLimit
     const GROUP_MINI_PROGRAM = 'miniProgram'; // 小程序
     const GROUP_APP = 'app'; // app
     const GROUP_WECHAT = 'wechat'; // 微信
+
+    /**
+     * 给其他表单验证的数据
+     *
+     * @var array
+     */
+    public static $ruleGroupRnage = ['miniProgram', 'app', 'wechat'];
+
 
     /**
      * {@inheritdoc}
@@ -68,8 +76,8 @@ class AccessToken extends RateLimit
             'member_id' => '会员ID',
             'group' => '组别',
             'status' => '状态',
-            'allowance' => 'Allowance',
-            'allowance_updated_at' => 'Allowance 更新时间',
+            'allowance' => '访问次数',
+            'allowance_updated_at' => '最后次访问时间',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
@@ -85,6 +93,18 @@ class AccessToken extends RateLimit
     public static function findIdentityByAccessToken($token, $type = null)
     {
         return static::findOne(['access_token' => $token]);
+    }
+
+    /**
+     * refresh_token 找到identity
+     *
+     * @param $token
+     * @param null $group
+     * @return AccessToken|null
+     */
+    public static function findIdentityByRefreshToken($token, $group = null)
+    {
+        return static::findOne(['group' => $group, 'refresh_token' => $token]);
     }
 
     /**
@@ -105,6 +125,7 @@ class AccessToken extends RateLimit
         $model->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
         $model->access_token = Yii::$app->security->generateRandomString() . '_' . time();
 
+        // 记录访问次数
         $member->visit_count += 1;
         $member->last_time = time();
         $member->last_ip = Yii::$app->request->getUserIP();
@@ -130,8 +151,9 @@ class AccessToken extends RateLimit
     /**
      * 返回模型
      *
-     * @param $id
-     * @return mixed
+     * @param $member_id
+     * @param $group
+     * @return array|AccessToken|null|ActiveRecord
      */
     protected static function findModel($member_id, $group)
     {

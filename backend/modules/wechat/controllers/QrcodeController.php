@@ -36,7 +36,7 @@ class QrcodeController extends WController
     /**
      * 创建
      *
-     * @return string|yii\web\Response
+     * @return mixed|string|Response
      */
     public function actionAdd()
     {
@@ -45,7 +45,6 @@ class QrcodeController extends WController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-
             $qrcode = $this->app->qrcode;
             try
             {
@@ -165,6 +164,11 @@ class QrcodeController extends WController
      * 长链接二维码
      *
      * @return array|string
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionLongUrl()
     {

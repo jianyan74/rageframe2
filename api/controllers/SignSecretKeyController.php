@@ -16,27 +16,39 @@ class SignSecretKeyController extends OffAuthController
     public $modelClass = '';
 
     /**
+     * 公钥
+     *
+     * @var string
+     */
+    protected $appId = 'doormen';
+    /**
+     * 密钥
+     *
+     * @var string
+     */
+    protected $appSecret = 'e3de3825cfbf';
+
+
+    /**
      * 生成测试带签名秘钥的url
      *
-     * appId: doormen
-     * appSecret: e3de3825cfbf
-     *
-     * 关于创建appId和appSecret可自行设置
+     * 关于创建appId和appSecret可自行生成
      *
      * @return array|\yii\data\ActiveDataProvider
      */
     public function actionIndex()
     {
         $paraStr = EncryptionHelper::createUrlParam([
-            'appId' => 'doormen',
+            'appId' => $this->appId,
             'time' => time(),
             'nonceStr' => StringHelper::random(32),
             'mobile' => '15888888888',
-        ], 'e3de3825cfbf');
+        ], $this->appSecret);
 
         return [
             'url' => Yii::$app->request->hostInfo . '/api/sign-secret-key?' . $paraStr,
-            'method' => 'post'
+            'method' => 'post',
+            'explain' => '请用post请求该链接进行测试带签名验证'
         ];
     }
 
@@ -48,6 +60,6 @@ class SignSecretKeyController extends OffAuthController
      */
     public function actionCreate()
     {
-        return EncryptionHelper::decodeUrlParam(Yii::$app->request->get(), 'e3de3825cfbf');
+        return EncryptionHelper::decodeUrlParam(Yii::$app->request->get(), $this->appSecret);
     }
 }

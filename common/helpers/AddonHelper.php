@@ -29,8 +29,7 @@ class AddonHelper
      */
     public static function getAddonConfig($name)
     {
-        $class = "addons\\{$name}\\AddonConfig";
-        return $class;
+        return "addons" . "\\" . $name . "\\" . "AddonConfig";
     }
 
     /**
@@ -41,8 +40,7 @@ class AddonHelper
      */
     public static function getAddonMessage($name)
     {
-        $class = "addons\\{$name}\\AddonMessage";
-        return $class;
+        return "addons" . "\\" . $name . "\\" . "AddonMessage";
     }
 
     /**
@@ -245,7 +243,7 @@ class AddonHelper
         !empty($controllerPath) && $controllerPath .= '\\';
 
         $controllerName = $controller . 'Controller';
-        $addonRootPath = "\\addons\\" . Yii::$app->params['addonInfo']['name'];
+        $addonRootPath = "\\" . "addons" . "\\" . Yii::$app->params['addonInfo']['name'];
         $tmpInfo = [
             'oldController' => $oldController,
             'oldAction' => $oldAction,
@@ -254,9 +252,14 @@ class AddonHelper
             'controllerName' => $controllerName,
             'actionName' => "action" . $action,
             'rootPath' => $addonRootPath,
-            'rootAbsolutePath' => Yii::getAlias('@addons') .'/' .Yii::$app->params['addonInfo']['name'],
-            'controllersPath' => $addonRootPath . "\\" . $module . "\\controllers\\" . $controllerPath . $controllerName
+            'rootAbsolutePath' => Yii::getAlias('@addons') . '/' .Yii::$app->params['addonInfo']['name'],
+            'controllersPath' => $addonRootPath . "\\" . $module . '\\'. "controllers". '\\' . $controllerPath . $controllerName
         ];
+
+        if (!class_exists($tmpInfo['controllersPath']))
+        {
+            throw new NotFoundHttpException('页面未找到。');
+        }
 
         // 存入模块基础的信息
         Yii::$app->params['addonInfo'] = ArrayHelper::merge(Yii::$app->params['addonInfo'], $tmpInfo);

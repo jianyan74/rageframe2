@@ -5,10 +5,6 @@
 - 控制台
   - 数据迁移
   - 定时任务
-- 控制器
-  - 上传
-  - 省市区联动
-  - 接收微信消息
 - 别名
 - 变量
   - api
@@ -75,20 +71,6 @@ php ./yii migrate/up
 
 查看控制器 `console\controllers\MsgHistoryController`
 
-### 控制器
-
-##### 上传
-
-> api上传 有专门的说明，目前说的例子适用于 wechat、frontend、backend 的应用
-
-##### 省市区联动
-
-> 目前说的例子适用于 wechat、frontend、backend 的应用
-
-##### 接收微信消息
-
-> 目前说的例子适用于 wechat 的应用
-
 ### 别名
 
-### 变量
+> TODO

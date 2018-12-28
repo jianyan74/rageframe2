@@ -11,6 +11,7 @@ use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
 use common\models\sys\Addons;
 use common\models\sys\AddonsBinding;
+use common\models\sys\AddonsAuthItem;
 use backend\modules\sys\models\AddonsForm;
 
 /**
@@ -125,6 +126,10 @@ class AddonsPlugController extends SController
                 // 添加入口
                 isset($addonsConfig->menu) && AddonsBinding::careteEntry($addonsConfig->menu, 'menu', $addonName);
                 isset($addonsConfig->cover) && AddonsBinding::careteEntry($addonsConfig->cover, 'cover', $addonName);
+
+                // 添加权限
+                isset($addonsConfig->authItem) && AddonsAuthItem::add($addonsConfig->authItem, $addonName);
+
                 Addons::edit(new Addons(), $addonsConfig);
 
                 $transaction->commit();
@@ -247,6 +252,9 @@ class AddonsPlugController extends SController
         $addonsConfig = new $class;
         isset($addonsConfig->menu) && AddonsBinding::careteEntry($addonsConfig->menu, 'menu', $addonName);
         isset($addonsConfig->cover) && AddonsBinding::careteEntry($addonsConfig->cover, 'cover', $addonName);
+
+        // 添加权限
+        isset($addonsConfig->authItem) && AddonsAuthItem::add($addonsConfig->authItem, $addonName);
         Addons::edit($addon, $addonsConfig);
 
         return $this->message('更新配置成功', $this->redirect(['uninstall']));

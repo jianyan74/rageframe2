@@ -1,6 +1,20 @@
 ## 数据字典
 
-### api_接口日志 : rf_api_log
+### api_授权秘钥表 : rf_api_access_token
+字段 | 类型 | 允许为空 | 默认值 | 字段说明
+---|---|---|---|---
+id | bigint(20) unsigned | 否 | | 无
+refresh_token | varchar(60) | 是 | | 刷新令牌
+access_token | varchar(60) | 是 | | 授权令牌
+member_id | bigint(20) unsigned | 是 | 0 | 关联的用户id
+group | varchar(30) | 是 | | 组别
+allowance | int(10) | 否 | 0 | 规定时间可获取次数
+allowance_updated_at | int(10) | 否 | 0 | 最后一次提交时间
+status | tinyint(4) | 否 | 1 | 状态[-1:删除;0:禁用;1启用]
+created_at | int(10) | 否 | 0 | 创建时间
+updated_at | int(10) | 是 | 0 | 修改时间
+
+### api_接口日志 : rf_common_log
 字段 | 类型 | 允许为空 | 默认值 | 字段说明
 ---|---|---|---|---
 id | int(11) | 否 | | 无
@@ -16,6 +30,7 @@ ip | varchar(16) | 是 | | ip地址
 error_code | int(10) | 是 | 0 | 报错code
 error_msg | varchar(200) | 是 | | 报错信息
 error_data | longtext | 是 | | 报错日志
+req_id | varchar(50) | 是 | | 对外id
 status | tinyint(4) | 否 | 1 | 状态(-1:已删除,0:禁用,1:正常)
 created_at | int(10) | 是 | 0 | 创建时间
 updated_at | int(10) unsigned | 是 | 0 | 修改时间
@@ -60,29 +75,18 @@ level | tinyint(1) | 否 | 1 | 级别
 position | varchar(255) | 否 | | 无
 sort | tinyint(3) unsigned | 是 | 0 | 排序
 
-### 直播_房间表 : rf_live_room
+### 系统_短信发送日志 : rf_common_sms_log
 字段 | 类型 | 允许为空 | 默认值 | 字段说明
 ---|---|---|---|---
 id | int(11) | 否 | | 无
-member_id | int(10) | 是 | 0 | 会员id
-title | varchar(100) | 是 | | 房间名称
-cover | varchar(255) | 是 | | 封面
-room_num | int(10) unsigned | 是 | 0 | 房间号
-recommend | tinyint(4) unsigned | 是 | 0 | 推荐位
-like_num | int(10) unsigned | 是 | 0 | 喜欢人数
-watch_num | int(10) unsigned | 是 | 0 | 观看人数
-max_watch_num | int(10) unsigned | 是 | 0 | 最多观看人数
-sort | int(10) | 是 | 0 | 排序
-view | int(10) unsigned | 是 | 0 | 浏览量
-push_path | varchar(100) | 是 | | 推流地址
-push_path_arg | varchar(200) | 是 | | 推流变量地址
-pull_path_rtmp | varchar(200) | 是 | | 拉流rtmp地址
-pull_path_flv | varchar(200) | 是 | | 拉流rtmp地址
-pull_path_m3u8 | varchar(200) | 是 | | 拉流rtmp地址
-start_time | int(10) unsigned | 是 | 0 | 直播开始时间
-end_time | int(10) unsigned | 是 | 0 | 直播结束时间
+member_id | int(11) | 是 | 0 | 用户id
+mobile | varchar(20) | 是 | | 手机号码
+content | varchar(1000) | 是 | | 内容
+error_code | int(10) | 是 | 0 | 报错code
+error_msg | varchar(200) | 是 | | 报错信息
+error_data | longtext | 是 | | 报错日志
 status | tinyint(4) | 否 | 1 | 状态(-1:已删除,0:禁用,1:正常)
-created_at | int(10) unsigned | 是 | 0 | 创建时间
+created_at | int(10) | 是 | 0 | 创建时间
 updated_at | int(10) unsigned | 是 | 0 | 修改时间
 
 ### 用户_收货地址表 : rf_member_address
@@ -93,7 +97,9 @@ member_id | int(11) | 是 | 0 | 用户id
 provinces | int(10) | 是 | 0 | 省id
 city | int(10) | 是 | 0 | 市id
 area | int(10) | 是 | 0 | 区id
-detailed_address | varchar(255) | 是 | | 详细地址
+address_name | varchar(255) | 是 | | 地址
+address_details | varchar(255) | 是 | | 详细地址
+is_default | tinyint(1) | 是 | 0 | 默认地址
 zip_code | int(10) | 是 | 0 | 邮编
 realname | varchar(100) | 是 | | 真实姓名
 tel | varchar(20) | 是 | | 家庭号码
@@ -144,11 +150,9 @@ username | varchar(20) | 是 | | 帐号
 password_hash | varchar(255) | 是 | | 密码
 auth_key | varchar(32) | 是 | | 授权令牌
 password_reset_token | varchar(255) | 是 | | 密码重置令牌
-access_token | varchar(60) | 是 | | 授权令牌
-refresh_token | varchar(60) | 是 | | 刷新令牌
 type | tinyint(1) | 是 | 1 | 类别[1:普通会员;10管理员]
 nickname | varchar(50) | 是 | | 昵称
-realname | varchar(10) | 是 | | 真实姓名
+realname | varchar(50) | 是 | | 真实姓名
 head_portrait | varchar(255) | 是 | | 头像
 sex | tinyint(1) | 是 | 1 | 性别[1:男;2:女]
 qq | varchar(20) | 是 | | qq
@@ -159,7 +163,7 @@ accumulate_money | decimal(10,2) | 是 | 0.00 | 累积消费
 frozen_money | decimal(10,2) | 是 | 0.00 | 累积金额
 user_integral | int(11) | 是 | 0 | 当前积分
 address_id | mediumint(8) unsigned | 是 | 0 | 默认地址
-visit_count | smallint(5) unsigned | 是 | 0 | 访问次数
+visit_count | smallint(5) unsigned | 是 | 1 | 访问次数
 home_phone | varchar(20) | 是 | | 家庭号码
 mobile_phone | varchar(20) | 是 | | 手机号码
 role | smallint(6) | 是 | 10 | 权限
@@ -168,8 +172,6 @@ last_ip | varchar(16) | 是 | | 最后一次登陆ip
 provinces | int(11) | 是 | 0 | 省
 city | int(11) | 是 | 0 | 城市
 area | int(11) | 是 | 0 | 地区
-allowance | int(10) | 否 | 0 | 规定时间可获取次数
-allowance_updated_at | int(10) | 否 | 0 | 最后一次提交时间
 status | smallint(6) | 是 | 1 | 状态
 created_at | int(10) | 否 | 0 | 创建时间
 updated_at | int(10) | 是 | 0 | 修改时间
@@ -219,6 +221,20 @@ status | tinyint(4) | 否 | 1 | 状态[-1:删除;0:禁用;1启用]
 created_at | int(10) | 否 | 0 | 创建时间
 updated_at | int(10) | 否 | 0 | 修改时间
 
+### 系统_插件_权限表 : rf_sys_addons_auth_item
+字段 | 类型 | 允许为空 | 默认值 | 字段说明
+---|---|---|---|---
+addons_name | varchar(40) | 否 | | 插件名称
+route | varchar(64) | 否 | | 插件路由
+description | text | 是 | | 无
+
+### 系统_插件_权限授权表 : rf_sys_addons_auth_item_child
+字段 | 类型 | 允许为空 | 默认值 | 字段说明
+---|---|---|---|---
+parent | varchar(64) | 否 | | 无
+child | varchar(64) | 否 | | 无
+addons_name | varchar(30) | 否 | | 插件名称
+
 ### 系统_插件菜单表 : rf_sys_addons_binding
 字段 | 类型 | 允许为空 | 默认值 | 字段说明
 ---|---|---|---|---
@@ -248,6 +264,7 @@ data | text | 是 | | 无
 parent_key | int(10) | 是 | 0 | 父级key
 level | int(5) | 是 | 1 | 级别
 sort | int(10) | 是 | 0 | 排序
+position | varchar(2000) | 否 | | 树
 created_at | int(11) | 是 | 0 | 无
 updated_at | int(11) | 是 | 0 | 无
 
@@ -272,7 +289,7 @@ id | int(10) unsigned | 否 | | 主键
 title | varchar(50) | 否 | | 配置标题
 name | varchar(30) | 否 | | 配置标识
 type | varchar(30) | 否 | | 配置类型
-cate_id | tinyint(4) unsigned | 否 | 0 | 配置分类
+cate_id | int(10) unsigned | 否 | 0 | 配置分类
 extra | varchar(255) | 否 | | 配置值
 remark | varchar(1000) | 否 | | 配置说明
 value | text | 是 | | 配置值
@@ -335,6 +352,7 @@ sort | int(5) | 是 | 0 | 排序
 level | tinyint(1) | 是 | 1 | 级别
 cate_id | tinyint(5) | 是 | 0 | 无
 dev | tinyint(4) | 是 | 0 | 开发者[0:都可见;开发模式可见]
+params | varchar(1000) | 是 | | 参数
 status | tinyint(1) | 是 | 1 | 状态[-1:删除;0:禁用;1启用]
 created_at | int(10) | 是 | 0 | 添加时间
 updated_at | int(10) | 是 | 0 | 修改时间
@@ -466,6 +484,7 @@ media_type | varchar(10) | 是 | | 资源类别
 send_time | int(10) unsigned | 是 | 0 | 发送时间
 send_status | tinyint(4) | 是 | 0 | 0未发送 1已发送
 final_send_time | int(10) unsigned | 是 | 0 | 最终发送时间
+error_content | varchar(255) | 是 | | 报错原因
 status | tinyint(4) | 是 | 1 | 状态[-1:删除;0:禁用;1启用]
 created_at | int(10) unsigned | 是 | 0 | 无
 updated_at | int(10) | 否 | 0 | 修改时间

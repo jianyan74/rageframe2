@@ -58,7 +58,7 @@ class Config extends \common\models\common\BaseModel
             'id' => 'ID',
             'title' => '标题',
             'name' => '标识',
-            'type' => '类型',
+            'type' => '属性',
             'cate_id' => '分类',
             'extra' => '配置项',
             'remark' => '说明',

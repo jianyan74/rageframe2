@@ -5,10 +5,10 @@ use Yii;
 use yii\base\Behavior;
 
 /**
- * Class beforeSend
+ * Class BeforeSend
  * @package api\behaviors
  */
-class beforeSend extends Behavior
+class BeforeSend extends Behavior
 {
     /**
      * {@inheritdoc}
@@ -42,6 +42,12 @@ class beforeSend extends Behavior
         if ($response->statusCode >= 500)
         {
             $response->data['data'] = YII_DEBUG ? $errData : '内部服务器错误,请联系管理员';
+        }
+
+        // 提取系统的报错信息
+        if ($response->statusCode >= 300 && isset($response->data['data']['message']) && isset($response->data['data']['status']))
+        {
+            $response->data['message'] = $response->data['data']['message'];
         }
 
         $response->format = yii\web\Response::FORMAT_JSON;

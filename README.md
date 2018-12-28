@@ -27,10 +27,15 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 
 ### 系统快照
 
+【权限管理】
+![image](docs/guide-zh-CN/images/auth.png)
+【自定义菜单】
+![image](docs/guide-zh-CN/images/menu.png)
+【素材管理】
 ![image](docs/guide-zh-CN/images/material.png)
-
+【插件模块】
 ![image](docs/guide-zh-CN/images/addon.png)
-
+【服务器监控】
 ![image](docs/guide-zh-CN/images/sysInfo.png)
 
 ### 开始之前
@@ -56,7 +61,7 @@ http://www.rageframe.com
 
 ### 文档
 
-[安装文档](docs/guide-zh-CN/start-installation.md) · [本地文档](docs/guide-zh-CN/README.md) · [更新历史](docs/guide-zh-CN/start-update-log.md)
+[安装文档](docs/guide-zh-CN/start-installation.md) · [本地文档](docs/guide-zh-CN/README.md) · [更新历史](docs/guide-zh-CN/start-update-log.md) · [常见问题](docs/guide-zh-CN/start-issue.md)
 
 ### 问题反馈
 
@@ -64,7 +69,7 @@ http://www.rageframe.com
 
 QQ群：[655084090](https://jq.qq.com/?_wv=1027&k=4BeVA2r)
 
-Github：https://github.com/jianyan74/rageframe2.git
+Github：https://github.com/jianyan74/rageframe2/issues
 
 ### 特别鸣谢
 
@@ -82,6 +87,6 @@ RageFrame遵循Apache2开源协议发布，并提供免费使用。
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2016-2018 by RageFrame [www.rageframe.com](http://www.rageframe.com)
+版权所有Copyright © 2016-2019 by RageFrame [www.rageframe.com](http://www.rageframe.com)
 
 All rights reserved。

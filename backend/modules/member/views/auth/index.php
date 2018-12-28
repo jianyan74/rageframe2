@@ -1,6 +1,9 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use common\helpers\HtmlHelper;
 
 $this->title = '第三方用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -15,14 +18,20 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <form action="" method="get" class="form-horizontal" role="form" id="form">
-                                <div class="input-group m-b">
-                                    <input type="text" class="form-control" name="keyword" placeholder="<?= $keyword ? $keyword : '请输入昵称'?>"/>
-                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
-                                </div>
-                            </form>
+                        <?php $form = ActiveForm::begin([
+                            'action' => Url::to(['index']),
+                            'method' => 'get'
+                        ]); ?>
+                        <div class="col-sm-3">
+                            <div class="input-group m-b">
+                                <?= Html::textInput('keyword', $keyword, [
+                                    'placeholder' => '请输入昵称',
+                                    'class' => 'form-control'
+                                ])?>
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
                         </div>
+                        <?php ActiveForm::end(); ?>
                     </div>
                     <table class="table table-hover">
                         <thead>
@@ -44,7 +53,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <tr id="<?= $model->id?>">
                                 <td><?= $model->id?></td>
                                 <td class="feed-element">
-                                    <img src="<?= \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>" class="img-circle">
+                                    <img src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" class="img-circle">
                                 </td>
                                 <td><?= $model->nickname?></td>
                                 <td><?= $model->sex == 1 ? '男' : '女' ?></td>
@@ -63,9 +72,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <td><?= $model->country?>·<?= $model->province?>·<?= $model->city?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <a href="<?= Url::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>
-                                    <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
-                                    <a href="<?= Url::to(['destroy','id' => $model->id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
+                                    <?= HtmlHelper::edit(['edit', 'id' => $model->id])?>
+                                    <?= HtmlHelper::status($model['status']); ?>
+                                    <?= HtmlHelper::delete(['destroy', 'id' => $model->id])?>
                                 </td>
                             </tr>
                         <?php } ?>

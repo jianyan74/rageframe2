@@ -1,4 +1,7 @@
 <?php
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
 use kartik\daterange\DateRangePicker;
 
@@ -21,35 +24,36 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 </div>
                 <div class="ibox-content">
                     <div class="col-sm-12">
-                        <form action="" method="get" class="form-horizontal" role="form" id="form">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="input-group drp-container">
-                                        <?= DateRangePicker::widget([
-                                            'name' => 'queryDate',
-                                            'value' => $from_date . '-' . $to_date,
-                                            'readonly' => 'readonly',
-                                            'useWithAddon' => true,
-                                            'convertFormat' => true,
-                                            'startAttribute' => 'from_date',
-                                            'endAttribute' => 'to_date',
-                                            'startInputOptions' => ['value' => $from_date],
-                                            'endInputOptions' => ['value' => $to_date],
-                                            'pluginOptions' => [
-                                                'locale' => ['format' => 'Y-m-d'],
-                                            ]
-                                        ]) . $addon;?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="input-group m-b">
-                                    <span class="input-group-btn">
-                                         <button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>
-                                    </span>
-                                    </div>
+                        <?php $form = ActiveForm::begin([
+                            'action' => Url::to(['rule-keyword']),
+                            'method' => 'get'
+                        ]); ?>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="input-group drp-container">
+                                    <?= DateRangePicker::widget([
+                                        'name' => 'queryDate',
+                                        'value' => $from_date . '-' . $to_date,
+                                        'readonly' => 'readonly',
+                                        'useWithAddon' => true,
+                                        'convertFormat' => true,
+                                        'startAttribute' => 'from_date',
+                                        'endAttribute' => 'to_date',
+                                        'startInputOptions' => ['value' => $from_date],
+                                        'endInputOptions' => ['value' => $to_date],
+                                        'pluginOptions' => [
+                                            'locale' => ['format' => 'Y-m-d'],
+                                        ]
+                                    ]) . $addon;?>
                                 </div>
                             </div>
-                        </form>
+                            <div class="col-sm-3">
+                                <div class="input-group m-b">
+                                    <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php ActiveForm::end(); ?>
                     </div>
                     <table class="table table-hover">
                         <thead>

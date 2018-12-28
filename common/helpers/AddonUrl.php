@@ -90,7 +90,7 @@ class AddonUrl
         $addonsUrl = [];
         $addonsUrl[0] = self::ADDON_EXECUTE;
         $addonsUrl['route'] = self::regroupRoute($url);
-        $addonsUrl['addon'] = Yii::$app->params['addonInfo']['name'];
+        $addonsUrl['addon'] = StringHelper::toUnderScore(Yii::$app->params['addonInfo']['name']);
 
         // 删除默认跳转url
         unset($url[0]);
@@ -114,11 +114,13 @@ class AddonUrl
 
         $route = $url[0];
         // 如果只填写了方法转为控制器方法
-        if (count(explode('/',$route)) < 2)
+        if (count(explode('/', $route)) < 2)
         {
             $oldRoute = explode('/', $oldRoute);
-            $oldRoute[1] = $url[0];
+            $oldRoute[count($oldRoute) - 1] = $url[0];
             $route = implode('/', $oldRoute);
+
+            unset($oldRoute);
         }
 
         return $route;

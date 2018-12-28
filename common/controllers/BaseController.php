@@ -64,7 +64,7 @@ class BaseController extends Controller
             'app_id' => $config['wechat_appid'],
             'secret' => $config['wechat_appsecret'],
             'token' => $config['wechat_token'],
-            'aes_key' => $config['wechat_encodingaeskey'],     // 兼容与安全模式下请一定要填写！！！
+            'aes_key' => $config['wechat_encodingaeskey'], // 兼容与安全模式下请一定要填写！！！
             /**
              * 指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
              * 使用自定义类名时，构造函数将会接收一个 `EasyWeChat\Kernel\Http\Response` 实例
@@ -96,7 +96,7 @@ class BaseController extends Controller
                 'retries' => 1,
                 'retry_delay' => 500,
                 'timeout' => 5.0,
-                // 'base_uri'      => 'https://api.weixin.qq.com/',
+                // 'base_uri' => 'https://api.weixin.qq.com/',
             ],
 
             /**
@@ -160,7 +160,7 @@ class BaseController extends Controller
      * @param $fistErrors
      * @return string
      */
-    public function analyErr($firstErrors)
+    protected function analyErr($firstErrors)
     {
         return Yii::$app->debris->analyErr($firstErrors);
     }

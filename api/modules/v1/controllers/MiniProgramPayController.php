@@ -15,6 +15,7 @@ use api\controllers\OnAuthController;
  *
  * Class MiniProgramNotifyController
  * @package api\modules\v1\controllers
+ * @property \yii\db\ActiveRecord $modelClass;
  */
 class MiniProgramPayController extends OnAuthController
 {
@@ -55,7 +56,7 @@ class MiniProgramPayController extends OnAuthController
             'body' => '支付简单说明',
             'detail' => '支付详情',
             'notify_url' => UrlHelper::toFront(['notify/mini-program']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-            'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, 1, PayLog::PAY_TYPE_MINI_PROGRAM, 'JSAPI'), // 支付
+            'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, PayLog::PAY_TYPE_MINI_PROGRAM), // 支付
             'total_fee' => $totalFee,
             'openid' => '', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
         ];
@@ -68,5 +69,22 @@ class MiniProgramPayController extends OnAuthController
         }
 
         return ResultDataHelper::api(422, $result['return_msg']);
+    }
+
+    /**
+     * 权限验证
+     *
+     * @param string $action 当前的方法
+     * @param null $model 当前的模型类
+     * @param array $params $_GET变量
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        // 方法名称
+        if (in_array($action, ['view', 'update', 'create', 'delete']))
+        {
+            throw new \yii\web\BadRequestHttpException('权限不足');
+        }
     }
 }

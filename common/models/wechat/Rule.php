@@ -1,10 +1,5 @@
 <?php
-
 namespace common\models\wechat;
-
-use Yii;
-use common\models\wechat\RuleKeyword;
-use common\models\wechat\ReplyText;
 
 /**
  * This is the model class for table "{{%wechat_rule}}".
@@ -92,7 +87,7 @@ class Rule extends \common\models\common\BaseModel
      *
      * @param $rule_id
      * @param $module
-     * @return mixed
+     * @return \yii\db\ActiveRecord
      */
     public static function getModuleModel($rule_id, $module)
     {
@@ -108,6 +103,7 @@ class Rule extends \common\models\common\BaseModel
 
         if (!($model = $modelList[$module]::find()->where(['rule_id' => $rule_id])->one()))
         {
+            /* @var $model \yii\db\ActiveRecord */
             $model = new $modelList[$module]();
             $model->loadDefaultValues();
         }

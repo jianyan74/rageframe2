@@ -12,6 +12,7 @@ use api\controllers\OnAuthController;
  *
  * Class FileController
  * @package api\modules\v1\controllers
+ * @property \yii\db\ActiveRecord $modelClass;
  */
 class FileController extends OnAuthController
 {
@@ -146,5 +147,22 @@ class FileController extends OnAuthController
         return [
             'url' => $mergeInfo['relativePath']
         ];
+    }
+
+    /**
+     * 权限验证
+     *
+     * @param string $action 当前的方法
+     * @param null $model 当前的模型类
+     * @param array $params $_GET变量
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        // 方法名称
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
+        {
+            throw new \yii\web\BadRequestHttpException('权限不足');
+        }
     }
 }

@@ -20,7 +20,11 @@ class MenuController extends WController
      * 自定义菜单首页
      *
      * @return string
-     * @throws NotFoundHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionIndex()
     {
@@ -45,6 +49,13 @@ class MenuController extends WController
 
     /**
      * 创建菜单
+     *
+     * @return array|string
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionEdit()
     {
@@ -65,7 +76,8 @@ class MenuController extends WController
             }
 
             $buttons = [];
-            foreach ($postInfo['list'] as &$button) {
+            foreach ($postInfo['list'] as &$button)
+            {
                 $arr = [];
                 if (isset($button['sub_button']))
                 {
@@ -170,7 +182,12 @@ class MenuController extends WController
      * 替换菜单为当前的菜单
      *
      * @param $id
-     * @return yii\web\Response
+     * @return mixed|\yii\web\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSave($id)
     {
@@ -195,7 +212,11 @@ class MenuController extends WController
      * 同步菜单
      *
      * @return array
-     * @throws \Exception
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSync()
     {

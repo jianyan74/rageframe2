@@ -301,7 +301,7 @@ class StringHelper extends BaseStringHelper
      */
     public static function randomNum($prefix = false, $length = 8)
     {
-        $str = $prefix ? $prefix : '';
+        $str = $prefix ?? '';
         return $str . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, $length);
     }
 

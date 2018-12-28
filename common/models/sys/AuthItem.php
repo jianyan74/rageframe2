@@ -1,8 +1,7 @@
 <?php
-
 namespace common\models\sys;
 
-use common\helpers\ArrayHelper;
+use Yii;
 
 /**
  * This is the model class for table "{{%sys_auth_item}}".
@@ -13,6 +12,7 @@ use common\helpers\ArrayHelper;
  * @property string $description
  * @property string $rule_name 规则名称
  * @property string $data
+ * @property string $position
  * @property int $parent_key 父级key
  * @property int $level 级别
  * @property int $sort 排序
@@ -38,6 +38,11 @@ class AuthItem extends \common\models\common\BaseModel
     const AUTH = 2;
 
     /**
+     * 树前缀
+     */
+    const POSITION_PREFIX = 'tr_';
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -57,10 +62,30 @@ class AuthItem extends \common\models\common\BaseModel
             [['key','parent_key'], 'safe'],
             [['description', 'data'], 'string'],
             [['name', 'rule_name'], 'string', 'max' => 64],
+            [['position'], 'string', 'max' => 2000],
             ['name', 'unique', 'message' => '名称已存在,请重新输入'],
             ['parent_key', 'default', 'value' => 0],
             [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],
         ];
+    }
+
+    /**
+     * 获取子角色
+     *
+     * @param AuthItem $model
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getChilds(AuthItem $model)
+    {
+        $position = $model->position . ' ' . static::POSITION_PREFIX . $model->key;
+
+        $models = self::find()
+            ->where(['type' => AuthItem::ROLE])
+            ->andWhere(['like', 'position', $position . '%', false])
+            ->asArray()
+            ->all();
+
+        return $models ?? [];
     }
 
     /**
@@ -76,6 +101,7 @@ class AuthItem extends \common\models\common\BaseModel
             'rule_name' => '规则',
             'data' => 'Data',
             'parent_key' => 'Parent Key',
+            'position' => '树',
             'level' => '级别',
             'sort' => '排序',
             'created_at' => '创建时间',
@@ -84,6 +110,8 @@ class AuthItem extends \common\models\common\BaseModel
     }
 
     /**
+     * 关联角色
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAuthAssignments()
@@ -92,6 +120,8 @@ class AuthItem extends \common\models\common\BaseModel
     }
 
     /**
+     * 关联路由名称
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getRuleName()
@@ -120,7 +150,8 @@ class AuthItem extends \common\models\common\BaseModel
      */
     public function getChildren()
     {
-        return $this->hasMany(AuthItem::className(), ['name' => 'child'])->viaTable('{{%sys_auth_item_child}}', ['parent' => 'name']);
+        return $this->hasMany(AuthItem::className(), ['name' => 'child'])
+            ->viaTable('{{%sys_auth_item_child}}', ['parent' => 'name']);
     }
 
     /**
@@ -128,7 +159,8 @@ class AuthItem extends \common\models\common\BaseModel
      */
     public function getParents()
     {
-        return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('{{%sys_auth_item_child}}', ['child' => 'name']);
+        return $this->hasMany(AuthItem::className(), ['name' => 'parent'])
+            ->viaTable('{{%sys_auth_item_child}}', ['child' => 'name']);
     }
 
     /**
@@ -138,10 +170,8 @@ class AuthItem extends \common\models\common\BaseModel
      */
     public function beforeDelete()
     {
-        $data = self::find()->asArray()->all();
-        $keys = ArrayHelper::getChildsId($data, $this->key, 'key', 'parent_key');
-
-        self::deleteAll(['in', 'key', $keys]);
+        $position = $this->position . ' ' . self::POSITION_PREFIX . $this->key;
+        self::deleteAll(['like', 'position', $position . '%', false]);
 
         return parent::beforeDelete();
     }
@@ -162,8 +192,34 @@ class AuthItem extends \common\models\common\BaseModel
 
             $key = $model['key'];
             $this->key = $key ? $key + 1 : 1;
+
+            if ($this->parent_key > 0)
+            {
+                if (!($parent = self::find()->where(['key' => $this->parent_key])->one()))
+                {
+                    return $this->addError('name', '找不到上级');
+                }
+
+                $this->level = $parent->level + 1;
+                $this->position = $parent->position . ' ' . static::POSITION_PREFIX . $parent->key;
+            }
+            else
+            {
+                if ($this->type == self::AUTH || Yii::$app->services->sys->isAuperAdmin())
+                {
+                    $this->position = static::POSITION_PREFIX . '0';
+                }
+                else
+                {
+                    $role = Yii::$app->services->sys->auth->getRole();
+                    $this->parent_key = $role->key;
+                    $this->level = $role->level + 1;
+                    $this->position = $role->position . ' ' . static::POSITION_PREFIX . $role->key;
+                }
+            }
         }
 
+        // 设置rule_name为null否则报错
         if (empty($this->rule_name))
         {
             $this->rule_name = null;

@@ -26,6 +26,9 @@ class WController extends BaseController
     {
         parent::init();
 
+        // 修改微信授权方式为静默授权
+        // Yii::$app->params['wechatConfig']['oauth']['scopes'] = ['snsapi_base'];
+
         /** 检测到微信进入自动获取用户信息 **/
         if ($this->openGetWechatUser && Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized())
         {
@@ -40,5 +43,7 @@ class WController extends BaseController
         {
             Yii::$app->params['wechatMember'] = Yii::$app->params['simulateUser']['userInfo'];
         }
+
+        return true;
     }
 }

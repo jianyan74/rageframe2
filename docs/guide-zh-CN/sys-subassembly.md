@@ -29,10 +29,8 @@ $qrCode = (new QrCode('This is my text'))
     ->setMargin(5)
     ->useForegroundColor(51, 153, 255);
 
-// 有多种使用方式
-
 // 把图片保存到文件中:
-$qrCode->writeFile(__DIR__ . '/code.png'); // 没有指定的时候默认为png格式
+$qrCode->writeFile(Yii::getAlias('@attachment') . '/code.png'); // 没有指定的时候默认为png格式
 
 // 直接显示在浏览器 
 header('Content-Type: '.$qrCode->getContentType());

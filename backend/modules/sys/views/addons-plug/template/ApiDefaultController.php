@@ -7,7 +7,7 @@ namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers;
 use Yii;
 use api\controllers\OffAuthController;
 use api\controllers\OnAuthController;
-use api\controllers\UserOnAuthController;
+use api\controllers\UserAuthController;
 
 /**
  * 默认控制器

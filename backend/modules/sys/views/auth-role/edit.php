@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>基本信息</h5>
+                    <h5>上级信息：<?= $parentTitle ?></h5>
                 </div>
                 <div class="ibox-content">
                     <?php $form = ActiveForm::begin([
@@ -22,15 +22,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]
                     ]); ?>
                     <div class="col-md-12">
-                        <?= $form->field($model, 'name',['labelOptions' => ['label' => '角色名称']])->textInput(['id' => 'name']) ?>
+                        <?= $form->field($model, 'name', ['labelOptions' => ['label' => '角色名称']])->textInput(['id' => 'name']) ?>
                         <div class="col-sm-2"></div>
-                        <div class="col-sm-10"><div id="configTree"></div></div>
+                        <div class="col-sm-5"><div id="userTree"></div></div>
+                        <div class="col-sm-5"><div id="plugTree"></div></div>
                     </div>
-
                     <div class="form-group">
                         <div class="col-sm-12 text-center">
                             <div class="hr-line-dashed"></div>
-                            <button class="btn btn-primary" type="button" onclick="getCheckboxTreeSelNode('configTree')">保存</button>
+                            <button class="btn btn-primary" type="button" onclick="submitForm()">保存</button>
                             <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                         </div>
                     </div>
@@ -43,11 +43,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- jsTree plugin javascript -->
     <script src="/backend/resources/js/plugins/jsTree/jstree.min.js"></script>
     <script>
-        var treeid = "configTree";
-        var checkId = JSON.parse('<?= json_encode($checkId) ?>');
-        var data = JSON.parse('<?= json_encode($formAuth) ?>');
+        var userTreeId = "userTree";
+        var userTreeCheckIds = JSON.parse('<?= json_encode($userTreeCheckIds) ?>');
+        var userTreeData = JSON.parse('<?= json_encode($userTreeData) ?>');
 
-        showCheckboxTree(data,treeid,checkId);
+        var plugTreeId = "plugTree";
+        var plugTreeCheckIds = JSON.parse('<?= json_encode($plugTreeCheckIds) ?>');
+        var plugTreeData = JSON.parse('<?= json_encode($plugTreeData) ?>');
+
+        showCheckboxTree(userTreeData, userTreeId, userTreeCheckIds);
+        showCheckboxTree(plugTreeData, plugTreeId, plugTreeCheckIds);
+
         /**
         * 带checkbox的树形控件使用说明
         * @data 应该是一个js数组
@@ -55,17 +61,31 @@ $this->params['breadcrumbs'][] = $this->title;
         * @checkId:需要默认勾选的数节点id；1.checkId="all"，表示勾选所有节点 2.checkId=[1,2]表示勾选id为1,2的节点
         * 节点的id号由url传入json串中的id决定
         */
-        function showCheckboxTree(data,id,checkId){
-            treeid = id;
-            menuTree = $("#"+id).bind("loaded.jstree",function(e,data){
+        function showCheckboxTree(data, id, checkId){
+
+            for (var i = 0; i < data.length; i++){
+                var dataVal = data[i]['id'];
+                dataVal = dataVal.replace(/\//g, '---');
+                data[i]['id'] = dataVal.replace(/:/g, '--');
+            }
+
+            for (var j = 0; j < checkId.length; j++){
+                var checkVal = checkId[j];
+                checkVal = checkVal.replace(/\//g, '---');
+                checkId[j] = checkVal.replace(/:/g, '--');
+            }
+
+            menuTree = $("#"+id).bind("loaded.jstree", function(e,data){
                 $("#"+id).jstree("open_all");
                 $("#"+id).find("li").each(function(){
                     if (checkId == 'all') {
-                        $("#"+id).jstree("check_node",$(this));
-                    } if (checkId instanceof Array){
-                        for (var i=0;i<checkId.length;i++){
+                        $("#"+id).jstree("check_node", $(this));
+                    }
+
+                    if (checkId instanceof Array){
+                        for (var i = 0; i < checkId.length; i++) {
                             if ($(this).attr("id") == checkId[i]){
-                                $("#"+id).jstree("check_node",$(this));
+                                $("#"+id).jstree("check_node", $(this));
                             }
                         }
                     }
@@ -103,31 +123,54 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             });
+
+            // 加载完毕关闭所有节点
+            $("#"+id).bind('ready.jstree',function (obj, e) {
+                $("#"+id).jstree('close_all');
+            });
         }
 
-        // 获取选中的id
-        function getCheckboxTreeSelNode(treeid){
+        /**
+         * 获取所有选择的数据
+         *
+         * @param treeId
+         */
+        function getCheckTreeIds(treeId) {
             // 打开所有的节点，不然获取不到子节点数据
-            $("#"+treeid).jstree('open_all');
+            $("#"+treeId).jstree('open_all');
 
             var ids = [];
-            $("#"+treeid).find("li").each(function(){
-                var liid = $(this).attr("id");
-                if ($("#" + liid + ">a").hasClass("jstree-clicked") || $("#" + liid + ">a>i").hasClass("jstree-undetermined")) {
-                    ids.push(liid);
+            $("#"+treeId).find("li").each(function(){
+                var liId = $(this).attr("id");
+                if ($("#" + liId + " > a").hasClass("jstree-clicked") || $("#" + liId + " > a > i").hasClass("jstree-undetermined")) {
+                    // 还原匹配后的字符串id
+                    liId = liId.replace(/---/g, '/');
+                    liId = liId.replace(/--/g, ':');
+
+                    ids.push(liId);
                 }
             });
 
+            return ids;
+        }
+
+        // 提交表单
+        function submitForm(){
+
+            var userTreeIds = getCheckTreeIds(userTreeId);
+            var plugTreeIds = getCheckTreeIds(plugTreeId);
+
             $.ajax({
-                type:"post",
-                url:"",
-                dataType: "json",
-                data: {
-                    originalName: "<?= $name; ?>",
-                    name: $("#name").val(),
-                    ids : ids
+                type :"post",
+                url : "<?= \yii\helpers\Url::to(['edit', 'name' => $name])?>",
+                dataType : "json",
+                data : {
+                    name : $("#name").val(),
+                    parent_key : "<?= $parentKey; ?>",
+                    userTreeIds : userTreeIds,
+                    plugTreeIds : plugTreeIds
                 },
-                success: function(data){
+                success : function(data){
                     if (data.code == 200) {
                         window.location = "<?= \yii\helpers\Url::to(['index'])?>";
                     } else {
@@ -135,8 +178,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             });
-
-            return ids;
         }
     </script>
 </div>

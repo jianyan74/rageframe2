@@ -27,38 +27,34 @@ class ConfigController extends SController
     public $modelClass = 'common\models\sys\Config';
 
     /**
-     * 网站设置
-     *
-     * @return string
-     */
-    public function actionEditAll()
-    {
-        return $this->render($this->action->id, [
-            'cates' => ConfigCate::getConfigList()
-        ]);
-    }
-
-    /**
      * 首页
      *
      * @param string $cate_id
      * @return string
      */
-    public function actionIndex($cate_id = '')
+    public function actionIndex()
     {
         $keyword = Yii::$app->request->get('keyword', '');
+        $cate_id = Yii::$app->request->get('cate_id', null);
 
         // 查询所有子分类
-        $cateIds = ArrayHelper::getChildsId(ConfigCate::find()->where(['status' => StatusEnum::ENABLED])->all(), $cate_id);
-        $cate_id && array_push($cateIds, $cate_id);
+        $cateIds = [];
+        if (!empty($cate_id))
+        {
+            $cates = ConfigCate::getMultiDate(['status' => StatusEnum::ENABLED], ['*']);
+            $cateIds = ArrayHelper::getChildIds($cates, $cate_id);
+            array_push($cateIds, $cate_id);
+        }
 
         $data = Config::find()
-            ->orFilterWhere(['in', 'cate_id', $cateIds])
-            ->orFilterWhere(['like', 'title', $keyword])
-            ->orFilterWhere(['like', 'name', $keyword]);
+            ->filterWhere(['in', 'cate_id', $cateIds])
+            ->andFilterWhere(['or',
+                ['like', 'title', $keyword],
+                ['like', 'name', $keyword]
+            ]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
-            ->orderBy('cate_id asc,sort asc')
+            ->orderBy('cate_id asc, sort asc')
             ->with('cate')
             ->limit($pages->limit)
             ->all();
@@ -67,7 +63,8 @@ class ConfigController extends SController
             'models' => $models,
             'pages' => $pages,
             'cate_id' => $cate_id,
-            'keyword' => $keyword
+            'keyword' => $keyword,
+            'cateDropDownList' => ConfigCate::getDropDownList()
         ]);
     }
 
@@ -76,7 +73,7 @@ class ConfigController extends SController
      *
      * @return array|mixed|string|\yii\web\Response
      */
-    public function actionEdit()
+    public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id');
@@ -98,7 +95,19 @@ class ConfigController extends SController
         return $this->renderAjax($this->action->id, [
             'model' => $model,
             'configTypeList' => Yii::$app->params['configTypeList'],
-            'cates' => ConfigCate::getList()
+            'cateDropDownList' => ConfigCate::getDropDownList()
+        ]);
+    }
+
+    /**
+     * 网站设置
+     *
+     * @return string
+     */
+    public function actionEditAll()
+    {
+        return $this->render($this->action->id, [
+            'cates' => ConfigCate::getItemsMergeList()
         ]);
     }
 
@@ -107,14 +116,15 @@ class ConfigController extends SController
      *
      * @return array
      * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionUpdateInfo()
     {
         $request = Yii::$app->request;
         if ($request->isAjax)
         {
-            // 记录日志
-            Yii::$app->debris->log('updateConfig', '修改配置信息');
+            // 记录行为日志
+            Yii::$app->services->sys->log('updateConfig', '修改配置信息');
 
             $config = $request->post('config', []);
             foreach ($config as $key => $value)

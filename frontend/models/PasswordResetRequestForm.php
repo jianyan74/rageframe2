@@ -41,11 +41,13 @@ class PasswordResetRequestForm extends Model
             'email' => $this->email,
         ]);
 
-        if (!$user) {
+        if (!$user)
+        {
             return false;
         }
         
-        if (!MemberInfo::isPasswordResetTokenValid($user->password_reset_token)) {
+        if (!MemberInfo::isPasswordResetTokenValid($user->password_reset_token))
+        {
             $user->generatePasswordResetToken();
             if (!$user->save()) {
                 return false;

@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script type="text/html"  id="editModel">
     <?php foreach($mediaType as $key => $item){ ?>
         <div class="col-lg-12 text-center" style="padding: 10px">
-            <a href="<?= Url::to(['edit', 'media_type' => $key]); ?>" class="btn btn-w-m btn-info"><?= $item; ?></a>
+            <a href="<?= Url::to(['create', 'media_type' => $key]); ?>" class="btn btn-w-m btn-info"><?= $item; ?></a>
         </div>
     <?php } ?>
 </script>

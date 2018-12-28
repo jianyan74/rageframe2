@@ -10,11 +10,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5><?= $this->title; ?></h5>
-                <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
-                </div>
             </div>
             <div class="ibox-content">
                 <table class="table table-hover">

@@ -38,11 +38,12 @@ class AddonConfig
     /**
      * 可授权权限
      *
-     * 例子：
-     *  array(
-     *      'index/index' => '首页',
-     *      'index/edit' => '首页编辑',
-     *  )
+     * 注意：采用Yii2的路由命名方式
+     * 例子：array(
+     *          'index/index' => '首页',
+     *          'cate-index/index' => '分类首页',
+     *          'cate-index/first-data' => '分类数据',
+     *        )
      * @var array
      */
     public $authItem = [

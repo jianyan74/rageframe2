@@ -1,6 +1,8 @@
 <?php
 namespace api\modules\v1\models;
 
+use common\enums\StatusEnum;
+use common\models\api\AccessToken;
 use common\models\member\MemberInfo;
 
 /**
@@ -18,6 +20,7 @@ class LoginForm extends \common\models\common\LoginForm
         return [
             [['username', 'password', 'group'], 'required'],
             ['password', 'validatePassword'],
+            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage]
         ];
     }
 
@@ -42,7 +45,7 @@ class LoginForm extends \common\models\common\LoginForm
             // email 登录
             if (strpos($this->username, "@"))
             {
-                $this->_user = MemberInfo::findOne(['email' => $this->username]);
+                $this->_user = MemberInfo::findOne(['email' => $this->username, 'status' => StatusEnum::ENABLED]);
             }
             else
             {

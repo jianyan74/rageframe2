@@ -1,15 +1,17 @@
 <?php
 namespace api\modules\v1\controllers\member;
 
-use api\controllers\UserOnAuthController;
+use api\controllers\UserAuthController;
+use common\models\member\Address;
 
 /**
  * 收货地址
  *
  * Class AddressController
  * @package api\modules\v1\controllers\member
+ * @property \yii\db\ActiveRecord $modelClass;
  */
-class AddressController extends UserOnAuthController
+class AddressController extends UserAuthController
 {
-    public $modelClass = 'api\modules\v1\models\AddressForm';
+    public $modelClass = 'common\models\member\Address';
 }

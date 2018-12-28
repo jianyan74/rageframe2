@@ -47,9 +47,12 @@ class MassRecordController extends WController
     /**
      * 编辑/新增
      *
-     * @return mixed
+     * @param $media_type
+     * @return mixed|string|\yii\web\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function actionEdit($media_type)
+    public function actionCreate($media_type)
     {
         $request = Yii::$app->request;
         $id = $request->get('id', null);
@@ -85,6 +88,8 @@ class MassRecordController extends WController
      * 获取粉丝分组 - 群发
      *
      * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSend()
     {

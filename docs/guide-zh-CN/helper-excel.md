@@ -50,7 +50,7 @@ $list = [
 // 简单使用
 return ExcelHelper::exportData($list, $header);
 
-// 定制 默认导出xlsx 支持 : xlsx/xls/Html/CSV
+// 定制 默认导出xlsx 支持 : xlsx/xls/html/csv
 return ExcelHelper::exportData($list, $header, '测试', 'xlsx');
 ```
 

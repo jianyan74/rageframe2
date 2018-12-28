@@ -15,7 +15,9 @@ class FansTagsController extends WController
     /**
      * 标签首页
      *
-     * @return string
+     * @return mixed|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionIndex()
     {
@@ -57,6 +59,8 @@ class FansTagsController extends WController
      * 同步标签
      *
      * @return mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionSynchro()
     {

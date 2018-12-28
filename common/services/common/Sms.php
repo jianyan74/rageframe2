@@ -14,6 +14,13 @@ use yii\web\UnprocessableEntityHttpException;
 class Sms extends Service
 {
     /**
+     * 消息队列
+     *
+     * @var bool
+     */
+    public $queueSwitch = false;
+
+    /**
      * @var array
      */
     protected $config = [];
@@ -52,12 +59,40 @@ class Sms extends Service
     /**
      * 发送短信
      *
+     * ```php
+     *       Yii::$app->services->sms->send($mobile, $code, $member_id)
+     * ```
+     *
      * @param $mobile
      * @param $code
      * @param int $member_id
      * @throws UnprocessableEntityHttpException
      */
     public function send($mobile, $code, $member_id = 0)
+    {
+        if ($this->queueSwitch == true)
+        {
+            $messageId = Yii::$app->queue->push(new Sms([
+                'mobile' => $mobile,
+                'code' => $code,
+                'member_id' => $member_id,
+            ]));
+
+            return $messageId;
+        }
+
+        return $this->realSend($mobile, $code, $member_id = 0);
+    }
+
+    /**
+     * 真实发送短信
+     *
+     * @param $mobile
+     * @param $code
+     * @param int $member_id
+     * @throws UnprocessableEntityHttpException
+     */
+    public function realSend($mobile, $code, $member_id = 0)
     {
         try
         {
@@ -97,7 +132,7 @@ class Sms extends Service
      * @param array $data
      * @return bool
      */
-    public function saveLog($data = [])
+    protected function saveLog($data = [])
     {
         $log = new SmsLog();
         $log = $log->loadDefaultValues();

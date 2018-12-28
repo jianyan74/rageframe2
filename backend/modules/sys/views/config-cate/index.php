@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         <ul class="nav nav-tabs">
             <li><a href="<?= Url::to(['config/index'])?>"> 配置管理</a></li>
             <li class="active"><a href="<?= Url::to(['config-cate/index'])?>"> 配置分类</a></li>
-            <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
+            <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
                 <i class="fa fa-plus"></i> 创建
             </a>
         </ul>

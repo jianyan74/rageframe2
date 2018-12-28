@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
 
 $this->title = '报错日志';
@@ -17,14 +18,17 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4">
-                            <form action="" method="get" class="form-horizontal" role="form" id="form">
-                                <div class="col-sm-5">
-                                    <?= Html::dropDownList('error_code', $error_code, ['' => '全部', 1 => '正常状态', 2 => '异常状态'], ['class' => 'form-control']);?>
-                                </div>
-                                <div class="input-group m-b">
-                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
-                                </div>
-                            </form>
+                            <?php $form = ActiveForm::begin([
+                                'action' => Url::to(['error']),
+                                'method' => 'get'
+                            ]); ?>
+                            <div class="col-sm-5">
+                                <?= Html::dropDownList('error_code', $error_code, ['' => '全部', 1 => '正常状态', 2 => '异常状态'], ['class' => 'form-control']);?>
+                            </div>
+                            <div class="input-group m-b">
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
+                            <?php ActiveForm::end(); ?>
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -48,11 +52,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <?php foreach($models as $model){ ?>
                                 <tr id = <?= $model->id; ?>>
                                     <td><?= $model->id; ?></td>
-                                    <td><?= $model->method; ?></td>
-                                    <td><?= isset($model->member->username) ? $model->member->username : '游客' ?></td>
+                                    <td><?= Html::encode($model->method); ?></td>
+                                    <td><?= !empty($model->member_id) ? '登录用户' : '游客' ?></td>
                                     <td><?= $model->module; ?></td>
-                                    <td><?= $model->controller; ?>/<?= $model->action; ?></td>
-                                    <td><?= $model->url; ?></td>
+                                    <td><?= Html::encode($model->controller); ?>/<?= Html::encode($model->action); ?></td>
+                                    <td><?= Html::encode($model->url); ?></td>
                                     <td><?= long2ip($model->ip); ?></td>
                                     <td>
                                         <?php

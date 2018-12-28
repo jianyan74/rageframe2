@@ -137,6 +137,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 <?= $form->field($model, 'covers')->widget('common\widgets\webuploader\Images', [
      'config' => [ // 配置同图片上传
+         // 'server' => '',
          'pick' => [
              'multiple' => ture,
          ],
@@ -162,6 +163,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 <?= $form->field($model, 'file')->widget('common\widgets\webuploader\Files', [
      'config' => [ // 配置同图片上传
+         // 'server' => \yii\helpers\Url::to(['file/files']), // 默认files 支持videos/voices/images方法验证
          'pick' => [
              'multiple' => false,
          ]
@@ -177,6 +179,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 <?= $form->field($model, 'files')->widget('common\widgets\webuploader\Files', [
      'config' => [ // 配置同图片上传
+          // 'server' => '',
          'pick' => [
              'multiple' => ture,
          ]

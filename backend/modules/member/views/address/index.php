@@ -1,7 +1,8 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
-use common\models\common\Provinces;
+use yii\helpers\Html;
+use common\helpers\HtmlHelper;
 
 $this->title = '收货地址';
 $this->params['breadcrumbs'][] = ['label' => '会员信息', 'url' => ['member/index']];
@@ -20,13 +21,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>用户昵称</th>
                             <th>真实姓名</th>
                             <th>手机号码</th>
-                            <th>省</th>
-                            <th>市</th>
-                            <th>区</th>
-                            <th>详细</th>
+                            <th>省市区</th>
+                            <th>详细地址</th>
+                            <th>是否默认</th>
                             <th>创建时间</th>
                             <th>操作</th>
                         </tr>
@@ -35,18 +34,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?php foreach($models as $model){ ?>
                             <tr id="<?= $model->id?>">
                                 <td><?= $model->id?></td>
-                                <td><?= $model->member->nickname ?></td>
-                                <td><?= $model->realname ?></td>
+                                <td><?= Html::encode($model->realname) ?></td>
                                 <td><?= $model->mobile ?></td>
-                                <td><?= Provinces::getCityName($model->provinces) ?></td>
-                                <td><?= Provinces::getCityName($model->city) ?></td>
-                                <td><?= Provinces::getCityName($model->area) ?></td>
-                                <td><?= $model->detailed_address?></td>
+                                <td><?= $model->address_name ?></td>
+                                <td><?= $model->address_details ?></td>
+                                <td><?= HtmlHelper::whether($model->is_default) ?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <a href="<?= Url::to(['ajax-edit','id' => $model->id, 'member_id' => $member_id])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-info btn-sm">编辑</span></a>
-                                    <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
-                                    <a href="<?= Url::to(['delete','id' => $model->id, 'member_id' => $member_id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
+                                    <?= HtmlHelper::edit(['ajax-edit', 'id' => $model->id, 'member_id' => $member_id], '编辑', [
+                                        'data-toggle' => 'modal',
+                                        'data-target' => '#ajaxModal',
+                                    ])?>
+                                    <?= HtmlHelper::status($model['status']); ?>
+                                    <?= HtmlHelper::delete(['destroy','id' => $model->id, 'member_id' => $member_id])?>
                                 </td>
                             </tr>
                         <?php } ?>

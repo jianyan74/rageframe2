@@ -1,11 +1,14 @@
 <?php
 use yii\helpers\Url;
 use common\helpers\AddonUrl;
+use \common\helpers\StringHelper;
 
 $this->title = '应用入口';
 $this->params['breadcrumbs'][] = $this->title;
 
 $addon = Yii::$app->params['addon']['name'];
+$addon = StringHelper::toUnderScore($addon);
+
 ?>
 <div class="row">
     <div class="col-sm-12">

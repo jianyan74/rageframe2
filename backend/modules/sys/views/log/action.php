@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\helpers\Html;
 
 $this->title = '行为日志';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -36,8 +37,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     <td><?= $model->id; ?></td>
                                     <td><?= $model->behavior; ?></td>
                                     <td><?= isset($model->manager->username) ? $model->manager->username : '游客' ?></td>
-                                    <td><?= $model->module; ?></td>
-                                    <td><?= $model->url; ?></td>
+                                    <td><?= Html::encode($model->module); ?></td>
+                                    <td><?= Html::encode($model->url); ?></td>
                                     <td><?= long2ip($model->ip); ?></td>
                                     <td>
                                         <?php if (long2ip($model->ip) == '127.0.0.1'){ ?>
@@ -46,7 +47,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                             <?= $model->country; ?>·<?= $model->provinces; ?>·<?= $model->city; ?>
                                         <?php } ?>
                                     </td>
-                                    <td><?= \yii\helpers\Html::encode($model->remark); ?></td>
+                                    <td><?= Html::encode($model->remark); ?></td>
                                     <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                     <td>
                                         <a href="<?= Url::to(['action-view','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModalLg'><span class="btn btn-info btn-sm">查看详情</span></a>

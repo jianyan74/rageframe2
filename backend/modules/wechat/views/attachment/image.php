@@ -39,12 +39,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="row">
         <div class="col-sm-12">
             <?= LinkPager::widget([
-                'pagination'        => $pages,
-                'maxButtonCount'    => 5,
-                'firstPageLabel'    => "首页",
-                'lastPageLabel'     => "尾页",
-                'nextPageLabel'     => "下一页",
-                'prevPageLabel'     => "上一页",
+                'pagination' => $pages,
+                'maxButtonCount' => 5,
+                'firstPageLabel' => "首页",
+                'lastPageLabel' => "尾页",
+                'nextPageLabel' => "下一页",
+                'prevPageLabel' => "上一页",
             ]);?>
         </div>
     </div>

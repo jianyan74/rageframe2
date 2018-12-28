@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <tr>
                             <td>扩展支持</td>
                             <td>
-                                <?= extension_loaded('opcache')
+                                <?= extension_loaded('Zend OPcache')
                                     ? '<span class="label label-primary">opcache支持</span>'
                                     : '<span class="label label-default">opcache不支持</span>'; ?>
                                 <?= extension_loaded('memcache')

@@ -38,7 +38,7 @@ class UploadHelper
     /**
      * Yii2 上传类
      *
-     * @var object
+     * @var \yii\web\UploadedFile
      */
     public $uploadedFile;
 
@@ -70,21 +70,32 @@ class UploadHelper
      */
     public $fileName;
 
+    /**
+     * 拿取需要的数据
+     *
+     * @var array
+     */
+    protected $filterConfig = [
+        'thumb',
+        'takeOverAction',
+        'chunks',
+        'chunk',
+        'guid',
+        'image',
+        'compress',
+    ];
+
+    /**
+     * 切片合并缓存前缀
+     *
+     * @var string
+     */
     public static $prefixForMergeCache = 'upload-file-guid:';
 
     public function  __construct(array $config, $type)
     {
-        // 解密json
-        foreach ($config as &$item)
-        {
-            if (!empty($item) && !is_numeric($item) && !is_array($item))
-            {
-                !empty(json_decode($item)) && $item = json_decode($item, true);
-            }
-        }
-
-        $this->config = ArrayHelper::merge(Yii::$app->params['uploadConfig'][$type], $config);
-        !empty($this->config['takeOverAction']) && $this->takeOverAction = $this->config['takeOverAction'];
+        // 过滤数据
+        $this->filter($config, $type);
         $this->type = $type;
     }
 
@@ -260,11 +271,12 @@ class UploadHelper
     /**
      * 切片合并
      *
-     * @param $ultimatelyFilePath
-     * @param $directoryPath
-     * @param $name
-     * @param $originalExc
-     * @param int $reconnectionNum
+     * @param string $ultimatelyFilePath 生成的文件路径
+     * @param string $directoryPath 需要被合并的目录
+     * @param int $name 开始合并文件名 数字 例如1、2、3、4、5...
+     * @param string $originalExc 文件扩展
+     * @param int $reconnectionNum 重复合并次数
+     * @throws NotFoundHttpException
      */
     public static function merge($ultimatelyFilePath, $directoryPath, $name, $originalExc, $reconnectionNum = 0)
     {
@@ -287,11 +299,16 @@ class UploadHelper
             }
             catch (\Exception $e)
             {
-                // 重复三次去合并文件，合成失败不管了
+                // 延迟1秒 重复三次去合并文件，合成失败不管了
                 if ($reconnectionNum < 3)
                 {
+                    sleep(1);
                     $reconnectionNum += 1;
                     self::merge($ultimatelyFilePath, $directoryPath, $name, $originalExc,$reconnectionNum);
+                }
+                else
+                {
+                    throw new NotFoundHttpException('合并失败');
                 }
             }
         }
@@ -646,5 +663,38 @@ class UploadHelper
         }
 
         return true;
+    }
+
+    /**
+     * 过滤数据
+     *
+     * @param $config
+     */
+    protected function filter($config, $type)
+    {
+        try
+        {
+            // 解密json
+            foreach ($config as $key => &$item)
+            {
+                if (!empty($item) && !is_numeric($item) && !is_array($item))
+                {
+                    !empty(json_decode($item)) && $item = json_decode($item, true);
+                }
+
+                if (!in_array($key, $this->filterConfig))
+                {
+                    unset($config[$key]);
+                }
+            }
+
+            $this->config = ArrayHelper::merge(Yii::$app->params['uploadConfig'][$type], $config);
+        }
+        catch (\Exception $e)
+        {
+            $this->config = Yii::$app->params['uploadConfig'][$type];
+        }
+
+        !empty($this->config['takeOverAction']) && $this->takeOverAction = $this->config['takeOverAction'];
     }
 }

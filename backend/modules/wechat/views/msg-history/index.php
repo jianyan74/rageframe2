@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use common\models\wechat\MsgHistory;
 use common\models\wechat\Rule;
 
@@ -20,13 +22,19 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <form action="" method="get" class="form-horizontal" role="form" id="form">
-                                <div class="input-group m-b">
-                                    <input type="text" class="form-control" name="keywords" placeholder="<?= $keywords ? $keywords : '请输入内容'?>"/>
-                                    <span class="input-group-btn"><button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button></span>
-                                </div>
-                            </form>
+                        <div class="col-sm-3">
+                            <?php $form = ActiveForm::begin([
+                                'action' => Url::to(['index']),
+                                'method' => 'get'
+                            ]); ?>
+                            <div class="input-group m-b">
+                                <?= Html::textInput('keywords   ', $keywords, [
+                                    'placeholder' => '请输入内容',
+                                    'class' => 'form-control'
+                                ])?>
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
+                            <?php ActiveForm::end(); ?>
                         </div>
                     </div>
                     <table class="table table-hover">
@@ -49,7 +57,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td><?= $model->id; ?></td>
                                 <td><?= isset($model->fans->nickname) ? $model->fans->nickname : '' ?></td>
                                 <td><?= $model->type?></td>
-                                <td style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;"><?= MsgHistory::readMessage($model->type,$model->message)?></td>
+                                <td style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;"><?= Html::encode(MsgHistory::readMessage($model->type,$model->message)) ?></td>
                                 <td>
                                     <?php if(!$model->rule_id){ ?>
                                         <span class="label label-default">未触发</span>

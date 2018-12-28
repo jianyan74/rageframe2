@@ -4,7 +4,8 @@ namespace backend\modules\member\controllers;
 use Yii;
 use yii\data\Pagination;
 use common\helpers\ResultDataHelper;
-use backend\modules\member\models\AddressForm;
+use common\enums\StatusEnum;
+use common\models\member\Address;
 
 /**
  * 收货地址
@@ -33,7 +34,9 @@ class AddressController extends MController
      */
     public function actionIndex()
     {
-        $data = AddressForm::find()->andWhere(['member_id' => $this->member_id]);
+        $data = Address::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['member_id' => $this->member_id]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -95,7 +98,7 @@ class AddressController extends MController
      */
     public function actionAjaxUpdate($id)
     {
-        if (!($model = AddressForm::findOne($id)))
+        if (!($model = Address::findOne($id)))
         {
             return ResultDataHelper::json(404, '找不到数据');
         }
@@ -133,8 +136,8 @@ class AddressController extends MController
             }
 
             return $model->save()
-                ? $this->redirect(['index', 'member_id' => $this->member_id])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index', 'member_id' => $this->member_id]), 'error');
+                ? $this->redirect(['index', 'member_id' => $model->member_id])
+                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index', 'member_id' => $model->member_id]), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
@@ -150,9 +153,9 @@ class AddressController extends MController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = AddressForm::findOne($id))))
+        if (empty($id) || empty(($model = Address::findOne($id))))
         {
-            $model = new AddressForm;
+            $model = new Address;
             $model = $model->loadDefaultValues();
             $model->member_id = $this->member_id;
             return $model;

@@ -63,6 +63,7 @@ class BaseModel extends ActiveRecord
             ->select($fields)
             ->with($with)
             ->orderby($orderby)
+            ->asArray()
             ->all();
     }
 

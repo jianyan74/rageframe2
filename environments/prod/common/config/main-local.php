@@ -8,6 +8,9 @@ return [
             'password' => '',
             'charset' => 'utf8mb4',
             'tablePrefix' => 'rf_',
+            // 'enableSchemaCache' => true, // 是否开启缓存, 请了解其中机制在开启，不了解谨慎
+            // 'schemaCacheDuration' => 3600, // 缓存时间
+            // 'schemaCache' => 'cache', // 缓存名称
         ],
         /**
         // redis缓存

@@ -30,6 +30,7 @@ class LogController extends SController
         $data = Log::find()->filterWhere($where);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
+            ->with(['manager', 'member'])
             ->limit($pages->limit)
             ->orderBy('id desc')
             ->all();
@@ -65,6 +66,7 @@ class LogController extends SController
         $data = ActionLog::find();
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
+            ->with(['manager'])
             ->limit($pages->limit)
             ->orderBy('id desc')
             ->all();
@@ -101,8 +103,10 @@ class LogController extends SController
 
         $data = PayLog::find()
             ->filterWhere(['pay_status' => $pay_status])
-            ->orFilterWhere(['like', 'order_sn', $keyword])
-            ->orFilterWhere(['like', 'out_trade_no', $keyword]);
+            ->andFilterWhere(['or',
+                ['like', 'order_sn', $keyword],
+                ['like', 'out_trade_no', $keyword]
+            ]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)

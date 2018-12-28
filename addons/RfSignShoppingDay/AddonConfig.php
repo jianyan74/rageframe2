@@ -22,6 +22,26 @@ class AddonConfig
     ];
 
     /**
+     * 可授权权限
+     *
+     * 例子：
+     *  array(
+     *      'index/index' => '首页',
+     *      'index/edit' => '首页编辑',
+     *  )
+     * @var array
+     */
+    public $authItem = [
+        'award/index' => '奖品管理',
+        'award/edit' => '奖品编辑',
+        'award/ajax-update' => '奖品状态修改',
+        'award/delete' => '奖品删除',
+        'record/index' => '中奖记录',
+        'record/export' => '中奖导出',
+        'user/index' => '用户管理',
+    ];
+
+    /**
      * 参数配置
      *
      * @var bool

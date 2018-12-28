@@ -9,6 +9,7 @@ use api\controllers\OffAuthController;
  *
  * Class DefaultController
  * @package api\modules\v1\controllers
+ * @property \yii\db\ActiveRecord $modelClass;
  */
 class DefaultController extends OffAuthController
 {
@@ -20,5 +21,15 @@ class DefaultController extends OffAuthController
     public function actionIndex()
     {
         return 'index';
+    }
+
+    /**
+     * 测试查询方法
+     *
+     * @return string
+     */
+    public function actionSearch()
+    {
+        return '测试查询';
     }
 }

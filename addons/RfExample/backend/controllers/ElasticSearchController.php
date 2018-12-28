@@ -26,6 +26,8 @@ class ElasticSearchController extends AddonsBaseController
      */
     public function init()
     {
+        /** ------ 全文搜索引擎 ------ **/
+
         // 配置了es的集群，那么需要在http_address中把每一个节点的ip都要配置上
         Yii::$app->set('elasticsearch', [
             'class' => 'yii\elasticsearch\Connection',

@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
+use common\helpers\HtmlHelper;
 
 $this->title = '规则管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -12,9 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-sm-12">
         <div class="ibox float-e-margins">
             <div class="pull-right m-b-sm">
-                <a class="btn btn-primary btn-xs" href="<?= Url::to(['rule-edit', 'addon' => Yii::$app->params['addon']['name']])?>">
-                    <i class="fa fa-plus"></i>  创建
-                </a>
+                <?= HtmlHelper::create(['rule-edit', 'addon' => Yii::$app->params['addon']['name']])?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -23,7 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="panel-heading">
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
-                                            <span class="label label-info">优先级：<?= $model->sort; ?></span>
+                                        <span class="label label-info">优先级：<?= $model->sort; ?></span>
                                     <?php if (RuleKeyword::verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
@@ -31,9 +30,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <span class="label label-info" onclick="statusRule(this)">已启用</span>
                                     <?php }else{ ?>
                                         <span class="label label-danger" onclick="statusRule(this)">已禁用</span>
-
                                     <?php } ?>
-                                        </span>
+                                 </span>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true" style="">
                                 <div class="panel-body">

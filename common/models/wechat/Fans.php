@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\wechat;
 
 use Yii;
@@ -103,10 +102,8 @@ class Fans extends \common\models\common\BaseModel
     }
 
     /**
-     * 关注
-     *
      * @param $openid
-     * @param $app
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
     public static function follow($openid)
     {
@@ -145,6 +142,7 @@ class Fans extends \common\models\common\BaseModel
      * 同步关注的用户信息
      *
      * @param $openid
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \yii\db\Exception
      */
     public static function sync($openid)

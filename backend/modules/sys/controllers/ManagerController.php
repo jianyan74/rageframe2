@@ -1,13 +1,15 @@
 <?php
 namespace backend\modules\sys\controllers;
 
+use common\helpers\ArrayHelper;
 use Yii;
 use yii\data\Pagination;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 use common\components\CurdTrait;
 use common\models\sys\Manager;
-use common\models\sys\AuthAssignment;
-use common\models\sys\AuthItem;
 use backend\modules\sys\models\PasswdForm;
+use backend\modules\sys\models\ManagerForm;
 
 /**
  * 后台管理员控制器
@@ -33,10 +35,16 @@ class ManagerController extends SController
     {
         $keyword = Yii::$app->request->get('keyword', null);
 
+        // 获取当前用户权限的下面的所有用户id，除超级管理员
+        $authIds = Yii::$app->services->sys->auth->getAuthIds();
+
         $data = Manager::find()
-            ->orFilterWhere(['like', 'username', $keyword])
-            ->orFilterWhere(['like', 'mobile', $keyword])
-            ->orFilterWhere(['like', 'realname', $keyword]);
+            ->filterWhere(['in', 'id', $authIds])
+            ->andFilterWhere(['or',
+                ['like', 'username', $keyword],
+                ['like', 'mobile', $keyword],
+                ['like', 'realname', $keyword]
+            ]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('type desc, id desc')
@@ -82,11 +90,12 @@ class ManagerController extends SController
         $model = new PasswdForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
+            /* @var $manager \common\models\sys\Manager */
             $manager = Yii::$app->user->identity;
             $manager->password_hash = Yii::$app->security->generatePasswordHash($model->passwd_new);;
 
-            // 记录日志
-            Yii::$app->debris->log('updateManagerPwd', '修改管理员密码|账号:' . Yii::$app->user->identity->username, false);
+            // 记录行为日志
+            Yii::$app->services->sys->log('updateManagerPwd', '修改管理员密码|账号:' . $manager->username, false);
 
             if ($manager->save())
             {
@@ -102,50 +111,66 @@ class ManagerController extends SController
     }
 
     /**
-     * 角色授权
+     * ajax编辑/新增
      *
-     * @return array|mixed|string
+     * @return array|mixed|string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
-    public function actionAuthRole()
+    public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
-        // 用户id
-        $user_id = $request->get('user_id');
-        // 角色
-        $role = AuthItem::find()->where(['type' => AuthItem::ROLE])->all();
-        // 模型
-        $model = AuthAssignment::find()->where(['user_id' => $user_id])->one();
 
-        if (!$model)
-        {
-            $model = new AuthAssignment();
-            $model->user_id = $user_id;
-        }
+        $model = new ManagerForm();
+        $model->id = $request->get('id');
+        $model->loadData();
+
+        $model->id != Yii::$app->params['adminAccount'] && $model->scenario = 'generalAdmin';
 
         if ($model->load($request->post()))
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return \yii\widgets\ActiveForm::validate($model);
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
             }
-            else
-            {
-                $AuthAssignment = new AuthAssignment();
-                // 返回状态
-                if ($AuthAssignment->setAuthRole($model->user_id, $model->item_name))
-                {
-                    return $this->message('授权成功', $this->redirect(['index']));
-                }
 
-                return $this->message('授权失败,角色可能已经被删除！', $this->redirect(['index']), 'error');
-            }
+            // 记录行为日志
+            Yii::$app->services->sys->log('managerEdit', '新增/编辑管理员密码|账号:' . $model->username, false);
+
+            return $model->saveData()
+                ? $this->redirect(['index'])
+                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
         }
 
-        return $this->renderAjax('auth-role', [
+        list($roles, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getAuthRoles();
+        $roles = ArrayHelper::itemsMerge($roles, 'key', $parent_key, 'parent_key');
+        $roles = ArrayHelper::itemsMergeDropDown($roles, 'key', 'name', $treeStat);
+
+        return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'role' => $role,
-            'user_id'=> $user_id,
+            'roles' => $roles,
         ]);
+    }
+
+    /**
+     * 删除
+     *
+     * @param $id
+     * @return mixed
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDelete($id)
+    {
+        // 记录行为日志
+        Yii::$app->services->sys->log('managerDel', '删除管理员');
+
+        if ($this->findModel($id)->delete())
+        {
+            return $this->message("删除成功", $this->redirect(['index']));
+        }
+
+        return $this->message("删除失败", $this->redirect(['index']), 'error');
     }
 }

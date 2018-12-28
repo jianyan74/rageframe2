@@ -23,8 +23,8 @@ class AuthAccreditController extends SController
     {
         $models = AuthItem::find()
             ->where(['type' => AuthItem::AUTH])
-            ->asArray()
             ->orderBy('sort asc')
+            ->asArray()
             ->all();
 
         return $this->render('index', [
@@ -43,9 +43,8 @@ class AuthAccreditController extends SController
         $name = $request->get('name');
         $model = $this->findModel($name);
         // 父级key
-        $model->level = $request->get('level', 1);// 等级
         $model->parent_key = $request->get('parent_key', 0);
-        $model->type = AuthItem::AUTH;
+        $model->level = $request->get('level', 1);
 
         if ($model->load($request->post()))
         {
@@ -62,16 +61,9 @@ class AuthAccreditController extends SController
             }
         }
 
-        $parent_name = "暂无";
-        if ($model->parent_key != 0)
-        {
-            $prent = AuthItem::find()->where(['key' => $model->parent_key])->one();
-            $parent_name = $prent['description'];
-        }
-
         return $this->renderAjax('ajax-edit', [
             'model' => $model,
-            'parent_name' => $parent_name,
+            'parent_title' => $request->get('parent_title', '无'),
         ]);
     }
 
@@ -131,7 +123,10 @@ class AuthAccreditController extends SController
         if (empty($name) || empty(($model = AuthItem::findOne($name))))
         {
             $model = new AuthItem();
-            return $model->loadDefaultValues();
+            $model = $model->loadDefaultValues();
+            $model->type = AuthItem::AUTH;
+
+            return $model;
         }
 
         return $model;

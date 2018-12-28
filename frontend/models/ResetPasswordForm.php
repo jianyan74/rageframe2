@@ -2,8 +2,8 @@
 namespace frontend\models;
 
 use yii\base\Model;
-use common\models\member\MemberInfo;
 use yii\web\UnprocessableEntityHttpException;
+use common\models\member\MemberInfo;
 
 /**
  * 密码重置表单

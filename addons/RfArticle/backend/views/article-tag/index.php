@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <a href="<?= AddonUrl::to(['ajax-edit','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal'>
                                     <span class="btn btn-info btn-sm">编辑</span>
                                 </a>
-                                <?= \common\helpers\HtmlHelper::statusSpan($model['status']); ?>
+                                <?= \common\helpers\HtmlHelper::status($model['status']); ?>
                                 <a href="<?= AddonUrl::to(['delete','id'=>$model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
                             </td>
                         </tr>
