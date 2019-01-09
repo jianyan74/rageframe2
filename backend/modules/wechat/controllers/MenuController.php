@@ -13,6 +13,7 @@ use common\models\wechat\FansTags;
  *
  * Class MenuController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MenuController extends WController
 {
@@ -235,7 +236,7 @@ class MenuController extends WController
             $model->title = "默认菜单";
             $model = $model->loadDefaultValues();
             $model->menu_data = serialize($list['menu']['button']);
-            $model->menu_id = $list['menu']['menuid'];
+            $model->menu_id = isset($list['menu']['menuid']) ? $list['menu']['menuid'] : '';
             $model->save();
         }
 
@@ -251,8 +252,9 @@ class MenuController extends WController
                 }
 
                 $model->title = "个性化菜单";
-                $model->type = Menu::TYPE_INDIVIDUATION;
                 $model->attributes = $menu['matchrule'];
+                $model->type = Menu::TYPE_INDIVIDUATION;
+                $model->tag_id = isset($menu['group_id']) ? $menu['group_id'] : '';
                 $model->menu_data = serialize($menu['button']);
                 $model->menu_id = $menu['menuid'];
                 $model->save();
