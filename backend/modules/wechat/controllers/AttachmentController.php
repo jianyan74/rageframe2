@@ -134,8 +134,15 @@ class AttachmentController extends WController
             {
                 if ($attach_id)
                 {
-                    // 更新到微信
-                    $material->updateArticle($attachment['media_id'], $article_list);
+                    // 更新图文
+                    foreach ($article_list as $k => $value)
+                    {
+                        $result = $material->updateArticle($attachment['media_id'], $value, $k);
+                        if ($error = Yii::$app->debris->getWechatError($result, false))
+                        {
+                            return ResultDataHelper::json(404, $error);
+                        }
+                    }
                 }
                 else
                 {
