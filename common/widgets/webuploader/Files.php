@@ -58,7 +58,7 @@ class Files extends InputWidget
             'auto' => true, // 自动上传
             'formData' => [
                 'guid' => null,
-                'takeOverAction' => 'local', // 默认本地 可修改 qiniu/oss 上传
+                'takeOverAction' => Yii::$app->params['uploadConfig']['files']['takeOverAction'], // 默认本地 可修改 qiniu/oss 上传
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,
