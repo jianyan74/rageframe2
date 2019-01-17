@@ -11,6 +11,7 @@ use yii\data\Pagination;
  *
  * Class MsgHistoryController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MsgHistoryController extends WController
 {

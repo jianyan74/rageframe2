@@ -6,8 +6,11 @@ use common\helpers\ArrayHelper;
 use common\models\sys\Addons;
 
 /**
+ * AddonsForm
+ *
  * Class AddonsForm
  * @package backend\modules\sys\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonsForm extends Addons
 {

@@ -89,6 +89,28 @@ CREATE TABLE `rf_addon_article_tag_map` (
   KEY `tag_id` (`tag_id`) USING BTREE,
   KEY `article_id` (`article_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='扩展_文章标签关联表';
+
+-- ----------------------------
+-- Table structure for rf_addon_article_adv
+-- ----------------------------
+DROP TABLE IF EXISTS `rf_addon_article_adv`;
+CREATE TABLE `rf_addon_article_adv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `title` varchar(30) NOT NULL DEFAULT '' COMMENT '标题',
+  `cover` varchar(100) DEFAULT '' COMMENT '图片',
+  `location_id` int(11) DEFAULT '0' COMMENT '广告位ID',
+  `silder_text` varchar(255) DEFAULT '' COMMENT '图片描述',
+  `start_time` int(10) DEFAULT '0' COMMENT '开始时间',
+  `end_time` int(10) DEFAULT '0' COMMENT '结束时间',
+  `jump_link` varchar(255) DEFAULT '' COMMENT '跳转链接',
+  `jump_type` tinyint(4) DEFAULT '1' COMMENT '跳转方式[1:新标签; 2:当前页]',
+  `sort` int(10) DEFAULT '0' COMMENT '优先级',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态',
+  `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `updated_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='扩展_文章_幻灯片表';
+
 ";
 
 // 执行sql

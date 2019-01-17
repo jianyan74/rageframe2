@@ -10,6 +10,8 @@ namespace backend\interfaces;
 interface WechatMessageInterface
 {
     /**
+     * 运行方法
+     *
      * @param $message
      * @return mixed
      */

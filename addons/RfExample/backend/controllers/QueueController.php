@@ -10,6 +10,7 @@ use addons\RfExample\common\components\Job;
  *
  * Class QueueController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class QueueController extends AddonsBaseController
 {

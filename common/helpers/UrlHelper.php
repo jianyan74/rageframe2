@@ -9,6 +9,7 @@ use yii\helpers\BaseUrl;
  *
  * Class UrlHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class UrlHelper extends BaseUrl
 {
@@ -24,14 +25,17 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerFront'))
         {
+            $domainName = Yii::$app->params['siteDomain']['frontend'];
             Yii::$app->set('urlManagerFront', [
                 'class' => 'yii\web\urlManager',
-                'hostInfo' => Yii::$app->request->hostInfo,
+                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo,
                 'scriptUrl' => '', // 代替'baseUrl'
                 'enablePrettyUrl' => true,
                 'showScriptName' => true,
                 'suffix' => '.html',// 静态
             ]);
+
+            unset($domainName);
         }
 
         return urldecode(Yii::$app->urlManagerFront->createAbsoluteUrl($url, $scheme));
@@ -49,13 +53,17 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerWechat'))
         {
+            $domainName = Yii::$app->params['siteDomain']['wechat'];
             Yii::$app->set('urlManagerWechat', [
                 'class' => 'yii\web\urlManager',
-                'scriptUrl' => '/wechat', // 代替'baseUrl'
+                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/wechat',
+                'scriptUrl' => '', // 代替'baseUrl'
                 'enablePrettyUrl' => true,
                 'showScriptName' => true,
                 'suffix' => '.html',// 静态
             ]);
+
+            unset($domainName);
         }
 
         return urldecode(Yii::$app->urlManagerWechat->createAbsoluteUrl($url, $scheme));
@@ -73,13 +81,17 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerApi'))
         {
+            $domainName = Yii::$app->params['siteDomain']['api'];
             Yii::$app->set('urlManagerApi', [
                 'class' => 'yii\web\urlManager',
-                'scriptUrl' => '/api', // 代替'baseUrl'
+                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/api',
+                'scriptUrl' => '', // 代替'baseUrl'
                 'enablePrettyUrl' => true,
                 'showScriptName' => true,
                 'suffix' => '',// 静态
             ]);
+
+            unset($domainName);
         }
 
         return urldecode(Yii::$app->urlManagerApi->createAbsoluteUrl($url, $scheme));

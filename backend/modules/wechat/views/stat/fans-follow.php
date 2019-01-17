@@ -14,132 +14,156 @@ $this->title = '粉丝关注统计';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
-<?= Html::jsFile('/backend/resources/js/plugins/echarts/echarts-all.js')?>
+<?= Html::jsFile('@web/resources/plugins/echarts/echarts-all.js')?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>今日新关注</h4>
-                    <h1 class="no-margins"><?= $today['new_attention']; ?></h1>
-                    <small>人</small>
-                </div>
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-star-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">今日新关注(人)</span>
+                <span class="info-box-number"><?= $today['new_attention']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>今日取消关注</h4>
-                    <h1 class="no-margins"><?= $today['cancel_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>今日净增关注</h4>
-                    <h1 class="no-margins"><?= $today['increase_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>累积关注</h4>
-                    <h1 class="no-margins"><?= $today['cumulate_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
+        <!-- /.info-box -->
     </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>昨日新关注</h4>
-                    <h1 class="no-margins"><?= $yesterday['new_attention']; ?></h1>
-                    <small>人</small>
-                </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-level-down"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">今日取消关注(人)</span>
+                <span class="info-box-number"><?= $today['cancel_attention']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>昨日取消关注</h4>
-                    <h1 class="no-margins"><?= $yesterday['cancel_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>昨日净增关注</h4>
-                    <h1 class="no-margins"><?= $yesterday['increase_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <h4>累积关注</h4>
-                    <h1 class="no-margins"><?= $yesterday['cumulate_attention']; ?></h1>
-                    <small>人</small>
-                </div>
-            </div>
-        </div>
+        <!-- /.info-box -->
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5><i class="fa fa-cog"></i>  关键指标详解</h5>
-                </div>
-                <div class="ibox-content">
-                    <div class="col-sm-12">
-                        <?php $form = ActiveForm::begin([
-                            'action' => Url::to(['index']),
-                            'method' => 'get'
-                        ]); ?>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="input-group drp-container">
-                                    <?= DateRangePicker::widget([
-                                        'name' => 'queryDate',
-                                        'value' => $from_date . '-' . $to_date,
-                                        'readonly' => 'readonly',
-                                        'useWithAddon' => true,
-                                        'convertFormat' => true,
-                                        'startAttribute' => 'from_date',
-                                        'endAttribute' => 'to_date',
-                                        'startInputOptions' => ['value' => $from_date],
-                                        'endInputOptions' => ['value' => $to_date],
-                                        'pluginOptions' => [
-                                            'locale' => ['format' => 'Y-m-d'],
-                                        ]
-                                    ]) . $addon;?>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="input-group m-b">
-                                    <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
-                                </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-level-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">今日净增关注(人)</span>
+                <span class="info-box-number"><?= $today['increase_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-user-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">累积关注</span>
+                <span class="info-box-number"><?= $today['cumulate_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-star-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">昨日新关注(人)</span>
+                <span class="info-box-number"><?= $yesterday['new_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-level-down"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">昨日取消关注(人)</span>
+                <span class="info-box-number"><?= $yesterday['cancel_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-level-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">昨日净增关注(人)</span>
+                <span class="info-box-number"><?= $yesterday['increase_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-user-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">昨日累积关注</span>
+                <span class="info-box-number"><?= $yesterday['cumulate_attention']; ?></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+            </div>
+            <div class="box-body table-responsive">
+                <div class="col-sm-12 normalPaddingJustV">
+                    <?php $form = ActiveForm::begin([
+                        'action' => Url::to(['index']),
+                        'method' => 'get'
+                    ]); ?>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group drp-container">
+                                <?= DateRangePicker::widget([
+                                    'name' => 'queryDate',
+                                    'value' => $from_date . '-' . $to_date,
+                                    'readonly' => 'readonly',
+                                    'useWithAddon' => true,
+                                    'convertFormat' => true,
+                                    'startAttribute' => 'from_date',
+                                    'endAttribute' => 'to_date',
+                                    'startInputOptions' => ['value' => $from_date],
+                                    'endInputOptions' => ['value' => $to_date],
+                                    'pluginOptions' => [
+                                        'locale' => ['format' => 'Y-m-d'],
+                                    ]
+                                ]) . $addon;?>
                             </div>
                         </div>
-                        <?php ActiveForm::end(); ?>
+                        <div class="col-sm-3">
+                            <div class="input-group m-b">
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
+                        </div>
                     </div>
-                    <table class="table">
-                        <tr>
-                            <td colspan="4">
-                                <div id="main" style="width: 100%;height:400px;"></div>
-                            </td>
-                        </tr>
-                    </table>
+                    <?php ActiveForm::end(); ?>
                 </div>
+                <table class="table">
+                    <tr>
+                        <td colspan="4">
+                            <div id="main" style="width: 100%;height:400px;"></div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

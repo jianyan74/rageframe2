@@ -12,6 +12,7 @@ use backend\modules\wechat\models\RuleForm;
 /**
  * Class RuleController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class RuleController extends WController
 {
@@ -93,7 +94,7 @@ class RuleController extends WController
                 if ($moduleModel->save())
                 {
                     $transaction->commit();
-                    return $this->redirect(['index','module' => $model->module]);
+                    return $this->redirect(['index', 'module' => $model->module]);
                 }
 
                 throw new \Exception('插入失败');

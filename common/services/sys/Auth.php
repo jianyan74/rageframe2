@@ -13,6 +13,7 @@ use common\models\sys\AddonsAuthItemChild;
 /**
  * Class Auth
  * @package common\services\sys
+ * @author jianyan74 <751393839@qq.com>
  */
 class Auth extends Service
 {
@@ -29,6 +30,13 @@ class Auth extends Service
      * @var array
      */
     protected $addonBaseAuth = [];
+
+    /**
+     * 拥有的插件权限
+     *
+     * @var array
+     */
+    protected $addonAuth = [];
 
     /**
      * 权限校验
@@ -363,6 +371,11 @@ class Auth extends Service
      */
     public function getAddonAuth()
     {
+        if (!empty($this->addonAuth))
+        {
+            return $this->addonAuth;
+        }
+
         // 非总管理员
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
@@ -389,21 +402,23 @@ class Auth extends Service
                 }
             }
 
-            $auths = Addons::find()
+            $this->addonAuth = Addons::find()
                 ->where(['status' => StatusEnum::ENABLED])
                 ->andWhere(['in', 'name', $addonNames])
-                ->with(['bindingCover', 'authItem' => function($query) use ($childs){
+                ->with(['bindingCover', 'bindingMenu', 'authItem' => function($query) use ($childs){
                     return $query->andWhere(['in', 'route', $childs]);
                 }])
                 ->all();
-
-            return $auths;
+        }
+        else
+        {
+            $this->addonAuth = Addons::find()
+                ->where(['status' => StatusEnum::ENABLED])
+                ->with(['bindingCover', 'bindingMenu', 'authItem'])
+                ->all();
         }
 
-        return Addons::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->with(['bindingCover', 'authItem'])
-            ->all();
+        return $this->addonAuth;
     }
 
     /**

@@ -8,6 +8,7 @@ use addons\RfSignShoppingDay\common\models\User;
 /**
  * Class IController
  * @package addons\RfSignShoppingDay\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class IController extends AddonsBaseController
 {

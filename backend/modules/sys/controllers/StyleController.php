@@ -9,7 +9,8 @@ use common\models\sys\Style;
  * 主题样式控制器
  *
  * Class StyleController
- * @package backend\modules\member\controllers
+ * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class StyleController extends SController
 {

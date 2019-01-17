@@ -10,11 +10,15 @@ namespace backend\interfaces;
 interface AddonsSettingInterface
 {
     /**
+     * 默认设置方法
+     *
      * @return mixed
      */
     public function actionDisplay();
 
     /**
+     * 默认钩子方法
+     *
      * @param array $param
      * @return mixed
      */

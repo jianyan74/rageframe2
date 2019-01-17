@@ -1,60 +1,52 @@
 <?php
-
 namespace backend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Main backend application asset bundle.
+ * Class AppAsset
+ * @package backend\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
 
-    public $baseUrl = '@web/';
+    public $baseUrl = '@web/resources';
 
     public $css = [
-        'resources/css/bootstrap.min.css?v=3.3.7',
-        'resources/css/font-awesome.css?v=4.7.0',
-        'resources/css/animate.css',
-        'resources/css/style.css?v=4.1.0',
-        // 复选框样式
-        'resources/css/plugins/iCheck/custom.css',
-        'resources/css/plugins/iCheck/grey.css',
-        // 弹出框css
-        'resources/css/plugins/sweetalert/sweetalert.css?v=1',
-        // rageframe自带样式
-        'resources/css/rageframe.css',
-        // 图片弹出css
-        'resources/js/plugins/fancybox/jquery.fancybox.min.css',
+        'bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'bower_components/font-awesome/css/font-awesome.min.css',
+        'bower_components/iconfont/iconfont.css',
+        'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+        'bower_components/Ionicons/css/ionicons.min.css',
+        'plugins/sweetalert/sweetalert.css', // 弹出框提示
+        'plugins/fancybox/jquery.fancybox.min.css', // 图片查看
+        'plugins/toastr/toastr.min.css', // 状态通知
+        'dist/css/AdminLTE.min.css',
+        'dist/css/skins/_all-skins.min.css',
+        'dist/css/rageframe.css?v=2.2.2',
+        'dist/css/wechat.css',
     ];
 
     public $js = [
-        // 全局js
-        'resources/js/bootstrap.min.js?v=3.3.7',
-        'resources/js/plugins/metisMenu/jquery.metisMenu.js',
-        'resources/js/plugins/slimscroll/jquery.slimscroll.min.js',
-        'resources/js/plugins/layer/layer.min.js',
-        // 自定义js
-        'resources/js/hplus.js?v=4.1.0',
-        'resources/js/contabs.js',
-        // 第三方插件
-        'resources/js/plugins/pace/pace.min.js',
-        // 复选框js
-        'resources/js/plugins/iCheck/icheck.min.js',
-        // 弹出框js
-        'resources/js/plugins/sweetalert/sweetalert.min.js',
-        // 图片弹出js
-        'resources/js/plugins/fancybox/jquery.fancybox.min.js',
-        // rageframe自带样式
-        'resources/js/rageframe.js',
-        // 前端模板
-        'resources/js/template.js',
+        'bower_components/bootstrap/dist/js/bootstrap.min.js',
+        'bower_components/jquery-slimscroll/jquery.slimscroll.min.js',
+        'bower_components/fastclick/lib/fastclick.js',
+        'plugins/layer/layer.min.js',
+        'plugins/sweetalert/sweetalert.min.js',
+        'plugins/fancybox/jquery.fancybox.min.js',
+        'dist/js/adminlte.js',
+        'dist/js/demo.js',
+        'dist/js/contabs.js',
+        'dist/js/content.js',
+        'dist/js/template.js',
+        'dist/js/rageframe.js?v=2.2.2',
     ];
 
     public $depends = [
         'yii\web\YiiAsset',
-        // 'yii\bootstrap\BootstrapAsset',
         'backend\assets\HeadJsAsset',
+        // 'yii\bootstrap\BootstrapAsset',
     ];
 }

@@ -2,14 +2,15 @@
 namespace backend\modules\member\controllers;
 
 use Yii;
-use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\components\CurdTrait;
 use common\models\member\MemberAuth;
+use common\models\common\SearchModel;
 
 /**
  * Class AuthController
  * @package backend\modules\member\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AuthController extends MController
 {
@@ -23,26 +24,28 @@ class AuthController extends MController
     /**
      * 首页
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
      */
     public function actionIndex()
     {
-        $keyword = Yii::$app->request->get('keyword', null);
+        $searchModel = new SearchModel([
+            'model' => MemberAuth::className(),
+            'scenario' => 'default',
+            'partialMatchAttributes' => ['realname', 'mobile_phone'], // 模糊查询
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
 
-        $data = MemberAuth::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andFilterWhere(['like', 'nickname', $keyword]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
-        $models = $data->offset($pages->offset)
-            ->with('member')
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->all();
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
-            'models' => $models,
-            'pages' => $pages,
-            'keyword' => $keyword,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 }

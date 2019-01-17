@@ -9,6 +9,7 @@ use backend\interfaces\WechatMessageInterface;
  *
  * Class WeatherApi
  * @package backend\modules\wechat\userapis
+ * @author jianyan74 <751393839@qq.com>
  */
 class WeatherApi implements WechatMessageInterface
 {

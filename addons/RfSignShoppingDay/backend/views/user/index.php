@@ -6,13 +6,14 @@ use common\helpers\AddonUrl;
 $this->title = '用户管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
+
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5><?= $this->title; ?></h5>
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
             </div>
-            <div class="ibox-content">
+            <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -35,18 +36,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?php } ?>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <?= LinkPager::widget([
-                            'pagination' => $pages,
-                            'maxButtonCount' => 5,
-                            'firstPageLabel' => "首页",
-                            'lastPageLabel' => "尾页",
-                            'nextPageLabel' => "下一页",
-                            'prevPageLabel' => "上一页",
-                        ]);?>
-                    </div>
-                </div>
+            </div>
+            <div class="box-footer">
+                <?= LinkPager::widget([
+                    'pagination' => $pages
+                ]);?>
             </div>
         </div>
     </div>

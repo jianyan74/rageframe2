@@ -9,7 +9,8 @@ use common\models\member\Address;
  *
  * Class AddressController
  * @package api\modules\v1\controllers\member
- * @property \yii\db\ActiveRecord $modelClass;
+ * @property \yii\db\ActiveRecord $modelClass
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddressController extends UserAuthController
 {

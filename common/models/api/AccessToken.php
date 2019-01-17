@@ -20,8 +20,6 @@ use common\helpers\ArrayHelper;
  * @property string $member_id 关联的用户id
  * @property string $group 组别
  * @property int $status 用户状态
- * @property int $allowance 规定时间可获取次数
- * @property int $allowance_updated_at 最后一次提交时间
  * @property int $created_at 创建时间
  * @property int $updated_at 修改时间
  */
@@ -56,7 +54,7 @@ class AccessToken extends RateLimit
     public function rules()
     {
         return [
-            [['member_id', 'status', 'allowance', 'allowance_updated_at', 'created_at', 'updated_at'], 'integer'],
+            [['member_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['refresh_token', 'access_token'], 'string', 'max' => 60],
             [['group'], 'string', 'max' => 30],
             [['access_token'], 'unique'],
@@ -76,8 +74,6 @@ class AccessToken extends RateLimit
             'member_id' => '会员ID',
             'group' => '组别',
             'status' => '状态',
-            'allowance' => '访问次数',
-            'allowance_updated_at' => '最后次访问时间',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
@@ -120,8 +116,6 @@ class AccessToken extends RateLimit
         $model = static::findModel($member->id, $group);
         $model->member_id = $member->id;
         $model->group = $group;
-        $model->allowance = 2;
-        $model->allowance_updated_at = time();
         $model->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
         $model->access_token = Yii::$app->security->generateRandomString() . '_' . time();
 

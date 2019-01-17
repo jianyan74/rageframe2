@@ -1,22 +1,25 @@
 <?php
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
+use common\helpers\AddonHtmlHelper;
 
 $this->title = '分类管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
+
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5><?= $this->title; ?></h5>
-                <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="box-tools">
+                    <?= AddonHtmlHelper::create(['ajax-edit'], '创建', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModal',
+                    ])?>
                 </div>
             </div>
-            <div class="ibox-content">
+            <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <thead>
                     <tr>

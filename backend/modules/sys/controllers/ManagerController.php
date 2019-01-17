@@ -16,6 +16,7 @@ use backend\modules\sys\models\ManagerForm;
  *
  * Class ManagerController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ManagerController extends SController
 {
@@ -111,7 +112,7 @@ class ManagerController extends SController
     }
 
     /**
-     * ajax编辑/新增
+     * ajax编辑/创建
      *
      * @return array|mixed|string|Response
      * @throws \yii\base\InvalidConfigException
@@ -136,7 +137,7 @@ class ManagerController extends SController
             }
 
             // 记录行为日志
-            Yii::$app->services->sys->log('managerEdit', '新增/编辑管理员密码|账号:' . $model->username, false);
+            Yii::$app->services->sys->log('managerEdit', '创建/编辑管理员密码|账号:' . $model->username, false);
 
             return $model->saveData()
                 ? $this->redirect(['index'])
@@ -144,7 +145,7 @@ class ManagerController extends SController
         }
 
         list($roles, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getAuthRoles();
-        $roles = ArrayHelper::itemsMerge($roles, 'key', $parent_key, 'parent_key');
+        $roles = ArrayHelper::itemsMerge($roles, $parent_key, 'key', 'parent_key');
         $roles = ArrayHelper::itemsMergeDropDown($roles, 'key', 'name', $treeStat);
 
         return $this->renderAjax($this->action->id, [

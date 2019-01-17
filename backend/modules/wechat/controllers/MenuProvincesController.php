@@ -10,6 +10,7 @@ use common\models\wechat\MenuProvinces;
  *
  * Class MenuProvincesController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MenuProvincesController extends WController
 {

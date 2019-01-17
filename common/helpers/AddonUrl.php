@@ -9,6 +9,7 @@ use yii\helpers\Url;
  *
  * Class AddonUrl
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonUrl
 {

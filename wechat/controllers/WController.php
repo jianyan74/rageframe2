@@ -9,6 +9,7 @@ use common\controllers\BaseController;
  *
  * Class WController
  * @package wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class WController extends BaseController
 {

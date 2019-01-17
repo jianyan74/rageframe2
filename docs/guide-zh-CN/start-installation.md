@@ -34,7 +34,7 @@ cd rageframe2
 3、安装依赖
 
 ```
-php composer.phar install
+php composer.phar install 
 ```
 
 4、初始化项目

@@ -10,6 +10,7 @@ use common\models\wechat\MassRecord;
 /**
  * Class SendForm
  * @package backend\modules\wechat\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class SendForm extends MassRecord
 {
@@ -65,6 +66,7 @@ class SendForm extends MassRecord
     {
         $app = Yii::$app->wechat->app;
         $method = $this->sendMethod[$this->media_type];
+
         $sendContent = $method == 'sendText' ? $this->content : $this->media_id;
 
         // 立即发送写入时间

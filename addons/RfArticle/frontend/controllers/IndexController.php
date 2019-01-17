@@ -9,8 +9,11 @@ use common\controllers\AddonsBaseController;
 use yii\data\Pagination;
 
 /**
+ * 首页
+ *
  * Class IndexController
  * @package addons\RfArticle\frontend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class IndexController extends AddonsBaseController
 {
@@ -43,7 +46,7 @@ class IndexController extends AddonsBaseController
     }
 
     /**
-     * 首页
+     * 列表
      *
      * @return string
      */

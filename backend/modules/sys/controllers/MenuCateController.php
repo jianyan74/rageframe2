@@ -10,6 +10,7 @@ use common\models\sys\MenuCate;
  *
  * Class MenuCateController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MenuCateController extends SController
 {

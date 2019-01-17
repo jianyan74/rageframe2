@@ -14,6 +14,7 @@ use common\models\wechat\QrcodeStat;
  *
  * Class WechatApiController
  * @package common\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class WechatApiController extends BaseController
 {

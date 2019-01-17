@@ -1,9 +1,10 @@
 <?php
-
 namespace frontend\modules\member\controllers;
 
 /**
- * Default controller for the `member` module
+ * Class DefaultController
+ * @package frontend\modules\member\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class DefaultController extends MController
 {

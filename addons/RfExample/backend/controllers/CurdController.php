@@ -3,6 +3,7 @@ namespace addons\RfExample\backend\controllers;
 
 use yii;
 use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
 use common\controllers\AddonsBaseController;
 use common\helpers\ResultDataHelper;
 use common\helpers\ExcelHelper;
@@ -11,6 +12,7 @@ use addons\RfExample\common\models\Curd;
 /**
  * Class CurdController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class CurdController extends AddonsBaseController
 {
@@ -105,12 +107,7 @@ class CurdController extends AddonsBaseController
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $getData = Yii::$app->request->get();
-        foreach (['id', 'sort', 'status'] as $item)
-        {
-            isset($getData[$item]) && $model->$item = $getData[$item];
-        }
-
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save())
         {
             return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));

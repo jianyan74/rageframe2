@@ -80,6 +80,7 @@ class MenuController extends WController
             foreach ($postInfo['list'] as &$button)
             {
                 $arr = [];
+                // 判断是否有子菜单
                 if (isset($button['sub_button']))
                 {
                     $arr['name'] = $button['name'];

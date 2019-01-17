@@ -7,32 +7,22 @@ use common\helpers\AddonHtmlHelper;
 $this->title = 'Curd Grid';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5><?= $this->title; ?></h5>
-                <div class="ibox-tools">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="pull-right">
                     <?= AddonHtmlHelper::create(['edit']); ?>
                 </div>
             </div>
-            <div class="ibox-content">
-                <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     //重新定义分页样式
-                    'layout'=> '{summary}{items}<div class="text-right tooltip-demo">{pager}</div>',
                     'tableOptions' => ['class' => 'table table-hover'],
-                    'pager'=>[
-                        //'options'=>['class' => 'hidden']//关闭分页
-                        'maxButtonCount' => 5,
-                        'firstPageLabel' => "首页",
-                        'lastPageLabel' => "尾页",
-                        'nextPageLabel' => "下一页",
-                        'prevPageLabel' => "上一页",
-                    ],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
@@ -99,9 +89,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ],
                     ],
-
                 ]); ?>
+                <!-- /.box-body -->
             </div>
+            <!-- /.box -->
         </div>
     </div>
 </div>

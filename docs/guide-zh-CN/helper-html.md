@@ -28,19 +28,19 @@ HtmlHelper::create(['index']);
 ### 编辑按钮
 
 ```
-HtmlHelper::edit(['edit', 'id' => 1']);
+HtmlHelper::edit(['edit', 'id' => 1]);
 ```
 
 ### 删除按钮
 
 ```
-HtmlHelper::create(['delete', 'id' => 1']);
+HtmlHelper::create(['delete', 'id' => 1]);
 ```
 
 ### 普通按钮
 
 ```
-HtmlHelper::linkButton(['test', 'id' => 1'], '测试');
+HtmlHelper::linkButton(['test', 'id' => 1], '测试');
 ```
 
 ### 状态标签

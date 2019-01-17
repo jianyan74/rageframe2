@@ -9,8 +9,9 @@ use Zhuzhichao\IpLocationZh\Ip;
 /**
  * Class Sys
  * @package common\services\sys
- *
  * @property \common\services\sys\Auth $auth
+ * @property \common\services\sys\Addon $addon
+ * @author jianyan74 <751393839@qq.com>
  */
 class Sys extends Service
 {

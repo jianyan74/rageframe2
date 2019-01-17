@@ -58,7 +58,7 @@ class Files extends InputWidget
             'auto' => true, // 自动上传
             'formData' => [
                 'guid' => null,
-                'takeOverAction' => Yii::$app->params['uploadConfig']['files']['takeOverAction'], // 默认本地 可修改 qiniu/oss 上传
+                'drive' => Yii::$app->params['uploadConfig']['files']['drive'], // 默认本地 可修改 qiniu/oss 上传
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,
@@ -85,6 +85,7 @@ class Files extends InputWidget
             'independentUrl' => false, // 独立上传地址,不受全局的地址上传影响
             'callback' => null, // 上传成功回调js方法
             'name' => $this->name,
+            'select' => true, // 显示选择文件
         ], $this->config);
 
         if (!empty(Yii::$app->params['uploadConfig']['files']['takeOverUrl']) && $this->config['independentUrl'] == false)

@@ -13,6 +13,7 @@ use common\models\sys\AuthItemChild;
  *
  * Class AuthRoleController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AuthRoleController extends SController
 {
@@ -27,7 +28,7 @@ class AuthRoleController extends SController
         list($models, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getAuthRoles();
 
         return $this->render('index', [
-            'models' => ArrayHelper::itemsMerge($models, 'key', $parent_key, 'parent_key'),
+            'models' => ArrayHelper::itemsMerge($models, $parent_key, 'key', 'parent_key'),
             'treeStat' => $treeStat
         ]);
     }
@@ -48,6 +49,7 @@ class AuthRoleController extends SController
         if ($request->isAjax)
         {
             $model->attributes = $request->post();
+            $model->description = Yii::$app->user->identity->username . '添加了角色';
             if (!$model->save())
             {
                 return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
@@ -95,7 +97,7 @@ class AuthRoleController extends SController
              * 由于数据与预期的不符手动写入Post数据
              */
             Yii::$app->request->setBodyParams(ArrayHelper::merge($request->post(), ['userTrees' => $allAuth]));
-            Yii::$app->services->sys->log('authEdit', '新增/编辑角色 or 权限');
+            Yii::$app->services->sys->log('authEdit', '创建/编辑角色 or 权限');
 
             return ResultDataHelper::json(200, '提交成功');
         }
@@ -141,6 +143,29 @@ class AuthRoleController extends SController
         }
 
         return $this->message("删除失败", $this->redirect(['index']), 'error');
+    }
+
+    /**
+     * ajax更新排序/状态
+     *
+     * @param $id
+     * @return array
+     */
+    public function actionAjaxUpdate($id)
+    {
+        if (!($model = AuthItem::findOne(['key' => $id])))
+        {
+            return ResultDataHelper::json(404, '找不到数据');
+        }
+
+        $data = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
+        $model->attributes = $data;
+        if (!$model->save())
+        {
+            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
+        }
+
+        return ResultDataHelper::json(200, '修改成功');
     }
 
     /**

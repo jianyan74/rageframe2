@@ -41,7 +41,7 @@ class Account extends \yii\db\ActiveRecord
      *
      * @var array
      */
-    public static $typeExplanation  = [
+    public static $typeExplanation = [
         self::TYPE_IMAGE => "图片消息",
         self::TYPE_VOICE => "语音消息",
         self::TYPE_VIDEO => "视频消息",
@@ -55,3 +55,4 @@ class Account extends \yii\db\ActiveRecord
         self::TYPE_WIFI_CONNECTED => "Wifi连接成功消息",
     ];
 }
+

@@ -10,32 +10,21 @@ $this->title = '自动回复';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="tabs-container">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="<?= Url::to(['rule/index'])?>"> 关键字自动回复</a></li>
-            <li><a href="<?= Url::to(['setting/special-message'])?>"> 非文字自动回复</a></li>
-            <li><a href="<?= Url::to(['reply-default/index'])?>"> 关注/默认回复</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active">
-                <div class="panel-body">
-                    <div class="row">
-                        <?php $form = ActiveForm::begin([
-                            'action' => Url::to(['index']),
-                            'method' => 'get'
-                        ]); ?>
-                        <div class="col-sm-3">
-                            <div class="input-group m-b">
-                                <?= Html::textInput('keyword', $keyword, [
-                                    'placeholder' => '请输入规则',
-                                    'class' => 'form-control'
-                                ])?>
-                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
-                            </div>
-                        </div>
-                        <?php ActiveForm::end(); ?>
-                    </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="<?= Url::to(['rule/index'])?>"> 关键字自动回复</a></li>
+                <li><a href="<?= Url::to(['setting/special-message'])?>"> 非文字自动回复</a></li>
+                <li><a href="<?= Url::to(['reply-default/index'])?>"> 关注/默认回复</a></li>
+                <li class="pull-right">
+                    <a class="btn btn-primary btn-xs" onclick="openEdit()">
+                        <i class="fa fa-plus"></i> 创建
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane">
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="btn-group">
@@ -45,10 +34,19 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <a class="btn btn-primary btn-xs pull-right" onclick="openEdit()">
-                                <i class="fa fa-plus"></i>  创建
-                            </a>
+                        <div class="col-sm-4">
+                            <?php $form = ActiveForm::begin([
+                                'action' => Url::to(['index']),
+                                'method' => 'get'
+                            ]); ?>
+                            <div class="input-group m-b">
+                                <?= Html::textInput('keyword', $keyword, [
+                                    'placeholder' => '请输入规则',
+                                    'class' => 'form-control'
+                                ])?>
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                            </div>
+                            <?php ActiveForm::end(); ?>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -75,7 +73,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         <?php if($model->ruleKeyword){ ?>
                                             <?php foreach($model->ruleKeyword as $rule){
                                                 if($rule->type != RuleKeyword::TYPE_TAKE){ ?>
-                                                    <span class="simple_tag" data-toggle="tooltip" data-placement="bottom" title="<?= RuleKeyword::$typeExplain[$rule->type]; ?>"><?= $rule->content?></span>
+                                                    <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="<?= RuleKeyword::$typeExplain[$rule->type]; ?>"><?= $rule->content?></span>
                                                 <?php }
                                             }
                                         } ?>
@@ -95,11 +93,6 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="col-sm-12">
                             <?= LinkPager::widget([
                                 'pagination' => $pages,
-                                'maxButtonCount' => 5,
-                                'firstPageLabel' => "首页",
-                                'lastPageLabel' => "尾页",
-                                'nextPageLabel' => "下一页",
-                                'prevPageLabel' => "上一页",
                             ]);?>
                         </div>
                     </div>
@@ -108,6 +101,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         </div>
     </div>
 </div>
+
 <script type="text/html"  id="editModel">
     <?php foreach($modules as $key => $module){ ?>
         <div class="col-lg-12 text-center" style="padding: 10px">

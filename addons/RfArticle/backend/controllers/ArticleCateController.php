@@ -12,6 +12,7 @@ use addons\RfArticle\common\models\ArticleCate;
  *
  * Class ArticleCateController
  * @package addons\RfArticle\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ArticleCateController extends AddonsBaseController
 {
@@ -40,13 +41,13 @@ class ArticleCateController extends AddonsBaseController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|yii\web\Response
      */
     public function actionAjaxEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
         $model->level = $request->get('level', null) ?? $model->level; // 级别

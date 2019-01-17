@@ -9,6 +9,7 @@ use common\controllers\AddonsBaseController;
  *
  * Class DefaultController
  * @package addons\RfSignShoppingDay\frontend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class DefaultController extends AddonsBaseController
 {

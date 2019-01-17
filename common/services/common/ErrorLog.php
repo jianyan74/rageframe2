@@ -6,10 +6,12 @@ use common\queues\LogJob;
 use common\helpers\StringHelper;
 use common\services\Service;
 use common\models\common\Log;
+use common\helpers\ArrayHelper;
 
 /**
  * Class ErrorLog
  * @package common\services\common
+ * @author jianyan74 <751393839@qq.com>
  */
 class ErrorLog extends Service
 {
@@ -90,7 +92,7 @@ class ErrorLog extends Service
             $this->req_id = $req_id;
 
             // 排除状态码
-            !in_array($this->statusCode, $this->exceptCode) && $this->insertLog();
+            !in_array($this->statusCode, ArrayHelper::merge($this->exceptCode, Yii::$app->params['user.log.except.code'])) && $this->insertLog();
         }
 
         return $this->errData;
@@ -122,6 +124,23 @@ class ErrorLog extends Service
      */
     private function getData()
     {
+        $data = $this->initData();
+        $data['req_id'] = $this->req_id;
+        $data['error_code'] = $this->statusCode;
+        $data['error_msg'] = $this->statusText;
+        $data['error_data'] = json_encode($this->errData);
+
+        return $data;
+    }
+
+    /**
+     * 初始化默认日志数据
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function initData()
+    {
         $member_id = Yii::$app->user->id;
         $url = explode('?', Yii::$app->request->getUrl());
 
@@ -146,10 +165,6 @@ class ErrorLog extends Service
         $data['controller'] = $controller;
         $data['action'] = $action;
         $data['ip'] = ip2long(Yii::$app->request->userIP);
-        $data['req_id'] = $this->req_id;
-        $data['error_code'] = $this->statusCode;
-        $data['error_msg'] = $this->statusText;
-        $data['error_data'] = json_encode($this->errData);
 
         return $data;
     }

@@ -1,6 +1,8 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
+use common\models\wechat\Attachment;
+use common\models\wechat\AttachmentNews;
 use yii;
 use yii\data\Pagination;
 use yii\web\Response;
@@ -9,10 +11,18 @@ use common\helpers\ResultDataHelper;
 use common\models\wechat\Fans;
 use common\models\wechat\FansTags;
 use common\models\wechat\FansTagMap;
+use common\models\wechat\Rule;
+use EasyWeChat\Kernel\Messages\Text;
+use EasyWeChat\Kernel\Messages\Image;
+use EasyWeChat\Kernel\Messages\Video;
+use EasyWeChat\Kernel\Messages\Voice;
+use EasyWeChat\Kernel\Messages\News;
+use EasyWeChat\Kernel\Messages\NewsItem;
 
 /**
  * Class FansController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class FansController extends WController
 {
@@ -82,7 +92,7 @@ class FansController extends WController
     }
 
     /**
-     * 粉丝详情
+     * 发送消息
      *
      * @param $id
      * @return array|string
@@ -93,13 +103,50 @@ class FansController extends WController
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
-    public function actionSendMessage($id)
+    public function actionSendMessage($openid)
     {
-        $model = Fans::findOne($id);
-
-        if (Yii::$app->request->isAjax)
+        $model = Fans::findOne(['openid' => $openid]);
+        if (Yii::$app->request->isPost)
         {
-            $message = Yii::$app->request->get('content');
+            $data = Yii::$app->request->post();
+            switch ($data['type'])
+            {
+                // 文字回复
+                case  1 :
+                    $message =  new Text($data['content']);
+                    break;
+                // 图片回复
+                case  2 :
+                    $message = new Image($data['images']);
+                    break;
+                // 图文回复
+                case  3 :
+                    $new = AttachmentNews::find()->where(['sort' => 0, 'attachment_id' => $data['news']])->one();
+                    $newsList[] = new NewsItem([
+                        'title' => $new['title'],
+                        'description' => $new['digest'],
+                        'url' => $new['media_url'],
+                        'image' => $new['thumb_url'],
+                    ]);
+
+                    $message = new News($newsList);
+                    break;
+                // 视频回复
+                case 4 :
+                    $message = new Video($data['video'], [
+                        'title' => $data['title'],
+                        'description' => $data['description'],
+                    ]);
+                    break;
+                // 语音回复
+                case 5 :
+                    $message = new Voice($data['voice']);
+                    break;
+                default :
+                    return ResultDataHelper::json(422, '找不到发送类型');
+                    break;
+            }
+
             $result = $this->app->customer_service->message($message)->to($model['openid'])->send();
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -109,7 +156,7 @@ class FansController extends WController
             return ResultDataHelper::json(200, '发送成功');
         }
 
-        return $this->render('send-message',[
+        return $this->renderAjax('send-message',[
             'model' => $model
         ]);
     }

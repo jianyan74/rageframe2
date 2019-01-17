@@ -7,6 +7,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Class AddonHook
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonHook
 {
@@ -60,6 +61,8 @@ class AddonHook
         }
         catch (\Exception $e)
         {
+            Yii::error($e->getMessage());
+
             if (YII_DEBUG || $debug)
             {
                 throw new NotFoundHttpException($e->getMessage());

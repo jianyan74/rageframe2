@@ -10,6 +10,7 @@ use addons\RfSignShoppingDay\common\models\Record;
 /**
  * Class RecordController
  * @package addons\RfSignShoppingDay\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class RecordController extends AddonsBaseController
 {

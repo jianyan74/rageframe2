@@ -7,6 +7,7 @@ use yii\base\BaseObject;
 /**
  * Class SmsJob
  * @package common\queues
+ * @author jianyan74 <751393839@qq.com>
  */
 class SmsJob extends BaseObject implements \yii\queue\JobInterface
 {

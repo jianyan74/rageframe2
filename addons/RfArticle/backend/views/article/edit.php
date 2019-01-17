@@ -2,6 +2,8 @@
 use yii\widgets\ActiveForm;
 use common\helpers\AddonUrl;
 use common\widgets\webuploader\Images;
+use kartik\datetime\DateTimePicker;
+use kartik\select2\Select2;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '文章管理', 'url' => AddonUrl::to(['index'])];
@@ -9,78 +11,65 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>基本信息</h5>
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">基本信息</h3>
             </div>
-            <div class="ibox-content">
-                <div class="col-sm-12">
-                    <?php $form = ActiveForm::begin([
-                        'fieldConfig' => [
-                            'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
-                        ]
-                    ]); ?>
-                    <?= $form->field($model, 'title')->textInput(); ?>
-                    <?= $form->field($model, 'author')->textInput(); ?>
-                    <?= $form->field($model, 'sort')->textInput(); ?>
-                    <?= $form->field($model, 'cate_id')->dropDownList($cates, ['prompt' => '请选择分类']) ?>
-                    <?= $form->field($model, 'cover')->widget(Images::className(), [
-                        'config' => [
-                            // 可设置自己的上传地址, 不设置则默认地址
-                            // 'server' => '',
-                            'pick' => [
-                                'multiple' => false,
+            <?php $form = ActiveForm::begin([
+                'fieldConfig' => [
+                    'template' => "<div class='col-sm-1 text-right'>{label}</div><div class='col-sm-11'>{input}{hint}{error}</div>",
+                ]
+            ]); ?>
+            <div class="box-body">
+                <?= $form->field($model, 'title')->textInput(); ?>
+                <?= $form->field($model, 'author')->textInput(); ?>
+                <?= $form->field($model, 'sort')->textInput(); ?>
+                <?= $form->field($model, 'cate_id')->widget(Select2::classname(), [
+                    'data' => $cates,
+                    'options' => ['placeholder' => '请选择'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]);?>
+
+                <?= $form->field($model, 'cover')->widget(Images::className(), [
+                    'config' => [
+                        // 可设置自己的上传地址, 不设置则默认地址
+                        // 'server' => '',
+                        'pick' => [
+                            'multiple' => false,
+                        ],
+                    ]
+                ]); ?>
+                <?= $form->field($model, 'description')->textarea(); ?>
+                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?= $form->field($model, 'created_at')->widget(DateTimePicker::className(), [
+                            'language' => 'zh-CN',
+                            'options' => [
+                                'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->created_at),
                             ],
-                        ]
-                    ]); ?>
-                    <?= $form->field($model, 'description')->textarea(); ?>
-                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
-                    <div class="form-group field-article-position">
-                        <div class='col-sm-2 text-right'>
-                            <label class="control-label">推荐位</label>
-                        </div>
-                        <div class='col-sm-10'>
-                            <input type="hidden" name="Article[position]" value="">
-                            <div id="article-position">
-                                <?php foreach ($positionExplain as $key => $value){ ?>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" name="Article[position][]" value="<?= $key?>" <?php if(\addons\RfArticle\common\models\Article::checkPosition($key, $model->position)){ ?>checked<?php } ?>> <?= $value?>
-                                    </label>
-                                <?php } ?>
-                                <div class="help-block"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php if(!empty($tags)){ ?>
-                        <div class="form-group field-article-tag">
-                            <div class='col-sm-2 text-right'>
-                                <label class="control-label">文章标签</label>
-                            </div>
-                            <div class='col-sm-10'>
-                                <div id="article-position">
-                                    <?php foreach ($tags as $key => $item){ ?>
-                                        <label class="checkbox-inline i-checks">
-                                            <input type="checkbox" name="tag[]" value="<?= $item['id']?>" <?php if(!empty($item['tagMap'])){ ?>checked<?php } ?>> <?= $item['title']?>
-                                        </label>
-                                    <?php } ?>
-                                    <div class="help-block"></div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php } ?>
-                    <?= $form->field($model, 'link')->textInput(); ?>
-                    <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12 text-center">
-                        <div class="hr-line-dashed"></div>
-                        <button class="btn btn-primary" type="submit">保存</button>
-                        <span class="btn btn-white" onclick="history.go(-1)">返回</span>
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd hh:ii',
+                                'todayHighlight' => true,//今日高亮
+                                'autoclose' => true,//选择后自动关闭
+                                'todayBtn' => true,//今日按钮显示
+                            ]
+                        ]);?>
                     </div>
                 </div>
-                <?php ActiveForm::end(); ?>
+                <?= $form->field($model, 'position')->checkboxList($positionExplain); ?>
+                <?= $form->field($model, 'tags')->checkboxList($tags); ?>
+                <?= $form->field($model, 'link')->textInput(); ?>
+                <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
             </div>
+            <div class="box-footer text-center">
+                <button class="btn btn-primary" type="submit">保存</button>
+                <span class="btn btn-white" onclick="history.go(-1)">返回</span>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>

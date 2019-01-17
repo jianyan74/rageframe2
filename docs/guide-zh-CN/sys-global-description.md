@@ -37,39 +37,38 @@ php ./yii migrate/up
 > 注意需要在Linux环境下运行，且让PHP的system函数取消禁用  
 > 表达式帮助：[cron表达式生成器](http://cron.qqe2.com/)
 
-1、需要先设置cron ，让 ./yii cron/run 可以每分钟运行。
+1、需要先设置cron ，让 ./yii schedule/run --scheduleFile=@console/config/schedule.php 可以每分钟运行。
 
 例如:
 
 ```
 //每分钟执行一次定时任务
-* * * * * /path-to-your-project/yii cron/run
+* * * * * /path-to-your-project/yii schedule/run --scheduleFile=@console/config/schedule.php 1>> /tmp/rageframeConsoleLog.text 2>&1
 ```
 
-2、在 console/config/params.php 中加入新的定时任务：
+2、在 console/config/schedule.php 中加入新的定时任务：
 
 ```
-    'cronJobs' => [
-        // 清理过期的微信历史消息记录
-        // 每天凌晨执行一次
-        'msg-history/index' => [
-            'cron' => '0 0 * * *',
-            'cron-stdout'=> '/tmp/rageframe/cron/MsgHistory.log',// 成功日志
-            'cron-stderr'=> '/tmp/rageframe/cron/MsgHistoryError.log',// 错误日志
-        ]
-        //......更多的定时任务
-    ],
-```
+/**
+ * 清理过期的微信历史消息记录
+ *
+ * 每天凌晨执行一次
+ */
+$schedule->command('msg-history/index')->cron('0 0 * * *');
 
-3、如果想修改定时任务运行时间可以在 `console/config/params.php `文件配置 `cron`
-
-```
-'cron' => '*/2 * * * *',
+/**
+ * 定时群发微信消息
+ *
+ * 每分钟执行一次
+ */
+$schedule->command('send-message/index')->cron('* * * * *');
 ```
 
 4、具体例子
 
 查看控制器 `console\controllers\MsgHistoryController`
+
+更多使用文档：https://github.com/omnilight/yii2-scheduling
 
 ### 别名
 

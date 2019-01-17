@@ -12,6 +12,7 @@ namespace common\services;
  * @property \common\services\common\Sms $sms 发送短信
  * @property \common\services\common\ErrorLog $errorLog 报错日志记录
  * @property \common\services\common\Mailer $mailer 发送邮件
+ * @author jianyan74 <751393839@qq.com>
  */
 class Application extends Service
 {
@@ -24,6 +25,9 @@ class Application extends Service
             'childService' => [
                 'auth' => [ // 权限
                     'class' => 'common\services\sys\Auth',
+                ],
+                'addon' => [ // 插件
+                    'class' => 'common\services\sys\Addon',
                 ],
             ],
         ],
@@ -41,7 +45,7 @@ class Application extends Service
         'errorLog' => [
             'class' => 'common\services\common\ErrorLog',
             'queueSwitch' => false, // 是否丢进队列 注意如果需要请先开启执行队列
-            'exceptCode' => [403, 404] // 除了数组内的状态码不记录，其他按照配置记录
+            'exceptCode' => [403] // 除了数组内的状态码不记录，其他按照配置记录
         ],
     ];
 }

@@ -14,6 +14,7 @@ use common\helpers\FileHelper;
  *
  * Class NotifyController
  * @package frontend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class NotifyController extends Controller
 {

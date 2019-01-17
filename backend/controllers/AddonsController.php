@@ -2,10 +2,11 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
 use yii\data\Pagination;
 use yii\web\Response;
 use yii\web\UnauthorizedHttpException;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
 use common\helpers\ResultDataHelper;
@@ -16,6 +17,7 @@ use backend\modules\wechat\models\RuleForm;
 /**
  * Class AddonsController
  * @package backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonsController extends \common\controllers\AddonsController
 {
@@ -233,13 +235,12 @@ class AddonsController extends \common\controllers\AddonsController
      */
     public function actionAjaxUpdate($id)
     {
-        $data = Yii::$app->request->get();
         if (!($model = Rule::findOne($id)))
         {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $model->attributes = $data;
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save())
         {
             return ResultDataHelper::json(422, Yii::$app->debris->analyErr($model->getFirstErrors()));

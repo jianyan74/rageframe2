@@ -6,6 +6,7 @@ use common\controllers\AddonsBaseController;
 /**
  * Class TestController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class TestController extends AddonsBaseController
 {

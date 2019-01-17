@@ -5,6 +5,8 @@
 - 生成二维码
 - IP地址转地区
 - Curl
+- 中文转拼音
+- Glide
 
 ### 生成二维码
 
@@ -81,3 +83,61 @@ if ($curl->errorCode === null) {
 ```
 
 文档地址：https://github.com/linslin/Yii2-Curl
+
+### 中文转拼音
+
+```
+use Overtrue\Pinyin\Pinyin;
+
+// 小内存型
+$pinyin = new Pinyin(); // 默认
+// 内存型
+// $pinyin = new Pinyin('Overtrue\Pinyin\MemoryFileDictLoader');
+// I/O型
+// $pinyin = new Pinyin('Overtrue\Pinyin\GeneratorFileDictLoader');
+
+$pinyin->convert('带着希望去旅行，比到达终点更美好');
+// ["dai", "zhe", "xi", "wang", "qu", "lyu", "xing", "bi", "dao", "da", "zhong", "dian", "geng", "mei", "hao"]
+
+$pinyin->convert('带着希望去旅行，比到达终点更美好', PINYIN_TONE);
+// ["dài","zhe","xī","wàng","qù","lǚ","xíng","bǐ","dào","dá","zhōng","diǎn","gèng","měi","hǎo"]
+
+$pinyin->convert('带着希望去旅行，比到达终点更美好', PINYIN_ASCII_TONE);
+//["dai4","zhe","xi1","wang4","qu4","lyu3","xing2","bi3","dao4","da2","zhong1","dian3","geng4","mei3","hao3"]
+```
+
+更多文档：https://github.com/overtrue/pinyin
+
+### Glide
+
+> Glide是一个用PHP编写的非常简单的按需图像处理库  
+> 注意：系统默认只能在storage下使用，已经基础配置完毕，但是系统内未安装，如果需要使用请先安装
+
+```
+php composer.phar require --prefer-dist trntv/yii2-glide
+```
+
+**用法：**
+
+直接输出一个图像
+
+```
+Yii::$app->glide->outputImage('new-upload.jpg', ['w' => 100, 'fit' => 'crop'])
+```
+
+创建一个图像
+
+```
+Yii::$app->glide->makeImage('new-upload.jpg', ['w' => 100, 'fit' => 'crop'])
+```
+
+创建一个带签名才能访问的图像
+
+```
+Yii::$app->glide->createSignedUrl(['glide/index', 'path' => 'images/2018-12/27/image_154588883551485657.jpg', 'w' => 175]);
+```
+
+> 注意开启设置 `storage/config/main.php` 内的 glide 组件的signKey，否则无效
+
+来源：https://github.com/trntv/yii2-glide  
+配套文档：http://glide.thephpleague.com/

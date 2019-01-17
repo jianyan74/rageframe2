@@ -11,11 +11,11 @@ $this->params['breadcrumbs'][] = ['label' => Menu::$typeExplain[$type], 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= Html::jsFile('/backend/resources/js/vue.min.js')?>
-<?= Html::jsFile('/backend/resources/js/Sortable.min.js')?>
-<?= Html::jsFile('/backend/resources/js/vuedraggable.min.js')?>
+<?= Html::jsFile('@web/resources/dist/js/vue.min.js')?>
+<?= Html::jsFile('@web/resources/dist/js/sortable.min.js')?>
+<?= Html::jsFile('@web/resources/dist/js/vuedraggable.min.js')?>
 
-<div id="vueArea" class="wrapper wrapper-content animated fadeInRight">
+<div id="vueArea" class="wrapper-content animated fadeInRight">
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
         <!-- 菜单编辑模式 -->
@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group farPaddingJustV">
                 <div class="hAlignCenter">
                     <?php if ($type == 1 || (empty($model['id']) && $type == 2)){ ?>
                         <a class="btn btn-primary" @click="submitForm">保存</a>
@@ -54,12 +54,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>菜单标题</h5>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">菜单标题</h3>
                 </div>
-                <div class="ibox-content clearfix">
-                    <div class="col-sm-12">
+                <div class="box-body">
+                    <div class="col-lg-12">
                         <?= $form->field($model, 'title')->textInput()->hint('给菜单起个名字吧！以便查找')->label(false) ?>
                     </div>
                 </div>
@@ -67,11 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <?php if ($type == Menu::TYPE_INDIVIDUATION){ ?>
             <div class="col-sm-6">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>显示对象</h5>
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">显示对象</h3>
                     </div>
-                    <div class="ibox-content clearfix">
+                    <div class="box-content clearfix normalPaddingJustV">
                         <div class="col-sm-12">
                             <div class="col-sm-3">
                                 <?= $form->field($model, 'sex')->dropDownList(Yii::$app->params['individuationMenuSex'],[
@@ -117,13 +117,13 @@ $this->params['breadcrumbs'][] = $this->title;
         	added by wzq 自定义菜单操作区
         -->
         <div class="col-sm-6" v-if="crtItem">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>菜单设置</h5>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">菜单设置</h3>
                     <a @click="deleteCrtItem" class="pull-right">删除菜单</a>
                 </div>
-                <div class="ibox-content clearfix">
-                    <div class="col-sm-12">
+                <div class="box-content clearfix normalPaddingJustV">
+                    <div class="col-sm-12 p-lg" style="padding-top: 0">
                         <div class="form-group">
                             <label class="control-label">菜单名称</label>
                             <input class="form-control" name="CustomMenu[title]" v-model="crtItem.name" aria-required="true" type="text">
@@ -149,22 +149,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="form-group" v-show="!hasSubItem(crtItem) && needMiniprogram(crtItem)">
                             <hr>
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">APPID</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 control-label">APPID</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" name="value" placeholder="请确保小程序与公众号已关联，填写小程序的APPID" value="" aria-required="true" type="text" v-model="crtItem.appid">
                                     <span class="help-block"><a href="http://weixiao.qq.com/notice/view?mid=0&cid=2&id=274" target="_blank">如何获取?</a></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">页面</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 control-label">页面</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" name="value" placeholder="请填写跳转页面的小程序访问路径" value="" aria-required="true" type="text" v-model="crtItem.pagepath">
                                     <span class="help-block"><a href="http://weixiao.qq.com/notice/view?mid=0&cid=2&id=275" target="_blank">填写指引</a></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">备用网页</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 control-label">备用网页</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" name="value" placeholder="写入要跳转的链接" value="" aria-required="true" type="text" v-model="crtItem.url">
                                     <span class="help-block">旧版微信客户端不支持小程序，用户点击菜单时会打开该网页</span>
                                 </div>

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/6/18
- * Time: 10:14
- */
-
 namespace backend\components;
 
 /**
@@ -13,6 +6,7 @@ namespace backend\components;
  *
  * Class SystemInfoLinux
  * @package backend\components
+ * @author jianyan74 <751393839@qq.com>
  */
 class SystemInfoLinux
 {

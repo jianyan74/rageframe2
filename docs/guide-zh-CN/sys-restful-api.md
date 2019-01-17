@@ -15,8 +15,8 @@
 
 ### 继承的基类说明
 
-- 无需登录的控制器请全部继承 `api\controllers\OffAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `yii\rest\ActiveController`
-- 需登录的控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`
+- 控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `optional` 属性
+- 用户私有控制器请全部继承 `api\controllers\UserAuthController`
 
 ### 速率和参数配置
 
@@ -33,12 +33,6 @@ return [
     'user.accessTokenValidity' => false,
     // api接口token有效期 默认2天
     'user.accessTokenExpire' => 2 * 24 * 3600,
-    // 不需要token验证的方法
-    'user.optional' => [
-
-    ],
-    // 速度控制 60 秒内访问 50 次，注意，数组的第一个不要设置1，设置1会出问题，一定要大于2
-    'user.rateLimit' => [50, 60],
     // 默认分页数量
     'user.pageSize' => 10,
 ];
@@ -96,7 +90,7 @@ public function checkAccess($action, $model = null, $params = [])
 ### 返回数据格式修改
 
 > 请自行修改 `api\behaviors\BeforeSend` 行为  
-> 注意: 有些前端没有接触过状态码在Http头里面返回所以可以 在 beforeSend 数据处理后开启 `$response->statusCode = 200`;
+> 注意: 有些前端没有接触过状态码在Http头里面返回所以可以 在 BeforeSend 数据处理后开启 `$response->statusCode = 200`;
 
 ### 自定义code返回
 

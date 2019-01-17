@@ -1,41 +1,43 @@
 <?php
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
 
 $this->title = '配置分类';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="tabs-container">
-        <ul class="nav nav-tabs">
-            <li><a href="<?= Url::to(['config/index'])?>"> 配置管理</a></li>
-            <li class="active"><a href="<?= Url::to(['config-cate/index'])?>"> 配置分类</a></li>
-            <a class="btn btn-primary btn-xs pull-right h6" href="<?= Url::to(['ajax-edit'])?>" data-toggle='modal' data-target='#ajaxModal'>
-                <i class="fa fa-plus"></i> 创建
-            </a>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active">
-                <div class="panel-body">
-                    <div class="col-sm-12">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th width="50">折叠</th>
-                                <th>分类名称</th>
-                                <th>排序</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?= $this->render('tree', [
-                                'models' => $models,
-                                'parent_title' =>"无",
-                                'pid' => 0,
-                            ])?>
-                            </tbody>
-                        </table>
-                    </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li><a href="<?= Url::to(['config/index'])?>">配置管理</a></li>
+                <li class="active"><a href="<?= Url::to(['config-cate/index'])?>">配置分类</a></li>
+                <li class="pull-right">
+                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModal',
+                    ])?>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th width="50">折叠</th>
+                            <th>分类名称</th>
+                            <th>排序</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?= $this->render('tree', [
+                            'models' => $models,
+                            'parent_title' =>"无",
+                            'pid' => 0,
+                        ])?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

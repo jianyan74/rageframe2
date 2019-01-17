@@ -9,6 +9,7 @@ use linslin\yii2\curl;
  *
  * Class AnalysisController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AnalysisController extends WController
 {

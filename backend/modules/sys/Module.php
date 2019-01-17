@@ -4,6 +4,7 @@ namespace backend\modules\sys;
 /**
  * Class Module
  * @package backend\modules\sys
+ * @author jianyan74 <751393839@qq.com>
  */
 class Module extends \yii\base\Module
 {

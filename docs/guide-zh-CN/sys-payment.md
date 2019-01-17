@@ -41,7 +41,7 @@ $resConfig = Yii::$app->pay->alipay($config)->f2f($order);
 $resConfig = Yii::$app->pay->alipay($config)->wap($order);
 ```
 
-扫描收款
+扫码收款
 
 ```
 $request = Yii::$app->pay->alipay->capture();
@@ -234,7 +234,7 @@ if ($response->isPaid()) {
 }
 ```
 
-查询
+查询订单
 
 ```
 $response  = Yii::$app->pay->union->query($orderId, $txnTime, $txnAmt);
@@ -243,7 +243,7 @@ $response  = Yii::$app->pay->union->query($orderId, $txnTime, $txnAmt);
 $queryId = $response['queryId'];
 ```
 
-关闭
+关闭订单
 
 ```
 $response  = Yii::$app->pay->union->query($orderId, $txnTime, $txnAmt, $queryId);

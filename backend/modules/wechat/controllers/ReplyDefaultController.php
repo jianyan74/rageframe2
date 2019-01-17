@@ -9,8 +9,9 @@ use common\models\wechat\ReplyDefault;
 /**
  * 默认回复控制器
  *
- * Class ReplyDefault
+ * Class ReplyDefaultController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ReplyDefaultController extends WController
 {

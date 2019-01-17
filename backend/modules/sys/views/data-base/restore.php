@@ -1,48 +1,49 @@
 <?php
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
 
 $this->title = '数据备份';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="tabs-container">
-        <ul class="nav nav-tabs">
-            <li><a href="<?= Url::to(['backups'])?>"> 数据备份</a></li>
-            <li class="active"><a href="<?= Url::to(['restore'])?>"> 数据还原</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active">
-                <div class="panel-body">
-                    <div class="col-sm-12">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>备份名称</th>
-                                <th>卷数</th>
-                                <th>压缩</th>
-                                <th>数据大小</th>
-                                <th>备份时间</th>
-                                <th>操作</th>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li><a href="<?= Url::to(['backups'])?>"> 数据备份</a></li>
+                <li class="active"><a href="<?= Url::to(['restore'])?>"> 数据还原</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>备份名称</th>
+                            <th>卷数</th>
+                            <th>压缩</th>
+                            <th>数据大小</th>
+                            <th>备份时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($list as $key => $row){ ?>
+                            <tr data-time="<?= $row['time']?>">
+                                <td><?= date('Ymd-His',$row['time'])?></td>
+                                <td><?= $row['part']?></td>
+                                <td><?= $row['compress']?></td>
+                                <td><?= Yii::$app->formatter->asShortSize($row['size'], 0)?></td>
+                                <td><?= Yii::$app->formatter->asDatetime($row['time'])?></td>
+                                <td>
+                                    <?= HtmlHelper::a('还原', 'javascript:void(0);', [
+                                        'class' => 'btn btn-info btn-sm table-restore'
+                                    ])?>
+                                    <?= HtmlHelper::delete(['delete','time' => $row['time']])?>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach($list as $key => $row){ ?>
-                                <tr data-time="<?= $row['time']?>">
-                                    <td><?= date('Ymd-His',$row['time'])?></td>
-                                    <td><?= $row['part']?></td>
-                                    <td><?= $row['compress']?></td>
-                                    <td><?= Yii::$app->formatter->asShortSize($row['size'])?></td>
-                                    <td><?= Yii::$app->formatter->asDatetime($row['time'])?></td>
-                                    <td>
-                                        <a href="javascript:;"><span class="btn btn-info btn-sm table-restore">还原</span></a>
-                                        <a href="<?= Url::to(['delete','time'=>$row['time']])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
+                        <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

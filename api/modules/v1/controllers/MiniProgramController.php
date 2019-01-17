@@ -2,7 +2,7 @@
 namespace api\modules\v1\controllers;
 
 use Yii;
-use api\controllers\OffAuthController;
+use api\controllers\OnAuthController;
 use api\modules\v1\models\MiniProgramLoginForm;
 use common\models\member\MemberInfo;
 use common\models\api\AccessToken;
@@ -12,13 +12,13 @@ use common\models\member\MemberAuth;
 use common\helpers\FileHelper;
 
 /**
- * 小程序
+ * 小程序授权验证
  *
  * Class MiniProgramController
  * @package api\modules\v1\controllers
- * @property \yii\db\ActiveRecord $modelClass;
+ * @author jianyan74 <751393839@qq.com>
  */
-class MiniProgramController extends OffAuthController
+class MiniProgramController extends OnAuthController
 {
     public $modelClass = '';
 
@@ -28,6 +28,15 @@ class MiniProgramController extends OffAuthController
      * @var
      */
     public $miniProgramApp;
+
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = ['decode', 'session-key'];
 
     public function init()
     {
@@ -151,6 +160,38 @@ class MiniProgramController extends OffAuthController
         }
 
         return AccessToken::getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
+    }
+
+    /**
+     * 生成小程序码
+     *
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     */
+    public function actionQrCode()
+    {
+        // $response = $app->app_code->get('path/to/page');
+        // 指定颜色
+        $response = $this->miniProgramApp->app_code->get('path/to/page', [
+            'width' => 600,
+            'line_color' => [
+                'r' => 105,
+                'g' => 166,
+                'b' => 134,
+            ],
+        ]);
+
+        // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败时为数组或者你指定的 API 返回格式
+
+        // 保存小程序码到文件
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            $filename = $response->save('/path/to/directory');
+        }
+
+        // 或
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            $filename = $response->saveAs('/path/to/directory', 'appcode.png');
+        }
     }
 
     /**

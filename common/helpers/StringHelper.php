@@ -8,6 +8,7 @@ use yii\helpers\BaseStringHelper;
 /**
  * Class StringHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class StringHelper extends BaseStringHelper
 {
@@ -303,29 +304,6 @@ class StringHelper extends BaseStringHelper
     {
         $str = $prefix ?? '';
         return $str . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, $length);
-    }
-
-    /**
-     * @param $value
-     * @param string $iconv
-     * @return string
-     */
-    public static function iconvForWindows($value, $iconv = "gb2312")
-    {
-        if (self::isWindowsOS())
-        {
-            switch ($iconv)
-            {
-                case "gb2312" : // utf-8转gb2312
-                    return iconv("utf-8", "gb2312", $value);
-                    break;
-                case "utf-8" : // gb2312转utf-8
-                    return iconv("gb2312", "utf-8", $value);
-                    break;
-            }
-        }
-
-        return $value;
     }
 
     /**

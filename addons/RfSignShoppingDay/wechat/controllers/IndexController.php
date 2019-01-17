@@ -11,6 +11,7 @@ use addons\RfSignShoppingDay\common\models\Award;
 /**
  * Class IndexController
  * @package addons\RfSignShoppingDay\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class IndexController extends IController
 {

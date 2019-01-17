@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 use yii\base\InvalidConfigException;
 use common\helpers\ResultDataHelper;
 use common\enums\StatusEnum;
+use common\helpers\ArrayHelper;
 
 /**
  * CURD基类特性
@@ -16,6 +17,7 @@ use common\enums\StatusEnum;
  * Trait CurdTrait
  * @package backend\components
  * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
+ * @author jianyan74 <751393839@qq.com>
  */
 trait CurdTrait
 {
@@ -54,7 +56,7 @@ trait CurdTrait
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return mixed
      */
@@ -122,23 +124,13 @@ trait CurdTrait
      */
     public function actionAjaxUpdate($id)
     {
-        // 兼容Grid多主键
-        if (!is_numeric($id) && ($idArr = json_decode($id, true)))
-        {
-            $id = $idArr['id'];
-        }
-
         if (!($model = $this->modelClass::findOne($id)))
         {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $getData = Yii::$app->request->get();
-        foreach (['sort', 'status'] as $item)
-        {
-            isset($getData[$item]) && $model->$item = $getData[$item];
-        }
-
+        $data = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
+        $model->attributes = $data;
         if (!$model->save())
         {
             return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
@@ -148,7 +140,7 @@ trait CurdTrait
     }
 
     /**
-     * ajax编辑/新增
+     * ajax编辑/创建
      *
      * @return array
      */

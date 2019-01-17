@@ -1,25 +1,29 @@
 <?php
 namespace api\controllers;
 
+use Yii;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
- * 消息报错
+ * 报错消息处理
  *
  * Class MessageController
  * @package api\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MessageController extends Controller
 {
     /**
-     * @return array
+     * @return string
      */
-    public function actions()
+    public function actionError()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
+        if (($exception = Yii::$app->getErrorHandler()->exception) === null)
+        {
+            $exception = new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+        }
+
+        return $exception->getMessage();
     }
 }

@@ -12,6 +12,7 @@ use common\components\CurdTrait;
  *
  * Class MenuController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MenuController extends SController
 {
@@ -37,14 +38,14 @@ class MenuController extends SController
             ->all();
 
         return $this->render('index', [
-            'models' => ArrayHelper::itemsMerge($models, 'id'),
+            'models' => ArrayHelper::itemsMerge($models),
             'cate_id' => $cate_id,
             'cates' => MenuCate::getList(),
         ]);
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|\yii\web\Response
      */
@@ -63,7 +64,7 @@ class MenuController extends SController
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);
             }
 

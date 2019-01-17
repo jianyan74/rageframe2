@@ -30,7 +30,7 @@ use yii\helpers\Url;
         <?php } ?>
     </div>
     <div class="col-sm-2">
-        <div class="ibox-tools" style="margin-top: 4px">
+        <div class="pull-right" style="margin-top: 4px">
             共 <strong class="text-danger"><?= $count ?></strong> 条
             <a class="btn btn-primary btn-xs" id="getAllAttachment">
                 <i class="fa fa-cloud-download"></i> 同步
@@ -41,7 +41,7 @@ use yii\helpers\Url;
                 </a>
             <?php }else{ ?>
                 <a class="btn btn-primary btn-xs" href="<?= Url::to([ $mediaType . '-create','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
-                    <i class="fa fa-plus"></i>  创建
+                    <i class="fa fa-plus"></i> 创建
                 </a>
             <?php } ?>
         </div>

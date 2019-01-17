@@ -117,13 +117,16 @@ class AddonConfig
      * @var array
      */
     public $menu = [
-<?php for ($i = 0; $i < $menuCount; $i++){ ?>
+<?php for ($i = 0; $i < $menuCount; $i++){
+    if (!empty($menus['title'][$i]) && !empty($menus['route'][$i])){
+        ?>
         [
             'title' => '<?= $menus['title'][$i]; ?>',
             'route' => '<?= $menus['route'][$i]; ?>',
             'icon' => '<?= $menus['icon'][$i]; ?>'
         ],
-<?php } ?>
+<?php }
+} ?>
     ];
 
     /**
@@ -132,13 +135,16 @@ class AddonConfig
      * @var array
      */
     public $cover = [
-<?php for ($i = 0; $i < $coverCount; $i++){ ?>
+<?php for ($i = 0; $i < $coverCount; $i++){
+    if (!empty($covers['title'][$i]) && !empty($covers['route'][$i])){
+        ?>
         [
             'title' => '<?= $covers['title'][$i]; ?>',
             'route' => '<?= $covers['route'][$i]; ?>',
             'icon' => '<?= $covers['icon'][$i]; ?>'
         ],
-<?php } ?>
+<?php }
+}?>
     ];
 
     /**

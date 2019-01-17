@@ -20,10 +20,6 @@ return [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
-        /** ------ 定时任务 ------ **/
-        'cron' => [
-            'class' => 'denisog\cronjobs\CronController'
-        ],
         /** ------ 数据库命令行备份 ------ **/
         'migrate' => [
             'class' => 'e282486518\migration\ConsoleController',

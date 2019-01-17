@@ -5,7 +5,7 @@ use yii\helpers\Url;
 $form = ActiveForm::begin([
     'id' => $model->formName(),
     'fieldConfig' => [
-        'template' => "<div class='col-sm-3 text-right'>{label}</div><div class='col-sm-9'>{input}\n{hint}\n{error}</div>",
+        'template' => "<div class='col-sm-4 text-right'>{label}</div><div class='col-sm-8'>{input}\n{hint}\n{error}</div>",
     ]
 ]);
 ?>

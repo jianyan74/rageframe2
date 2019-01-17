@@ -6,6 +6,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Class SystemInfo
  * @package backend\components
+ * @author jianyan74 <751393839@qq.com>
  */
 class SystemInfo
 {

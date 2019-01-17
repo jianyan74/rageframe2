@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
 use common\helpers\ArrayHelper;
 
 ?>
@@ -13,16 +14,12 @@ use common\helpers\ArrayHelper;
         <td>
             <?= ArrayHelper::itemsLevel($model['level'], $models, $k, $treeStat)?>
             <?= $model['name']?>
-            <a href="<?= Url::to(['edit','parent_key' => $model['key'], 'parent_title' => $model['name'],'level' => $model['level'] + 1])?>">
-                <i class="fa fa-plus-circle"></i>
-            </a>
+            <?= HtmlHelper::a('<i class="fa fa-plus-circle"></i>', ['edit', 'parent_key' => $model['key'], 'parent_title' => $model['name'],'level' => $model['level'] + 1])?>
         </td>
-        <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
+        <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
         <td>
-            <a href="<?= Url::to(['edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']])?>">
-                <span class="btn btn-info btn-sm">编辑</span>
-            </a>
-            <a href="<?= Url::to(['delete', 'name' => $model['name']])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>
+            <?= HtmlHelper::edit(['edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']], '编辑')?>
+            <?= HtmlHelper::delete(['delete', 'name' => $model['name']])?>
         </td>
     </tr>
     <?php if (!empty($model['-'])) { ?>

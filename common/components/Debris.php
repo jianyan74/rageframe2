@@ -10,6 +10,7 @@ use yii\web\UnprocessableEntityHttpException;
  *
  * Class Debris
  * @package common\components
+ * @author jianyan74 <751393839@qq.com>
  */
 class Debris
 {

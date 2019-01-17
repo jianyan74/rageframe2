@@ -4,10 +4,9 @@ namespace backend\modules\wechat\models;
 use common\models\wechat\Attachment;
 
 /**
- * 视频上传
- *
  * Class VideoForm
  * @package backend\modules\wechat\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class VideoForm extends Attachment
 {

@@ -5,15 +5,28 @@ use Yii;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
-use crazyfd\qiniu\Qiniu;
-use OSS\OssClient;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
+use Overtrue\Flysystem\Qiniu\QiniuAdapter;
+use Overtrue\Flysystem\Qiniu\Plugins\FileUrl;
+use Xxtime\Flysystem\Aliyun\OssAdapter;
+use common\models\common\Attachment;
+use common\models\common\Log;
 
 /**
+ * 上传辅助类
+ *
  * Class UploadHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class UploadHelper
 {
+    /**
+     * 切片合并缓存前缀
+     */
+    const PREFIX_MERGE_CACHE = 'upload-file-guid:';
+
     /**
      * 上传配置
      *
@@ -29,55 +42,27 @@ class UploadHelper
     public $paths = [];
 
     /**
-     * 上传文件基础信息
-     *
-     * @var array
-     */
-    public $fileBaseInfo = [];
-
-    /**
-     * Yii2 上传类
-     *
-     * @var \yii\web\UploadedFile
-     */
-    public $uploadedFile;
-
-    /**
-     * $_File 名称
+     * 默认取 $_FILE['file']
      *
      * @var string
      */
     public $uploadFileName = 'file';
 
     /**
-     * 上传类型
-     *
-     * @var string
-     */
-    public $type = 'image';
-
-    /**
-     * 接管上传方法
+     * 上传驱动
      *
      * @var
      */
-    public $takeOverAction = 'local';
-
-    /**
-     * 文件名称
-     *
-     * @var
-     */
-    public $fileName;
+    protected $drive = 'local';
 
     /**
      * 拿取需要的数据
      *
      * @var array
      */
-    protected $filterConfig = [
+    protected $filter = [
         'thumb',
-        'takeOverAction',
+        'drive',
         'chunks',
         'chunk',
         'guid',
@@ -86,71 +71,119 @@ class UploadHelper
     ];
 
     /**
-     * 切片合并缓存前缀
+     * 上传文件基础信息
      *
-     * @var string
+     * @var array
      */
-    public static $prefixForMergeCache = 'upload-file-guid:';
+    protected $baseInfo = [
+        'name' => '',
+        'size' => 0,
+        'extension' => 'jpg',
+        'url' => '',
+        'merge' => false,
+        'guid' => '',
+        'type' => 'image/jpeg',
+    ];
 
-    public function  __construct(array $config, $type)
+    /**
+     * 上传组件
+     *
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
+     * 是否切片上传
+     *
+     * @var bool
+     */
+    protected $isCut = false;
+
+    /**
+     * UploadHelper constructor.
+     * @throws \Exception
+     */
+    public function __construct(array $config, $type)
     {
         // 过滤数据
         $this->filter($config, $type);
+        // 设置文件类型
         $this->type = $type;
+        // 初始化上传地址
+        $this->initPaths();
+        // 获取全局参数
+        $sysConfig = Yii::$app->debris->configAll();
+
+        // 判断是否切片上传
+        if (isset($this->config['chunks']) && isset($this->config['guid']))
+        {
+            $this->drive = 'local';
+            $this->isCut = true;
+        }
+
+        switch ($this->drive)
+        {
+            // 本地
+            case Attachment::DRIVE_LOCAL :
+                $adapter = new Local(Yii::getAlias('@attachment'), FILE_APPEND);
+                break;
+            // 阿里云
+            case Attachment::DRIVE_OSS :
+                $adapter = new OssAdapter([
+                    'access_id' => $sysConfig['storage_aliyun_accesskeyid'],
+                    'access_secret' => $sysConfig['storage_aliyun_accesskeysecret'],
+                    'bucket' => $sysConfig['storage_aliyun_bucket'],
+                    'endpoint' => $sysConfig['storage_aliyun_endpoint'],
+                    // 'timeout'        => 3600,
+                    // 'connectTimeout' => 10,
+                    // 'isCName'        => false,
+                    // 'token'          => '',
+                ]);
+                break;
+            // 七牛
+            case Attachment::DRIVE_QINIU :
+                $accessKey = $sysConfig['storage_qiniu_accesskey'];
+                $secretKey = $sysConfig['storage_qiniu_secrectkey'];
+                $cdnHost = $sysConfig['storage_qiniu_domain'];
+                $bucket = $sysConfig['storage_qiniu_bucket'];
+                $adapter = new QiniuAdapter($accessKey, $secretKey, $bucket, $cdnHost);
+                break;
+            default :
+                $adapter = new Local(Yii::getAlias('@attachment'));
+                break;
+        }
+
+        $this->filesystem = new Filesystem($adapter);
     }
 
     /**
-     * 验证是否符合上传
+     * 验证文件
      *
-     * @param $fileBaseInfo
-     *  Array(
-     *   [name] => temp.jpg
-     *   [size] => 300939
-     * )
      * @throws NotFoundHttpException
      */
-    public function verify($fileBaseInfo = [])
+    public function verifyFile()
     {
-        if (empty($fileBaseInfo))
-        {
-            $uploadedFile = UploadedFile::getInstanceByName($this->uploadFileName);
-            $fileBaseInfo = [
-                'size' => $uploadedFile->size,
-                'name' => $uploadedFile->getBaseName(),
-                'extension' => $uploadedFile->getExtension(),
-            ];
+        $file = UploadedFile::getInstanceByName($this->uploadFileName);
+        $this->baseInfo['extension'] = $file->getExtension();
+        $this->baseInfo['size'] = $file->size;
 
-            $this->uploadedFile = $uploadedFile;
-        }
+        empty($this->baseInfo['name']) && $this->baseInfo['name'] = $file->getBaseName();
+        $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $file->getExtension();
 
-        if ($fileBaseInfo['size'] > $this->config['maxSize'])
-        {
-            throw new NotFoundHttpException('文件大小超出网站限制');
-        }
-
-        if (!empty($this->config['extensions']) && !in_array($fileBaseInfo['extension'], $this->config['extensions']))
-        {
-            throw new NotFoundHttpException('文件类型不允许');
-        }
-
-        $this->fileBaseInfo = $fileBaseInfo;
-        unset($uploadedFile, $uploadedFile);
-        return true;
+        unset($file);
+        $this->verify();
     }
 
     /**
-     * 验证是否符合上传
+     * 验证Url
      *
-     * @param $fileBaseInfo
-     *  Array(
-     *   [name] => temp.jpg
-     *   [size] => 300939
-     * )
+     * @param $url
+     * @return bool
      * @throws NotFoundHttpException
      */
-    public function verifyRemote($imgUrl)
+    public function verifyUrl($url)
     {
-        $imgUrl = str_replace("&amp;", "&", htmlspecialchars($imgUrl));
+        $imgUrl = str_replace("&amp;", "&", htmlspecialchars($url));
         // http开头验证
         if (strpos($imgUrl, "http") !== 0)
         {
@@ -186,10 +219,6 @@ class UploadHelper
         }
 
         $extend = StringHelper::clipping($imgUrl, '.', 1);
-        if (!empty($this->config['extensions']) && !in_array($extend, $this->config['extensions']))
-        {
-            throw new NotFoundHttpException('文件类型不允许');
-        }
 
         //打开输出缓冲区并获取远程图片
         ob_start();
@@ -205,378 +234,107 @@ class UploadHelper
         ob_end_clean();
         preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
 
-        $size = strlen($img);
-        if ($size > $this->config['maxSize'])
+        // $name = $m ? $m[1] : "",
+        $this->baseInfo['extension'] = $extend;
+        $this->baseInfo['size'] = strlen($img);
+        $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $extend;
+
+        $this->verify();
+
+        return $img;
+    }
+
+    /**
+     * 验证base64格式的内容
+     *
+     * @param $data
+     * @param $extend
+     * @throws NotFoundHttpException
+     */
+    public function verifyBase64($data, $extend)
+    {
+        $this->baseInfo['extension'] = $extend;
+        $this->baseInfo['size'] = strlen($data);
+        $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $extend;
+
+        $this->verify();
+
+        unset($data, $extend);
+    }
+
+    /**
+     * 验证文件大小及类型
+     *
+     * @throws NotFoundHttpException
+     */
+    protected function verify()
+    {
+        if ($this->baseInfo['size'] > $this->config['maxSize'])
         {
             throw new NotFoundHttpException('文件大小超出网站限制');
         }
 
-        $this->fileBaseInfo = [
-            'extension' => $extend,
-            'size' => $size,
-            'name' => $m ? $m[1] : "",
-        ];
-
-        $this->config['image'] = $img;
-
-        return true;
+        if (!empty($this->config['extensions']) && !in_array($this->baseInfo['extension'], $this->config['extensions']))
+        {
+            throw new NotFoundHttpException('文件类型不允许');
+        }
     }
 
     /**
-     * 切片
+     * 写入
      *
-     * @return array
-     * @throws NotFoundHttpException
+     * @param bool $data
+     * @return bool|void
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
      */
-    public function cut()
+    public function save($data = false)
     {
-        $config = $this->config;
-        $chunk = $config['chunk'];
-        $guid = $config['guid'];
+        $result = false;
 
-        $chunk += 1;
-        $fullPathName = $this->paths['tmpAbsolutePath'] . $chunk . '.' . $this->fileBaseInfo['extension'];
-        $fileName = $guid . '.' . $this->fileBaseInfo['extension'];
-
-        $fullPathName = StringHelper::iconvForWindows($fullPathName);
-        if ($this->uploadedFile->saveAs($fullPathName))
+        // 拦截 如果是切片上传就接管
+        if ($this->isCut == true)
         {
-            $url = $this->paths['relativePath'] . $fileName;
-            $config['fullPath'] == true && $url = Yii::$app->request->hostInfo . $url;
-
-            // 判断如果上传成功就去合并文件
-            if ($config['chunks'] == $chunk)
-            {
-                // 缓存上传信息等待回调
-                Yii::$app->cache->set(self::$prefixForMergeCache . $guid, [
-                    'config' => $config,
-                    'type' => $this->type,
-                    'relativePath' => $url,
-                    'ultimatelyFilePath' => $this->paths['absolutePath'] . $fileName,
-                    'tmpAbsolutePath' => $this->paths['tmpAbsolutePath'],
-                    'extension' => $this->fileBaseInfo['extension'],
-                ], 3600);
-            }
-
-            return  [
-                'url' => $url,
-                'merge' => true,
-                'guid' => $guid,
-            ];
+            return $this->cut();
         }
 
-        throw new NotFoundHttpException('文件移动失败');
-    }
-
-    /**
-     * 切片合并
-     *
-     * @param string $ultimatelyFilePath 生成的文件路径
-     * @param string $directoryPath 需要被合并的目录
-     * @param int $name 开始合并文件名 数字 例如1、2、3、4、5...
-     * @param string $originalExc 文件扩展
-     * @param int $reconnectionNum 重复合并次数
-     * @throws NotFoundHttpException
-     */
-    public static function merge($ultimatelyFilePath, $directoryPath, $name, $originalExc, $reconnectionNum = 0)
-    {
-        $fileName = $name . '.' . $originalExc;
-        $filePath = $directoryPath . $fileName;
-        if (file_exists($filePath))
+        // 判断如果文件存在就重命名文件名
+        if ($this->filesystem->has($this->baseInfo['url']))
         {
-            file_put_contents($ultimatelyFilePath, file_get_contents($filePath), FILE_APPEND);
-            unlink($filePath);
+            $this->baseInfo['name'] = $this->baseInfo['name'] . '_' . StringHelper::randomNum();
+            $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
+        }
 
-            $name = $name + 1;
-            self::merge($ultimatelyFilePath, $directoryPath, $name, $originalExc);
+        if (false === $data)
+        {
+            $file = UploadedFile::getInstanceByName($this->uploadFileName);
+            if ($file->error === UPLOAD_ERR_OK)
+            {
+                $stream = fopen($file->tempName, 'r+');
+                $result = $this->filesystem->writeStream($this->baseInfo['url'], $stream);
+                if (is_resource($stream))
+                {
+                    fclose($stream);
+                }
+            }
         }
         else
         {
-            try
-            {
-                // 删除文件夹，如果删除失败重新去合并
-                rmdir($directoryPath);
-            }
-            catch (\Exception $e)
-            {
-                // 延迟1秒 重复三次去合并文件，合成失败不管了
-                if ($reconnectionNum < 3)
-                {
-                    sleep(1);
-                    $reconnectionNum += 1;
-                    self::merge($ultimatelyFilePath, $directoryPath, $name, $originalExc,$reconnectionNum);
-                }
-                else
-                {
-                    throw new NotFoundHttpException('合并失败');
-                }
-            }
+            $result = $this->filesystem->write($this->baseInfo['url'], $data);
         }
-    }
 
-    /**
-     * 直接上传
-     *
-     * @return mixed|string
-     * @throws NotFoundHttpException
-     * @throws \OSS\Core\OssException
-     * @throws \Exception
-     */
-    public function save($takeOverAction = '')
-    {
-        $takeOverAction = !empty($takeOverAction) ? $takeOverAction : $this->takeOverAction;
-
-        $paths = $this->getPaths();
-        $fileName = $this->fileName . '.' . $this->fileBaseInfo['extension'];
-        $fileAbsolutePath = $paths['absolutePath'] . $fileName;
-
-        // 切片上传
-        if (isset($this->config['chunks']) && isset($this->config['guid']))
+        // 本地的图片才可执行
+        if ($this->type == 'images' && $this->drive == 'local')
         {
-            $takeOverAction = 'cut';
+            // 图片水印
+            $this->watermark();
+            // 图片压缩
+            $this->compress();
+            // 创建缩略图
+            $this->thumb();
         }
 
-        switch ($takeOverAction)
-        {
-            // 本地上传
-            case 'local' :
-                $url = $this->local($fileName, $fileAbsolutePath);
-
-                // 授权图片才可执行
-                if ($this->type == 'images')
-                {
-                    // 图片水印
-                    $this->watermark($fileAbsolutePath);
-                    // 图片压缩
-                    $this->compress($fileAbsolutePath);
-                    // 创建缩略图
-                    $this->thumb($fileAbsolutePath);
-                }
-
-                return $this->getUrl($url);
-                break;
-            // 阿里oss上传
-            case 'oss' :
-                // 判断是否本地上传
-                !empty($this->uploadedFile) && $fileAbsolutePath = $this->uploadedFile->tempName;
-                return $this->oss($fileName, $fileAbsolutePath);
-                break;
-            // 七牛上传
-            case 'qiniu' :
-                // 判断是否本地上传
-                !empty($this->uploadedFile) && $fileAbsolutePath = $this->uploadedFile->tempName;
-                return $this->qiniu($fileName, $fileAbsolutePath);
-                break;
-            // base64上传
-            case 'base64' :
-                $url = $this->base64($fileName, $fileAbsolutePath);
-
-                // 对象存储接管上传
-                if ($this->takeOverAction != 'local')
-                {
-                    return $this->save();
-                }
-
-                return $this->getUrl($url);
-                break;
-            // 远程拉取
-            case 'remote' :
-
-                $url = $this->remote($fileName, $fileAbsolutePath);
-
-                // 对象存储接管上传
-                if ($this->takeOverAction != 'local')
-                {
-                    return $this->save();
-                }
-
-                return $this->getUrl($url);
-                break;
-            case 'cut' :
-                return $this->cut();
-                break;
-        }
-
-        throw new NotFoundHttpException('找不到上传方法');
-    }
-
-    /**
-     * 获取生成路径信息
-     *
-     * @return array
-     * @throws NotFoundHttpException
-     */
-    public function getPaths()
-    {
-        if (!empty($this->paths))
-        {
-            return $this->paths;
-        }
-
-        $config = $this->config;
-        $this->fileName = $config['prefix'] . StringHelper::randomNum(time());
-        // 保留原名称
-        if ($config['originalName'] == true && !empty($this->fileBaseInfo['name']))
-        {
-            $this->fileName = $this->fileBaseInfo['name'];
-        }
-
-        // 文件路径
-        $filePath = $config['path'] . date($config['subName'], time()) . "/";
-        // 缩略图
-        $thumbPath = Yii::$app->params['uploadConfig']['thumb']['path'] . date($config['subName'], time()) . "/";
-
-        $paths = [
-            'relativePath' => Yii::getAlias("@attachurl/") . $filePath, // 相对路径
-            'absolutePath' => Yii::getAlias("@attachment/") . $filePath, // 绝对路径
-            'thumbRelativePath' => Yii::getAlias("@attachurl/") . $thumbPath, // 缩略图相对路径
-            'thumbAbsolutePath' => Yii::getAlias("@attachment/") . $thumbPath, // 缩略图绝对路径
-        ];
-
-        // 切片的临时路径
-        if (isset($config['guid']))
-        {
-            $tmpPath = 'tmp/' . date($config['subName'], time()) . "/" . $config['guid'] . '/';
-            $paths = ArrayHelper::merge($paths, [
-                'tmpRelativePath' => Yii::getAlias("@attachurl/") . $tmpPath, // 临时相对路径
-                'tmpAbsolutePath' => Yii::getAlias("@attachment/") . $tmpPath, // 临时绝对路径
-            ]);
-        }
-
-        $this->paths = $paths;
-
-        // 创建目录
-        unset($paths['relativePath'], $paths['thumbRelativePath'], $paths['tmpRelativePath']);
-        foreach ($paths as $key => $path)
-        {
-            if (!FileHelper::mkdirs($path))
-            {
-                throw new NotFoundHttpException('文件夹创建失败，请确认是否开启attachment文件夹写入权限');
-            }
-        }
-
-        unset($paths);
-
-        return $this->paths;
-    }
-
-    /**
-     * 获取图片规则
-     *
-     * @param $url
-     * @return string
-     */
-    public function getUrl($url)
-    {
-        if ($this->config['fullPath'] == true)
-        {
-            $url = Yii::$app->request->hostInfo . $url;
-        }
-
-        return $url;
-    }
-
-    /**
-     * base64上传
-     *
-     * @param $fileName
-     * @param $fileAbsolutePath
-     * @throws NotFoundHttpException
-     */
-    public function base64($fileName, $fileAbsolutePath)
-    {
-        $data = base64_decode($this->config['image']);
-
-        // 移动文件
-        if (!(file_put_contents($fileAbsolutePath, $data) && file_exists($fileAbsolutePath)))
-        {
-            throw new NotFoundHttpException('上传失败');
-        }
-
-        return $this->paths['relativePath'] . $fileName;
-    }
-
-    /**
-     * 远程拉取
-     *
-     * @param $fileName
-     * @param $fileAbsolutePath
-     * @return string
-     * @throws NotFoundHttpException
-     */
-    public function remote($fileName, $fileAbsolutePath)
-    {
-        // 移动文件
-        if (!(file_put_contents($fileAbsolutePath, $this->config['image']) && file_exists($fileAbsolutePath)))
-        {
-            throw new NotFoundHttpException('上传失败');
-        }
-
-        return $this->paths['relativePath'] . $fileName;
-    }
-
-    /**
-     * @param $fileName
-     * @param $fileAbsolutePath
-     * @throws NotFoundHttpException
-     */
-    public function local($fileName, $fileAbsolutePath)
-    {
-        $fileAbsolutePath = StringHelper::iconvForWindows($fileAbsolutePath);
-        if (!$this->uploadedFile->saveAs($fileAbsolutePath))
-        {
-            throw new NotFoundHttpException('文件上传失败');
-        }
-
-        return $this->paths['relativePath'] . $fileName;
-    }
-
-    /**
-     * oss 上传
-     *
-     * @param $fileName
-     * @param $fileAbsolutePath
-     * @return mixed
-     * @throws \OSS\Core\OssException
-     */
-    public function oss($fileName, $fileAbsolutePath)
-    {
-        $config = Yii::$app->debris->configAll();
-        $accessKeyId = $config['storage_aliyun_accesskeyid'];
-        $accessKeySecret = $config['storage_aliyun_accesskeysecret'];
-        $endpoint = $config['storage_aliyun_endpoint'];
-        $bucket = $config['storage_aliyun_bucket'];
-
-        $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-        $result = $ossClient->uploadFile($bucket, $fileName, $fileAbsolutePath);
-
-        // 私有获取图片信息
-        // $singUrl = $ossClient->signUrl($bucket, $name, 60*60*24);
-
-        return $result['info']['url'];
-    }
-
-    /**
-     * 七牛上传
-     *
-     * @param $fileName
-     * @param $fileAbsolutePath
-     * @return string
-     * @throws \Exception
-     */
-    public function qiniu($fileName, $fileAbsolutePath)
-    {
-        $config = Yii::$app->debris->configAll();
-        $ak = $config['storage_qiniu_accesskey'];
-        $sk = $config['storage_qiniu_secrectkey'];
-        $domain = $config['storage_qiniu_domain'];
-        $bucket = $config['storage_qiniu_bucket'];
-
-        $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
-        $qiniu->uploadFile($fileAbsolutePath, $fileName);
-        $url = $qiniu->getLink($fileName);
-
-        return 'http://' . $url;
+        return $result;
     }
 
     /**
@@ -585,20 +343,24 @@ class UploadHelper
      * @param $fullPathName
      * @return bool
      */
-    protected function watermark($fullPathName)
+    protected function watermark()
     {
         if (Yii::$app->debris->config('sys_image_watermark_status') != true)
         {
             return true;
         }
 
+        // 原图路径
+        $absolutePath =  Yii::getAlias("@attachment/") . $this->baseInfo['url'];
+
         $local = Yii::$app->debris->config('sys_image_watermark_location');
         $watermarkImg = StringHelper::getLocalFilePath(Yii::$app->debris->config('sys_image_watermark_img'));
-        if ($coordinate = DebrisHelper::getWatermarkLocation($fullPathName, $watermarkImg, $local))
+
+        if ($coordinate = DebrisHelper::getWatermarkLocation($absolutePath, $watermarkImg, $local))
         {
             // $aliasName = StringHelper::getAliasUrl($fullPathName, 'watermark');
-            Image::watermark($fullPathName, $watermarkImg, $coordinate)
-                ->save($fullPathName, ['quality' => 100]);
+            Image::watermark($absolutePath, $watermarkImg, $coordinate)
+                ->save($absolutePath, ['quality' => 100]);
         }
 
         return true;
@@ -610,24 +372,27 @@ class UploadHelper
      * @param $fullPathName
      * @return bool
      */
-    protected function compress($fullPathName)
+    protected function compress()
     {
         if ($this->config['compress'] != true)
         {
             return true;
         }
 
-        $imgInfo = getimagesize($fullPathName);
+        // 原图路径
+        $absolutePath = Yii::getAlias("@attachment/") . $this->baseInfo['url'];
+
+        $imgInfo = getimagesize($absolutePath);
         $compressibility = $this->config['compressibility'];
 
         $tmpMinSize = 0;
         foreach ($compressibility as $key => $item)
         {
-            if ($this->fileBaseInfo['size'] >= $tmpMinSize && $this->fileBaseInfo['size'] < $key && $item < 100)
+            if ($this->baseInfo['size'] >= $tmpMinSize && $this->baseInfo['size'] < $key && $item < 100)
             {
                 // $aliasName = StringHelper::getAliasUrl($fullPathName, 'compress');
-                Image::thumbnail($fullPathName, $imgInfo[0] , $imgInfo[1])
-                    ->save($fullPathName, ['quality' => $item]);
+                Image::thumbnail($absolutePath, $imgInfo[0] , $imgInfo[1])
+                    ->save($absolutePath, ['quality' => $item]);
 
                 break;
             }
@@ -643,26 +408,141 @@ class UploadHelper
      *
      * @return bool
      */
-    protected function thumb($absolutePath)
+    protected function thumb()
     {
         if (empty($this->config['thumb']))
         {
             return true;
         }
 
-        $fileName = $this->fileName . '.' . $this->fileBaseInfo['extension'];
+        // 原图路径
+        $absolutePath =  Yii::getAlias("@attachment/") . $this->baseInfo['url'];
+
+        // 缩略图路径
+        $path = Yii::getAlias("@attachment/") . $this->paths['thumbRelativePath'];
+        FileHelper::mkdirs($path);
+        $thumbPath  = $path . $this->baseInfo['name']  . '.' . $this->baseInfo['extension'];
 
         foreach ($this->config['thumb'] as $value)
         {
-            $thumbPath = $this->paths['thumbAbsolutePath'] . $fileName;
-            $thumbPath = StringHelper::createThumbUrl($thumbPath, $value['widget'], $value['height']);
+            $thumbFullPath = StringHelper::createThumbUrl($thumbPath, $value['widget'], $value['height']);
 
             // 裁剪从坐标0,60 裁剪一张300 x 20 的图片,并保存 不设置坐标则从坐标0，0开始
             // Image::crop($originalPath, $thumbWidget , $thumbHeight, [0, 60])->save($thumbOriginalPath), ['quality' => 100]);
-            Image::thumbnail($absolutePath, $value['widget'], $value['height'])->save($thumbPath);
+            Image::thumbnail($absolutePath, $value['widget'], $value['height'])->save($thumbFullPath);
         }
 
         return true;
+    }
+
+    /**
+     * 切片
+     *
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
+     */
+    public function cut()
+    {
+        // 切片参数
+        $chunk = $this->config['chunk'] + 1;
+        $guid = $this->config['guid'];
+
+        // 临时文件夹路径
+        $url = $this->paths['tmpRelativePath'] . $chunk . '.' . $this->baseInfo['extension'];
+
+        // 上传
+        $file = UploadedFile::getInstanceByName($this->uploadFileName);
+        if ($file->error === UPLOAD_ERR_OK)
+        {
+            $stream = fopen($file->tempName, 'r+');
+            $result = $this->filesystem->writeStream($url, $stream);
+            fclose($stream);
+
+            // 判断如果上传成功就去合并文件
+            $this->baseInfo['chunk'] = $chunk;
+            if ($this->config['chunks'] == $chunk)
+            {
+                // 缓存上传信息等待回调
+                Yii::$app->cache->set(self::PREFIX_MERGE_CACHE . $guid, [
+                    'type' => $this->type,
+                    'drive' => $this->drive,
+                    'paths' => $this->paths,
+                    'baseInfo' => $this->baseInfo,
+                    'config' => $this->config,
+                ], 3600);
+            }
+
+            $this->baseInfo['merge'] = true;
+            $this->baseInfo['guid'] = $guid;
+        }
+    }
+
+    /**
+     * 切片合并
+     *
+     * @param int $name
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
+     */
+    public function merge($name = 1)
+    {
+        // 由于合并会附带上一次切片的信息，取消切片判断
+        $this->isCut = false;
+
+        $filePath = $this->paths['tmpRelativePath'] . $name . '.' . $this->baseInfo['extension'];
+        if ($this->filesystem->has($filePath) && ($content = $this->filesystem->read($filePath)))
+        {
+            if ($this->filesystem->has($this->baseInfo['url']))
+            {
+                $this->filesystem->update($this->baseInfo['url'], $content);
+            }
+            else
+            {
+                $this->filesystem->write($this->baseInfo['url'], $content);
+            }
+
+            unset($content);
+            $this->filesystem->delete($filePath);
+            $name += 1;
+            self::merge($name);
+        }
+        else
+        {
+            // 删除文件夹，如果删除失败重新去合并
+            $this->filesystem->deleteDir($this->paths['tmpRelativePath']);
+        }
+    }
+
+    /**
+     * 获取生成路径信息
+     *
+     * @return array
+     */
+    protected function initPaths()
+    {
+        if (!empty($this->paths))
+        {
+            return $this->paths;
+        }
+
+        $config = $this->config;
+        // 保留原名称
+        $config['originalName'] == false && $this->baseInfo['name'] = $config['prefix'] . StringHelper::randomNum(time());
+
+        // 文件路径
+        $filePath = $config['path'] . date($config['subName'], time()) . "/";
+        // 缩略图
+        $thumbPath = Yii::$app->params['uploadConfig']['thumb']['path'] . date($config['subName'], time()) . "/";
+
+        empty($config['guid']) && $config['guid'] = StringHelper::randomNum();
+        $tmpPath = 'tmp/' . date($config['subName'], time()) . "/" . $config['guid'] . '/';
+        $this->paths = [
+            'relativePath' => $filePath, // 相对路径
+            'thumbRelativePath' => $thumbPath, // 缩略图相对路径
+            'tmpRelativePath' => $tmpPath, // 临时相对路径
+        ];
+
+        return $this->paths;
     }
 
     /**
@@ -681,13 +561,9 @@ class UploadHelper
                 {
                     !empty(json_decode($item)) && $item = json_decode($item, true);
                 }
-
-                if (!in_array($key, $this->filterConfig))
-                {
-                    unset($config[$key]);
-                }
             }
 
+            $config = ArrayHelper::filter($config, $this->filter);
             $this->config = ArrayHelper::merge(Yii::$app->params['uploadConfig'][$type], $config);
         }
         catch (\Exception $e)
@@ -695,6 +571,95 @@ class UploadHelper
             $this->config = Yii::$app->params['uploadConfig'][$type];
         }
 
-        !empty($this->config['takeOverAction']) && $this->takeOverAction = $this->config['takeOverAction'];
+        !empty($this->config['drive']) && $this->drive = $this->config['drive'];
+    }
+
+    /**
+     * 写入目录
+     *
+     * @param array $paths
+     */
+    public function setPaths(array $paths)
+    {
+        $this->paths = $paths;
+    }
+
+    /**
+     * 写入基础信息
+     *
+     * @param array $baseInfo
+     */
+    public function setBaseInfo(array $baseInfo)
+    {
+        $this->baseInfo = $baseInfo;
+    }
+
+    /**
+     * @param mixed $drive
+     */
+    public function setDrive($drive)
+    {
+        $this->drive = $drive;
+    }
+
+    /**
+     * @return array
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getBaseInfo()
+    {
+        if ($this->isCut == true)
+        {
+            return $this->baseInfo;
+        }
+
+        // 处理上传的文件信息
+        $this->baseInfo['type'] = $this->filesystem->getMimetype($this->baseInfo['url']);
+        $this->baseInfo['size'] = $this->filesystem->getSize($this->baseInfo['url']);
+        $path = $this->baseInfo['url'];
+        switch ($this->drive)
+        {
+            // 本地
+            case Attachment::DRIVE_LOCAL :
+                $this->baseInfo['url'] = Yii::getAlias('@attachurl') . '/' . $this->baseInfo['url'];
+                if ($this->config['fullPath'] == true)
+                {
+                    $this->baseInfo['url'] = Yii::$app->request->hostInfo . $this->baseInfo['url'];
+                }
+                break;
+            // 阿里云
+            case Attachment::DRIVE_OSS :
+                $bucket = Yii::$app->debris->config('storage_aliyun_bucket');
+                $endpoint = Yii::$app->debris->config('storage_aliyun_endpoint');
+                $this->baseInfo['url'] = 'http://' . $bucket . '.' . $endpoint . '/' . $this->baseInfo['url'];
+                break;
+            // 七牛
+            case Attachment::DRIVE_QINIU :
+                $this->filesystem->addPlugin(new FileUrl());
+                $this->baseInfo['url'] = $this->filesystem->getUrl($this->baseInfo['url']);
+                break;
+        }
+
+        // 写入数据库
+        $attachment = new Attachment();
+        $attachment->drive = $this->drive;
+        $attachment->upload_type = $this->type;
+        $attachment->specific_type = $this->baseInfo['type'];
+        $attachment->size = $this->baseInfo['size'];
+        $attachment->extension = $this->baseInfo['extension'];
+        $attachment->name = $this->baseInfo['name'];
+        $attachment->base_url = $this->baseInfo['url'];
+        $attachment->path = $path;
+        if (!$attachment->save())
+        {
+            $data = Yii::$app->services->errorLog->initData();
+            $data['error_code'] = 422;
+            $data['error_msg'] = '资源写入失败';
+            $data['error_data'] = json_encode($attachment->getErrors());
+            Log::record($data);
+        }
+
+        return $this->baseInfo;
     }
 }

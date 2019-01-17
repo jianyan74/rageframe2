@@ -1,8 +1,8 @@
 <?php
 namespace common\models\sys;
 
-use common\enums\StatusEnum;
 use Yii;
+use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
 /**
@@ -122,7 +122,7 @@ class Menu extends \common\models\common\BaseModel
             }
         }
 
-        return ArrayHelper::itemsMerge($models, 'id');
+        return ArrayHelper::itemsMerge($models);
     }
 
     /**

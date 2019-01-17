@@ -7,6 +7,7 @@ use common\controllers\AddonsBaseController;
 /**
  * Class IndexController
  * @package addons\RfExample\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class IndexController extends AddonsBaseController
 {

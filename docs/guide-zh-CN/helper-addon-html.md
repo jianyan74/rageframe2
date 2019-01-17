@@ -26,19 +26,19 @@ AddonHtmlHelper::create(['index']);
 ### 编辑按钮
 
 ```
-AddonHtmlHelper::edit(['edit', 'id' => 1']);
+AddonHtmlHelper::edit(['edit', 'id' => 1]);
 ```
 
 ### 删除按钮
 
 ```
-AddonHtmlHelper::create(['delete', 'id' => 1']);
+AddonHtmlHelper::create(['delete', 'id' => 1]);
 ```
 
 ### 普通按钮
 
 ```
-AddonHtmlHelper::linkButton(['test', 'id' => 1'], '测试');
+AddonHtmlHelper::linkButton(['test', 'id' => 1], '测试');
 ```
 
 ### 状态标签

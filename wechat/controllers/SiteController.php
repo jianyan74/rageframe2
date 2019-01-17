@@ -10,6 +10,7 @@ use common\helpers\UrlHelper;
 /**
  * Class SiteController
  * @package wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SiteController extends WController
 {

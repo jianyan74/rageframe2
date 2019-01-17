@@ -4,8 +4,9 @@ namespace common\helpers;
 /**
  * 日期数据格式返回
  *
- * Class ResultDataHelper
+ * Class DateHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class DateHelper
 {

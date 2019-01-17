@@ -6,12 +6,14 @@ use yii\data\Pagination;
 use common\helpers\ResultDataHelper;
 use common\enums\StatusEnum;
 use common\models\member\Address;
+use yii\helpers\ArrayHelper;
 
 /**
  * 收货地址
  *
  * Class AddressController
  * @package backend\modules\member\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddressController extends MController
 {
@@ -51,7 +53,7 @@ class AddressController extends MController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return mixed
      */
@@ -107,12 +109,7 @@ class AddressController extends MController
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $getData = Yii::$app->request->get();
-        foreach (['id', 'sort', 'status'] as $item)
-        {
-            isset($getData[$item]) && $model->$item = $getData[$item];
-        }
-
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save())
         {
             return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
@@ -122,7 +119,7 @@ class AddressController extends MController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|yii\web\Response
      */
@@ -135,7 +132,7 @@ class AddressController extends MController
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);
             }
 

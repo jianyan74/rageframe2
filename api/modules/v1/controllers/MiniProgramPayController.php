@@ -13,9 +13,9 @@ use api\controllers\OnAuthController;
 /**
  * 小程序支付案例
  *
- * Class MiniProgramNotifyController
+ * Class MiniProgramPayController
  * @package api\modules\v1\controllers
- * @property \yii\db\ActiveRecord $modelClass;
+ * @author jianyan74 <751393839@qq.com>
  */
 class MiniProgramPayController extends OnAuthController
 {

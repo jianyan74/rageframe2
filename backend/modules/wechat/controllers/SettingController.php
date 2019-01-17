@@ -10,6 +10,7 @@ use backend\modules\wechat\models\HistoryForm;
  *
  * Class SettingController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SettingController extends WController
 {

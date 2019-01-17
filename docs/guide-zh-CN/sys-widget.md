@@ -60,22 +60,20 @@ use kartik\color\ColorInput;
 ### 日期时间控件
 
 ```
-use dosamigos\datetimepicker\DateTimePicker;
+use kartik\datetime\DateTimePicker;
 ```
 ```
 <?= $form->field($model, 'test')->widget(DateTimePicker::className(), [
-    'language' => 'zh-CN',
-    'template' => '{button}{reset}{input}',
-    'options' => [
-        'value' => $model->isNewRecord ? '' : date('Y-m-d H:i:s',$model->test),
-    ],
-    'clientOptions' => [
-        'format' => 'yyyy-mm-dd hh:ii:ss',
-        'todayHighlight' => true,//今日高亮
-        'autoclose' => true,//选择后自动关闭
-        'todayBtn' => true,//今日按钮显示
-    ]
-
+        'language' => 'zh-CN',
+        'options' => [
+            'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
+        ],
+        'pluginOptions' => [
+            'format' => 'yyyy-mm-dd hh:ii',
+            'todayHighlight' => true,//今日高亮
+            'autoclose' => true,//选择后自动关闭
+            'todayBtn' => true,//今日按钮显示
+        ]
 ]);?>
 ```
 
@@ -84,13 +82,30 @@ use dosamigos\datetimepicker\DateTimePicker;
 ```
 use kartik\daterange\DateRangePicker;
 ```
+
 ```
-<?= $form->field($model, 'date_range', [
-        'addon'=>['prepend'=>['content'=>'<i class="glyphicon glyphicon-calendar"></i>']],
-        'options'=>['class'=>'drp-container form-group']
-    ])->widget(DateRangePicker::classname(), [
-        'useWithAddon'=>true
-    ]);?>
+$addon = <<< HTML
+<span class="input-group-addon">
+    <i class="glyphicon glyphicon-calendar"></i>
+</span>
+HTML;
+```
+
+```
+<?= DateRangePicker::widget([
+    'name' => 'queryDate',
+    'value' => date('Y-m-d') . '-' . date('Y-m-d'),
+    'readonly' => 'readonly',
+    'useWithAddon' => true,
+    'convertFormat' => true,
+    'startAttribute' => 'from_date',
+    'endAttribute' => 'to_date',
+    'startInputOptions' => ['value' => date('Y-m-d')],
+    'endInputOptions' => ['value' => date('Y-m-d')],
+    'pluginOptions' => [
+        'locale' => ['format' => 'Y-m-d'],
+    ]
+]) . $addon;?>
 ```
 
 具体参考：http://demos.krajee.com/date-range
@@ -119,7 +134,7 @@ use kartik\daterange\DateRangePicker;
                     'height' => 200,
                 ],
             ],
-            'takeOverAction ' => 'local',// 默认本地 qiniu/oss 上传
+            'drive' => 'local',// 默认本地 qiniu/oss 上传
         ],
          'chunked' => false,// 开启分片上传
          'chunkSize' => 512 * 1024,// 分片大小
@@ -282,7 +297,7 @@ echo $form->field($model, 'state_1')->widget(Select2::classname(), [
 
       ],
     'formData' => [
-        'takeOverAction' => 'local', // 默认本地 支持qiniu/oss 上传
+        'drive' => 'local', // 默认本地 支持qiniu/oss 上传
         'thumb' => [ // 图片缩略图
             [
                 'widget' => 100,

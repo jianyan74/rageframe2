@@ -83,7 +83,7 @@ class UEditor extends \yii\widgets\InputWidget
 
         $this->config = ArrayHelper::merge($config, $this->config);
         $this->formData = ArrayHelper::merge([
-            'takeOverAction' => 'local',
+            'drive' => 'local',
         ], $this->formData);
     }
 
@@ -101,7 +101,7 @@ class UEditor extends \yii\widgets\InputWidget
         {
             if (!empty($formDatum) && is_array($formDatum))
             {
-                $formDatum = json_encode($formDatum);
+                $formDatum = Json::encode($formDatum);
             }
         }
 

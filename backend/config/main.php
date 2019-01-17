@@ -108,6 +108,9 @@ return [
         'provinces' => [
             'class' => 'backend\widgets\provinces\ProvincesController',
         ],
+        'wechat-select-attachment' => [
+            'class' => 'backend\widgets\wechatselectattachment\WechatSelectAttachment',
+        ],
     ],
     'params' => $params,
 ];

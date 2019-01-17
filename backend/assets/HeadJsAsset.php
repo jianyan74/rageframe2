@@ -6,15 +6,17 @@ use yii\web\AssetBundle;
 /**
  * Class HeadJsAsset
  * @package backend\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class HeadJsAsset extends AssetBundle
 {
     public $basePath = '@webroot';
 
-    public $baseUrl = '@web';
+    public $baseUrl = '@web/resources';
 
     public $js = [
-        'resources/js/jquery.min.js?v=2.1.4',
+        'bower_components/jquery/dist/jquery.min.js',
+        'plugins/toastr/toastr.min.js',
     ];
 
     public $jsOptions = [

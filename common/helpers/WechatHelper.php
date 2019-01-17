@@ -10,6 +10,7 @@ use linslin\yii2\curl\Curl;
  *
  * Class WechatHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class WechatHelper
 {
@@ -17,8 +18,9 @@ class WechatHelper
      * jsapi支付
      *
      * @param array $attributes
-     * @return mixed
+     * @return array
      * @throws BadRequestHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
     public static function jsApiPay(array $attributes)
     {
@@ -42,6 +44,7 @@ class WechatHelper
      * @param array $attributes
      * @return mixed
      * @throws BadRequestHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
     public static function nativePay(array $attributes)
     {

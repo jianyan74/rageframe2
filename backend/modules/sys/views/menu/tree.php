@@ -25,7 +25,7 @@ use common\helpers\ArrayHelper;
         <td><?= $model['url']?></td>
         <td><div class="fa <?= $model['menu_css']?>"></div></td>
         <td><?= HtmlHelper::whether($model['dev'])?></td>
-        <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']; ?>" onblur="rfSort(this)"></td>
+        <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
         <td>
             <?= HtmlHelper::edit(['ajax-edit', 'id' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $parent_title, 'level' => $model['level']], '编辑', [
                 'data-toggle' => 'modal',

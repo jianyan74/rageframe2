@@ -10,13 +10,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="pull-right m-b-sm">
-                <?= HtmlHelper::create(['rule-edit', 'addon' => Yii::$app->params['addon']['name']])?>
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="box-tools">
+                    <?= HtmlHelper::create(['rule-edit', 'addon' => Yii::$app->params['addon']['name']])?>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
+            <div class="box-body table-responsive">
+                <div class="col-lg-12">
                     <?php foreach($models as $model){ ?>
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -39,7 +42,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <?php if ($model->ruleKeyword){ ?>
                                             <?php foreach($model->ruleKeyword as $rule){
                                                 if ($rule->type != RuleKeyword::TYPE_TAKE){ ?>
-                                                    <span class="simple_tag" data-toggle="tooltip" data-placement="bottom" title="<?= RuleKeyword::$typeExplain[$rule->type]; ?>"><?= $rule->content?></span>
+                                                    <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="<?= RuleKeyword::$typeExplain[$rule->type]; ?>"><?= $rule->content?></span>
                                                 <?php }
                                             }
                                         } ?>
@@ -55,19 +58,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             </div>
                         </div>
                     <?php } ?>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <?= LinkPager::widget([
-                                'pagination' => $pages,
-                                'maxButtonCount' => 5,
-                                'firstPageLabel' => "首页",
-                                'lastPageLabel' => "尾页",
-                                'nextPageLabel' => "下一页",
-                                'prevPageLabel' => "上一页",
-                            ]);?>
-                        </div>
-                    </div>
                 </div>
+            </div>
+            <div class="box-footer">
+                <?= LinkPager::widget([
+                    'pagination' => $pages
+                ]);?>
             </div>
         </div>
     </div>
@@ -76,7 +72,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 <script>
     // status => 1:启用;-1禁用;
     function statusRule(obj){
-
         var id = $(obj).parent().attr('id');
         var self = $(obj);
         var status = self.hasClass("label-danger") ? 1 : 0;

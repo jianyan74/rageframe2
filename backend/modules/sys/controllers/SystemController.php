@@ -11,6 +11,7 @@ use backend\components\SystemInfo;
  *
  * Class SystemController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SystemController extends SController
 {

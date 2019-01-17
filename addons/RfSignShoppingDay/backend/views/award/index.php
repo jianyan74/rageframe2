@@ -1,24 +1,23 @@
 <?php
-
+use common\helpers\AddonHtmlHelper;
 use yii\widgets\LinkPager;
 use common\helpers\AddonUrl;
 
 $this->title = '奖品管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
+
 <div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5><?= $this->title; ?></h5>
-                <div class="ibox-tools">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="box-tools">
                     当前有效的奖品概率为: <?= $prob ?>/1000
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
-                        <i class="fa fa-plus"></i>  创建
-                    </a>
+                    <?= AddonHtmlHelper::create(['edit'], '创建'); ?>
                 </div>
             </div>
-            <div class="ibox-content">
+            <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -37,30 +36,23 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->id; ?></td>
                             <td><?= $model->title; ?></td>
                             <td><?= $model->cate_id == 1 ? '<span class="label label-primary">积分</span>' : '<span class="label label-info">卡卷</span>'; ?></td>
-                            <td class="col-md-1"><input type="text" class="form-control" value="<?= $model['sort']?>" onblur="rfSort(this)"></td>
+                            <td class="col-md-1"><?= AddonHtmlHelper::sort($model['sort']); ?></td>
                             <td><?= $model->prob; ?></td>
                             <td><?= $model->surplus_num; ?>/<?= $model->all_num; ?></td>
                             <td>
-                                <a href="<?= AddonUrl::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                <?= \common\helpers\HtmlHelper::status($model['status']);?>
-                                <a href="<?= AddonUrl::to(['delete','id'=> $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                <?= AddonHtmlHelper::edit(['edit', 'id' => $model['id']]); ?>
+                                <?= AddonHtmlHelper::status($model['status']); ?>
+                                <?= AddonHtmlHelper::delete(['delete', 'id' => $model['id']]); ?>
                             </td>
                         </tr>
                     <?php } ?>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <?= LinkPager::widget([
-                            'pagination' => $pages,
-                            'maxButtonCount' => 5,
-                            'firstPageLabel' => "首页",
-                            'lastPageLabel' => "尾页",
-                            'nextPageLabel' => "下一页",
-                            'prevPageLabel' => "上一页",
-                        ]);?>
-                    </div>
-                </div>
+            </div>
+            <div class="box-footer">
+                <?= LinkPager::widget([
+                    'pagination' => $pages
+                ]);?>
             </div>
         </div>
     </div>

@@ -2,10 +2,9 @@
 namespace common\enums;
 
 /**
- * 状态枚举
- *
  * Class StatusEnum
- * @package common\enum
+ * @package common\enums
+ * @author jianyan74 <751393839@qq.com>
  */
 class StatusEnum
 {

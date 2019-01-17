@@ -17,6 +17,7 @@ use addons\RfArticle\common\models\Article;
  *
  * Class ArticleController
  * @package addons\RfArticle\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ArticleController extends AddonsBaseController
 {
@@ -52,12 +53,13 @@ class ArticleController extends AddonsBaseController
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel
+            'searchModel' => $searchModel,
+            'cates' => ArticleCate::getDropDown()
         ]);
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return string|\yii\console\Response|\yii\web\Response
      * @throws \yii\db\Exception
@@ -68,16 +70,25 @@ class ArticleController extends AddonsBaseController
         $id = $request->get('id', null);
         $model = $this->findModel($id);
 
-        // 文章标签
-        $tags = ArticleTag::find()->with([
-            'tagMap' => function($query) use ($id){
-                $query->andWhere(['article_id' => $id]);
-            },])->all();
+        // 设置选中标签
+        $tagMap = ArticleTagMap::getTagsByActicleId($id);
+        $model->tags = array_column($tagMap, 'tag_id');
+        // 推荐位
+        $positionExplain = Article::$positionExplain;
+        $keys = [];
+        foreach ($positionExplain as $key => $value)
+        {
+            if (Article::checkPosition($key, $model->position))
+            {
+                $keys[] = $key;
+            }
+        }
+        $model->position = $keys;
 
         if ($model->load($request->post()) && $model->save())
         {
             // 更新文章标签
-            ArticleTagMap::addTags($model->id, $request->post('tag', []));
+            ArticleTagMap::addTags($model->id, $model->tags);
 
             return $this->redirect(['index']);
         }
@@ -85,8 +96,8 @@ class ArticleController extends AddonsBaseController
         return $this->render($this->action->id, [
             'model' => $model,
             'cates' => ArticleCate::getDropDown(),
-            'positionExplain' => Article::$positionExplain,
-            'tags' => $tags,
+            'positionExplain' => $positionExplain,
+            'tags' => ArticleTag::getCheckTags(),
         ]);
     }
 

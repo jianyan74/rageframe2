@@ -4,14 +4,15 @@ namespace api\behaviors;
 use Yii;
 use yii\base\Behavior;
 use yii\web\Controller;
-use common\helpers\EncryptionHelper;
 use yii\web\UnprocessableEntityHttpException;
+use common\helpers\EncryptionHelper;
 
 /**
  * http 签名验证
  *
  * Class HttpSignAuth
  * @package api\behaviors
+ * @author jianyan74 <751393839@qq.com>
  */
 class HttpSignAuth extends Behavior
 {

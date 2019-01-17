@@ -9,6 +9,7 @@ use common\models\common\Provinces;
 /**
  * Class ProvincesController
  * @package backend\widgets\provinces
+ * @author jianyan74 <751393839@qq.com>
  */
 class ProvincesController extends yii\web\Controller
 {
@@ -44,17 +45,17 @@ class ProvincesController extends yii\web\Controller
         {
             return Html::tag('option', '-- 请选择市 --', ['value' => '']) ;
         }
-        else if($type_id == 2 && !$pid)
+        elseif($type_id == 2 && !$pid)
         {
             return Html::tag('option', '-- 请选择区 --', ['value' => '']) ;
         }
-        else if($type_id == 2 && $model)
+        elseif($type_id == 2 && $model)
         {
             $str = "-- 请选择区 --";
         }
 
         $str = Html::tag('option', $str, ['value' => '']) ;
-        foreach($model as $value => $name)
+        foreach ($model as $value => $name)
         {
             $str .= Html::tag('option', Html::encode($name), ['value' => $value]);
         }

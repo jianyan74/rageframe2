@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 /**
  * Class ManagerForm
  * @package backend\modules\sys\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class ManagerForm extends Model
 {

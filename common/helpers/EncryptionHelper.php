@@ -6,6 +6,7 @@ use yii\web\UnprocessableEntityHttpException;
 /**
  * Class EncryptionHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class EncryptionHelper
 {

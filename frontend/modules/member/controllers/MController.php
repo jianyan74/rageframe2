@@ -7,6 +7,7 @@ use frontend\controllers\IController;
 /**
  * Class MController
  * @package frontend\modules\member\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MController extends IController
 {

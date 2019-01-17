@@ -2,6 +2,7 @@
 namespace backend\modules\sys\controllers;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -16,9 +17,10 @@ use backend\modules\sys\models\AddonsForm;
 
 /**
  * 模块插件控制器
- *
+ * s
  * Class AddonsPlugController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonsPlugController extends SController
 {
@@ -160,12 +162,7 @@ class AddonsPlugController extends SController
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $getData = Yii::$app->request->get();
-        foreach (['id', 'sort', 'status'] as $item)
-        {
-            isset($getData[$item]) && $model->$item = $getData[$item];
-        }
-
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save())
         {
             return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
@@ -175,7 +172,7 @@ class AddonsPlugController extends SController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|Response
      */

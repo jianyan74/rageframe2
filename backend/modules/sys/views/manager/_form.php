@@ -1,77 +1,68 @@
 <?php
-
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use common\helpers\HtmlHelper;
 ?>
 
-<link href="/backend/resources/other/cropper/cropper.min.css" rel="stylesheet">
-<link href="/backend/resources/other/cropper/sitelogo.css" rel="stylesheet">
+<?= HtmlHelper::cssFile('@web/resources/plugins/cropper/cropper.min.css'); ?>
+<?= HtmlHelper::cssFile('@web/resources/plugins/cropper/sitelogo.css'); ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <?php $form = ActiveForm::begin([]); ?>
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="ibox-content text-center">
-                <div class="m-b-md">
-                    <img class="img-circle circle-border" alt="image" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImgBase64();?>'">
-                </div>
-                <p class="font-bold"><h3><i class="fa <?= $model->sex == 1 ? 'fa-mars': 'fa-venus'; ?>"></i> <?= $model->realname?></h3></p>
-                <div class="text-center">
-                    <a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a>
-                </div>
-            </div>
-            <div class="ibox-content">
-                <p>最后登陆IP : <?= $model->last_ip ?></p>
-                <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="box">
+            <div class="modal-body text-center">
+            <p><img class="profile-user-img img-responsive img-circle rf-img-lg" alt="image" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"></p>
+            <p><a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a></p>
+                <p class="profile-username"><?= $model->username; ?></p>
+            <p>最后登陆IP : <?= $model->last_ip ?></p>
+            <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
             </div>
         </div>
-        <div class="col-sm-9">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>基本信息</h5>
-                </div>
-                <div class="ibox-content">
-                    <div class="col-md-12">
-                        <div class="form-group" >
-                            <?= $form->field($model, 'head_portrait')->hiddenInput()->label(false) ?>
-                        </div>
-                        <?= $form->field($model, 'realname')->textInput() ?>
-                        <?= $form->field($model, 'sex')->radioList(['1' => '男','2' => '女']) ?>
-                        <?= $form->field($model, 'mobile')->textInput() ?>
-                        <?= \backend\widgets\provinces\Provinces::widget([
-                            'form' => $form,
-                            'model' => $model,
-                            'provincesName' => 'provinces',// 省字段名
-                            'cityName' => 'city',// 市字段名
-                            'areaName' => 'area',// 区字段名
-                        ]); ?>
-                        <?= $form->field($model, 'email')->textInput() ?>
-                        <?= $form->field($model,'birthday')->widget('kartik\date\DatePicker',[
-                            'language'  => 'zh-CN',
-                            'layout'=>'{picker}{input}',
-                            'pluginOptions' => [
-                                'format' => 'yyyy-mm-dd',
-                                'todayHighlight' => true,// 今日高亮
-                                'autoclose' => true,// 选择后自动关闭
-                                'todayBtn' => true,// 今日按钮显示
-                            ],
-                            'options'=>[
-                                'class' => 'form-control no_bor',
-                                'readonly' => 'readonly',// 禁止输入
-                            ]
-                        ]); ?>
-                        <?= $form->field($model, 'address')->textarea() ?>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12 text-center">
-                            <button class="btn btn-primary" type="submit" onclick="SendForm()">保存</button>
-                            <?= $backBtn ?>
-                        </div>
-                    </div>　
-                    <?php ActiveForm::end(); ?>
-                </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">基本信息</h3>
             </div>
+            <?php $form = ActiveForm::begin([
+                'fieldConfig' => [
+                    'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
+                ]
+            ]); ?>
+            <div class="box-body">
+                <?= $form->field($model, 'head_portrait')->hiddenInput()->label(false) ?>
+                <?= $form->field($model, 'realname')->textInput() ?>
+                <?= $form->field($model, 'sex')->radioList(['1' => '男','2' => '女']) ?>
+                <?= $form->field($model, 'mobile')->textInput() ?>
+                <?= \backend\widgets\provinces\Provinces::widget([
+                    'form' => $form,
+                    'model' => $model,
+                    'provincesName' => 'provinces',// 省字段名
+                    'cityName' => 'city',// 市字段名
+                    'areaName' => 'area',// 区字段名
+                ]); ?>
+                <?= $form->field($model, 'email')->textInput() ?>
+                <?= $form->field($model,'birthday')->widget('kartik\date\DatePicker',[
+                    'language'  => 'zh-CN',
+                    'layout'=>'{picker}{input}',
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd',
+                        'todayHighlight' => true,// 今日高亮
+                        'autoclose' => true,// 选择后自动关闭
+                        'todayBtn' => true,// 今日按钮显示
+                    ],
+                    'options'=>[
+                        'class' => 'form-control no_bor',
+                        'readonly' => 'readonly',// 禁止输入
+                    ]
+                ]); ?>
+                <?= $form->field($model, 'address')->textarea() ?>
+            </div>
+            <div class="box-footer text-center">
+                <button class="btn btn-primary" type="submit" onclick="SendForm()">保存</button>
+                <?= $backBtn ?>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>
@@ -127,10 +118,10 @@ use common\helpers\HtmlHelper;
     </div>
 </div>
 
-<?php Yii::$app->view->registerJsFile('/backend/resources/js/bootstrap.min.js?v=3.3.7'); ?>
-<script src="/backend/resources/other/cropper/cropper.js"></script>
-<script src="/backend/resources/other/cropper/sitelogo.js"></script>
-<script src="/backend/resources/other/cropper/html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
+<?php Yii::$app->view->registerJsFile('@web/resources/dist/js/bootstrap.min.js?v=3.3.7'); ?>
+<?= HtmlHelper::jsFile('@web/resources/plugins/cropper/cropper.js')?>
+<?= HtmlHelper::jsFile('@web/resources/plugins/cropper/sitelogo.js')?>
+<?= HtmlHelper::jsFile('@web/resources/plugins/cropper/html2canvas.min.js')?>
 
 <script type="text/javascript">
     // 做个下简易的验证  大小 格式
@@ -140,7 +131,7 @@ use common\helpers\HtmlHelper;
         var Size = target[0].files[0].size / 1024;
         if(Size > filemaxsize) {
             rfError('图片过大，请重新选择!');
-            $(".avatar-wrapper").childre().remove;
+            $(".avatar-wrapper").children().remove;
             return false;
         }
         if(!this.files[0].type.match(/image.*/)) {
@@ -153,7 +144,6 @@ use common\helpers\HtmlHelper;
             testend = teststr.match(/[^\\]+\.[^\(]+/i); // 直接完整文件名的
             filename.innerHTML = testend;
         }
-
     });
 
     $(".avatar-save").on("click", function() {
@@ -180,7 +170,7 @@ use common\helpers\HtmlHelper;
         var data = {};
         data.image = src;
         data.jid = $('#jid').val();
-        data.takeOverAction = 'local';
+        data.drive = 'local';
         $.ajax({
             url : "<?= Url::to(['/file/base64'])?>",
             type : "post",
@@ -204,7 +194,7 @@ use common\helpers\HtmlHelper;
         if(status){
             var src = $('#manager-head_portrait').val();
             if(src){
-                $('#head_portrait',window.parent.document).attr('src',src);
+                $('.head_portrait',window.parent.document).attr('src',src);
             }
         }
     }

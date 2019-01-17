@@ -2,16 +2,17 @@
 namespace backend\modules\member\controllers;
 
 use Yii;
-use yii\data\Pagination;
+use common\models\common\SearchModel;
 use common\components\CurdTrait;
 use common\models\member\MemberInfo;
 use common\enums\StatusEnum;
 
 /**
  * 会员管理
- * 
+ *
  * Class MemberController
  * @package backend\modules\member\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MemberController extends MController
 {
@@ -25,35 +26,33 @@ class MemberController extends MController
     /**
      * 首页
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
      */
     public function actionIndex()
     {
-        $keyword = Yii::$app->request->get('keyword', null);
+        $searchModel = new SearchModel([
+            'model' => MemberInfo::className(),
+            'scenario' => 'default',
+            'partialMatchAttributes' => ['realname', 'mobile_phone'], // 模糊查询
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
 
-        $data = MemberInfo::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andFilterWhere(['or',
-                ['like', 'id', $keyword],
-                ['like', 'username', $keyword],
-                ['like', 'mobile_phone', $keyword],
-                ['like', 'realname', $keyword]
-            ]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->all();
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
-            'models' => $models,
-            'pages' => $pages,
-            'keyword' => $keyword,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|\yii\web\Response
      * @throws \yii\base\Exception
@@ -69,7 +68,7 @@ class MemberController extends MController
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);
             }
 

@@ -7,8 +7,8 @@ $this->title = $attachment->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '图文素材', 'url' => ['index', 'type' => 'news']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?= Html::cssFile('/backend/resources/css/rageframe.css')?>
-<?= Html::jsFile('/backend/resources/js/vue.min.js')?>
+
+<?= Html::jsFile('@web/resources/dist/js/vue.min.js')?>
 
 <style>
     .leftArea{
@@ -44,14 +44,14 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 </style>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <?php $form = ActiveForm::begin(); ?>
-    <div class="row">
-        <div class="col-sm-12" id="vueArea">
-            <div class="ibox-title">
-                <h5>回复内容</h5>
+<?php $form = ActiveForm::begin(); ?>
+<div class="row">
+    <div class="col-sm-12" id="vueArea">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">回复内容</h3>
             </div>
-            <div class="ibox-content overflowHidden">
+            <div class="box-content overflowHidden">
                 <div class="row">
                     <div class="col-sm-12 noHorizontalPadding">
                         <div class="flex-row">
@@ -93,6 +93,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 'attribute' => 'content',
                                                 'name' => 'content',
                                                 'value' => '',
+                                                'formData' => [
+                                                    'drive' => 'local',
+                                                    'showDrive' => 'WechatAttachment',
+                                                ],
                                             ]) ?>
                                         <?php } ?>
                                     </div>
@@ -129,23 +133,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-        <!-- 上传组件不需要显示出来，我只需要使用它的功能即可 -->
-        <div hidden>
-            <?= \common\widgets\webuploader\Images::widget([
-                'name'  =>"thumb_url",
-                'value' =>  '',
-                'config' => [
-                    'pick' => [
-                        'multiple' => false,
-                    ],
-                    'callback' => 'setUploadedImg',
-                    'independentUrl' => true,
-                ],
-            ])?>
-        </div>
     </div>
-    <?php ActiveForm::end(); ?>
+    <!-- 上传组件不需要显示出来，我只需要使用它的功能即可 -->
+    <div hidden>
+        <?= \common\widgets\webuploader\Images::widget([
+            'name'  =>"thumb_url",
+            'value' =>  '',
+            'config' => [
+                'pick' => [
+                    'multiple' => false,
+                ],
+                'callback' => 'setUploadedImg',
+                'independentUrl' => true,
+            ],
+        ])?>
+    </div>
 </div>
+<?php ActiveForm::end(); ?>
 
 <script>
     function DataPost(){

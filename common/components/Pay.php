@@ -10,11 +10,14 @@ use common\helpers\ArrayHelper;
 use common\helpers\UrlHelper;
 
 /**
+ * 支付组件
+ *
  * Class Pay
  * @package common\components
  * @property \common\components\payment\WechatPay $wechat
  * @property \common\components\payment\AliPay $alipay
  * @property \common\components\payment\UnionPay $union
+ * @author jianyan74 <751393839@qq.com>
  */
 class Pay extends Component
 {

@@ -5,16 +5,29 @@ use Yii;
 use yii\filters\Cors;
 use yii\filters\RateLimiter;
 use yii\filters\auth\CompositeAuth;
+use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
 use api\behaviors\HttpSignAuth;
 
 /**
  * Class ActiveController
- * @package common\controllers
+ * @package api\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ActiveController extends \yii\rest\ActiveController
 {
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = [];
+
     /**
      * 默认每页数量
      *
@@ -60,19 +73,19 @@ class ActiveController extends \yii\rest\ActiveController
                  * yii\filters\auth\HttpBearerAuth::className(),
                  *
                  * 3.请求参数 access token 当作API URL请求参数发送，这种方式应主要用于JSONP请求，因为它不能使用HTTP头来发送access token
-                 * http://rageframe.com/user/index/index?accessToken=123
+                 * http://rageframe.com/user/index/index?access-token=123
                  *
                  * 4.请求参数 access token 当作API header请求参数发送
                  * header格式: X-Api-Key: access-token
                  * yii\filters\auth\HttpHeaderAuth::className(),
                  */
-                [
-                    'class' => QueryParamAuth::className(),
-                    'tokenParam' => 'access-token'
-                ],
+                HttpBasicAuth::className(),
+                HttpBearerAuth::className(),
+                HttpHeaderAuth::className(),
+                QueryParamAuth::className(),
             ],
             // 不进行认证判断方法
-            'optional' => Yii::$app->params['user.optional'],
+            'optional' => $this->optional,
         ];
 
         // 进行签名验证，前提开启了签名验证
@@ -119,7 +132,7 @@ class ActiveController extends \yii\rest\ActiveController
             $expire = Yii::$app->params['user.accessTokenExpire'];
 
             // 验证有效期
-            if ($timestamp + $expire <= time() && !in_array($action->id, Yii::$app->params['user.optional']))
+            if ($timestamp + $expire <= time() && !in_array($action->id, $this->optional))
             {
                 throw new BadRequestHttpException('您的登录验证已经过期，请重新登陆');
             }

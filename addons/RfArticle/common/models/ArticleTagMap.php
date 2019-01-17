@@ -42,6 +42,15 @@ class ArticleTagMap extends \yii\db\ActiveRecord
 
     /**
      * @param $article_id
+     * @return ArticleTagMap[]
+     */
+    public static function getTagsByActicleId($article_id)
+    {
+        return self::findAll(['article_id' => $article_id]);
+    }
+
+    /**
+     * @param $article_id
      * @param $tags
      * @return bool
      * @throws \yii\db\Exception

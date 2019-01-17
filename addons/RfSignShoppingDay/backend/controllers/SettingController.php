@@ -12,6 +12,7 @@ use addons\RfSignShoppingDay\common\models\SettingForm;
  *
  * Class SettingController
  * @package addons\RfSignShoppingDay\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SettingController extends AddonsBaseController implements AddonsSettingInterface
 {

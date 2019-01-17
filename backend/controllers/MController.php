@@ -13,6 +13,7 @@ use yii\filters\AccessControl;
  * @property \yii\db\ActiveRecord $modelClass;
  * @property \EasyWeChat\OfficialAccount\Application $app;
  * @property \common\services\Application $services;
+ * @author jianyan74 <751393839@qq.com>
  */
 class MController extends \common\controllers\BaseController
 {
@@ -110,20 +111,14 @@ class MController extends \common\controllers\BaseController
      * @param string $msgText 错误内容
      * @param string $skipUrl 跳转链接
      * @param string $msgType 提示类型 [success/error/info/warning]
-     * @param int $closeTime 提示关闭时间
      * @return mixed
      */
-    public function message($msgText, $skipUrl, $msgType = null, int $closeTime = 5, $autoClose = true)
+    public function message($msgText, $skipUrl, $msgType = null)
     {
         $msgType = $msgType ?? 'success';
+        !in_array($msgType, ['success', 'error', 'info', 'warning']) && $msgType = 'success';
 
-        $html = $msgText;
-        if ($autoClose)
-        {
-            $html .= " <span class='rfCloseTime'>" . $closeTime . "</span>秒后自动关闭...";
-        }
-
-        Yii::$app->getSession()->setFlash($msgType, $html);
+        Yii::$app->getSession()->setFlash($msgType, $msgText);
 
         return $skipUrl;
     }

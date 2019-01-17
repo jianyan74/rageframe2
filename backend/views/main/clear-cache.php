@@ -3,19 +3,18 @@ $this->title = "缓存清理";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox-content m-b-sm border-bottom">
-        <div class="p-xs">
-            <div class="pull-left m-r-md">
-                <i class="fa fa-globe text-navy mid-icon"></i>
-            </div>
-            <?php if ($status == false) { ?>
-                <h2>缓存清理成功！</h2>
-                <span>SUCCESS</span>
-            <?php }else{ ?>
-                <h2>缓存清理失败,请开启 <?= $status ?> 读写权限</h2>
-                <span>ERROR</span>
-            <?php } ?>
+<div class="box box-default">
+    <!-- /.box-header -->
+    <?php if ($result == true) { ?>
+        <div class="alert alert-success alert-dismissible">
+            <h4><i class="icon fa fa-check"></i> 缓存清理成功</h4>
+            可手动关闭当前标签页
         </div>
-    </div>
+    <?php }else{ ?>
+        <div class="alert alert-danger alert-dismissible">
+            <h4><i class="icon fa fa-ban"></i> 缓存清理失败</h4>
+            请检查自己的服务器/文件夹清理权限
+        </div>
+    <?php } ?>
+    <!-- /.box-body -->
 </div>

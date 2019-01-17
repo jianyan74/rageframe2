@@ -8,6 +8,7 @@ use common\models\sys\Addons;
 /**
  * Class AddonHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonHelper
 {
@@ -60,7 +61,7 @@ class AddonHelper
      */
     public static function getAddonIcon($name)
     {
-        return '/backend/resources/img/icon.jpg';
+        return Yii::getAlias('@web') . '/resources/dist/img/icon.jpg';
     }
 
     /**

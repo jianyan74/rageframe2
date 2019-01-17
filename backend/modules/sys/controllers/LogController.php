@@ -12,6 +12,7 @@ use common\models\common\Log;
  *
  * Class LogController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class LogController extends SController
 {

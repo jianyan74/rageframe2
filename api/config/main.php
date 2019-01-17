@@ -77,6 +77,7 @@ return [
                         'GET search' => 'search',
                         'GET session-key' => 'session-key',// 小程序获取session key
                         'POST decode' => 'decode',// 解密获取小程序用户信息数据
+                        'GET qr-code' => 'qr-code',// 获取小程序码
                     ],
                 ],
                 [
@@ -89,8 +90,6 @@ return [
                         'POST voices' => 'voices', // 语音上传
                         'POST files' => 'files', // 文件上传
                         'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
-                        'POST qiniu' => 'qiniu', // 七牛上传
-                        'POST oss' => 'oss', // 阿里云oss上传
                         'POST merge' => 'merge', // 合并分片
                     ],
                 ],

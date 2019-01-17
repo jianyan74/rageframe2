@@ -76,6 +76,7 @@
 
 - [SearchModel](component-search-model.md)
 - CurdTrait
+- [应用配置独立域名](independent-app-domain-name.md)
 - [代码提示/线上性能优化](system-optimize.md)
 - [PHP编程规范](php-standard.md)
 - [网址收录](append-website.md)

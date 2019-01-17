@@ -7,6 +7,7 @@ use common\controllers\BaseController;
 /**
  * Class IController
  * @package frontend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class IController extends BaseController
 {

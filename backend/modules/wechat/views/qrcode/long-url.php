@@ -5,45 +5,39 @@ $this->title = '长链接转二维码';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="tabs-container">
-                <ul class="nav nav-tabs">
-                    <li><a href="<?= Url::to(['index'])?>"> 二维码管理</a></li>
-                    <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
-                    <li class="active"><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active">
-                        <div class="panel-body">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label" for="menu-title">长链接</label>
-                                    <div class="input-group m-b">
-                                        <input id="longurl" class="form-control" type="text">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" id="change">立即转换</button>
-                                        </span>
-                                    </div>
-                                    <div class="help-block">请输入您要转换的长链接，支持http://、https://、weixin://wxpay 格式的url</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label" for="menu-title">二维码</label><br>
-                                        <div class="row" style="padding-left: 15px">
-                                            <img src="<?= Url::to(['qr','shortUrl'=>Yii::$app->request->hostInfo])?>" id="qrsrc" style="border:1px solid #CCC;border-radius:4px;">
-                                            <div class="help-block"><span id="longUrl">默认显示 <?= Yii::$app->request->hostInfo ?> 的二维码</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label" for="menu-title">短连接</label>
-                                        <input id="url" class="form-control" type="text" value="" readonly>
-                                    </div>
-                                </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li><a href="<?= Url::to(['index'])?>"> 二维码管理</a></li>
+                <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
+                <li class="active"><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane rf-auto">
+                    <div class="form-group">
+                        <label class="control-label" for="menu-title">长链接</label>
+                        <div class="input-group m-b">
+                            <input id="longurl" class="form-control" type="text">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" id="change">立即转换</button>
+                            </span>
+                        </div>
+                        <div class="help-block">请输入您要转换的长链接，支持http://、https://、weixin://wxpay 格式的url</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="menu-title">二维码</label><br>
+                            <div class="row" style="padding-left: 15px">
+                                <img src="<?= Url::to(['qr','shortUrl'=>Yii::$app->request->hostInfo])?>" id="qrsrc" style="border:1px solid #CCC;border-radius:4px;">
+                                <div class="help-block"><span id="longUrl">默认显示 <?= Yii::$app->request->hostInfo ?> 的二维码</span></div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="menu-title">短连接</label>
+                            <input id="url" class="form-control" type="text" value="" readonly>
                         </div>
                     </div>
                 </div>

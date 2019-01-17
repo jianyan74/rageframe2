@@ -2,8 +2,9 @@
 namespace addons\RfArticle;
 
 /**
- * Class Addon
+ * Class AddonConfig
  * @package addons\RfArticle
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonConfig
 {
@@ -48,6 +49,10 @@ class AddonConfig
         'article-tag/ajax-edit' => '文章标签编辑',
         'article-tag/ajax-update' => '文章标签状态修改',
         'article-tag/delete' => '文章标签删除',
+        'adv/index' => '幻灯片首页',
+        'adv/edit' => '幻灯片编辑',
+        'adv/ajax-update' => '幻灯片状态修改',
+        'adv/delete' => '幻灯片删除',
         'article/recycle' => '回收站',
         'article/show' => '回收站还原',
         'article/delete' => '回收站删除',
@@ -141,9 +146,14 @@ class AddonConfig
             'icon' => 'fa fa-tags'
         ],
         [
+            'title' => '幻灯片',
+            'route' => 'adv/index',
+            'icon' => 'fa fa-file-image-o'
+        ],
+        [
             'title' => '回收站',
             'route' => 'article/recycle',
-            'icon' => 'fa fa-trash'
+            'icon' => 'fa fa-trash-o'
         ],
     ];
 

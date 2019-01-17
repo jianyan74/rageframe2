@@ -6,70 +6,46 @@ use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
 ?>
 
-<?= Html::cssFile('@resources/css/login.css'); ?>
-
-<script>
-    if (window.top !== window.self) {
-        window.top.location = window.location;
-    }
-</script>
-
-<body class="signin">
-<div class="signinpanel">
-    <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-            <p class="no-margins">欢迎登录 <?= Yii::$app->params['adminTitle']; ?></p>
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true,'placeholder' => '用户名','class' => 'form-control uname'])->label(false) ?>
-            <?= $form->field($model, 'password')->passwordInput(['placeholder' => '密码','class' => 'form-control pword m-b'])->label(false) ?>
-
-            <?php if ($model->scenario == 'captchaRequired'){ ?>
-                <?= $form->field($model,'verifyCode')->widget(Captcha::className(),[
-                    'template' => '<div class="row"><div class="col-sm-7">{input}</div><div class="col-sm-5">{image}</div></div>',
-                    'imageOptions' => [
-                        'alt' => '点击换图',
-                        'title' => '点击换图',
-                        'style' => 'cursor:pointer'
-                    ],
-                    'options' => [
-                        'class' => 'form-control verifyCode',
-                        'placeholder' => '验证码',
-                    ],
-                ])->label(false)?>
-            <?php } ?>
-            <?php
-                $field = $form->field($model, 'rememberMe',['labelOptions' => ['class' => 'verifyCode']])->checkbox();
-                $field->label();
-                $field->error();
-            ?>
-            <div class="form-group text-left">
-                <div class="checkbox i-checks">
-                    <label class="no-padding">
-                        <?= $field->parts['{input}']; ?><i></i> <?= $field->parts['{labelTitle}'];?>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <?= Html::submitButton('立即登录', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
-            </div>
-            <?php ActiveForm::end(); ?>
-        </div>
-        <div class="col-sm-3"></div>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <?= Yii::$app->params['adminTitle']; ?>
     </div>
-    <div class="signup-footer">
-        <div class="text-center">
-            <?= Yii::$app->debris->config('web_copyright'); ?>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">欢迎登陆</p>
+        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <?= $form->field($model, 'username', [
+            'template' => '<div class="form-group has-feedback">{input}<span class="glyphicon glyphicon-user form-control-feedback"></span></div>{hint}{error}'
+        ])->textInput(['placeholder' => '用户名'])->label(false) ?>
+
+        <?= $form->field($model, 'password', [
+            'template' => '<div class="form-group has-feedback">{input}<span class="glyphicon glyphicon-lock form-control-feedback"></span></div>{hint}{error}'
+        ])->passwordInput(['placeholder' => '密码'])->label(false) ?>
+        <?php if ($model->scenario == 'captchaRequired'){ ?>
+            <?= $form->field($model,'verifyCode')->widget(Captcha::className(),[
+                'template' => '<div class="row"><div class="col-sm-7">{input}</div><div class="col-sm-5">{image}</div></div>',
+                'imageOptions' => [
+                    'alt' => '点击换图',
+                    'title' => '点击换图',
+                    'style' => 'cursor:pointer'
+                ],
+                'options' => [
+                    'class' => 'form-control',
+                    'placeholder' => '验证码',
+                ],
+            ])->label(false)?>
+        <?php } ?>
+        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        <div class="form-group">
+            <?= Html::submitButton('立即登录', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
+        </div>
+        <?php ActiveForm::end(); ?>
+        <div class="social-auth-links text-center">
+            <p><?= Yii::$app->debris->config('web_copyright'); ?></p>
         </div>
     </div>
+    <!-- /.login-box-body -->
 </div>
-
-<script>
-    $(document).ready(function(){
-        $(".i-checks").iCheck({
-            checkboxClass   :"icheckbox_square-green",
-            radioClass      :"iradio_square-green",
-            increaseArea    : '20%' // optional
-        })
-    });
-</script>
+<!-- /.login-box -->
+</body>

@@ -9,6 +9,7 @@ use common\models\wechat\FansTags;
  *
  * Class FansTagsController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class FansTagsController extends WController
 {
@@ -16,13 +17,15 @@ class FansTagsController extends WController
      * 标签首页
      *
      * @return mixed|string
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionIndex()
     {
         $request = Yii::$app->request;
-
         if ($request->isPost)
         {
             $tag_add = $request->post('tag_add', []);
@@ -31,14 +34,12 @@ class FansTagsController extends WController
             // 更新标签
             foreach ($tag_update as $key => $value)
             {
-                if ($value)
+                if (empty($value))
                 {
-                    $this->app->user_tag->update($key, $value);
+                    return $this->message("标签名称不能为空", $this->redirect(['index']), 'error');
                 }
-                else
-                {
-                    return $this->message("标签名称不能为空", $this->redirect(['list'], 'error'));
-                }
+
+                $this->app->user_tag->update($key, $value);
             }
 
             // 插入标签
@@ -48,6 +49,7 @@ class FansTagsController extends WController
             }
 
             FansTags::updateList();
+            return $this->message("保存成功", $this->redirect(['index']));
         }
 
         return $this->render('index',[
@@ -59,7 +61,10 @@ class FansTagsController extends WController
      * 同步标签
      *
      * @return mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionSynchro()

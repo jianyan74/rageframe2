@@ -8,6 +8,7 @@ use yii\web\AssetBundle;
  *
  * Class Asset
  * @package addons\RfArticle\backend\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class Asset extends AssetBundle
 {

@@ -9,7 +9,8 @@ use yii\base\Behavior;
  * 登陆后的行为
  *
  * Class AfterLogin
- * @package common\behaviors
+ * @package backend\behaviors
+ * @author jianyan74 <751393839@qq.com>
  */
 class AfterLogin extends Behavior
 {

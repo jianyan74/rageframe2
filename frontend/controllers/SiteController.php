@@ -14,7 +14,9 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
 /**
- * Site controller
+ * Class SiteController
+ * @package frontend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SiteController extends Controller
 {

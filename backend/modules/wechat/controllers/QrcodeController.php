@@ -12,6 +12,7 @@ use common\helpers\ResultDataHelper;
  *
  * Class QrcodeController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class QrcodeController extends WController
 {
@@ -87,7 +88,6 @@ class QrcodeController extends WController
     {
         $id = Yii::$app->request->get('id');
         $model = Qrcode::findOne($id);
-
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
             return $this->redirect(['index']);

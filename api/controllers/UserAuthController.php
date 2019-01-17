@@ -2,6 +2,7 @@
 namespace api\controllers;
 
 use Yii;
+use yii\rest\OptionsAction;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
@@ -10,10 +11,12 @@ use common\helpers\ResultDataHelper;
 /**
  * 需要授权登录访问基类
  *
- * 适用于个人中心
+ * 注意：适用于个人中心
+ *
  * Class UserAuthController
  * @package api\controllers
- * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass
+ * @author jianyan74 <751393839@qq.com>
  */
 class UserAuthController extends ActiveController
 {

@@ -7,6 +7,7 @@ use common\controllers\AddonsBaseController;
 /**
  * Class UserController
  * @package addons\RfSignShoppingDay\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class UserController extends AddonsBaseController
 {

@@ -10,8 +10,9 @@ use common\helpers\StringHelper;
  *
  * Class SignSecretKeyController
  * @package api\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
-class SignSecretKeyController extends OffAuthController
+class SignSecretKeyController extends OnAuthController
 {
     public $modelClass = '';
 
@@ -28,6 +29,14 @@ class SignSecretKeyController extends OffAuthController
      */
     protected $appSecret = 'e3de3825cfbf';
 
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = ['index', 'create'];
 
     /**
      * 生成测试带签名秘钥的url

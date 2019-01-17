@@ -77,8 +77,8 @@ $(function() {
                 var progressObj = parentObj.children(".upload-progress");
 
                 percentage = Math.floor(percentage * 100);
-                progressObj.find(".progress-bar").width(percentage + "%");
-                progressObj.find(".progress-bar").html(percentage + "%");
+                // progressObj.find(".progress-bar").width(percentage + "%");
+                progressObj.find(".badge").html(percentage + "%");
             });
 
             //当文件上传出错时触发
@@ -149,6 +149,7 @@ $(function() {
                 //如果队列为空，则移除进度条
                 if (uploader.getStats().queueNum == 0) {
                     progressObj.remove();
+                    parentObj.css({'margin-bottom':"0"});
                 }
             });
         };
@@ -163,21 +164,22 @@ $(function() {
         //防止重复创建
         if (parentObj.children(".upload-progress").length == 0){
             //创建进度条
-            var fileProgressObj = $('<div class="upload-progress"></div>').appendTo(parentObj);
-            var progressBar = $('<div class="progress progress-bar-default" style="margin-bottom:0">\n' +
-                '    <div style="width: 0" class="progress-bar">0%</div>\n' +
-                '</div>').appendTo(fileProgressObj);
-            var progressCancel = $('<a style="color: inherit;">取消上传</a>').appendTo(fileProgressObj);
+            var fileProgressObj = $('<div class="upload-progress" style="width: 110px"></div>').appendTo(parentObj);
+            $('<span class="badge bg-green">0%</span>').appendTo(fileProgressObj);
+            parentObj.css({'margin-bottom':"25px"});
+            var progressCancel = $('<a style="color: inherit;padding-left: 20px;cursor:pointer">取消</a>').appendTo(fileProgressObj);
             //绑定点击事件
             progressCancel.click(function() {
                 uploader.cancelFile(file);
                 fileProgressObj.remove();
+                parentObj.css({'margin-bottom':"0"});
             });
         }
     }
 
     // 添加图片
     function addImage(parentObj, data, config){
+        console.log(parentObj);
         var multiple = config.pick.multiple;
         var boxId = parentObj.parent().attr('data-boxId');
         var name = parentObj.parent().attr('data-name');
@@ -228,7 +230,7 @@ $(function() {
     }
 
     // 删除图片节点
-    $(document).on("click",".delimg",function() {
+    $(document).on("click", ".delimg", function() {
         var parentObj = $(this).parent().parent();
         var multiple =  $(this).attr('data-multiple');
         var name = $(this).parent().parent().parent().attr('data-name');
@@ -256,4 +258,30 @@ $(function() {
 
         parentObj.remove();
     });
+
+    // 图片/文件选择
+    $(document).on("click",".rfAttachmentActive",function() {
+        if (!$(this).hasClass('active')){
+            $(this).addClass('active');
+        }else{
+            $(this).removeClass('active');
+        }
+    });
+
+    // 上传事件
+    $(document).on("click",".uploadWebuploader",function() {
+        var boxid = $(this).parent().parent('ul').attr('id');
+        $('.upload-album-' + boxid + ' input').trigger('click');
+    });
+
+    // 移除图像蒙层
+    $('.photo-list').mouseleave(function(e){
+        $(e.currentTarget).parent().find('.halfOpacityBlackBG').hide();
+    });
+
+    // 移除文件蒙层
+    $('.file-list').mouseleave(function(e){
+        $(e.currentTarget).parent().find('.halfOpacityBlackBG').hide();
+    });
+
 });

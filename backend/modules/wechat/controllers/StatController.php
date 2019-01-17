@@ -10,9 +10,10 @@ use common\models\wechat\FansStat;
 
 /**
  * 数据统计
- * 
+ *
  * Class StatController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class StatController extends WController
 {

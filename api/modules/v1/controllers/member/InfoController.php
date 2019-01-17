@@ -10,7 +10,8 @@ use common\enums\StatusEnum;
  *
  * Class InfoController
  * @package api\modules\v1\controllers\member
- * @property \yii\db\ActiveRecord $modelClass;
+ * @property \yii\db\ActiveRecord $modelClass
+ * @author jianyan74 <751393839@qq.com>
  */
 class InfoController extends OnAuthController
 {

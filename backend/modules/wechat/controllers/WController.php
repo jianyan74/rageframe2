@@ -8,6 +8,7 @@ use backend\controllers\MController;
  *
  * Class WController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class WController extends MController
 {

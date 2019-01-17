@@ -12,6 +12,7 @@ use addons\RfExample\common\models\Cate;
  *
  * Class CateController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class CateController extends AddonsBaseController
 {
@@ -40,7 +41,7 @@ class CateController extends AddonsBaseController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|yii\web\Response
      */

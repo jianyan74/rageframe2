@@ -9,6 +9,7 @@ use common\models\sys\Manager;
  *
  * Class LoginForm
  * @package backend\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class LoginForm extends \common\models\common\LoginForm
 {

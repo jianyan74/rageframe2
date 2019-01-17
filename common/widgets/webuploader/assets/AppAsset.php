@@ -6,6 +6,7 @@ use yii\web\AssetBundle;
 /**
  * Class AppAsset
  * @package common\widgets\webuploader\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class AppAsset extends AssetBundle {
 
@@ -17,7 +18,7 @@ class AppAsset extends AssetBundle {
 
     public $js = [
         'js/uploader.js',
-        'js/Sortable.min.js'
+        'js/sortable.min.js'
     ];
 
     public $depends = [

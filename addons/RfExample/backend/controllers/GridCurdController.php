@@ -10,6 +10,7 @@ use common\controllers\AddonsBaseController;
 /**
  * Class GridCurdController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class GridCurdController extends AddonsBaseController
 {

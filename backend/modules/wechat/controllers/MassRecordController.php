@@ -1,6 +1,8 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
+use common\enums\StatusEnum;
+use common\models\wechat\Attachment;
 use Yii;
 use yii\data\Pagination;
 use common\components\CurdTrait;
@@ -13,6 +15,7 @@ use backend\modules\wechat\models\SendForm;
  *
  * Class MassRecordController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class MassRecordController extends WController
 {
@@ -45,22 +48,31 @@ class MassRecordController extends WController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @param $media_type
      * @return mixed|string|\yii\web\Response
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function actionCreate($media_type)
+    public function actionEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id', null);
+        $media_type = Yii::$app->request->get('media_type');
         $model = $this->findModel($id);
         $model->media_type = $media_type;
+        $model->send_status == StatusEnum::DISABLED && $model->send_type = 2;
 
         if ($model->load($request->post()))
         {
+            // 获取图文资源文件
+            if ($model->media_type == Attachment::TYPE_NEWS)
+            {
+                $attachment = Attachment::findById($model->attachment_id);
+                $model->media_id = $attachment['media_id'];
+            }
+
             $model->send_time = strtotime($model->send_time);
             $immediately = $model->send_type == 1 ? true : false;
 
@@ -81,6 +93,30 @@ class MassRecordController extends WController
             'model' => $model,
             'media_type' => $media_type,
             'tags' => FansTags::getList(),
+            'submit' => true,
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \yii\web\UnprocessableEntityHttpException
+     */
+    public function actionView()
+    {
+        $request = Yii::$app->request;
+        $id = $request->get('id', null);
+        $media_type = Yii::$app->request->get('media_type');
+        $model = $this->findModel($id);
+        $model->media_type = $media_type;
+        $model->send_status == StatusEnum::DISABLED && $model->send_type = 2;
+
+        return $this->render('edit', [
+            'model' => $model,
+            'media_type' => $media_type,
+            'tags' => FansTags::getList(),
+            'submit' => false,
         ]);
     }
 

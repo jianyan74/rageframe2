@@ -9,6 +9,7 @@ use common\controllers\AddonsBaseController;
 /**
  * Class VideoController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class VideoController extends AddonsBaseController
 {

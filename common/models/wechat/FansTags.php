@@ -98,7 +98,10 @@ class FansTags extends \common\models\common\BaseModel
      * 获取标签信息并保存到数据库
      *
      * @return mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
     public static function updateList()

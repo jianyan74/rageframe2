@@ -5,7 +5,6 @@ use Yii;
 use yii\rest\Serializer;
 use yii\data\ActiveDataProvider;
 use common\enums\StatusEnum;
-use api\controllers\OffAuthController;
 use api\controllers\OnAuthController;
 use addons\RfExample\common\models\Curd;
 use addons\RfExample\api\models\CurdModel;
@@ -16,9 +15,18 @@ use addons\RfExample\api\models\CurdModel;
  * Class IndexController
  * @package addons\RfExample\api\controllers
  */
-class IndexController extends OffAuthController
+class IndexController extends OnAuthController
 {
     public $modelClass = 'addons\RfExample\common\models\CurdModel';
+
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = ['index', 'test'];
 
     /**
      * Demo访问地址

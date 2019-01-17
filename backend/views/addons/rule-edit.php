@@ -1,6 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\models\wechat\RuleKeyword;
+use common\helpers\HtmlHelper;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '规则管理', 'url' => ['rule', 'addon' => Yii::$app->params['addon']['name']]];
@@ -19,24 +20,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-sm-12">
                         <div class="col-sm-9">
                             <?= $form->field($model, 'name')->textInput()->hint('您可以给这条规则起一个名字, 方便下次修改和查看。') ?>
-                            <div class="advanced" style="display: none">
+                            <div class="setting" style="display: none">
                                 <?= $form->field($model, 'sort')->textInput()->hint('规则优先级，越大则越靠前，最大不得超过255') ?>
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-2">
                             <div class="checkbox m-2 m-r-xs" style="padding-top: 14px">
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input type="checkbox">
-                                    </div>高级设置
-                                </label>
+                                <label><input type="checkbox" id="setting" class="adv"> 高级设置</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
                             <?= $form->field($model, 'keyword')->textInput(['value'=> implode(',',$ruleKeywords[RuleKeyword::TYPE_MATCH])])->hint('多个关键字请使用逗号隔开，如天气，今日天气。')->label('关键字') ?>
-                            <div class="advanced" style="display: none">
+                            <div class="trigger" style="display: none">
                                 <div class="form-group">
                                     <label class="control-label">高级触发列表</label>
                                 </div>
@@ -146,13 +143,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-2" style="padding-top: 14px;">
-                            <div class="checkbox m-2 m-r-xs">
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input type="checkbox">
-                                    </div>高级触发
-                                </label>
+                        <div class="col-sm-3 col-md-2">
+                            <div class="checkbox m-2 m-r-xs" style="padding-top: 14px">
+                                <label><input type="checkbox" id="trigger" class="adv"> 高级触发</label>
                             </div>
                         </div>
                     </div>
@@ -205,13 +198,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function(){
-        // 复选框选中
-        $('input').on('ifChecked', function(event){
-            $(this).parent().parent().parent().parent().parent().parent().find('.advanced').show();
-        });
-        // 复选框移除
-        $('input').on('ifUnchecked', function(event){
-            $(this).parent().parent().parent().parent().parent().parent().find('.advanced').hide();
+        $('.adv').click(function () {
+            var id = $(this).attr('id');
+            if($(this).is(':checked')) {
+                // do something
+                $('.' + id).show();
+            }else{
+                $('.' + id).hide();
+            }
         });
 
         // 添加

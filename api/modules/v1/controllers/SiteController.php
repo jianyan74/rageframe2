@@ -5,7 +5,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use common\models\api\AccessToken;
 use common\helpers\ResultDataHelper;
-use api\controllers\OffAuthController;
+use api\controllers\OnAuthController;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\RefreshForm;
 
@@ -14,11 +14,20 @@ use api\modules\v1\models\RefreshForm;
  *
  * Class SiteController
  * @package api\modules\v1\controllers
- * @property \yii\db\ActiveRecord $modelClass;
+ * @author jianyan74 <751393839@qq.com>
  */
-class SiteController extends OffAuthController
+class SiteController extends OnAuthController
 {
     public $modelClass = '';
+
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = ['login', 'refresh'];
 
     /**
      * 登录根据用户信息返回accessToken

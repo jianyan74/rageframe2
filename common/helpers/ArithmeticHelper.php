@@ -4,8 +4,9 @@ namespace common\helpers;
 /**
  * 算法辅助类
  *
- * Class ArrayHelper
+ * Class ArithmeticHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ArithmeticHelper
 {

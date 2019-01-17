@@ -17,6 +17,7 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 - 整合了第三方登录，目前有QQ、微信、微博、GitHub等等。
 - 整合了第三方支付，目前有微信支付、支付宝支付、银联支付。
 - 整合了RESTful API，支持前后端分离接口开发和app接口开发，可直接上手开发业务。
+- 全面监控系统报错，报错日志写入数据库，方便定位错误信息。
 - 快速高效，Servises(服务层) 遵循Yii2的懒加载方式，只初始化使用到的组件服务。
 - 封装了常用的扩展组件(生成二维码、Curl、IP地址转地区)和表单控件(时间、时间日期、日期范围选择、颜色选择器、省市区三级联动、单图上传、多图上传、单文件上传、多文件上传、百度编辑器、图表、多文本编辑框)，快速开发，不必在为基础组件而担忧。
 - 丰富完善的文档，让你二次开发不在困扰。
@@ -27,16 +28,16 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 
 ### 系统快照
 
-【权限管理】
-![image](docs/guide-zh-CN/images/auth.png)
-【自定义菜单】
-![image](docs/guide-zh-CN/images/menu.png)
-【素材管理】
-![image](docs/guide-zh-CN/images/material.png)
-【插件模块】
-![image](docs/guide-zh-CN/images/addon.png)
-【服务器监控】
-![image](docs/guide-zh-CN/images/sysInfo.png)
+【首页】
+![image](docs/guide-zh-CN/images/index.png)
+【微信自定义菜单】
+![image](docs/guide-zh-CN/images/wechat-menu.png)
+【微信关注统计】
+![image](docs/guide-zh-CN/images/wechat-stat.png)
+【插件模块列表】
+![image](docs/guide-zh-CN/images/addon-list.png)
+【插件模块文章模块】
+![image](docs/guide-zh-CN/images/addon-activity.png)
 
 ### 开始之前
 
@@ -77,9 +78,11 @@ Github：https://github.com/jianyan74/rageframe2/issues
 
 Yii：http://www.yiiframework.com
 
+EasyWechat：https://www.easywechat.com
+
 Bootstrap：http://getbootstrap.com
 
-EasyWechat：https://www.easywechat.com
+AdminLTE：https://adminlte.io
 
 ### 版权信息
 

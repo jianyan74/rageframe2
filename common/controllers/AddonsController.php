@@ -12,6 +12,7 @@ use common\helpers\StringHelper;
  *
  * Class AddonsController
  * @package common\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonsController extends Controller
 {

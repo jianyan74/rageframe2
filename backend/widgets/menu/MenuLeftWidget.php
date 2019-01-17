@@ -1,16 +1,17 @@
 <?php
 namespace backend\widgets\menu;
 
+use Yii;
 use yii\base\Widget;
 use common\enums\StatusEnum;
 use common\models\sys\Menu;
-use common\models\sys\Addons;
 
 /**
- * 菜单
+ * 左边菜单
  *
- * Class MainLeftWidget
- * @package backend\widgets\left
+ * Class MenuLeftWidget
+ * @package backend\widgets\menu
+ * @author jianyan74 <751393839@qq.com>
  */
 class MenuLeftWidget extends Widget
 {
@@ -21,7 +22,7 @@ class MenuLeftWidget extends Widget
     {
         return $this->render('menu-left', [
             'models'=> Menu::getAuthShowList(StatusEnum::ENABLED),
-            'addonsMenu' => Addons::getListMenu(),
+            'addonsInfo' => Yii::$app->services->sys->addon->getInfo(),
         ]);
     }
 }

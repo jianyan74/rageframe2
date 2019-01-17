@@ -16,6 +16,7 @@ use common\components\CurdTrait;
  *
  * Class ConfigController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ConfigController extends SController
 {
@@ -69,7 +70,7 @@ class ConfigController extends SController
     }
 
     /**
-     * 编辑/新增
+     * 编辑/创建
      *
      * @return array|mixed|string|\yii\web\Response
      */
@@ -83,7 +84,7 @@ class ConfigController extends SController
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);
             }
 

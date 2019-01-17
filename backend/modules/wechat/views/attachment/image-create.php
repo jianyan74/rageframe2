@@ -24,6 +24,7 @@ $form = ActiveForm::begin([
                 ],
                 'fileSingleSizeLimit' => 2048 * 1024,// 图片大小限制
                 'independentUrl' => true,
+                'select' => false,// 选择在线图片
             ]
         ])->label('永久图片')->hint('永久图片只支持 bmp/png/jpeg/jpg/gif 格式,大小不超过为2M, 上限 5000 张');?>
     </div>

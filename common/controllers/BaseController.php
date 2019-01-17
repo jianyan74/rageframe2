@@ -11,6 +11,7 @@ use common\helpers\ArrayHelper;
  *
  * Class BaseController
  * @package common\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class BaseController extends Controller
 {
@@ -114,6 +115,7 @@ class BaseController extends Controller
         // 微信支付
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
             'app_id' => $config['wechat_appid'],
+            'secret' => $config['wechat_appsecret'],
             'mch_id' => $config['wechat_mchid'],
             'key' => $config['wechat_api_key'], // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)

@@ -10,6 +10,7 @@ use yii\data\Pagination;
 /**
  * Class AwardController
  * @package addons\RfSignShoppingDay\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AwardController extends AddonsBaseController
 {

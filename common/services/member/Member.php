@@ -9,6 +9,7 @@ use common\models\member\MemberInfo;
 /**
  * Class Member
  * @package common\services\member
+ * @author jianyan74 <751393839@qq.com>
  */
 class Member extends Service
 {

@@ -162,45 +162,6 @@ class Addons extends BaseModel
     }
 
     /**
-     * 获取菜单导航列表
-     *
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getListMenu()
-    {
-        $models = self::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->with(['bindingMenu'])
-            ->asArray()
-            ->all();
-
-        // 创建分类数组
-        $groups = array_keys(Yii::$app->params['addonsGroup']);
-        $addons = [];
-        foreach ($groups as $group)
-        {
-            !isset($addons[$group]) && $addons[$group] = [];
-        }
-
-        // 模块分类插入
-        foreach ($models as $model)
-        {
-            $addons[$model['group']][] = $model;
-        }
-
-        // 删除空模块分类
-        foreach ($addons as $key => $vlaue)
-        {
-            if (empty($vlaue))
-            {
-                unset($addons[$key]);
-            }
-        }
-
-        return $addons;
-    }
-
-    /**
      * 编辑信息
      *
      * @param object $addons
@@ -241,7 +202,7 @@ class Addons extends BaseModel
      */
     public function getBindingMenu()
     {
-        return $this->hasOne(AddonsBinding::className(), ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::className(), ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
     }
 
     /**

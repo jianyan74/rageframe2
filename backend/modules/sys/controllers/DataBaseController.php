@@ -11,6 +11,7 @@ use backend\modules\sys\models\Database;
  *
  * Class DataBaseController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class DataBaseController extends SController
 {
@@ -426,7 +427,7 @@ class DataBaseController extends SController
         array_map("unlink", glob($path));
         if (count(glob($path)))
         {
-            return $this->message('文件删除失败，请检查权限!', $this->redirect(['restore']),'error');
+            return $this->message('文件删除失败，请检查权限!', $this->redirect(['restore']), 'error');
         }
 
         return $this->message('文件删除成功', $this->redirect(['restore']));

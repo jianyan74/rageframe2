@@ -6,43 +6,20 @@ use yii\helpers\Html;
 $this->title = $allMediaType[$mediaType];
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
-<style>
-    /*!*给大盒子添加样式*!*/
-    .inlineBlockContainer{
-        width:100%;
-        /*下面代码是兼容各个浏览器的，并实现了四列，没两列之间间距为30px，*/
-        /*火狐*/
-        -moz-column-count:5;
-        -moz-column-gap:0;
-        -moz-column-rule:0 solid #ff0000;
-        /*谷歌*/
-        -webkit-column-count:5;
-        -webkit-column-gap:0;
-        -webkit-column-rule:0 solid #ff0000;
-        /*Opera浏览器*/
-        -o-column-count:5;
-        -o-column-gap:0;
-        -o-column-rule:0 solid #ff0000;
-    }
 
-    /*!*小盒子内容区的样式，display:inline-block：实现 效果*!*/
-    .inlineBlockContainer .normalPaddingRight{
-        width:100%;
-        display:inline-block
-    }
-</style>
-<div class="wrapper wrapper-content animated fadeInRight">
-    <?= $this->render('_nav', [
-        'allMediaType' => $allMediaType,
-        'mediaType' => $mediaType,
-        'keywords' => $keywords,
-        'count' => $pages->totalCount
-    ])?>
-    <div class="row" style="margin-top: 25px">
-        <div class="col-sm-12">
+<?= $this->render('_nav', [
+    'allMediaType' => $allMediaType,
+    'mediaType' => $mediaType,
+    'keywords' => $keywords,
+    'count' => $pages->totalCount
+]); ?>
+
+<div class="row" style="margin-top: 25px">
+    <div class="col-sm-12">
+        <div class="box">
             <div class="inlineBlockContainer col5 vAlignTop separateChildren">
                 <?php foreach ($models as $item){ ?>
-                    <div class="normalPaddingRight">
+                    <div class="normalPaddingRight" style="position:absolute">
                         <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 30px;">
                             <?php foreach ($item['news'] as $index => $news){ ?>
                                 <div class="normalPadding relativePosition postItem">
@@ -83,6 +60,13 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </div>
                 <?php } ?>
             </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <?= LinkPager::widget([
+                        'pagination' => $pages,
+                    ]);?>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -120,4 +104,45 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         });
         //
     })
+</script>
+
+<!--瀑布流-->
+<script type="text/javascript">
+    var waterBasic = (function(){
+        function init(){
+            var nodeWidth = $(".normalPaddingRight").outerWidth(true),
+                colNum = parseInt( $(window).width() / nodeWidth ),
+                colSumHeight = [];
+            for (var i=0;i<colNum;i++) {
+                colSumHeight.push(0);
+            }
+            $(".normalPaddingRight").each(function(){
+                var $cur = $(this),
+                    idx = 0,
+                    minSumHeight = colSumHeight[0];
+                // 获取到solSumHeight中的最小高度
+                for (var i=0;i<colSumHeight.length;i++) {
+                    if (minSumHeight > colSumHeight[i]) {
+                        minSumHeight = colSumHeight[i];
+                        idx = i;
+                    }
+                }
+                // 设置各个item的css属性
+                $cur.css({
+                    left: nodeWidth*idx,
+                    top: minSumHeight
+                });
+                // 更新solSumHeight
+                colSumHeight[idx] = colSumHeight[idx] + $cur.outerHeight(true);
+            })
+        }
+        // 设置窗口改变时也能重新加载
+        $(window).on("resize", function(){
+            init();
+        });
+        return {
+            init: init
+        }
+    })();
+    waterBasic.init();
 </script>

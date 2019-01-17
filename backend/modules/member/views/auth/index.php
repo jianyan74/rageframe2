@@ -1,7 +1,6 @@
 <?php
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\widgets\ActiveForm;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use common\helpers\HtmlHelper;
 
@@ -9,90 +8,99 @@ $this->title = '第三方用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5><?= $this->title; ?></h5>
-                </div>
-                <div class="ibox-content">
-                    <div class="row">
-                        <?php $form = ActiveForm::begin([
-                            'action' => Url::to(['index']),
-                            'method' => 'get'
-                        ]); ?>
-                        <div class="col-sm-3">
-                            <div class="input-group m-b">
-                                <?= Html::textInput('keyword', $keyword, [
-                                    'placeholder' => '请输入昵称',
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+            </div>
+            <div class="box-body table-responsive">
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    //重新定义分页样式
+                    'tableOptions' => ['class' => 'table table-hover'],
+                    'columns' => [
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'visible' => false, // 不显示#
+                        ],
+                        [
+                            'attribute' => 'id',
+                            'filter' => false, //不显示搜索框
+                        ],
+                        [
+                            'attribute' => 'head_portrait',
+                            'value' => function ($model) {
+                                return HtmlHelper::img(HtmlHelper::headPortrait(Html::encode($model->head_portrait)), [
+                                    'class' => 'img-circle rf-img-md img-bordered-sm',
+                                ]);
+                            },
+                            'filter' => false,
+                            'format' => 'raw',
+                        ],
+                        'nickname',
+                        [
+                            'attribute' => 'sex',
+                            'value' => function ($model, $key, $index, $column){
+                                return $model->sex == 1 ? '男' : '女';
+                            },
+                            'filter' => Html::activeDropDownList($searchModel,
+                                'sex',[
+                                    '1' => '男',
+                                    '2' => '女'
+                                ],
+                                [
+                                    'prompt' => '全部',
                                     'class' => 'form-control'
-                                ])?>
-                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
-                            </div>
-                        </div>
-                        <?php ActiveForm::end(); ?>
-                    </div>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>头像</th>
-                            <th>昵称</th>
-                            <th>性别</th>
-                            <th>来源</th>
-                            <th>绑定账号</th>
-                            <th>生日</th>
-                            <th>所在地区</th>
-                            <th>创建时间</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach($models as $model){ ?>
-                            <tr id="<?= $model->id?>">
-                                <td><?= $model->id?></td>
-                                <td class="feed-element">
-                                    <img src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" class="img-circle">
-                                </td>
-                                <td><?= $model->nickname?></td>
-                                <td><?= $model->sex == 1 ? '男' : '女' ?></td>
-                                <td><?= $model->oauth_client?></td>
-                                <td>
-                                    <?php if(!empty($model->member)){?>
-                                        ID：<?= $model->member->id ?><br>
-                                        昵称：<?= $model->member->nickname ?><br>
-                                        账号：<?= $model->member->username ?><br>
-                                        手机：<?= $model->member->mobile_phone ?>
-                                    <?php }else{ ?>
-                                        未绑定
-                                    <?php } ?>
-                                </td>
-                                <td><?= $model->birthday?></td>
-                                <td><?= $model->country?>·<?= $model->province?>·<?= $model->city?></td>
-                                <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
-                                <td>
-                                    <?= HtmlHelper::edit(['edit', 'id' => $model->id])?>
-                                    <?= HtmlHelper::status($model['status']); ?>
-                                    <?= HtmlHelper::delete(['destroy', 'id' => $model->id])?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                        </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <?= LinkPager::widget([
-                                'pagination' => $pages,
-                                'maxButtonCount' => 5,
-                                'firstPageLabel' => "首页",
-                                'lastPageLabel' => "尾页",
-                                'nextPageLabel' => "下一页",
-                                'prevPageLabel' => "上一页",
-                            ]);?>
-                        </div>
-                    </div>
-                </div>
+                                ]
+                            )
+                        ],
+                        'oauth_client',
+                        [
+                            'label'=> '关联用户',
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                return "用户ID：" . $model->member->id . '<br>'.
+                                    "昵称：" . $model->member->nickname . '<br>'.
+                                    "账号：" . $model->member->username . '<br>'.
+                                    "手机：" . $model->member->mobile_phone . '<br>';
+                            },
+                            'format' => 'raw',
+                        ],
+                        [
+                            'attribute' => 'province',
+                            'filter' => false, //不显示搜索框
+                        ],
+                        [
+                            'attribute' => 'city',
+                            'filter' => false, //不显示搜索框
+                        ],
+                        [
+                            'attribute' => 'created_at',
+                            'filter' => false, //不显示搜索框
+                            'format' => ['date', 'php:Y-m-d H:i:s'],
+                        ],
+                        // 'updated_at',
+                        [
+                            'header' => "操作",
+                            'class' => 'yii\grid\ActionColumn',
+                            'template'=> '{ajax-edit} {address} {edit} {status} {destroy}',
+                            'buttons' => [
+                                'edit' => function ($url, $model, $key) {
+                                    return HtmlHelper::edit(['edit', 'id' => $model->id]);
+                                },
+                                'status' => function ($url, $model, $key) {
+                                    return HtmlHelper::status($model->status);
+                                },
+                                'destroy' => function ($url, $model, $key) {
+                                    return HtmlHelper::delete(['destroy','id' => $model->id]);
+                                },
+                            ],
+                        ],
+                    ],
+                ]); ?>
+
             </div>
         </div>
     </div>

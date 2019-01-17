@@ -8,6 +8,7 @@ use yii\base\InvalidConfigException;
 /**
  * Class Service
  * @package common\services
+ * @author jianyan74 <751393839@qq.com>
  */
 class Service extends BaseObject
 {

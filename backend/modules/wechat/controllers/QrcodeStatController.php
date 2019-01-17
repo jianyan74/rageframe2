@@ -12,6 +12,7 @@ use common\helpers\ExcelHelper;
  *
  * Class QrcodeStatController
  * @package backend\modules\wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class QrcodeStatController extends WController
 {

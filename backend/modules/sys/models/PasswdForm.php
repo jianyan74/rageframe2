@@ -10,6 +10,7 @@ use common\models\sys\Manager;
  *
  * Class PasswdForm
  * @package backend\modules\sys\models
+ * @author jianyan74 <751393839@qq.com>
  */
 class PasswdForm extends Model
 {

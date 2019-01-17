@@ -7,6 +7,7 @@ use common\models\common\Log;
 /**
  * Class LogJob
  * @package common\queues
+ * @author jianyan74 <751393839@qq.com>
  */
 class LogJob extends BaseObject implements \yii\queue\JobInterface
 {

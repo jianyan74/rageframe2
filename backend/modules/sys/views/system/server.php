@@ -6,106 +6,109 @@ $this->title = '服务器信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<?= Html::jsFile('@resources/js/plugins/echarts/echarts-all.js')?>
+<?= Html::jsFile('@web/resources/plugins/echarts/echarts-all.js')?>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5><i class="fa fa-cog"></i>  服务器参数</h5>
-        </div>
-        <div class="ibox-content">
-            <table class="table">
-                <tr>
-                    <td>服务器域名地址</td>
-                    <td><?= $info['environment']['domainIP'] ?></td>
-                    <td>服务器标识</td>
-                    <td><?= $info['environment']['flag'] ?></td>
-                </tr>
-                <tr>
-                    <td>操作系统</td>
-                    <td><?= $info['environment']['os'] ?></td>
-                    <td>服务器解析引擎</td>
-                    <td><?= $info['environment']['webEngine'] ?></td>
-                </tr>
-                <tr>
-                    <td>服务器语言</td>
-                    <td><?= $info['environment']['language'] ?></td>
-                    <td>服务器端口</td>
-                    <td><?= $info['environment']['webPort'] ?></td>
-                </tr>
-                <tr>
-                    <td>服务器主机名</td>
-                    <td><?= $info['environment']['name'] ?></td>
-                    <td>站点绝对路径</td>
-                    <td><?= $info['environment']['webPath'] ?></td>
-                </tr>
-                <tr>
-                    <td>服务器当前时间</td>
-                    <td><span id="divTime"></span></td>
-                    <td>服务器已运行时间</td>
-                    <td><?= $info['uptime'] ?></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5><i class="fa fa-cog"></i>  服务器硬件数据</h5>
-        </div>
-        <div class="ibox-content">
-            <div id="schedule" style="width: 100%;height:150px;"></div>
-            <div class="col-sm-12 text-center" id="memData">
-                <div class="col-sm-3 "><?= $info['hardDisk']['used']?>/<?= $info['hardDisk']['total']?> (G)</div>
-                <div class="col-sm-3"><?= $info['memory']['real']['used'] ?>/<?= $info['memory']['memory']['total']; ?> (M)</div>
-                <div class="col-sm-3"><?= $info['memory']['memory']['used'] ?>/<?= $info['memory']['memory']['total']; ?> (M)</div>
-                <div class="col-sm-3"><?= $info['memory']['cache']['real']?>/<?= $info['memory']['cache']['total']?> (M)<br>Buffers缓冲为 <?= $info['memory']['memory']['buffers']?> M</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><i class="fa fa-cog"></i> 服务器参数</h3>
             </div>
-            <div id="sys-hardware">
+            <div class="box-body table-responsive">
                 <table class="table">
                     <tr>
-                        <td>CPU</td>
-                        <td><?= $info['cpu']['num'] ?></td>
-                        <td>CPU型号</td>
-                        <td><?= $info['cpu']['model'] ?></td>
+                        <td>服务器域名地址</td>
+                        <td><?= $info['environment']['domainIP'] ?></td>
+                        <td>服务器标识</td>
+                        <td><?= $info['environment']['flag'] ?></td>
                     </tr>
                     <tr>
-                        <td>CPU使用情况</td>
-                        <td colspan="3">
-                            <?= $info['cpuUse']['explain'] ?>
-                        </td>
+                        <td>操作系统</td>
+                        <td><?= $info['environment']['os'] ?></td>
+                        <td>服务器解析引擎</td>
+                        <td><?= $info['environment']['webEngine'] ?></td>
                     </tr>
                     <tr>
-                        <td>系统平均负载(1分钟、5分钟、以及15分钟的负载均值)</td>
-                        <td colspan="3"><?= $info['loadavg']['explain'] ?></td>
+                        <td>服务器语言</td>
+                        <td><?= $info['environment']['language'] ?></td>
+                        <td>服务器端口</td>
+                        <td><?= $info['environment']['webPort'] ?></td>
+                    </tr>
+                    <tr>
+                        <td>服务器主机名</td>
+                        <td><?= $info['environment']['name'] ?></td>
+                        <td>站点绝对路径</td>
+                        <td><?= $info['environment']['webPath'] ?></td>
+                    </tr>
+                    <tr>
+                        <td>服务器当前时间</td>
+                        <td><span id="divTime"></span></td>
+                        <td>服务器已运行时间</td>
+                        <td><?= $info['uptime'] ?></td>
                     </tr>
                 </table>
             </div>
         </div>
-    </div>
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5><i class="fa fa-cog"></i>  服务器实时网络数据</h5>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><i class="fa fa-cog"></i> 服务器硬件数据</h3>
+            </div>
+            <div class="box-body table-responsive">
+                <div id="schedule" style="width: 100%;height:150px;"></div>
+                <div class="col-sm-12 text-center" id="memData">
+                    <div class="col-sm-3 "><?= $info['hardDisk']['used']?>/<?= $info['hardDisk']['total']?> (G)</div>
+                    <div class="col-sm-3"><?= $info['memory']['real']['used'] ?>/<?= $info['memory']['memory']['total']; ?> (M)</div>
+                    <div class="col-sm-3"><?= $info['memory']['memory']['used'] ?>/<?= $info['memory']['memory']['total']; ?> (M)</div>
+                    <div class="col-sm-3"><?= $info['memory']['cache']['real']?>/<?= $info['memory']['cache']['total']?> (M)<br>Buffers缓冲为 <?= $info['memory']['memory']['buffers']?> M</div>
+                </div>
+                <div id="sys-hardware">
+                    <table class="table">
+                        <tr>
+                            <td>CPU</td>
+                            <td><?= $info['cpu']['num'] ?></td>
+                            <td>CPU型号</td>
+                            <td><?= $info['cpu']['model'] ?></td>
+                        </tr>
+                        <tr>
+                            <td>CPU使用情况</td>
+                            <td colspan="3">
+                                <?= $info['cpuUse']['explain'] ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>系统平均负载(1分钟、5分钟、以及15分钟的负载均值)</td>
+                            <td colspan="3"><?= $info['loadavg']['explain'] ?></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="ibox-content">
-            <table class="table">
-                <tr>
-                    <td>总发送</td>
-                    <td id="netWork_allOutSpeed"><?= $info['netWork']['allOutSpeed'] ?></td>
-                    <td>总接收</td>
-                    <td id="netWork_allInputSpeed"><?= $info['netWork']['allInputSpeed'] ?></td>
-                </tr>
-                <tr>
-                    <td>发送速度</td>
-                    <td id="netWork_currentOutSpeed"><?= $info['netWork']['currentOutSpeed'] ?></td>
-                    <td>接收速度</td>
-                    <td id="netWork_currentInputSpeed"><?= $info['netWork']['currentInputSpeed'] ?></td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <div id="main" style="width: 100%;height:400px;"></div>
-                    </td>
-                </tr>
-            </table>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><i class="fa fa-cog"></i> 服务器实时网络数据</h3>
+            </div>
+            <div class="box-body table-responsive">
+                <table class="table">
+                    <tr>
+                        <td>总发送</td>
+                        <td id="netWork_allOutSpeed"><?= $info['netWork']['allOutSpeed'] ?></td>
+                        <td>总接收</td>
+                        <td id="netWork_allInputSpeed"><?= $info['netWork']['allInputSpeed'] ?></td>
+                    </tr>
+                    <tr>
+                        <td>发送速度</td>
+                        <td id="netWork_currentOutSpeed"><?= $info['netWork']['currentOutSpeed'] ?></td>
+                        <td>接收速度</td>
+                        <td id="netWork_currentInputSpeed"><?= $info['netWork']['currentInputSpeed'] ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="main" style="width: 100%;height:400px;"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -246,6 +249,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 
     schedule.setOption(scheduleOption()); // 加载图表
 </script>
+
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('main'));
     var currentOutSpeed = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

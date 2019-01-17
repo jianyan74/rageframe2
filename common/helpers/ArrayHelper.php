@@ -6,6 +6,7 @@ use yii\helpers\BaseArrayHelper;
 /**
  * Class ArrayHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ArrayHelper extends BaseArrayHelper
 {
@@ -18,14 +19,14 @@ class ArrayHelper extends BaseArrayHelper
      * @param string $pidField
      * @return array
      */
-    public static function itemsMerge(array $items, $idField = "id", $pid = 0, $pidField = 'pid')
+    public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid')
     {
         $arr = [];
         foreach($items as $v)
         {
             if ($v[$pidField] == $pid)
             {
-                $v['-'] = self::itemsMerge($items, $idField, $v[$idField], $pidField);
+                $v['-'] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
                 $arr[] = $v;
             }
         }

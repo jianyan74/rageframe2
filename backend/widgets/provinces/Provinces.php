@@ -6,7 +6,8 @@ use yii\base\Widget;
 
 /**
  * Class Provinces
- * @package backend\widgets\left
+ * @package backend\widgets\provinces
+ * @author jianyan74 <751393839@qq.com>
  */
 class Provinces extends Widget
 {
@@ -65,7 +66,7 @@ class Provinces extends Widget
     {
         parent::init();
 
-        empty($this->url) && $this->url = Yii::$app->urlManager->createUrl(['provinces/index']);
+        empty($this->url) && $this->url = Yii::$app->urlManager->createUrl(['/provinces/index']);
     }
 
     /**

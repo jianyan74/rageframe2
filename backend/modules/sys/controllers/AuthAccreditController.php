@@ -11,6 +11,7 @@ use common\helpers\ResultDataHelper;
  *
  * Class AuthAccreditController
  * @package backend\modules\sys\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AuthAccreditController extends SController
 {
@@ -28,7 +29,7 @@ class AuthAccreditController extends SController
             ->all();
 
         return $this->render('index', [
-            'models' => ArrayHelper::itemsMerge($models, 'key', 0, 'parent_key'),
+            'models' => ArrayHelper::itemsMerge($models, 0, 'key', 'parent_key'),
         ]);
     }
 
@@ -98,12 +99,7 @@ class AuthAccreditController extends SController
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $getData = Yii::$app->request->get();
-        foreach (['key', 'sort', 'status'] as $item)
-        {
-            isset($getData[$item]) && $model->$item = $getData[$item];
-        }
-
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['key', 'sort', 'status']);
         if (!$model->save())
         {
             return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));

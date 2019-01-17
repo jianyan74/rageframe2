@@ -7,63 +7,60 @@ use common\helpers\StringHelper;
 $this->title = '网站设置';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
-<div class="wrapper wrapper-content animated fadeIn">
-    <div class="row m-b-lg">
-        <div class="col-sm-9">
-            <div class="tabs-container">
-                <div class="tabs-left">
-                    <ul class="nav nav-tabs">
-                        <?php foreach ($cates as $k => $cate){ ?>
-                            <li <?php if ($k == 0){ ?>class="active"<?php } ?>>
-                                <a aria-expanded="false" href="#tab-<?= $cate['id'] ?>" data-toggle="tab"> <?= $cate['title'] ?></a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                    <div class="tab-content ">
-                        <?php foreach ($cates as $k => $cate){ ?>
-                            <div id="tab-<?= $cate['id'] ?>" class="tab-pane <?php if ($k == 0){ ?>active<?php } ?>">
-                                <div class="panel-body">
-                                    <?php $form = ActiveForm::begin(['id' => 'form-tab-' . $cate['id']]); ?>
-                                    <?php foreach ($cate['-'] as $item){ ?>
-                                        <h2 style="font-size: 20px;padding-top: 0;margin-top: 0">
-                                            <i class="fa fa-share-alt"></i>
-                                            <?= $item['title']?>
-                                        </h2>
-                                        <div class="col-sm-12" style="padding-left: 26px;">
-                                            <?php foreach ($item['config'] as $row){ ?>
-                                                <?= $this->render($row['type'], [
-                                                    'row' => $row,
-                                                    'option' => StringHelper::parseAttr($row['extra']),
-                                                ]) ?>
-                                            <?php } ?>
-                                        </div>
-                                    <?php } ?>
-                                    <div class="form-group">
-                                        <div class="col-sm-12 text-center">
-                                            <span type="submit" class="btn btn-primary" onclick="present(<?= $cate['id'] ?>)">保存</span>
-                                        </div>
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="tabs-container">
+            <div class="tabs-left">
+                <ul class="nav nav-tabs">
+                    <?php foreach ($cates as $k => $cate){ ?>
+                        <li <?php if ($k == 0){ ?>class="active"<?php } ?>>
+                            <a aria-expanded="false" href="#tab-<?= $cate['id'] ?>" data-toggle="tab"> <?= $cate['title'] ?></a>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <div class="tab-content ">
+                    <?php foreach ($cates as $k => $cate){ ?>
+                        <div id="tab-<?= $cate['id'] ?>" class="tab-pane <?php if ($k == 0){ ?>active<?php } ?>">
+                            <div class="panel-body">
+                                <?php $form = ActiveForm::begin(['id' => 'form-tab-' . $cate['id']]); ?>
+                                <?php foreach ($cate['-'] as $item){ ?>
+                                    <h2 style="font-size: 20px;padding-top: 0;margin-top: 0">
+                                        <i class="fa fa-tag"></i>
+                                        <?= $item['title']?>
+                                    </h2>
+                                    <div class="col-sm-12" style="padding-left: 26px;">
+                                        <?php foreach ($item['config'] as $row){ ?>
+                                            <?= $this->render($row['type'], [
+                                                'row' => $row,
+                                                'option' => StringHelper::parseAttr($row['extra']),
+                                            ]) ?>
+                                        <?php } ?>
                                     </div>
-                                    <?php ActiveForm::end(); ?>
+                                <?php } ?>
+                                <div class="form-group">
+                                    <div class="col-sm-12 text-center">
+                                        <span type="submit" class="btn btn-primary" onclick="present(<?= $cate['id'] ?>)">保存</span>
+                                    </div>
                                 </div>
+                                <?php ActiveForm::end(); ?>
                             </div>
-                        <?php } ?>
-                    </div>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
-        <div class="col-sm-3" id="explain">
-            <div class="ibox float-e-margins">
-                <div class="ibox-content">
-                    <div class="file-manager">
-                        <h4>说明：</h4>
-                        <h5>单击标题名称获取配置标识</h5>
-                        <div class="hr-line-dashed"></div>
-                        <h5 class="tag-title"></h5>
-                        <?= Html::input('text','demo','',['class' => 'form-control','id'=>'demo','readonly' => 'readonly']);?>
-                        <div class="hr-line-dashed"></div>
-                        <div class="clearfix">当前显示 ： <span id="demo-title">无</span></div>
-                    </div>
-                </div>
+    </div>
+    <div class="col-sm-3" id="explain">
+        <div class="box">
+            <div class="box-body">
+                <h5>说明：</h5>
+                <h6>单击标题名称获取配置标识</h6>
+                <div class="hr-line-dashed"></div>
+                <h5 class="tag-title"></h5>
+                <?= Html::input('text','demo','',['class' => 'form-control','id'=>'demo','readonly' => 'readonly']);?>
+                <div class="hr-line-dashed"></div>
+                <div class="clearfix">当前显示 ： <span id="demo-title">无</span></div>
             </div>
         </div>
     </div>
@@ -72,6 +69,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script type="text/javascript">
 
     $(document).ready(function () {
+        if ($(this).width() < 769) {
+            return;
+        }
 
         // 当前高度
         var menuYloc = $("#explain").offset().top;

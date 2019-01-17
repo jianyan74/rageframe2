@@ -4,6 +4,7 @@ namespace common\helpers;
 /**
  * Class AddonHtmlHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonHtmlHelper extends HtmlHelper
 {
@@ -17,11 +18,11 @@ class AddonHtmlHelper extends HtmlHelper
     public static function delete($url, $content = '删除',$options = [])
     {
         $options = ArrayHelper::merge([
-            'class' => 'btn btn-warning btn-sm',
+            'class' => 'btn btn-danger btn-sm',
             'onclick' => "rfDelete(this);return false;"
         ], $options);
 
-        return self::a($content, AddonUrl::to($url), $options);
+        return self::a($content, $url, $options);
     }
 
     /**
@@ -34,27 +35,27 @@ class AddonHtmlHelper extends HtmlHelper
     public static function edit($url, $content = '编辑', $options = [])
     {
         $options = ArrayHelper::merge([
-            'class' => 'btn btn-info btn-sm',
+            'class' => 'btn btn-primary btn-sm',
         ], $options);
 
-        return self::a($content, AddonUrl::to($url), $options);
+        return self::a($content, $url, $options);
     }
 
     /**
-     * 新增
+     * 创建
      *
      * @param $url
      * @param array $options
      * @return string
      */
-    public static function create($url, $content = '新增', $options = [])
+    public static function create($url, $content = '创建', $options = [])
     {
         $options = ArrayHelper::merge([
             'class' => "btn btn-primary btn-xs"
         ], $options);
 
         $content = '<i class="fa fa-plus"></i> ' . $content;
-        return self::a($content, AddonUrl::to($url), $options);
+        return self::a($content, $url, $options);
     }
 
     /**
@@ -70,6 +71,22 @@ class AddonHtmlHelper extends HtmlHelper
             'class' => "btn btn-white btn-sm"
         ], $options);
 
-        return self::a($content, AddonUrl::to($url), $options);
+        return self::a($content, $url, $options);
+    }
+
+    /**
+     * @param string $text
+     * @param null $url
+     * @param array $options
+     * @return string
+     */
+    public static function a($text, $url = null, $options = [])
+    {
+        if ($url !== null)
+        {
+            $options['href'] = AddonUrl::to($url);
+        }
+
+        return static::tag('a', $text, $options);
     }
 }

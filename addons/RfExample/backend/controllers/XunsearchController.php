@@ -14,6 +14,7 @@ use addons\RfExample\common\models\Xunsearch;
  *
  * Class XunsearchController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class XunsearchController extends AddonsBaseController
 {

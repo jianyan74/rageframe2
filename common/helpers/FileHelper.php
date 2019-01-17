@@ -6,6 +6,7 @@ namespace common\helpers;
  *
  * Class FileHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class FileHelper
 {

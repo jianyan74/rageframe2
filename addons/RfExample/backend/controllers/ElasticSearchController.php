@@ -12,6 +12,7 @@ use addons\RfExample\common\models\ElasticSearchCurd;
 /**
  * Class ElasticSearchController
  * @package addons\RfExample\backend\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class ElasticSearchController extends AddonsBaseController
 {

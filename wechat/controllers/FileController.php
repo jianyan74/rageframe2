@@ -11,6 +11,7 @@ use common\helpers\FileHelper;
 /**
  * Class FileController
  * @package wechat\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class FileController extends FileBaseController
 {

@@ -4,6 +4,7 @@ namespace common\helpers;
 /**
  * Class FfmpegHelper
  * @package common\helpers
+ * @author jianyan74 <751393839@qq.com>
  */
 class FfmpegHelper
 {
@@ -78,8 +79,8 @@ class FfmpegHelper
             $result['bitrate'] = $matches[3]; // bitrate 码率 单位kb
         }
 
-        // Stream #0:1: Video: rv20 (RV20 / 0x30325652), yuv420p, 352x288, 117 kb/s, 15 fps, 15 tbr, 1k tbn, 1k tbc
-        // Stream #0:1: Video: h264 (Main) (avc1 / 0x31637661), yuv420p(tv, smpte170m/bt709/bt709, progressive), 240x320, 475 kb/s, 29.84 fps, 29.97 tbr, 600 tbn, 1200 tbc (default)
+        // 格式1：Stream #0:1: Video: rv20 (RV20 / 0x30325652), yuv420p, 352x288, 117 kb/s, 15 fps, 15 tbr, 1k tbn, 1k tbc
+        // 格式2：Stream #0:1: Video: h264 (Main) (avc1 / 0x31637661), yuv420p(tv, smpte170m/bt709/bt709, progressive), 240x320, 475 kb/s, 29.84 fps, 29.97 tbr, 600 tbn, 1200 tbc (default)
         if (preg_match("/Video: (.*?), (.*?), (.*?), (.*?), (.*?)[,\s]/", $videoInfo, $matches))
         {
             $result['vcodec'] = $matches[1];  // 编码格式

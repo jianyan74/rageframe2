@@ -9,6 +9,7 @@ use yii\base\InvalidConfigException;
 /**
  * Class Mailer
  * @package common\services\common
+ * @author jianyan74 <751393839@qq.com>
  */
 class Mailer extends Service
 {

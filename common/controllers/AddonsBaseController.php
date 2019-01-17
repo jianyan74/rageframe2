@@ -9,8 +9,9 @@ use common\helpers\AddonUrl;
 /**
  * 模块基类控制器
  *
- * Class AddonBaseController
+ * Class AddonsBaseController
  * @package common\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class AddonsBaseController extends BaseController
 {
@@ -122,6 +123,7 @@ class AddonsBaseController extends BaseController
     private function registerClientResource()
     {
         $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . AddonHelper::getAppName() . '\\' . 'assets';
+        /* @var $assets \yii\web\AssetBundle */
         $assets = $assetsPath . '\\' .'Asset';
 
         // 注册资源类名
@@ -155,16 +157,15 @@ class AddonsBaseController extends BaseController
      *
      * @param string $msgText 错误内容
      * @param string $skipUrl 跳转链接
-     * @param null $msgType 提示类型[success/error/info/warning]
-     * @param int $closeTime 提示关闭时间
+     * @param string $msgType 提示类型 [success/error/info/warning]
      * @return mixed
      */
-    protected function message($msgText, $skipUrl, $msgType = null, int $closeTime = 5)
+    public function message($msgText, $skipUrl, $msgType = null)
     {
         $msgType = $msgType ?? 'success';
-        $html = $msgText . " <span class='rfCloseTime'>" . $closeTime . "</span>秒后自动关闭...";
+        !in_array($msgType, ['success', 'error', 'info', 'warning']) && $msgType = 'success';
 
-        Yii::$app->getSession()->setFlash($msgType, $html);
+        Yii::$app->getSession()->setFlash($msgType, $msgText);
 
         return $skipUrl;
     }

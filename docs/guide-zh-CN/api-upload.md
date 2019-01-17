@@ -7,8 +7,6 @@
 - 语音上传
 - 文件上传
 - base64上传
-- 七牛上传
-- OSS上传
 
 ### 图片上传
 
@@ -23,7 +21,7 @@
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 thumb | array| 否 | 无 | 生成缩略图(具体看例子) | 
 
 thumb 数组例子(生成`100*100`和`200*200`的缩略图)
@@ -65,7 +63,7 @@ thumb 数组例子(生成`100*100`和`200*200`的缩略图)
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 
 返回
 
@@ -92,7 +90,7 @@ takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 
 返回
 
@@ -119,7 +117,7 @@ takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 
 返回
 
@@ -146,7 +144,7 @@ takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 image | string| 是 | 无 | 文件 | 
-takeOverAction | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 extend | string| 否 | jpg | 文件后缀 | 
 
 返回
