@@ -11,11 +11,11 @@ use common\helpers\HtmlHelper;
     <div class="col-sm-3">
         <div class="box">
             <div class="modal-body text-center">
-            <p><img class="profile-user-img img-responsive img-circle rf-img-lg" alt="image" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"></p>
-            <p><a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a></p>
+                <p><img class="profile-user-img img-responsive img-circle rf-img-lg" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"></p>
+                <p><a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a></p>
                 <p class="profile-username"><?= $model->username; ?></p>
-            <p>最后登陆IP : <?= $model->last_ip ?></p>
-            <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
+                <p>最后登陆IP : <?= $model->last_ip ?></p>
+                <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@ use common\helpers\HtmlHelper;
     </div>
 </div>
 
-<?php Yii::$app->view->registerJsFile('@web/resources/dist/js/bootstrap.min.js?v=3.3.7'); ?>
+<?= HtmlHelper::jsFile('@web/resources/dist/js/jquery.min.js')?>
 <?= HtmlHelper::jsFile('@web/resources/plugins/cropper/cropper.js')?>
 <?= HtmlHelper::jsFile('@web/resources/plugins/cropper/sitelogo.js')?>
 <?= HtmlHelper::jsFile('@web/resources/plugins/cropper/html2canvas.min.js')?>
@@ -152,6 +152,7 @@ use common\helpers\HtmlHelper;
         var copyDom = targetDom.clone();
         copyDom.width(targetDom.width() + "px");
         copyDom.height(targetDom.height() + "px");
+        copyDom.css({'z-index':"-1",'position':'absolute',"top": "50px",'left':'50px',"background-color": "white"});
         $('body').append(copyDom);
         html2canvas(copyDom, {
             allowTaint  : true,
