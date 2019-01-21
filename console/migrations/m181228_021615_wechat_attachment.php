@@ -15,7 +15,7 @@ class m181228_021615_wechat_attachment extends Migration
             'file_name' => 'varchar(255) NULL DEFAULT \'\' COMMENT \'文件原始名\'',
             'local_url' => 'varchar(255) NULL DEFAULT \'\' COMMENT \'本地地址\'',
             'media_type' => 'varchar(15) NOT NULL DEFAULT \'\' COMMENT \'类别\'',
-            'media_id' => 'varchar(255) NULL DEFAULT \'\' COMMENT \'微信资源ID\'',
+            'media_id' => 'varchar(100) NULL DEFAULT \'\' COMMENT \'微信资源ID\'',
             'media_url' => 'varchar(5000) NULL DEFAULT \'\' COMMENT \'资源Url\'',
             'width' => 'int(10) unsigned NULL DEFAULT \'0\' COMMENT \'宽度\'',
             'height' => 'int(10) unsigned NULL DEFAULT \'0\' COMMENT \'高度\'',
