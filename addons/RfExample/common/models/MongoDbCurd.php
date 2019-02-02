@@ -37,7 +37,7 @@ class MongoDbCurd extends ActiveRecord
      */
     public function attributes()
     {
-        return array_keys($this->attributes());
+        return array_keys($this->attributeLabels());
     }
 
     /**
@@ -47,7 +47,8 @@ class MongoDbCurd extends ActiveRecord
     {
         return [
             [['title', 'status', 'cover', 'longitude', 'latitude'], 'required'],
-            [['sort', 'created_at', 'updated_at'], 'integer'],
+            [['sort', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['sort', 'created_at', 'updated_at', 'status'], 'filter', 'filter' => 'intval'],
             [['author'], 'safe'],
         ];
     }
