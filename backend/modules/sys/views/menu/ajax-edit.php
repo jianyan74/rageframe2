@@ -23,7 +23,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'title')->textInput() ?>
         <?= $form->field($model, 'url')->textInput()->hint("例如：/index/index，要绝对路由哦") ?>
-        <?= $form->field($model, 'params')->widget(MultipleInput::className(), [
+        <?= $form->field($model, 'params')->widget(MultipleInput::class, [
             'max' => 6,
             'columns' => [
                 [

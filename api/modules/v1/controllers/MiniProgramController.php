@@ -23,13 +23,6 @@ class MiniProgramController extends OnAuthController
     public $modelClass = '';
 
     /**
-     * 小程序SDK
-     *
-     * @var
-     */
-    public $miniProgramApp;
-
-    /**
      * 不用进行登录验证的方法
      * 例如： ['index', 'update', 'create', 'view', 'delete']
      * 默认全部需要验证
@@ -37,27 +30,6 @@ class MiniProgramController extends OnAuthController
      * @var array
      */
     protected $optional = ['decode', 'session-key'];
-
-    public function init()
-    {
-        $logPath = Yii::getAlias('@runtime') . DIRECTORY_SEPARATOR . 'wechat-miniProgram' . DIRECTORY_SEPARATOR . date('Y-m') . DIRECTORY_SEPARATOR;
-        FileHelper::mkdirs($logPath);
-
-        Yii::$app->params['wechatMiniProgramConfig'] = [
-            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
-            'secret' => Yii::$app->debris->config('miniprogram_secret'),
-            // token 和 aes_key 开启消息推送后可见
-            // 'token' => '',
-            // 'aes_key' => ''
-            'response_type' => 'array',
-            'log' => [
-                'level' > 'debug',
-                'file' => $logPath . date('d') . '.log',
-            ],
-        ];
-
-        $this->miniProgramApp = Yii::$app->wechat->miniProgram;
-    }
 
     /**
      * 通过 Code 换取 SessionKey
@@ -67,6 +39,7 @@ class MiniProgramController extends OnAuthController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\base\Exception
      * @throws \yii\web\UnprocessableEntityHttpException
@@ -78,7 +51,7 @@ class MiniProgramController extends OnAuthController
             return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
         }
 
-        $oauth = $this->miniProgramApp->auth->session($code);
+        $oauth = Yii::$app->wechat->miniProgram->auth->session($code);
         // 解析是否接口报错
         Yii::$app->debris->getWechatError($oauth);
 
@@ -119,7 +92,7 @@ class MiniProgramController extends OnAuthController
             return ResultDataHelper::api(422, '签名错误');
         }
 
-        $userinfo = $this->miniProgramApp->encryptor->decryptData($oauth['session_key'], $model->iv, $model->encryptedData);
+        $userinfo = Yii::$app->wechat->miniProgram->encryptor->decryptData($oauth['session_key'], $model->iv, $model->encryptedData);
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
@@ -130,7 +103,7 @@ class MiniProgramController extends OnAuthController
                 'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
                 'oauth_client' => MemberAuth::CLIENT_MINI_PROGRAM,
                 'oauth_client_user_id' => $userinfo['openId'],
-                'sex' => $userinfo['gender'],
+                'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
                 'head_portrait' => $userinfo['avatarUrl'],
                 'country' => $userinfo['country'],
@@ -172,7 +145,7 @@ class MiniProgramController extends OnAuthController
     {
         // $response = $app->app_code->get('path/to/page');
         // 指定颜色
-        $response = $this->miniProgramApp->app_code->get('path/to/page', [
+        $response = Yii::$app->wechat->miniProgram->app_code->get('path/to/page', [
             'width' => 600,
             'line_color' => [
                 'r' => 105,
@@ -184,12 +157,14 @@ class MiniProgramController extends OnAuthController
         // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败时为数组或者你指定的 API 返回格式
 
         // 保存小程序码到文件
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
+        {
             $filename = $response->save('/path/to/directory');
         }
 
         // 或
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
+        {
             $filename = $response->saveAs('/path/to/directory', 'appcode.png');
         }
     }

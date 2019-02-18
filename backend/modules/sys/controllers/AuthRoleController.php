@@ -25,7 +25,7 @@ class AuthRoleController extends SController
     public function actionIndex()
     {
         /* @var $models \common\models\sys\AuthItem */
-        list($models, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getAuthRoles();
+        list($models, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getChildRoles();
 
         return $this->render('index', [
             'models' => ArrayHelper::itemsMerge($models, $parent_key, 'key', 'parent_key'),
@@ -80,9 +80,16 @@ class AuthRoleController extends SController
             foreach ($plugTreeIds as $plugTreeId)
             {
                 $arrTreeId = explode(':', $plugTreeId);
+                $type = AddonsAuthItemChild::TYPE_COVER;
+                if (isset($arrTreeId[1]) && !isset(AddonsAuthItemChild::$authExplain[$arrTreeId[1]]))
+                {
+                    $type = AddonsAuthItemChild::TYPE_MENU;
+                }
+
                 $addAddonAuths[] = [
                     'child' => $plugTreeId,
                     'addons_name' => $arrTreeId[0],
+                    'type' => $type
                 ];
             }
 

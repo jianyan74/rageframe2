@@ -1,8 +1,8 @@
 <?php
-use yii\widgets\LinkPager;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use common\helpers\HtmlHelper;
+use common\enums\GenderEnum;
 
 $this->title = '第三方用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -41,15 +41,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         ],
                         'nickname',
                         [
-                            'attribute' => 'sex',
+                            'attribute' => 'gender',
                             'value' => function ($model, $key, $index, $column){
-                                return $model->sex == 1 ? '男' : '女';
+                                return GenderEnum::$listExplain[$model->gender];
                             },
                             'filter' => Html::activeDropDownList($searchModel,
-                                'sex',[
-                                    '1' => '男',
-                                    '2' => '女'
-                                ],
+                                'gender',
+                                GenderEnum::$listExplain,
                                 [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
@@ -64,7 +62,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 return "用户ID：" . $model->member->id . '<br>'.
                                     "昵称：" . $model->member->nickname . '<br>'.
                                     "账号：" . $model->member->username . '<br>'.
-                                    "手机：" . $model->member->mobile_phone . '<br>';
+                                    "手机：" . $model->member->mobile . '<br>';
                             },
                             'format' => 'raw',
                         ],

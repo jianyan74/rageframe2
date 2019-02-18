@@ -4,14 +4,6 @@ return [
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
 
-    // 各自应用域名配置，如果没有配置应用独立域名请忽略
-    'siteDomain' => [
-        'backend' => '',
-        'frontend' => '',
-        'wechat' => '',
-        'api' => '',
-    ],
-
     // 上传配置
     'uploadConfig' => [
         // 图片

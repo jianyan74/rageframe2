@@ -73,7 +73,7 @@ class AuthRule extends \common\models\common\BaseModel
             $this->addError('className', $message);
         }
 
-        if (!is_subclass_of($this->className, Rule::className()))
+        if (!is_subclass_of($this->className, Rule::class))
         {
             $message = "'{$this->className}'必须是 RBAC 规则";
             $this->addError('className', $message);
@@ -108,7 +108,7 @@ class AuthRule extends \common\models\common\BaseModel
      */
     public function getAuthItems()
     {
-        return $this->hasMany(AuthItem::className(), ['rule_name' => 'name']);
+        return $this->hasMany(AuthItem::class, ['rule_name' => 'name']);
     }
 
     /**

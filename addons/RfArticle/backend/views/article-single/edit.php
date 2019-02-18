@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'title')->textInput(); ?>
                 <?= $form->field($model, 'author')->textInput(); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
-                <?= $form->field($model, 'cover')->widget(Images::className(), [
+                <?= $form->field($model, 'cover')->widget(Images::class, [
                     'config' => [
                         'pick' => [
                             'multiple' => false,
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]); ?>
                 <?= $form->field($model, 'description')->textarea(); ?>
-                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
+                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class, [
                     'formData' => [
                         'drive' => 'local', // 默认本地 支持qiniu/oss 上传
                         'thumb' => [ // 生成缩略图

@@ -2,7 +2,6 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\sys\Style;
 use common\models\sys\MenuCate;
 use common\helpers\DebrisHelper;
 
@@ -18,16 +17,23 @@ class MainController extends MController
     /**
      * 系统首页
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionIndex()
     {
         // 判断是否手机
         Yii::$app->params['isMobile'] = DebrisHelper::isMobile();
+        // 拉取公告
+        Yii::$app->services->sys->notify->pullAnnounce(Yii::$app->user->id);
+        // 获取当前通知
+        list($notify, $notifyPage) = Yii::$app->services->sys->notify->getUserNotify(Yii::$app->user->id);
 
-        return $this->renderPartial('index',[
-            'style' => Style::findByManagerId(Yii::$app->user->id),
-            'menuCates' => MenuCate::getList()
+        return $this->renderPartial('index', [
+            'menuCates' => MenuCate::getList(),
+            'manager' => Yii::$app->user->identity,
+            'notify' => $notify,
+            'notifyPage' => $notifyPage,
         ]);
     }
 

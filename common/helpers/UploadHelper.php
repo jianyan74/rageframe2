@@ -149,7 +149,7 @@ class UploadHelper
                 $adapter = new QiniuAdapter($accessKey, $secretKey, $bucket, $cdnHost);
                 break;
             default :
-                $adapter = new Local(Yii::getAlias('@attachment'));
+                throw new NotFoundHttpException('找不到上传驱动');
                 break;
         }
 
@@ -164,6 +164,12 @@ class UploadHelper
     public function verifyFile()
     {
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
+
+        if (!$file)
+        {
+            throw new NotFoundHttpException('找不到上传文件，请检查上传类型');
+        }
+
         $this->baseInfo['extension'] = $file->getExtension();
         $this->baseInfo['size'] = $file->size;
 
@@ -284,7 +290,7 @@ class UploadHelper
      * 写入
      *
      * @param bool $data
-     * @return bool|void
+     * @throws NotFoundHttpException
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
@@ -295,7 +301,8 @@ class UploadHelper
         // 拦截 如果是切片上传就接管
         if ($this->isCut == true)
         {
-            return $this->cut();
+            $this->cut();
+            return;
         }
 
         // 判断如果文件存在就重命名文件名
@@ -305,6 +312,7 @@ class UploadHelper
             $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
         }
 
+        // 判断是否直接写入
         if (false === $data)
         {
             $file = UploadedFile::getInstanceByName($this->uploadFileName);
@@ -312,6 +320,11 @@ class UploadHelper
             {
                 $stream = fopen($file->tempName, 'r+');
                 $result = $this->filesystem->writeStream($this->baseInfo['url'], $stream);
+                if (!$result)
+                {
+                    throw new NotFoundHttpException('文件写入失败');
+                }
+
                 if (is_resource($stream))
                 {
                     fclose($stream);
@@ -321,6 +334,10 @@ class UploadHelper
         else
         {
             $result = $this->filesystem->write($this->baseInfo['url'], $data);
+            if (!$result)
+            {
+                throw new NotFoundHttpException('文件写入失败');
+            }
         }
 
         // 本地的图片才可执行
@@ -334,7 +351,7 @@ class UploadHelper
             $this->thumb();
         }
 
-        return $result;
+        return;
     }
 
     /**

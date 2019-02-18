@@ -1,9 +1,10 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
-use common\models\wechat\Fans;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\wechat\Fans;
+use common\helpers\AuthHelper;
 use common\helpers\HtmlHelper;
 
 $this->title = '粉丝管理';
@@ -28,8 +29,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <div class="tab-pane active">
                         <div class="panel-body">
                             <div class="col-sm-6">
-                                <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>
-                                <span class="btn btn-white" onclick="getAllFans()"> 同步全部粉丝信息</span>
+                                <!-- 权限校验判断 -->
+                                <?php if(AuthHelper::verify('/wechat/fans/sync')){ ?>
+                                    <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>
+                                <?php } ?>
+                                <!-- 权限校验判断 -->
+                                <?php if(AuthHelper::verify('/wechat/fans/get-all-fans')){ ?>
+                                    <span class="btn btn-white" onclick="getAllFans()"> 同步全部粉丝信息</span>
+                                <?php } ?>
                             </div>
                             <div class="col-sm-6">
                                 <?php $form = ActiveForm::begin([
@@ -93,12 +100,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                             <?php }else{ ?>
                                                 <span class="label label-default">无标签</span>
                                             <?php } ?>
-                                            <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #0f0f0f"><i class="fa fa-sort-down"></i></a>
-                                            <select class="form-control m-b groups" style="display: none">
-                                                <?php foreach ($fansTags as $value){ ?>
-                                                    <option value="<?= $value['id'] ?>" <?php if ($value['id'] == $model->group_id){ ?>selected<?php } ?>><?= $value['name'] ?></option>
-                                                <?php } ?>
-                                            </select>
+                                            <!-- 权限校验判断 -->
+                                            <?php if (AuthHelper::verify('/wechat/fans/move-tag')){ ?>
+                                                <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #0f0f0f"><i class="fa fa-sort-down"></i></a>
+                                            <?php } ?>
                                         </td>
                                         <td><?= $model->openid ?></td>
                                         <td>
@@ -131,23 +136,6 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 </div>
 
 <script>
-    $(".groups").change(function(){
-        var group_id = $(".groups").val();
-        var openid = $(this).parent().parent().attr('openid');
-
-        $.ajax({
-            type:"post",
-            url:"<?= Url::to(['move-user'])?>",
-            dataType: "json",
-            data: {group_id:group_id,openid:openid},
-            success: function(data){
-                if(data.code == 404) {
-                    rfAffirm(data.message);
-                }
-            }
-        });
-    });
-
     // 同步所有粉丝openid
     function getAllFans() {
 

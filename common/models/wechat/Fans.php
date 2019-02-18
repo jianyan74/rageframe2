@@ -63,7 +63,7 @@ class Fans extends \common\models\common\BaseModel
             [['member_id', 'sex', 'follow', 'followtime', 'unfollowtime', 'group_id', 'last_updated', 'status', 'created_at', 'updated_at'], 'integer'],
             [['unionid'], 'string', 'max' => 64],
             [['openid', 'nickname'], 'string', 'max' => 50],
-            [['head_portrait'], 'string', 'max' => 255],
+            [['head_portrait'], 'string', 'max' => 150],
             [['tag'], 'string', 'max' => 1000],
             [['last_longitude', 'last_latitude'], 'string', 'max' => 10],
             [['last_address', 'country', 'province', 'city'], 'string', 'max' => 100],
@@ -202,7 +202,7 @@ class Fans extends \common\models\common\BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::className(), ['id' => 'member_id']);
+        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
     }
 
     /**
@@ -212,6 +212,6 @@ class Fans extends \common\models\common\BaseModel
      */
     public function getTags()
     {
-        return $this->hasMany(FansTagMap::className(),['fans_id' => 'id']);
+        return $this->hasMany(FansTagMap::class,['fans_id' => 'id']);
     }
 }

@@ -3,7 +3,7 @@ use yii\helpers\Url;
 use common\enums\StatusEnum;
 ?>
 
-<?php foreach($models as $item){ ?>
+<?php foreach($menus as $item){ ?>
     <li class="treeview rfLeftMenu <?= ($item['cate']['is_default_show'] == StatusEnum::ENABLED || Yii::$app->params['isMobile'] == true) ? '' : 'hide'; ?> rfLeftMenu-<?= $item['cate_id']; ?>">
         <?php if(!empty($item['-'])){ ?>
             <a href="#">
@@ -14,7 +14,7 @@ use common\enums\StatusEnum;
             </a>
             <ul class="treeview-menu">
                 <?= $this->render('menu-tree', [
-                    'models' => $item['-'],
+                    'menus' => $item['-'],
                     'level' => $level + 1,
                 ])?>
             </ul>

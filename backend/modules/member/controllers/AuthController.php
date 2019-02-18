@@ -30,9 +30,9 @@ class AuthController extends MController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => MemberAuth::className(),
+            'model' => MemberAuth::class,
             'scenario' => 'default',
-            'partialMatchAttributes' => ['realname', 'mobile_phone'], // 模糊查询
+            'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
             'defaultOrder' => [
                 'id' => SORT_DESC
             ],
@@ -41,7 +41,7 @@ class AuthController extends MController
 
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED])->andWhere(['>', 'member_id', 0]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

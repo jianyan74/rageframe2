@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'site_title')->textInput(); ?>
                 <div class="row">
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
+                        <?= $form->field($model, 'start_time')->widget(DateTimePicker::class, [
                             'language' => 'zh-CN',
                             'options' => [
                                 'value' => empty($model->start_time) ? date('Y-m-d H:i:s') : $model->start_time,
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         ]);?>
                     </div>
                     <div class="col-sm-6">
-                        <?= $form->field($model, 'end_time')->widget(DateTimePicker::className(), [
+                        <?= $form->field($model, 'end_time')->widget(DateTimePicker::class, [
                             'language' => 'zh-CN',
                             'options' => [
                                 'value' => empty($model->end_time) ? date('Y-m-d H:i:s') : $model->end_time,
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             </div>
             <div class="box-body">
                 <?= $form->field($model, 'share_title')->textInput(); ?>
-                <?= $form->field($model, 'share_cover')->widget(Images::className(), [
+                <?= $form->field($model, 'share_cover')->widget(Images::class, [
                     'config' => [
                         'pick' => [
                             'multiple' => false,

@@ -70,15 +70,27 @@ data | array | 接口数据 |
 }
 ```
 
+header出参说明
+
+参数名 | 参数类型 | 说明 | 备注
+---|---|---|---
+X-Rate-Limit-Limit | int | 同一个时间段所允许的请求的最大数目 | 
+X-Rate-Limit-Remaining | int | 在当前时间段内剩余的请求的数量 |
+X-Rate-Limit-Reset | int | 为了得到最大请求数所等待的秒数 |
+X-Pagination-Total-Count | int | 总数量 | 
+X-Pagination-Page-Count | int | 总页数 | 
+X-Pagination-Current-Page | int | 当前页数 |
+X-Pagination-Per-Page | int | 每页数量 |
+
 #### 公用请求方法
 
 针对不同操作，服务器向用户返回的结果应该符合以下规范。
 
-- GET /collection  返回数据列表（数组）
-- GET /collection/1  返回id为1的数据
-- POST /collection  返回新生成的数据
-- PUT /collection/1  修改id为1的数据
-- DELETE /collection/1  删除id为1的数据
+- GET /article  获取文章列表
+- GET /article/1  获取文章详情(id为1)
+- POST /article  创建一篇文章
+- PUT /article/1  获取文章(id为1)
+- DELETE /article/1  删除文章(id为1)
 
 #### 公共状态码说明
 

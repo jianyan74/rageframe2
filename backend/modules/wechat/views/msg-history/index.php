@@ -55,14 +55,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <?php foreach($models as $model){ ?>
                         <tr>
                             <td><?= $model->id; ?></td>
-                            <td><?= isset($model->fans->nickname) ? $model->fans->nickname : '' ?></td>
+                            <td><?= $model->fans->nickname ?? ''; ?></td>
                             <td><?= $model->type?></td>
-                            <td style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;"><?= Html::encode(MsgHistory::readMessage($model->type,$model->message)) ?></td>
+                            <td style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;"><?= Html::encode(MsgHistory::readMessage($model->type, $model->message)) ?></td>
                             <td>
                                 <?php if(!$model->rule_id){ ?>
                                     <span class="label label-default">未触发</span>
                                 <?php }else{ ?>
-                                    <span class="label label-info"><?= Rule::findRuleTitle($model->rule_id)?></span>
+                                    <span class="label label-info"><?= $model->rule->name ?? '规则被删除' ?></span>
                                 <?php } ?>
                             </td>
                             <td>
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                             <td>
                             <td>
-                                <?= HtmlHelper::linkButton(['/wechat/fans/send-message','openid' => $model->openid], '发送消息', [
+                                <?= HtmlHelper::linkButton(['/wechat/fans/send-message', 'openid' => $model->openid], '发送消息', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModalLg',
                                 ])?>

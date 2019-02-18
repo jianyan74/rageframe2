@@ -9,10 +9,8 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--[if lt IE 8]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"<
+    <meta name="renderer" content="webkit">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>

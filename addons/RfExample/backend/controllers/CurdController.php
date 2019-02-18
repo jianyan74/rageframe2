@@ -58,12 +58,12 @@ class CurdController extends AddonsBaseController
         $request  = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-        $model->covers = unserialize($model->covers);
-        $model->files = json_decode($model->files, true);
+        !empty($model->covers) && $model->covers = unserialize($model->covers);
+        !empty($model->covers) && $model->files = json_decode($model->files, true);
         if ($model->load($request->post()))
         {
-            $model->covers = serialize($model->covers);
-            $model->files = json_encode($model->files);
+            !empty($model->covers) && $model->covers = serialize($model->covers);
+            !empty($model->files) && $model->files = json_encode($model->files);
 
             if ($model->save())
             {

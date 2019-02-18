@@ -37,7 +37,7 @@ class ManagerController extends SController
         $keyword = Yii::$app->request->get('keyword', null);
 
         // 获取当前用户权限的下面的所有用户id，除超级管理员
-        $authIds = Yii::$app->services->sys->auth->getAuthIds();
+        $authIds = Yii::$app->services->sys->auth->getChildRoleIds();
 
         $data = Manager::find()
             ->filterWhere(['in', 'id', $authIds])
@@ -144,7 +144,7 @@ class ManagerController extends SController
                 : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
         }
 
-        list($roles, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getAuthRoles();
+        list($roles, $parent_key, $treeStat) = Yii::$app->services->sys->auth->getChildRoles();
         $roles = ArrayHelper::itemsMerge($roles, $parent_key, 'key', 'parent_key');
         $roles = ArrayHelper::itemsMergeDropDown($roles, 'key', 'name', $treeStat);
 

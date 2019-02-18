@@ -108,9 +108,9 @@ class AddonHelper
      */
     public static function setConfig($config)
     {
+        /* @var $model \common\models\sys\Addons */
         $model = Yii::$app->params['addon'];
         $model->config = serialize($config);
-
         return $model->save();
     }
 
@@ -174,6 +174,7 @@ class AddonHelper
                 $dependency = new \yii\caching\DbDependency([
                     'sql' => Addons::find()
                         ->select('updated_at')
+                        ->orderBy('updated_at desc')
                         ->where(['name' => $addonName])
                         ->createCommand()
                         ->getRawSql(),

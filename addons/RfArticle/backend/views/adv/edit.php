@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'title')->textInput(); ?>
                     <?= $form->field($model, 'location_id')->dropDownList($locals); ?>
                     <?= $form->field($model, 'sort')->textInput(); ?>
-                    <?= $form->field($model, 'cover')->widget(Images::className(), [
+                    <?= $form->field($model, 'cover')->widget(Images::class, [
                         'config' => [
                             'pick' => [
                                 'multiple' => false,
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]
                     ]); ?>
                     <?= $form->field($model, 'silder_text')->textarea(); ?>
-                    <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
+                    <?= $form->field($model, 'start_time')->widget(DateTimePicker::class, [
                         'language' => 'zh-CN',
                         'options' => [
                             'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'todayBtn' => true,//今日按钮显示
                         ]
                     ]);?>
-                    <?= $form->field($model, 'end_time')->widget(DateTimePicker::className(), [
+                    <?= $form->field($model, 'end_time')->widget(DateTimePicker::class, [
                         'language' => 'zh-CN',
                         'options' => [
                             'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->end_time),

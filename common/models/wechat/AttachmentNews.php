@@ -40,8 +40,8 @@ class AttachmentNews extends \common\models\common\BaseModel
         return [
             [['attachment_id', 'show_cover_pic', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
-            [['title'], 'string', 'max' => 50],
-            [['thumb_media_id', 'thumb_url', 'digest', 'content_source_url', 'media_url'], 'string', 'max' => 255],
+            [['title', 'thumb_media_id'], 'string', 'max' => 50],
+            [['thumb_url', 'digest', 'content_source_url', 'media_url'], 'string', 'max' => 200],
             [['author'], 'string', 'max' => 64],
         ];
     }
@@ -139,6 +139,6 @@ class AttachmentNews extends \common\models\common\BaseModel
      */
     public function getAttachment()
     {
-        return $this->hasOne(Attachment::className(), ['id' => 'attachment_id']);
+        return $this->hasOne(Attachment::class, ['id' => 'attachment_id']);
     }
 }

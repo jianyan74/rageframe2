@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'prob')->textInput()->hint('最高总上限为 1000 请不要超出'); ?>
                     <div class="row">
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'start_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->start_time),
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]);?>
                         </div>
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'end_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'end_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->end_time),
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'draw_start_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'draw_start_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->draw_start_time),
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]);?>
                         </div>
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'draw_end_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'draw_end_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->draw_end_time),

@@ -1,13 +1,13 @@
 <?php
 namespace common\services\sys;
 
-use common\helpers\ArrayHelper;
 use Yii;
-use common\enums\StatusEnum;
 use common\models\sys\Addons;
 use common\models\sys\AuthItem;
 use common\services\Service;
 use common\models\sys\AuthItemChild;
+use common\helpers\ArrayHelper;
+use common\models\sys\AddonsAuthItem;
 use common\models\sys\AddonsAuthItemChild;
 
 /**
@@ -20,9 +20,9 @@ class Auth extends Service
     /**
      * 当前用户权限
      *
-     * @var
+     * @var \common\models\sys\AuthItem
      */
-    protected $authRole;
+    protected $role;
 
     /**
      * 当前基础插件权限
@@ -39,45 +39,31 @@ class Auth extends Service
     protected $addonAuth = [];
 
     /**
-     * 权限校验
+     * 当前系统权限
      *
-     * @param $route
-     * @param $addonName
-     * @return bool
+     * @var array
      */
-    public function addonCan($route, $addonName)
-    {
-        $child = $this->getAddonName($addonName, $route);
-        $parent = Yii::$app->user->identity->assignment->item_name ?? null;
-
-        if (empty($parent))
-        {
-            return false;
-        }
-
-        if (AddonsAuthItemChild::findOne(['child' => $child, 'parent' => $parent]))
-        {
-            return true;
-        }
-
-        return false;
-    }
+    protected $sysAuth = [];
 
     /**
-     * 返回当前角色对象
+     * 获取当前的角色
      *
-     * @return bool|AuthItem|null
+     * @return AuthItem|null
      */
     public function getRole()
     {
-        if (!($this->authRole instanceof AuthItem))
+        if (!$this->role)
         {
             /* @var $assignment \common\models\sys\AuthAssignment */
-            $assignment = Yii::$app->user->identity->assignment;
-            $this->authRole = AuthItem::findOne($assignment->item_name);
+            if ($assignment = Yii::$app->user->identity->assignment)
+            {
+                $this->role = AuthItem::find()
+                    ->where(['name' => $assignment->item_name, 'type' => AuthItem::ROLE])
+                    ->one();
+            }
         }
 
-        return $this->authRole;
+        return $this->role;
     }
 
     /**
@@ -85,14 +71,14 @@ class Auth extends Service
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getAuthRoles()
+    public function getChildRoles()
     {
         // 样式渲染辅助
         $treeStat = 1;
         // 如果不是总管理，只显示自己能管辖的角色
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
-            $role = Yii::$app->services->sys->auth->getRole();
+            $role = $this->getRole();
             $parent_key = $role->key;
             $treeStat += $role->level;
             $models = AuthItem::getChilds($role);
@@ -116,17 +102,15 @@ class Auth extends Service
      *
      * @return array
      */
-    public function getAuthIds()
+    public function getChildRoleIds()
     {
         if (Yii::$app->services->sys->isAuperAdmin())
         {
             return [];
         }
 
-        $authRole = $this->getRole();
-        $position = $authRole->position . ' ' . AuthItem::POSITION_PREFIX . $authRole->key;
-
-
+        $role = $this->getRole();
+        $position = $role->position . ' ' . AuthItem::POSITION_PREFIX . $role->key;
         $models = AuthItem::getMultiDate(['like', 'position', $position . '%', false], ['*'], 'level asc', ['authAssignments']);
 
         $ids = [];
@@ -188,7 +172,7 @@ class Auth extends Service
             $tmpAuthCount[$auth['key']] = $count == 0 ? 1 : $count;
         }
 
-        // 做一次筛选，不然jstree会吧顶级分类下所有的子分类都选择
+        // 做一次筛选，不然jstree会把顶级分类下所有的子分类都选择
         foreach ($tmpChildCount as $key => $item)
         {
             if (isset($tmpAuthCount[$key]) && $item != $tmpAuthCount[$key])
@@ -212,118 +196,58 @@ class Auth extends Service
     {
         // 获取当前登录的所有权限
         $auths = $this->getAddonAuth();
-        // 获取当前编辑的权限
-        $checkIds = AddonsAuthItemChild::find()
-            ->where(['parent' => $name])
-            ->asArray()
-            ->all();
 
-        $checkIds = array_column($checkIds, 'child');
-
-        $formAuth = []; // 全部权限
-        $tmpAuthCount = [];
-
-        $isAuperAdmin = Yii::$app->services->sys->isAuperAdmin();
-
+        $addonNames = $formAuth = $authCount = [];
         foreach ($auths as $auth)
         {
-            $tmpAuthCount[$auth['name']] = 1;
+            $addonNames[$auth['addons_name']] = $auth['addons_name'];
 
             $formAuth[] = [
-                'id' => $auth['name'],
-                'parent' => '#',
-                'text' => $auth['title'],
+                'id' => $this->getAddonName($auth['addons_name'], $auth['route']),
+                'parent' => $auth['addons_name'],
+                'text' => $auth['description'],
                 // 'icon' => 'none',
             ];
 
-            // 设置入口权限
-            if (!empty($auth->bindingCover))
-            {
-                $id = $this->getAddonName($auth['name'], AddonsAuthItemChild::AUTH_COVER);
-                if ($isAuperAdmin || in_array($id, $this->addonBaseAuth))
-                {
-                    $formAuth[] = [
-                        'id' => $id,
-                        'parent' => $auth['name'],
-                        'text' => AddonsAuthItemChild::$authExplain[AddonsAuthItemChild::AUTH_COVER],
-                        // 'icon' => 'none',
-                    ];
-
-                    $tmpAuthCount[$auth['name']] += 1;
-                }
-            }
-
-            // 设置规则权限
-            if ($auth->is_rule == true)
-            {
-                $id = $this->getAddonName($auth['name'], AddonsAuthItemChild::AUTH_RULE);
-                if ($isAuperAdmin || in_array($id, $this->addonBaseAuth))
-                {
-                    $formAuth[] = [
-                        'id' => $id,
-                        'parent' => $auth['name'],
-                        'text' => AddonsAuthItemChild::$authExplain[AddonsAuthItemChild::AUTH_RULE],
-                        // 'icon' => 'none',
-                    ];
-
-                    $tmpAuthCount[$auth['name']] += 1;
-                }
-            }
-
-            // 判断设置权限
-            if ($auth->is_setting == true)
-            {
-                $id = $this->getAddonName($auth['name'], AddonsAuthItemChild::AUTH_SETTING);
-                if ($isAuperAdmin || in_array($id, $this->addonBaseAuth))
-                {
-                    $formAuth[] = [
-                        'id' => $id,
-                        'parent' => $auth['name'],
-                        'text' => AddonsAuthItemChild::$authExplain[AddonsAuthItemChild::AUTH_SETTING],
-                        // 'icon' => 'none',
-                    ];
-
-                    $tmpAuthCount[$auth['name']] += 1;
-                }
-            }
-
-            // 设置路由权限
-            foreach ($auth->authItem as $key => $item)
-            {
-                if ($item['route'] != AddonsAuthItemChild::AUTH_SETTING)
-                {
-                    $formAuth[] = [
-                        'id' => $this->getAddonName($auth['name'], $item['route']),
-                        'parent' => $item['addons_name'],
-                        'text' => $item['description'],
-                        // 'icon' => 'none',
-                    ];
-
-                    $tmpAuthCount[$auth['name']] += 1;
-                }
-            }
+            !isset($authCount[$auth['addons_name']]) && $authCount[$auth['addons_name']] = 1;
+            $authCount[$auth['addons_name']] += 1;
         }
 
-        // 获取当前总权限
-        $groupCheckId = AddonsAuthItemChild::find()
-            ->where(['parent' => $name])
-            ->select(['addons_name', ' count(*) as num'])
-            ->groupBy('addons_name')
+        // 父级
+        $addons = Addons::find()
+            ->select(['title', 'name'])
+            ->where(['in', 'name', $addonNames])
             ->asArray()
             ->all();
-
-        $checkNum = [];
-        foreach ($groupCheckId as $item)
+        foreach ($addons as $addon)
         {
-            $checkNum[$item['addons_name']] = $item['num'];
+            $formAuth[] = [
+                'id' => $addon['name'],
+                'parent' => '#',
+                'text' => $addon['title'],
+                // 'icon' => 'none',
+            ];
         }
 
-        // 如果没有全选去除顶级路由
-        foreach ($tmpAuthCount as $key => $value)
+        // 获取当前编辑的选中权限
+        $itemChild = AddonsAuthItemChild::find()
+            ->where(['parent' => $name])
+            ->asArray()
+            ->all();
+        $checkIds = array_column($itemChild, 'child');
+
+        // 循环去掉选中
+        foreach ($itemChild as $item)
         {
-            if (!isset($checkNum[$key]) || $checkNum[$key] != $value)
+            isset($authCount[$item['addons_name']]) && $authCount[$item['addons_name']] -= 1;
+        }
+
+        // 去除重复
+        foreach ($checkIds as $k => $checkId)
+        {
+            if (isset($authCount[$checkId]) && $authCount[$checkId] != 0)
             {
-                $checkIds = array_merge(array_diff($checkIds, [$key]));
+                $checkIds = array_merge(array_diff($checkIds, [$checkId]));
             }
         }
 
@@ -340,7 +264,11 @@ class Auth extends Service
     {
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
-            $role = $this->getRole();
+            if (!($role = $this->getRole()))
+            {
+                return [];
+            }
+
             $models = AuthItemChild::find()
                 ->where(['parent' => $role->name])
                 ->asArray()
@@ -376,72 +304,44 @@ class Auth extends Service
             return $this->addonAuth;
         }
 
+        $authItems = AddonsAuthItem::find()
+            ->orderBy('type asc')
+            ->asArray()
+            ->all();
+
         // 非总管理员
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
-            $addonNames = $childs = [];
+            if (!($role = $this->getRole()))
+            {
+                return [];
+            }
 
-            $role = $this->getRole();
             $models = AddonsAuthItemChild::find()
                 ->where(['parent' => $role->name])
                 ->asArray()
                 ->all();
 
+            $childAuth = [];
             foreach ($models as $model)
             {
-                if ($model['addons_name'] == $model['child'])
-                {
-                    $addonNames[] = $model['child'];
-                }
-                else
-                {
-                    $childs[] = str_replace($model['addons_name'] . ':', '', $model['child']);
-
-                    // 加入基础权限
-                    $this->setAddonBaseAuth($model['child'], $model['addons_name']);
-                }
+                $key = $model['child'];
+                $childAuth[$key] = $model;
             }
 
-            $this->addonAuth = Addons::find()
-                ->where(['status' => StatusEnum::ENABLED])
-                ->andWhere(['in', 'name', $addonNames])
-                ->with(['bindingCover', 'bindingMenu', 'authItem' => function($query) use ($childs){
-                    return $query->andWhere(['in', 'route', $childs]);
-                }])
-                ->all();
-        }
-        else
-        {
-            $this->addonAuth = Addons::find()
-                ->where(['status' => StatusEnum::ENABLED])
-                ->with(['bindingCover', 'bindingMenu', 'authItem'])
-                ->all();
+            foreach ($authItems as $k => $item)
+            {
+                $key = $this->getAddonName($item['addons_name'], $item['route']);
+
+                if (!isset($childAuth[$key]))
+                {
+                    unset($authItems[$k]);
+                }
+            }
         }
 
-        return $this->addonAuth;
-    }
-
-    /**
-     * 设置基础权限
-     *
-     * @param $childs
-     * @param $addonName
-     */
-    private function setAddonBaseAuth($child, $addonName)
-    {
-        $baseAuth = [
-            $this->getAddonName($addonName, AddonsAuthItemChild::AUTH_COVER),
-            $this->getAddonName($addonName, AddonsAuthItemChild::AUTH_RULE),
-            $this->getAddonName($addonName, AddonsAuthItemChild::AUTH_SETTING),
-        ];
-
-        // 获取当前用户插件基础权限
-        if (in_array($child, $baseAuth))
-        {
-            $this->addonBaseAuth[] = $child;
-        }
-
-        unset($baseAuth);
+        $this->addonAuth = $authItems;
+        return $authItems;
     }
 
     /**

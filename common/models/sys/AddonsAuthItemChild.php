@@ -14,8 +14,11 @@ use Yii;
  */
 class AddonsAuthItemChild extends \yii\db\ActiveRecord
 {
-    const AUTH_COVER = 'addonsCover'; // 入口管理路由
-    const AUTH_RULE = 'addonsRule'; // 规则管理路由
+    const TYPE_COVER = 1; // 核心设置
+    const TYPE_MENU = 2; // 菜单路由
+
+    const AUTH_COVER = 'rfAddonsCover'; // 入口管理路由
+    const AUTH_RULE = 'rfAddonsRule'; // 规则管理路由
     const AUTH_SETTING = 'setting/display'; // 参数设置管理路由
 
     /**
@@ -44,8 +47,9 @@ class AddonsAuthItemChild extends \yii\db\ActiveRecord
             [['parent'], 'required'],
             [['parent', 'child'], 'string', 'max' => 64],
             [['addons_name'], 'string', 'max' => 30],
+            [['type'], 'integer'],
             [['parent'], 'unique'],
-            [['parent'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['parent' => 'name']],
+            [['parent'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::class, 'targetAttribute' => ['parent' => 'name']],
         ];
     }
 
@@ -58,6 +62,7 @@ class AddonsAuthItemChild extends \yii\db\ActiveRecord
             'parent' => 'Parent',
             'child' => 'Child',
             'addons_name' => 'Addons Name',
+            'type' => 'type',
         ];
     }
 
@@ -77,13 +82,13 @@ class AddonsAuthItemChild extends \yii\db\ActiveRecord
         $data = [];
         foreach ($auth as $value)
         {
-            $data[] = [$parent, $value['child'], $value['addons_name']];
+            $data[] = [$parent, $value['child'], $value['addons_name'], $value['type']];
         }
 
         if (!empty($data))
         {
             // 批量插入数据
-            $field = ['parent', 'child', 'addons_name'];
+            $field = ['parent', 'child', 'addons_name', 'type'];
             return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $field, $data)->execute();
         }
 
@@ -93,8 +98,16 @@ class AddonsAuthItemChild extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAddon()
+    {
+        return $this->hasOne(Addons::class, ['name' => 'addons_name'])->asArray()->select(['title', 'name', 'group']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getParent()
     {
-        return $this->hasOne(AuthItem::className(), ['name' => 'parent']);
+        return $this->hasOne(AuthItem::class, ['name' => 'parent']);
     }
 }

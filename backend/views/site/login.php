@@ -23,7 +23,7 @@ use yii\captcha\Captcha;
             'template' => '<div class="form-group has-feedback">{input}<span class="glyphicon glyphicon-lock form-control-feedback"></span></div>{hint}{error}'
         ])->passwordInput(['placeholder' => '密码'])->label(false) ?>
         <?php if ($model->scenario == 'captchaRequired'){ ?>
-            <?= $form->field($model,'verifyCode')->widget(Captcha::className(),[
+            <?= $form->field($model,'verifyCode')->widget(Captcha::class,[
                 'template' => '<div class="row"><div class="col-sm-7">{input}</div><div class="col-sm-5">{image}</div></div>',
                 'imageOptions' => [
                     'alt' => '点击换图',

@@ -8,6 +8,7 @@ use common\helpers\ResultDataHelper;
 use api\controllers\OnAuthController;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\RefreshForm;
+use api\modules\v1\models\MobileLogin;
 
 /**
  * 登录接口
@@ -67,6 +68,25 @@ class SiteController extends OnAuthController
         }
 
         return AccessToken::getAccessToken($model->getUser(), $model->group);
+    }
+
+    /**
+     * 手机验证码登录Demo
+     *
+     * @return array|mixed
+     * @throws \yii\base\Exception
+     */
+    protected function actionMobileLogin()
+    {
+        $model = new MobileLogin();
+        $model->attributes = Yii::$app->request->post();
+        if ($model->validate())
+        {
+            return AccessToken::getAccessToken($model->getUser(), $model->group);
+        }
+
+        // 返回数据验证失败
+        return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
     }
 
     /**

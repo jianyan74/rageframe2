@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-lg-12">
                     <?= $form->field($model, 'title')->textInput(); ?>
                     <?= $form->field($model, 'description')->textarea(); ?>
-                    <?= $form->field($model, 'tag')->widget(Select2::classname(), [
+                    <?= $form->field($model, 'tag')->widget(Select2::class, [
                         'data' => [1 => "First", 2 => "Second", 3 => "Third", 4 => "Fourth", 5 => "Fifth"],
                         'options' => ['placeholder' => '请选择'],
                         'pluginOptions' => [
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'sort')->textInput(); ?>
                     <div class="row">
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'start_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]);?>
                         </div>
                         <div class="col-sm-6">
-                            <?= $form->field($model, 'end_time')->widget(DateTimePicker::className(), [
+                            <?= $form->field($model, 'end_time')->widget(DateTimePicker::class, [
                                 'language' => 'zh-CN',
                                 'options' => [
                                     'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'areaName' => 'area',// 区字段名
                         'template' => 'short'
                     ]); ?>
-                    <?= $form->field($model, 'cover')->widget(Images::className(), [
+                    <?= $form->field($model, 'cover')->widget(Images::class, [
                         'config' => [
                             // 可设置自己的上传地址, 不设置则默认地址
                             // 'server' => '',
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'chunkSize' => 512 * 1024,// 分片大小
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'covers')->widget(Images::className(), [
+                    <?= $form->field($model, 'covers')->widget(Images::class, [
                         'config' => [
                             // 可设置自己的上传地址, 不设置则默认地址
                             // 'server' => '',
@@ -109,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'chunkSize' => 512 * 1024,// 分片大小
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'file')->widget(Files::className(), [
+                    <?= $form->field($model, 'file')->widget(Files::class, [
                         'config' => [
                             'pick' => [
                                 'multiple' => false,
@@ -118,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'chunkSize' => 1024 * 1024 * 5,// 分片大小
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'files')->widget(Files::className(), [
+                    <?= $form->field($model, 'files')->widget(Files::class, [
                         'config' => [
                             'pick' => [
                                 'multiple' => true,
@@ -127,7 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'chunkSize' => 512 * 1024,// 分片大小
                         ]
                     ]); ?>
-                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
+                    <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class, [
                         'formData' => [
                             'drive' => 'local', // 默认本地 支持qiniu/oss 上传
                             'thumb' => [

@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="active tab-pane rf-auto">
                     <?php $form = ActiveForm::begin(); ?>
                     <div class="col-sm-12">
-                        <?= $form->field($model, 'follow_content')->widget(\kartik\select2\Select2::classname(), [
+                        <?= $form->field($model, 'follow_content')->widget(\kartik\select2\Select2::class, [
                             'data' => $keyword,
                             'options' => ['placeholder' => '请选择'],
                             'pluginOptions' => [
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ])->hint('注意：这里是自动回复设置的关键字，设置用户添加公众帐号好友时，发送的欢迎信息。');?>
 
-                        <?= $form->field($model, 'default_content')->widget(\kartik\select2\Select2::classname(), [
+                        <?= $form->field($model, 'default_content')->widget(\kartik\select2\Select2::class, [
                             'data' => $keyword,
                             'options' => ['placeholder' => '请选择'],
                             'pluginOptions' => [

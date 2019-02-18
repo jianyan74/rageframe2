@@ -9,7 +9,7 @@
 
   ```php
   $searchModel = new SearchModel([
-       'model' => Topic::className(),
+       'model' => Topic::class,
        'scenario' => 'default',
   ]);
  
@@ -27,7 +27,7 @@
  ```php
   $searchModel = new SearchModel([
        'defaultOrder' => ['id' => SORT_DESC],
-       'model' => Topic::className(),
+       'model' => Topic::class,
        'scenario' => 'default',
        'relations' => ['comment' => []], // 关联表（可以是Model里面的关联）
        'partialMatchAttributes' => ['title'], // 模糊查询

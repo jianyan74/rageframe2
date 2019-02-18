@@ -12,6 +12,7 @@ use common\models\wechat\RuleKeyword;
 use common\helpers\ResultDataHelper;
 use common\helpers\AddonHelper;
 use common\models\sys\AddonsAuthItemChild;
+use common\helpers\AddonAuthHelper;
 use backend\modules\wechat\models\RuleForm;
 
 /**
@@ -28,7 +29,7 @@ class AddonsController extends \common\controllers\AddonsController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -48,7 +49,7 @@ class AddonsController extends \common\controllers\AddonsController
     public function beforeAction($action)
     {
         // 验证是否登录且验证是否超级管理员
-        if (!Yii::$app->user->isGuest && Yii::$app->user->id === Yii::$app->params['adminAccount'])
+        if (!Yii::$app->user->isGuest && Yii::$app->services->sys->isAuperAdmin())
         {
             return true;
         }
@@ -62,8 +63,7 @@ class AddonsController extends \common\controllers\AddonsController
         $route = $this->route;
         in_array($action->id, ['cover', 'qr-code']) && $route = AddonsAuthItemChild::AUTH_COVER;
         in_array($action->id, ['rule', 'rule-edit', 'rule-delete', 'ajax-update']) && $route = AddonsAuthItemChild::AUTH_RULE;
-
-        if (Yii::$app->services->sys->auth->addonCan($route, $this->addonName) == false)
+        if (AddonAuthHelper::verify($route) == false)
         {
             throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
         }

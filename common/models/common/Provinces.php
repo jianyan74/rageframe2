@@ -40,7 +40,7 @@ class Provinces extends \yii\db\ActiveRecord
             [['title', 'shortname'], 'string', 'max' => 50],
             [['pinyin'], 'string', 'max' => 100],
             [['lng', 'lat'], 'string', 'max' => 20],
-            [['position'], 'string', 'max' => 255],
+            [['position'], 'string', 'max' => 200],
             [['id'], 'unique'],
         ];
     }

@@ -6,15 +6,17 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use yii\widgets\InputWidget;
 use common\widgets\ueditor\assets\AppAsset;
 
 /**
  * 百度编辑器上传
  *
  * Class UEditor
- * @package common\widgets\webuploader
+ * @package common\widgets\ueditor
+ * @author jianyan74 <751393839@qq.com>
  */
-class UEditor extends \yii\widgets\InputWidget
+class UEditor extends InputWidget
 {
     /**
      * ueditor参数配置
@@ -22,18 +24,6 @@ class UEditor extends \yii\widgets\InputWidget
      * @var array
      */
     public $config = [];
-
-    /**
-     * 默认名称
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string|array
-     */
-    public $value;
 
     /**
      * @var array
@@ -81,6 +71,7 @@ class UEditor extends \yii\widgets\InputWidget
             ],
         ];
 
+        if (!empty($this->config['toolbars'])) unset($config['toolbars']);
         $this->config = ArrayHelper::merge($config, $this->config);
         $this->formData = ArrayHelper::merge([
             'drive' => 'local',

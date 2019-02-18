@@ -10,7 +10,7 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 ### 特色
 
 - 只做基础底层内容，RageFrame不会在上面开发过多的业务内容，满足绝大多数的系统底层开发。
-- 基于完善的RBAC权限控制管理、无限父子级权限分组、可自由分配子级权限。
+- 基于完善的RBAC权限控制管理、无限父子级权限分组、可自由分配子级权限，且按钮/链接/自定义内容等都可加入权限控制。
 - 多入口模式，多入口分为 backend(后台)、frontend(PC前端)， wechat(微信)，api(其他或app接口对接)， 不同的业务,不同的设备,进入不同的入口。
 - 对接微信公众号且支持小程序，使用了一款优秀的微信非官方SDK Easywechat 4.x，开箱即用，预置了绝大部分功能，大幅度的提升了微信开发效率。
 - 模块插件机制，安装和卸载不会对原来的系统产生影响,强大的功能完全满足金主爸爸的临时需求，且支持用户多端访问(后台、微信、Api、前台)。
@@ -28,15 +28,19 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 
 ### 系统快照
 
-【首页】
-![image](docs/guide-zh-CN/images/index.png)
-【微信自定义菜单】
+【系统 - 首页】
+![image](docs/guide-zh-CN/images/sys-index.png)
+【系统 - 配置管理】
+![image](docs/guide-zh-CN/images/sys-config.png)
+【系统 - 角色编辑】
+![image](docs/guide-zh-CN/images/rbac-role.png)
+【微信 - 自定义菜单】
 ![image](docs/guide-zh-CN/images/wechat-menu.png)
-【微信关注统计】
+【微信 - 关注统计】
 ![image](docs/guide-zh-CN/images/wechat-stat.png)
-【插件模块列表】
+【插件模块 - 列表】
 ![image](docs/guide-zh-CN/images/addon-list.png)
-【插件模块文章模块】
+【插件模块 - 文章模块】
 ![image](docs/guide-zh-CN/images/addon-activity.png)
 
 ### 开始之前

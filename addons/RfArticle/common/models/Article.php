@@ -184,7 +184,7 @@ class Article extends \common\models\common\BaseModel
      */
     public function getCate()
     {
-        return $this->hasOne(ArticleCate::className(),['id' => 'cate_id']);
+        return $this->hasOne(ArticleCate::class,['id' => 'cate_id']);
     }
 
     /**
@@ -194,7 +194,7 @@ class Article extends \common\models\common\BaseModel
      */
     public function getTags()
     {
-        return $this->hasMany(ArticleTag::className(), ['id' => 'tag_id'])
+        return $this->hasMany(ArticleTag::class, ['id' => 'tag_id'])
             ->viaTable(ArticleTagMap::tableName(), ['article_id' => 'id'])
             ->asArray();
     }
@@ -219,7 +219,7 @@ class Article extends \common\models\common\BaseModel
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],

@@ -202,7 +202,7 @@ class FansStat extends \common\models\common\BaseModel
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['updated_at'],
                 ],

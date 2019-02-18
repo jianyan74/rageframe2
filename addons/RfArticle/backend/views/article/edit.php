@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'title')->textInput(); ?>
                 <?= $form->field($model, 'author')->textInput(); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
-                <?= $form->field($model, 'cate_id')->widget(Select2::classname(), [
+                <?= $form->field($model, 'cate_id')->widget(Select2::class, [
                     'data' => $cates,
                     'options' => ['placeholder' => '请选择'],
                     'pluginOptions' => [
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]);?>
 
-                <?= $form->field($model, 'cover')->widget(Images::className(), [
+                <?= $form->field($model, 'cover')->widget(Images::class, [
                     'config' => [
                         // 可设置自己的上传地址, 不设置则默认地址
                         // 'server' => '',
@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]); ?>
                 <?= $form->field($model, 'description')->textarea(); ?>
-                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
+                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class) ?>
                 <div class="row">
                     <div class="col-lg-12">
-                        <?= $form->field($model, 'created_at')->widget(DateTimePicker::className(), [
+                        <?= $form->field($model, 'created_at')->widget(DateTimePicker::class, [
                             'language' => 'zh-CN',
                             'options' => [
                                 'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $model->created_at),
@@ -60,8 +60,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);?>
                     </div>
                 </div>
-                <?= $form->field($model, 'position')->checkboxList($positionExplain); ?>
-                <?= $form->field($model, 'tags')->checkboxList($tags); ?>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?= $form->field($model, 'position')->checkboxList($positionExplain); ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?= $form->field($model, 'tags')->checkboxList($tags); ?>
+                    </div>
+                </div>
                 <?= $form->field($model, 'link')->textInput(); ?>
                 <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
             </div>

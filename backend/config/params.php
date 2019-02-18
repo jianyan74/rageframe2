@@ -20,11 +20,10 @@ return [
 
     /** ------ 开发者信息 ------ **/
     'exploitName' => '简言',
-    'exploitVersions' => '2.2.2',
+    'exploitVersions' => '2.2.21',
     'exploitSysName' => 'RageFrame应用开发引擎',
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
-    'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">github.com/jianyan74/rageframe2</a>',
-    'exploitGitee' => '<a href="https://gitee.com/jianyan94/rageframe2" target="_blank">gitee.com/jianyan94/rageframe2</a>',
+    'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">https://github.com/jianyan74/rageframe2</a>',
 
     /** ------ 备份配置配置 ------ **/
     'dataBackupPath' => Yii::getAlias('@root') . '/common/backup', // 数据库备份根路径
@@ -46,12 +45,7 @@ return [
         '/wechat/common/select-news',// 微信自动回复获取图文
         '/wechat/common/select-attachment',// 微信自动回复获取图片/视频/
         '/wechat/analysis/image',// 微信显示素材图片
-        '/sys/style/update',// 系统主题更新
-    ],
-
-    // 不需要验证的方法
-    'noAuthAction' => [
-
+        '/wechat/qrcode/qr',// 二维码管理的二维码
     ],
 
     'isMobile' => false,

@@ -5,10 +5,10 @@ use common\helpers\HtmlHelper;
 
 ?>
 <?php foreach($models as $k => $model){ ?>
-    <tr id=<?= $model['key'] ?> name="<?= $model['name'] ?>" class="<?= $parent_key ?>">
+    <tr id="<?= $model['key'] ?>" class="<?= $parent_key ?>" style="display: <?= $defaultCss; ?>" data-parentKey="<?= implode('-', explode(' ', $parent_key)) ?>">
         <td>
             <?php if (!empty($model['-'])){ ?>
-                <div class="fa fa-minus-square cf" style="cursor:pointer;"></div>
+                <div class="fa fa-plus-square cf" style="cursor:pointer;"></div>
             <?php } ?>
         </td>
         <td>
@@ -34,6 +34,7 @@ use common\helpers\HtmlHelper;
             'models' => $model['-'],
             'parent_title' => $model['description'],
             'parent_key' => $model['key'] . " " . $parent_key,
+            'defaultCss' => 'none',
         ])?>
     <?php } ?>
 <?php } ?>

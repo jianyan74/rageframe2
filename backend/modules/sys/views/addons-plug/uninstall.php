@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
 use common\helpers\AddonHelper;
 
 $this->title = '已安装的插件';
@@ -57,11 +58,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 </td>
                                 <td><?= $vo['brief_introduction'] ?> <a href="javascript:void(0);" class="show-description">详细介绍</a></td>
                                 <td>
-                                    <a href="<?= Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置和权限, 更新后权限需要重新授权角色');return false;"><span class="btn btn-primary btn-sm">更新配置</span></a>
-                                    <a href="<?= Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-primary btn-sm">更新数据</span></a>
-                                    <a href="<?= Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-primary btn-sm">编辑</span></a>
-                                    <?= \common\helpers\HtmlHelper::status($vo['status']) ?>
-                                    <a href="<?= Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
+                                    <?php if($vo['auth']['upgradeConfig']){ ?>
+                                        <a href="<?= Url::to(['upgrade-config','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置和权限, 更新后需要重新授权角色的权限');return false;"><span class="btn btn-primary btn-sm">更新配置</span></a>
+                                    <?php } ?>
+                                    <?php if($vo['auth']['upgrade']){ ?>
+                                        <a href="<?= Url::to(['upgrade','name' => $vo['name']])?>" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-primary btn-sm">更新数据</span></a>
+                                    <?php } ?>
+                                    <?php if($vo['auth']['ajaxEdit']){ ?>
+                                        <a href="<?= Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-primary btn-sm">编辑</span></a>
+                                    <?php } ?>
+                                    <?= HtmlHelper::status($vo['status']) ?>
+                                    <?php if($vo['auth']['uninstal']){ ?>
+                                        <a href="<?= Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <tr id ="description-<?= $vo['id'] ?>" style="display: none">
@@ -87,7 +96,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <img alt="image" class="img-rounded m-t-xs img-responsive" src="{{value.cover}}" width="64" height="64">
         </td>
         <td>
-            <h4>{{value.title}}</h4>
+            <h5>{{value.title}}</h5>
             <small> 标识：{{value.name}}</small>
         </td>
         <td>{{value.version}}</td>
@@ -108,15 +117,25 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             {{/if}}
         </td>
         <td>
-            <a href="{{value.upgradeConfigUrl}}" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '会重载最新模块的配置');return false;"><span class="btn btn-primary btn-sm">更新配置</span></a>
+            {{if value.auth.upgradeConfig == 1}}
+            <a href="{{value.upgradeConfigUrl}}" onclick="rfTwiceAffirm(this, '确认更新配置吗？', '更新后需要重新授权角色的权限');return false;"><span class="btn btn-primary btn-sm">更新配置</span></a>
+            {{/if}}
+            {{if value.auth.upgrade == 1}}
             <a href="{{value.upgradeUrl}}" onclick="rfTwiceAffirm(this, '确认更新数据吗？', '会执行更新数据库字段升级等功能');return false;"><span class="btn btn-primary btn-sm">更新数据</span></a>
-            <a href="{{value.ajaxEditUrl}}"><span class="btn btn-primary btn-sm">更新数据</span></a>
+            {{/if}}
+            {{if value.auth.ajaxEdit == 1}}
+            <a href="{{value.ajaxEditUrl}}"><span class="btn btn-primary btn-sm">编辑</span></a>
+            {{/if}}
+            {{if value.auth.ajaxUpdate == 1}}
             {{if value.status == 0 }}
             <span class="btn btn-primary btn-sm" onclick="rfStatus(this)">启用</span>
             {{else}}
-            <span class="btn btn-default btn-sm"  onclick="rfStatus(this)">禁用</span>'
+            <span class="btn btn-default btn-sm"  onclick="rfStatus(this)">禁用</span>
             {{/if}}
+            {{/if}}
+            {{if value.auth.uninstal == 1}}
             <a href="{{value.uninstallUrl}}" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
+            {{/if}}
         </td>
     </tr>
     <tr id ="description-{{value.id}}" style="display: none">

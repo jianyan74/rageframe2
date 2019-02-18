@@ -1,6 +1,7 @@
 <?php
 namespace backend\widgets\menu;
 
+use common\helpers\AddonAuthHelper;
 use Yii;
 use yii\base\Widget;
 use common\helpers\ArrayHelper;
@@ -31,27 +32,14 @@ class AddonLeftWidget extends Widget
             $addon['is_rule'] = false;
             $addon['is_cover'] = false;
 
-            $auth = AddonsAuthItemChild::find()
-                ->where(['addons_name' => $addon['name']])
-                ->asArray()
-                ->all();
-
-            $routes = [];
-            foreach ($auth as $item)
-            {
-                $route = explode(':', $item['child']);
-                if (count($route) == 2)
-                {
-                    $route[1] == AddonsAuthItemChild::AUTH_RULE && $addon['is_rule'] = true;
-                    $route[1] == AddonsAuthItemChild::AUTH_COVER && $addon['is_cover'] = true;
-                    $route[1] == AddonsAuthItemChild::AUTH_SETTING && $addon['is_setting'] = true;
-                    $routes[] = $route[1];
-                }
-            }
+            $auth = AddonAuthHelper::getAuth();
+            in_array(AddonsAuthItemChild::AUTH_RULE, $auth) && $addon['is_rule'] = true;
+            in_array(AddonsAuthItemChild::AUTH_COVER, $auth) && $addon['is_cover'] = true;
+            in_array(AddonsAuthItemChild::AUTH_SETTING, $auth) && $addon['is_setting'] = true;
 
             foreach ($menus as $kye => $menu)
             {
-                if (!in_array($menu['route'], $routes))
+                if (!in_array($menu['route'], $auth))
                 {
                     unset($menus[$kye]);
                 }

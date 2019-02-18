@@ -89,7 +89,7 @@ class ConfigCate extends \common\models\common\BaseModel
      */
     public function getConfig()
     {
-        return $this->hasMany(Config::className(), ['cate_id' => 'id'])
+        return $this->hasMany(Config::class, ['cate_id' => 'id'])
             ->where(['status' => StatusEnum::ENABLED])
             ->orderBy('sort asc, id desc');
     }

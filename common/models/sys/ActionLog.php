@@ -46,8 +46,8 @@ class ActionLog extends \common\models\common\BaseModel
             [['get_data', 'post_data'], 'string'],
             [['behavior', 'module', 'controller', 'action', 'country', 'provinces', 'city'], 'string', 'max' => 50],
             [['method'], 'string', 'max' => 20],
-            [['url'], 'string', 'max' => 1000],
-            [['remark'], 'string', 'max' => 255],
+            [['url'], 'string', 'max' => 200],
+            [['remark'], 'string', 'max' => 1000],
         ];
     }
 
@@ -83,6 +83,6 @@ class ActionLog extends \common\models\common\BaseModel
      */
     public function getManager()
     {
-        return $this->hasOne(Manager::className(), ['id' => 'manager_id']);
+        return $this->hasOne(Manager::class, ['id' => 'manager_id']);
     }
 }

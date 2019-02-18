@@ -9,13 +9,13 @@ use yii\widgets\InputWidget;
 use yii\base\InvalidConfigException;
 use common\helpers\StringHelper;
 use common\widgets\webuploader\assets\AppAsset;
-use common\widgets\webuploader\assets\WebuploaderAsset;
 
 /**
- * 文件上传小工具
+ * 文经上传
  *
  * Class Files
  * @package common\widgets\webuploader
+ * @author jianyan74 <751393839@qq.com>
  */
 class Files extends InputWidget
 {
@@ -25,18 +25,6 @@ class Files extends InputWidget
      * @var array
      */
     public $config = [];
-
-    /**
-     * 默认名称
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string|array
-     */
-    public $value;
 
     /**
      * 盒子ID
@@ -142,7 +130,6 @@ class Files extends InputWidget
     protected function registerClientScript()
     {
         $view = $this->getView();
-        WebuploaderAsset::register($view);
         AppAsset::register($view);
     }
 }

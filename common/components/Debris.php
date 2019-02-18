@@ -43,6 +43,14 @@ class Debris
     }
 
     /**
+     * 清除缓存
+     */
+    public function clearConfigCache()
+    {
+        Yii::$app->cache->delete(self::CACHE_PREFIX);
+    }
+
+    /**
      * 获取全部配置信息
      *
      * @param bool $noCache true 不从缓存读取 false 从缓存读取
@@ -56,7 +64,7 @@ class Debris
         {
             $info = Config::getList();
             // 设置缓存
-            Yii::$app->cache->set($cacheKey, $info, 300);
+            Yii::$app->cache->set($cacheKey, $info, 60 * 60);
         }
 
         return $info;
@@ -83,6 +91,7 @@ class Debris
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getWechatError($message, $direct = true)

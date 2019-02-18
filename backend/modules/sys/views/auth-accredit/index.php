@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <tr>
                         <th width="50">折叠</th>
                         <th>路由名称</th>
-                        <th>路由地址</th>
+                        <th>路由/别名</th>
                         <th>排序</th>
                         <th>操作</th>
                     </tr>
@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         'models'=>$models,
                         'parent_title' =>"无",
                         'parent_key' => 0,
+                        'defaultCss' => '',
                     ])?>
                     </tbody>
                 </table>
@@ -47,14 +48,21 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     $('.cf').click(function(){
         var self = $(this);
         var id = self.parent().parent().attr('id');
+        var parentkey = id + '-' + self.parent().parent().data('parentkey');
 
         if(self.hasClass("fa-minus-square")){
-            $('.'+id).hide();
+            $('.' + id).hide();
             self.removeClass("fa-minus-square").addClass("fa-plus-square");
+            $('.' + id).find(".fa-minus-square").removeClass("fa-minus-square").addClass("fa-plus-square");
         } else {
-            $('.'+id).show();
+
+            var data = $('.' + id);
+            $.each(data,function(letter,rows){
+                if ($(rows).data('parentkey') == parentkey){
+                    $(rows).show();
+                }
+            });
             self.removeClass("fa-plus-square").addClass("fa-minus-square");
-            $('.'+id).find(".fa-plus-square").removeClass("fa-plus-square").addClass("fa-minus-square");
         }
     });
 </script>

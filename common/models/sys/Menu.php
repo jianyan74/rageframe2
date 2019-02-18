@@ -2,6 +2,7 @@
 namespace common\models\sys;
 
 use Yii;
+use common\helpers\AuthHelper;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
@@ -76,7 +77,7 @@ class Menu extends \common\models\common\BaseModel
      * @param bool $status 状态
      * @return array
      */
-    public static function getAuthShowList($status = false)
+    public static function getList($status = false)
     {
         $data = Menu::find()->andFilterWhere(['status' => $status]);
         // 关闭开发模式
@@ -85,40 +86,32 @@ class Menu extends \common\models\common\BaseModel
             $data = $data->andWhere(['dev' => StatusEnum::DISABLED]);
         }
 
-        // 非总管理员菜单显示
-        if (Yii::$app->user->id != Yii::$app->params['adminAccount'])
-        {
-            // 查询用户权限
-            $authAssignment = AuthAssignment::finldByUserId(Yii::$app->user->id);
-            $urls = [];
-            if (!empty($authAssignment['authItemChild']))
-            {
-                foreach ($authAssignment['authItemChild'] as $item)
-                {
-                    $urls[] = $item['child'];
-                }
-            }
-
-            $data = $data->andWhere(['in', 'url', $urls]);
-        }
-
         $models = $data->orderBy('cate_id asc, sort asc')
-            ->with('cate')
+            ->with(['cate'])
             ->asArray()
             ->all();
 
-        // 让 url 支持参数传递
-        foreach ($models as &$model)
+        // 获取当前所有的权限信息
+        $auth = Yii::$app->services->sys->isAuperAdmin() ? false : AuthHelper::getAuth();
+        foreach ($models as $key => &$model)
         {
-            $params = unserialize($model['params']);
-            empty($params) && $params = [];
-            $model['fullUrl'][] = $model['url'];
-            foreach ($params as $param)
+            // 判断权限是否拥有且支持参数传递
+            if (false === $auth || in_array($model['url'], $auth))
             {
-                if (!empty($param['key']))
+                $params = unserialize($model['params']);
+                empty($params) && $params = [];
+                $model['fullUrl'][] = $model['url'];
+                foreach ($params as $param)
                 {
-                    $model['fullUrl'][$param['key']] = $param['value'];
+                    if (!empty($param['key']))
+                    {
+                        $model['fullUrl'][$param['key']] = $param['value'];
+                    }
                 }
+            }
+            else
+            {
+                unset($models[$key]);
             }
         }
 
@@ -132,7 +125,7 @@ class Menu extends \common\models\common\BaseModel
      */
     public function getCate()
     {
-        return $this->hasOne(MenuCate::className(), ['id' => 'cate_id']);
+        return $this->hasOne(MenuCate::class, ['id' => 'cate_id']);
     }
 
     /**

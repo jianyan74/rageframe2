@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'class' => $model->send_time == 1 ? 'hide' : '',
                                 'id' => 'send_time'
                             ]
-                        ])->widget(DateTimePicker::className(), [
+                        ])->widget(DateTimePicker::class, [
                             'language' => 'zh-CN',
                             'options' => [
                                 'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime(date('Y-m-d H:i'))) : date('Y-m-d H:i', $model->send_time),

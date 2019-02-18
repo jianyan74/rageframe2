@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use common\enums\GenderEnum;
+use common\enums\StatusEnum;
 
 $this->title = '编辑';
 $this->params['breadcrumbs'][] = ['label' => '第三方用户', 'url' => ['index']];
@@ -23,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'oauth_client')->textInput([
                     'readonly' => 'readonly'
                 ]) ?>
-                <?= $form->field($model, 'sex')->radioList(['1' => '男', '2' => '女']) ?>
+                <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
                 <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Images', [
                     'config' => [
                         // 可设置自己的上传地址, 不设置则默认地址
@@ -61,7 +63,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'readonly' => 'readonly',// 禁止输入
                     ]
                 ]); ?>
-                <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain) ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">

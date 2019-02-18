@@ -32,9 +32,9 @@ class MemberController extends MController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => MemberInfo::className(),
+            'model' => MemberInfo::class,
             'scenario' => 'default',
-            'partialMatchAttributes' => ['realname', 'mobile_phone'], // 模糊查询
+            'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
             'defaultOrder' => [
                 'id' => SORT_DESC
             ],

@@ -1,11 +1,11 @@
 <?php
-
 namespace common\models\member;
 
-use common\enums\StatusEnum;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use common\enums\StatusEnum;
+use common\helpers\RegularHelper;
 
 /**
  * This is the model class for table "{{%member_info}}".
@@ -19,7 +19,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $nickname 昵称
  * @property string $realname 真实姓名
  * @property string $head_portrait 头像
- * @property int $sex 性别[1:男;2:女]
+ * @property int $gender 性别[0:未知;1:男;2:女]
  * @property string $qq qq
  * @property string $email 邮箱
  * @property string $birthday 生日
@@ -27,18 +27,18 @@ use yii\behaviors\TimestampBehavior;
  * @property string $accumulate_money 累积消费
  * @property string $frozen_money 累积金额
  * @property int $user_integral 当前积分
- * @property int $visit_count 访问次数
+ * @property string $visit_count 访问次数
  * @property string $home_phone 家庭号码
- * @property string $mobile_phone 手机号码
+ * @property string $mobile 手机号码
  * @property int $role 权限
  * @property int $last_time 最后一次登陆时间
  * @property string $last_ip 最后一次登陆ip
  * @property int $provinces 省
  * @property int $city 城市
  * @property int $area 地区
- * @property int $status 状态
- * @property int $created_at 创建时间
- * @property int $updated_at 修改时间
+ * @property int $status 状态[-1:删除;0:禁用;1启用]
+ * @property string $created_at 创建时间
+ * @property string $updated_at 修改时间
  */
 class MemberInfo extends \common\models\common\User
 {
@@ -59,18 +59,16 @@ class MemberInfo extends \common\models\common\User
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
             [['username'], 'unique', 'on' => ['backendCreate']],
-            [['type', 'sex', 'user_integral', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['type', 'gender', 'user_integral', 'visit_count', 'role', 'last_time', 'provinces', 'city', 'area', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['user_money', 'accumulate_money', 'frozen_money'], 'number'],
-            [['username', 'qq', 'home_phone', 'mobile_phone'], 'string', 'max' => 20],
-            [['password_hash', 'password_reset_token', 'head_portrait'], 'string', 'max' => 255],
+            [['username', 'qq', 'home_phone', 'mobile'], 'string', 'max' => 20],
+            [['password_hash', 'password_reset_token', 'head_portrait'], 'string', 'max' => 150],
             [['auth_key'], 'string', 'max' => 32],
-            [['nickname'], 'string', 'max' => 50],
-            [['realname'], 'string', 'max' => 10],
+            [['nickname', 'realname'], 'string', 'max' => 50],
             [['email'], 'string', 'max' => 60],
             [['last_ip'], 'string', 'max' => 16],
-            ['mobile_phone', 'match', 'pattern' => '/^[1][3578][0-9]{9}$/','message' => '不是一个有效的手机号码'],
-            ['last_ip', 'default', 'value' => '0.0.0.0'],
+            ['mobile', 'match', 'pattern' => RegularHelper::mobile(),'message' => '不是一个有效的手机号码'],
         ];
     }
 
@@ -89,7 +87,7 @@ class MemberInfo extends \common\models\common\User
             'nickname' => '昵称',
             'realname' => '真实姓名',
             'head_portrait' => '头像',
-            'sex' => '性别',
+            'gender' => '性别',
             'qq' => 'QQ',
             'email' => '邮箱',
             'birthday' => '生日',
@@ -99,7 +97,7 @@ class MemberInfo extends \common\models\common\User
             'user_integral' => '积分',
             'visit_count' => '登录总次数',
             'home_phone' => '家庭号码',
-            'mobile_phone' => '手机号码',
+            'mobile' => '手机号码',
             'role' => '权限',
             'last_time' => '最后一次登录时间',
             'last_ip' => '最后一次登录ip',
@@ -130,7 +128,7 @@ class MemberInfo extends \common\models\common\User
      */
     public function getAuth()
     {
-        $this->hasMany(MemberAuth::className(), ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
+        $this->hasMany(MemberAuth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
     }
 
     /**
@@ -151,14 +149,13 @@ class MemberInfo extends \common\models\common\User
     }
 
     /**
-     * 行为插入时间戳
      * @return array
      */
     public function behaviors()
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],

@@ -26,20 +26,6 @@ class NotifyController extends Controller
     public $enableCsrfValidation = false;
 
     /**
-     * 配置
-     *
-     * @var
-     */
-    protected $config;
-
-    public function init()
-    {
-        $this->config = Yii::$app->debris->configAll();
-
-        parent::init();
-    }
-
-    /**
      * EasyWechat支付回调 - 微信
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -47,13 +33,6 @@ class NotifyController extends Controller
      */
     public function actionEasyWechat()
     {
-        // 微信支付参数配置
-        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $this->config['wechat_appid'],
-            'mch_id' => $this->config['wechat_mchid'],
-            'key' => $this->config['wechat_api_key'], // API 密钥
-        ], Yii::$app->params['wechatPaymentConfig']);
-
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)
         {
             // 记录写入文件日志
@@ -113,9 +92,7 @@ class NotifyController extends Controller
     {
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $this->config['miniprogram_appid'],
-            'mch_id' => $this->config['wechat_mchid'],
-            'key' => $this->config['wechat_api_key'], // API 密钥
+            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
         ], Yii::$app->params['wechatPaymentConfig']);
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail)

@@ -217,7 +217,7 @@ class ExcelHelper
                     $arr[$currentRow][] = trim($val);
                 }
 
-                $arr[$currentRow] = array_filter($arr[$currentRow]);
+                // $arr[$currentRow] = array_filter($arr[$currentRow]);
                 // 统计连续空行
                 if (empty($arr[$currentRow]) && $emptyRowNum <= 50)
                 {

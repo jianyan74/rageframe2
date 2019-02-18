@@ -5,6 +5,7 @@ use common\enums\WhetherEnum;
 use common\enums\StatusEnum;
 use yii\helpers\BaseHtml;
 use Yii;
+use yii\helpers\Url;
 
 /**
  * Class HtmlHelper
@@ -20,8 +21,14 @@ class HtmlHelper extends BaseHtml
      * @param array $options
      * @return string
      */
-    public static function delete($url, $content = '删除',$options = [])
+    public static function delete(array $url, $content = '删除',$options = [])
     {
+        // 权限校验
+        if (!self::beforVerify($url[0]))
+        {
+            return '';
+        }
+
         $options = ArrayHelper::merge([
             'class' => 'btn btn-danger btn-sm',
             'onclick' => "rfDelete(this);return false;"
@@ -37,8 +44,14 @@ class HtmlHelper extends BaseHtml
      * @param array $options
      * @return string
      */
-    public static function edit($url, $content = '编辑', $options = [])
+    public static function edit(array $url, $content = '编辑', $options = [])
     {
+        // 权限校验
+        if (!self::beforVerify($url[0]))
+        {
+            return '';
+        }
+
         $options = ArrayHelper::merge([
             'class' => 'btn btn-primary btn-sm',
         ], $options);
@@ -53,8 +66,14 @@ class HtmlHelper extends BaseHtml
      * @param array $options
      * @return string
      */
-    public static function create($url, $content = '创建', $options = [])
+    public static function create(array $url, $content = '创建', $options = [])
     {
+        // 权限校验
+        if (!self::beforVerify($url[0]))
+        {
+            return '';
+        }
+
         $options = ArrayHelper::merge([
             'class' => "btn btn-primary btn-xs"
         ], $options);
@@ -70,8 +89,14 @@ class HtmlHelper extends BaseHtml
      * @param array $options
      * @return string
      */
-    public static function linkButton($url, $content, $options = [])
+    public static function linkButton(array $url, $content, $options = [])
     {
+        // 权限校验
+        if (!self::beforVerify($url[0]))
+        {
+            return '';
+        }
+
         $options = ArrayHelper::merge([
             'class' => "btn btn-white btn-sm"
         ], $options);
@@ -87,6 +112,12 @@ class HtmlHelper extends BaseHtml
      */
     public static function status($status = 1)
     {
+        // 权限校验
+        if (!self::beforVerify('ajax-update'))
+        {
+            return '';
+        }
+
         $listBut = [
             StatusEnum::DISABLED => self::tag('span', '启用', [
                 'class' => "btn btn-success btn-sm",
@@ -102,6 +133,28 @@ class HtmlHelper extends BaseHtml
     }
 
     /**
+     * @param string $text
+     * @param null $url
+     * @param array $options
+     * @return string
+     */
+    public static function a($text, $url = null, $options = [])
+    {
+        if ($url !== null)
+        {
+            // 权限校验
+            if (!self::beforVerify($url))
+            {
+                return '';
+            }
+
+            $options['href'] = Url::to($url);
+        }
+
+        return static::tag('a', $text, $options);
+    }
+
+    /**
      * 排序
      *
      * @param $value
@@ -109,6 +162,12 @@ class HtmlHelper extends BaseHtml
      */
     public static function sort($value, $options = [])
     {
+        // 权限校验
+        if (!self::beforVerify('ajax-update'))
+        {
+            return $value;
+        }
+
         $options = ArrayHelper::merge([
             'class' => 'form-control',
             'onblur' => 'rfSort(this)',
@@ -149,16 +208,6 @@ class HtmlHelper extends BaseHtml
     }
 
     /**
-     * 解决图片资源失败
-     *
-     * @return string
-     */
-    public static function onErrorImg()
-    {
-        return Yii::getAlias('@web') . '/resources/dist/img/default-head-portrait.png';
-    }
-
-    /**
      * 点击大图
      *
      * @param string $imgSrc
@@ -175,5 +224,22 @@ class HtmlHelper extends BaseHtml
         return self::a($image, $imgSrc, [
             'data-fancybox' => 'gallery'
         ]);
+    }
+
+    /**
+     * @param $route
+     * @return bool
+     */
+    protected static function beforVerify($route)
+    {
+        if (Yii::$app->services->sys->isAuperAdmin())
+        {
+           return true;
+        }
+
+        is_array($route) && $route = $route[0];
+        $route = '/' . UrlHelper::getAuthUrl($route);
+
+        return AuthHelper::verify($route);
     }
 }

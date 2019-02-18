@@ -11,6 +11,7 @@ use Zhuzhichao\IpLocationZh\Ip;
  * @package common\services\sys
  * @property \common\services\sys\Auth $auth
  * @property \common\services\sys\Addon $addon
+ * @property \common\services\sys\Notify $notify
  * @author jianyan74 <751393839@qq.com>
  */
 class Sys extends Service

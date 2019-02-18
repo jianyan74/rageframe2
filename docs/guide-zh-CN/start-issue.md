@@ -12,7 +12,6 @@
 - 如何配置权限管理的路由和菜单绑定
 - 数据迁移出现 Specified key was too long; max key length is 767 bytes 
 - Api应用增加了控制器方法，还是出现404
-- 前台调用文件上传组件出现样式出错
 
 #### 出现 vendor/bower/jquery/dist 找不到的解决方案
 
@@ -72,32 +71,3 @@ header: {
 #### Api应用增加了控制器方法，还是出现404
 
 > 由于开启了路由严格验证，所有的控制器方法都需要在main里面去配置rule，且单独的方法(不是CURD)也需要单独配置
-
-#### 前台调用文件上传组件出现样式出错
-
-找到 `frontend\assets\AppAsset` 加入以下代码  
-
-**css**
-
-```
-// 复选框样式
-'/backend/resources/css/plugins/iCheck/custom.css',
-'/backend/resources/css/plugins/iCheck/grey.css',
-// 弹出框css
-'/backend/resources/css/plugins/sweetalert/sweetalert.css?v=1',
-// 图片弹出css
-'/backend/resources/js/plugins/fancybox/jquery.fancybox.min.css',
-'/backend/resources/css/font-awesome.min.css',
-```
-
-**js**
-
-```
-'/backend/resources/js/plugins/sweetalert/sweetalert.min.js',
-// 图片弹出js
-'/backend/resources/js/plugins/fancybox/jquery.fancybox.min.js',
-// 复选框js
-'/backend/resources/js/plugins/iCheck/icheck.min.js',
-// rageframe自带样式
-'/backend/resources/js/rageframe.js',
-```

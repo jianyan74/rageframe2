@@ -202,7 +202,17 @@ class Addons extends BaseModel
      */
     public function getBindingMenu()
     {
-        return $this->hasMany(AddonsBinding::className(), ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
+    }
+
+    /**
+     * 关联首页绑定的菜单
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBindingIndexMenu()
+    {
+        return $this->hasOne(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'menu'])->asArray()->orderBy('id asc');
     }
 
     /**
@@ -212,7 +222,7 @@ class Addons extends BaseModel
      */
     public function getBindingCover()
     {
-        return $this->hasMany(AddonsBinding::className(), ['addons_name' => 'name'])->where(['entry' => 'cover'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'cover'])->orderBy('id asc');
     }
 
     /**
@@ -222,7 +232,7 @@ class Addons extends BaseModel
      */
     public function getBinding()
     {
-        return $this->hasMany(AddonsBinding::className(), ['addons_name' => 'name'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::class, ['addons_name' => 'name'])->orderBy('id asc');
     }
 
     /**
@@ -232,7 +242,7 @@ class Addons extends BaseModel
      */
     public function getAuthItem()
     {
-        return $this->hasMany(AddonsAuthItem::className(), ['addons_name' => 'name']);
+        return $this->hasMany(AddonsAuthItem::class, ['addons_name' => 'name']);
     }
 
     /**
@@ -242,7 +252,7 @@ class Addons extends BaseModel
      */
     public function getAuthItemChild()
     {
-        return $this->hasOne(AddonsAuthItemChild::className(), ['addons_name' => 'name']);
+        return $this->hasOne(AddonsAuthItemChild::class, ['addons_name' => 'name']);
     }
 
     /**

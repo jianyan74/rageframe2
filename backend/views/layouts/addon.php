@@ -13,10 +13,8 @@ AppAsset::register($this);
     <html lang="<?= Yii::$app->language ?>">
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--[if lt IE 8]>
-        <meta http-equiv="refresh" content="0;ie.html" />
-        <![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"<
+        <meta name="renderer" content="webkit">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
@@ -25,7 +23,7 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
     <div class="wrapper-content">
         <section class="content-header">
-            <a href="" class="rfHeaderFont">
+            <a href="<?= Yii::$app->request->getUrl(); ?>" class="rfHeaderFont">
                 <i class="glyphicon glyphicon-refresh"></i> 刷新
             </a>
             <?php if (Yii::$app->request->referrer != Yii::$app->request->hostInfo . Yii::$app->request->getBaseUrl() . '/'){ ?>
@@ -95,7 +93,21 @@ AppAsset::register($this);
         </div>
     </div>
 
+    <!--初始化模拟框-->
+    <div id="rfModalBody" class="hide">
+        <div class="modal-body">
+            <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
+            <span>加载中... </span>
+        </div>
+    </div>
+
     <script>
+        // 配置
+        var config = {
+            tag: <?= Yii::$app->debris->config('sys_tags'); ?>,
+            isMobile: "<?= Yii::$app->params['isMobile']; ?>",
+        };
+
         $(document).ready(function () {
             var isMobile = "<?php Yii::$app->params['isMobile'];?>";
             if ($(this).width() < 769) {
@@ -127,16 +139,20 @@ AppAsset::register($this);
         // 小模拟框清除
         $('#ajaxModal').on('hide.bs.modal', function () {
             $(this).removeData("bs.modal");
+            $('#ajaxModal').find('.modal-content').html($('#rfModalBody').html());
         });
         // 大模拟框清除
         $('#ajaxModalLg').on('hide.bs.modal', function () {
             $(this).removeData("bs.modal");
+            $('#ajaxModalLg').find('.modal-content').html($('#rfModalBody').html());
         });
         // 最大模拟框清除
         $('#ajaxModalMax').on('hide.bs.modal', function () {
             $(this).removeData("bs.modal");
+            $('#ajaxModalMax').find('.modal-content').html($('#rfModalBody').html());
         });
-        // status => 1:启用;-1禁用;
+
+        // 状态 1:启用;0禁用;
         function rfStatus(obj){
             var id = $(obj).parent().parent().attr('id');
 
@@ -169,7 +185,7 @@ AppAsset::register($this);
                 }
             });
         }
-
+        // 排序
         function rfSort(obj){
             var id = $(obj).parent().parent().attr('id');
 

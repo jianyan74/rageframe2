@@ -21,8 +21,8 @@ class MenuLeftWidget extends Widget
     public function run()
     {
         return $this->render('menu-left', [
-            'models'=> Menu::getAuthShowList(StatusEnum::ENABLED),
-            'addonsInfo' => Yii::$app->services->sys->addon->getInfo(),
+            'menus'=> Menu::getList(StatusEnum::ENABLED),
+            'addonMenus' => Yii::$app->services->sys->addon->getMenus(),
         ]);
     }
 }

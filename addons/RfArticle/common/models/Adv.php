@@ -50,7 +50,7 @@ class Adv extends \common\models\common\BaseModel
             [['location_id', 'jump_type', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 30],
             [['cover'], 'string', 'max' => 100],
-            [['silder_text', 'jump_link'], 'string', 'max' => 255],
+            [['silder_text', 'jump_link'], 'string', 'max' => 150],
         ];
     }
 

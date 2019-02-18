@@ -9,7 +9,8 @@ return [
     'sourceLanguage' => 'zh-cn',
     'timeZone' => 'Asia/Shanghai',
     'bootstrap' => [
-        'queue' // 队列系统
+        'queue', // 队列系统
+        'common\components\InitConfig', // 加载默认的配置
     ],
     'components' => [
         /** ------ 格式化时间 ------ **/

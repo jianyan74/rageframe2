@@ -144,6 +144,7 @@ class ConfigController extends SController
                 }
             }
 
+            Yii::$app->debris->clearConfigCache();
             return ResultDataHelper::json(200, "修改成功");
         }
 

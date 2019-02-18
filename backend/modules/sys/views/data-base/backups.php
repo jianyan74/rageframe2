@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use common\helpers\AuthHelper;
 
 $this->title = '数据备份';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -16,10 +17,22 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="active tab-pane">
                     <div class="col-sm-12 normalPaddingJustV">
                         <div class="btn-group">
-                            <a class="btn btn-white table-list-database" href="javascript:;" data-type="1">立即备份</a>
-                            <a class="btn btn-white table-list-database" href="javascript:;" data-type="2">修复表</a>
-                            <a class="btn btn-white table-list-database" href="javascript:;" data-type="3">优化表</a>
-                            <a class="btn btn-white dictionary" href="javascript:;">Markdown数据字典</a>
+                            <!-- 权限校验 -->
+                            <?php if(AuthHelper::verify('/sys/data-base/export')){ ?>
+                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="1">立即备份</a>
+                            <?php } ?>
+                            <!-- 权限校验 -->
+                            <?php if(AuthHelper::verify('/sys/data-base/repair')){ ?>
+                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="2">修复表</a>
+                            <?php } ?>
+                            <!-- 权限校验 -->
+                            <?php if(AuthHelper::verify('/sys/data-base/optimize')){ ?>
+                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="3">优化表</a>
+                            <?php } ?>
+                            <!-- 权限校验 -->
+                            <?php if(AuthHelper::verify('/sys/data-base/data-dictionary')){ ?>
+                                <a class="btn btn-white dictionary" href="javascript:;">Markdown数据字典</a>
+                            <?php } ?>
                         </div>
                     </div>
                     <table class="table table-hover">
@@ -50,8 +63,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td><?= $model['create_time']?></td>
                                 <td id="<?= $model['name']?>">未备份</td>
                                 <td>
-                                    <a href="#" class="table-list-optimize">优化表</a>
-                                    <a href="#" class="table-list-repair">修复表</a>
+                                    <!-- 权限校验 -->
+                                    <?php if(AuthHelper::verify('/sys/data-base/optimize')){ ?>
+                                        <a href="#" class="table-list-optimize">优化表</a>
+                                    <?php } ?>
+                                    <!-- 权限校验 -->
+                                    <?php if(AuthHelper::verify('/sys/data-base/repair')){ ?>
+                                        <a href="#" class="table-list-repair">修复表</a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>

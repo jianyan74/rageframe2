@@ -84,10 +84,6 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <td><a href="https://jq.qq.com/?_wv=1027&amp;k=4BeVA2r" target="_blank">655084090</a></td>
                     </tr>
                     <tr>
-                        <td>Gitee</td>
-                        <td><?= Yii::$app->params['exploitGitee']?></td>
-                    </tr>
-                    <tr>
                         <td>GitHub</td>
                         <td><?= Yii::$app->params['exploitGitHub']?></td>
                     </tr>
@@ -113,6 +109,24 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <tr>
                         <td>扩展支持</td>
                         <td>
+                            <?= extension_loaded('curl')
+                                ? '<span class="label label-primary">curl支持</span>'
+                                : '<span class="label label-default">curl不支持</span>'; ?>
+                            <?= extension_loaded('fileinfo')
+                                ? '<span class="label label-primary">fileinfo支持</span>'
+                                : '<span class="label label-default">fileinfo不支持</span>'; ?>
+                            <?= extension_loaded('intl')
+                                ? '<span class="label label-primary">intl支持</span>'
+                                : '<span class="label label-default">intl不支持</span>'; ?>
+                            <?= extension_loaded('mbstring')
+                                ? '<span class="label label-primary">mbstring支持</span>'
+                                : '<span class="label label-default">mbstring不支持</span>'; ?>
+                            <?= extension_loaded('intl')
+                                ? '<span class="label label-primary">exif支持</span>'
+                                : '<span class="label label-default">exif不支持</span>'; ?>
+                            <?= extension_loaded('openssl')
+                                ? '<span class="label label-primary">openssl支持</span>'
+                                : '<span class="label label-default">openssl不支持</span>'; ?>
                             <?= extension_loaded('Zend OPcache')
                                 ? '<span class="label label-primary">opcache支持</span>'
                                 : '<span class="label label-default">opcache不支持</span>'; ?>
@@ -150,12 +164,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <td><?= ini_get('memory_limit'); ?></td>
                     </tr>
                     <tr>
-                        <td>Socket超时时间</td>
-                        <td><?= ini_get('default_socket_timeout'); ?> 秒</td>
-                    </tr>
-                    <tr>
                         <td>POST数据最大尺寸</td>
                         <td><?= ini_get('post_max_size'); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Socket超时时间</td>
+                        <td><?= ini_get('default_socket_timeout'); ?> 秒</td>
                     </tr>
                 </table>
             </div>

@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <?php $form = ActiveForm::begin([]); ?>
             <div class="box-body">
-                <?= $form->field($model, 'video')->widget(Files::className(), [
+                <?= $form->field($model, 'video')->widget(Files::class, [
                     'config' => [
                         'pick' => [
                             'multiple' => false,

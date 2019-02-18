@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\helpers\AuthHelper;
 use Yii;
 use yii\web\UnauthorizedHttpException;
 use yii\filters\AccessControl;
@@ -49,7 +50,7 @@ class MController extends \common\controllers\BaseController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -74,7 +75,7 @@ class MController extends \common\controllers\BaseController
         Yii::$app->debris->config('sys_page') && $this->pageSize = Yii::$app->debris->config('sys_page');
 
         // 验证是否登录且验证是否超级管理员
-        if (!Yii::$app->user->isGuest && Yii::$app->user->id === Yii::$app->params['adminAccount'])
+        if (!Yii::$app->user->isGuest && Yii::$app->services->sys->isAuperAdmin())
         {
             return true;
         }
@@ -92,12 +93,14 @@ class MController extends \common\controllers\BaseController
             $permissionName = '/' . Yii::$app->controller->module->id . $permissionName;
         }
 
-        if (in_array($permissionName, Yii::$app->params['noAuthRoute']) || in_array(Yii::$app->controller->action->id, Yii::$app->params['noAuthAction']) )
+        // 判断是否忽略校验
+        if (in_array($permissionName, Yii::$app->params['noAuthRoute']))
         {
             return true;
         }
 
-        if (!Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
+        // 开始权限校验
+        if (!AuthHelper::verify($permissionName))
         {
             throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
         }

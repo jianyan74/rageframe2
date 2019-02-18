@@ -19,7 +19,7 @@ use common\models\sys\AuthRule;
     </div>
     <div class="modal-body">
         <?= $form->field($model, 'description')->textInput() ?>
-        <?= $form->field($model, 'name')->textInput()->hint('例如 /main/index, 要绝对路径哦') ?>
+        <?= $form->field($model, 'name')->textInput()->hint('如果是路由要绝对路径哦, 例如 /main/index') ?>
         <?= $form->field($model, 'rule_name')->dropDownList(AuthRule::getRoutes(), ['prompt' => '请选择']) ?>
         <?= $form->field($model, 'sort')->textInput() ?>
     </div>

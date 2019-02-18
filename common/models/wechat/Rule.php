@@ -186,7 +186,7 @@ class Rule extends \common\models\common\BaseModel
      */
     public function getRuleKeyword()
     {
-        return $this->hasMany(RuleKeyword::className(), ['rule_id' => 'id'])->orderBy('type asc');
+        return $this->hasMany(RuleKeyword::class, ['rule_id' => 'id'])->orderBy('type asc');
     }
 
     /**
@@ -196,7 +196,7 @@ class Rule extends \common\models\common\BaseModel
      */
     public function getAddon()
     {
-        return $this->hasMany(ReplyAddon::className(), ['rule_id' => 'id']);
+        return $this->hasMany(ReplyAddon::class, ['rule_id' => 'id']);
     }
 
     /**

@@ -97,6 +97,28 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     'drive' => 'local',
                                                     'showDrive' => 'WechatAttachment',
                                                 ],
+                                                'config' => [
+                                                    'toolbars' => [
+                                                        [
+                                                            'fullscreen', 'source', 'undo', 'redo', '|',
+                                                            'customstyle', 'paragraph', 'fontfamily', 'fontsize'
+                                                        ],
+                                                        [
+                                                            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat',
+                                                            'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|',
+                                                            'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
+                                                            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                                                            'directionalityltr', 'directionalityrtl', 'indent', '|'
+                                                        ],
+                                                        [
+                                                            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+                                                            'link', 'unlink', '|','simpleupload',
+                                                            'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'insertcode', 'pagebreak', '|',
+                                                            'horizontal', 'inserttable', '|',
+                                                            'print', 'preview', 'searchreplace', 'help'
+                                                        ]
+                                                    ],
+                                                ]
                                             ]) ?>
                                         <?php } ?>
                                     </div>

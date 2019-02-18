@@ -236,6 +236,16 @@ class MsgHistory extends \common\models\common\BaseModel
      */
     public function getFans()
     {
-        return $this->hasOne(Fans::className(), ['openid' => 'openid']);
+        return $this->hasOne(Fans::class, ['openid' => 'openid']);
+    }
+
+    /**
+     * 关联规则
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRule()
+    {
+        return $this->hasOne(Rule::class, ['id' => 'rule_id']);
     }
 }

@@ -43,8 +43,7 @@ class Config extends \common\models\common\BaseModel
             [['value'], 'string'],
             [['title'], 'string', 'max' => 50],
             [['name', 'type'], 'string', 'max' => 30],
-            [['extra'], 'string', 'max' => 255],
-            [['remark'], 'string', 'max' => 1000],
+            [['remark', 'extra'], 'string', 'max' => 1000],
             [['name'], 'unique'],
         ];
     }
@@ -94,7 +93,7 @@ class Config extends \common\models\common\BaseModel
      */
     public function getCate()
     {
-        return $this->hasOne(ConfigCate::className(), ['id' => 'cate_id']);
+        return $this->hasOne(ConfigCate::class, ['id' => 'cate_id']);
     }
 
     /**
@@ -104,7 +103,7 @@ class Config extends \common\models\common\BaseModel
     public function beforeSave($insert)
     {
         // 清除缓存
-        Yii::$app->debris->configAll(true);
+        Yii::$app->debris->clearConfigCache();
         return parent::beforeSave($insert);
     }
 
@@ -114,7 +113,7 @@ class Config extends \common\models\common\BaseModel
     public function beforeDelete()
     {
         // 清除缓存
-        Yii::$app->debris->configAll(true);
+        Yii::$app->debris->clearConfigCache();
         return parent::beforeDelete();
     }
 }

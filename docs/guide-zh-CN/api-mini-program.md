@@ -79,7 +79,7 @@ auth_key | string| 是 | 无 | 授权秘钥
             "address_id": "0",
             "visit_count": 9,
             "home_phone": null,
-            "mobile_phone": null,
+            "mobile": null,
             "role": 10,
             "last_time": 1527339061,
             "last_ip": "127.0.0.1",

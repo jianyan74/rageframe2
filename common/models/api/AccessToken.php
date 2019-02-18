@@ -17,11 +17,11 @@ use common\helpers\ArrayHelper;
  * @property string $id
  * @property string $refresh_token 刷新令牌
  * @property string $access_token 授权令牌
- * @property string $member_id 关联的用户id
+ * @property string $member_id 用户id
  * @property string $group 组别
- * @property int $status 用户状态
- * @property int $created_at 创建时间
- * @property int $updated_at 修改时间
+ * @property int $status 状态[-1:删除;0:禁用;1启用]
+ * @property string $created_at 创建时间
+ * @property string $updated_at 修改时间
  */
 class AccessToken extends RateLimit
 {
@@ -48,12 +48,10 @@ class AccessToken extends RateLimit
         return '{{%api_access_token}}';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
+            [['member_id','refresh_token', 'access_token', 'group'], 'required'],
             [['member_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['refresh_token', 'access_token'], 'string', 'max' => 60],
             [['group'], 'string', 'max' => 30],
@@ -167,7 +165,7 @@ class AccessToken extends RateLimit
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],

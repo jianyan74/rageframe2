@@ -97,7 +97,7 @@ class RuleKeywordStat extends \common\models\common\BaseModel
      */
     public function getRule()
     {
-        return $this->hasOne(Rule::className(),['id' => 'rule_id']);
+        return $this->hasOne(Rule::class,['id' => 'rule_id']);
     }
 
     /**
@@ -107,7 +107,7 @@ class RuleKeywordStat extends \common\models\common\BaseModel
      */
     public function getRuleKeyword()
     {
-        return $this->hasOne(RuleKeyword::className(),['id' => 'keyword_id']);
+        return $this->hasOne(RuleKeyword::class,['id' => 'keyword_id']);
     }
 
     /**
@@ -131,7 +131,7 @@ class RuleKeywordStat extends \common\models\common\BaseModel
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],

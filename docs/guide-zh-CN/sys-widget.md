@@ -22,7 +22,7 @@
 use kartik\color\ColorInput;
 ```
 ```
-<?= $form->field($model, 'color')->widget(ColorInput::classname(), [
+<?= $form->field($model, 'color')->widget(ColorInput::class, [
     'options' => ['placeholder' => '请选择颜色'],
 ]);?>
 ```
@@ -63,7 +63,7 @@ use kartik\color\ColorInput;
 use kartik\datetime\DateTimePicker;
 ```
 ```
-<?= $form->field($model, 'test')->widget(DateTimePicker::className(), [
+<?= $form->field($model, 'test')->widget(DateTimePicker::class, [
         'language' => 'zh-CN',
         'options' => [
             'value' => $model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',$model->start_time),
@@ -209,7 +209,7 @@ use unclead\multipleinput\MultipleInput;
 
 ...
 
-<?= $form->field($model, 'schedule')->widget(MultipleInput::className(), [
+<?= $form->field($model, 'schedule')->widget(MultipleInput::class, [
     'max' => 4,
     'columns' => [
         [
@@ -224,7 +224,7 @@ use unclead\multipleinput\MultipleInput;
         ],
         [
             'name'  => 'day',
-            'type'  => \kartik\date\DatePicker::className(),
+            'type'  => \kartik\date\DatePicker::class,
             'title' => 'Day',
             'value' => function($data) {
                 return $data['day'];
@@ -260,7 +260,7 @@ use unclead\multipleinput\MultipleInput;
 use kartik\select2\Select2
 
 // Usage with ActiveForm and model
-echo $form->field($model, 'state_1')->widget(Select2::classname(), [
+echo $form->field($model, 'state_1')->widget(Select2::class, [
     'data' => $data,
     'options' => ['placeholder' => 'Select a state ...'],
     'pluginOptions' => [
@@ -289,10 +289,10 @@ echo $form->field($model, 'state_1')->widget(Select2::classname(), [
 视图
 
 ```
-<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className()) ?>
+<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class) ?>
 
 // 自定义配置参数用法
-<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::className(), [
+<?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class, [
      'config' => [
 
       ],

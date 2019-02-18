@@ -172,6 +172,8 @@ $this->params['breadcrumbs'][] = $this->title;
         var userTreeIds = getCheckTreeIds(userTreeId);
         var plugTreeIds = getCheckTreeIds(plugTreeId);
 
+        rfAffirm('保存中...');
+
         $.ajax({
             type :"post",
             url : "<?= \yii\helpers\Url::to(['edit', 'name' => $name])?>",

@@ -126,6 +126,6 @@ class QrcodeStat extends \common\models\common\BaseModel
      */
     public function getFans()
     {
-        return $this->hasOne(Fans::className(), ['openid' => 'openid'])->select('openid, nickname, follow');
+        return $this->hasOne(Fans::class, ['openid' => 'openid'])->select('openid, nickname, follow');
     }
 }

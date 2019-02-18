@@ -58,7 +58,7 @@ class ArticleTag extends \common\models\common\BaseModel
      */
     public function getTagMap()
     {
-        return $this->hasOne(ArticleTagMap::className(), ['tag_id' => 'id']);
+        return $this->hasOne(ArticleTagMap::class, ['tag_id' => 'id']);
     }
 
     /**

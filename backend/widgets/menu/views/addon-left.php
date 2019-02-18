@@ -9,11 +9,11 @@ $addonName = StringHelper::toUnderScore($addonName);
 ?>
 
 <div class="box box-solid rfAddonMenu">
-    <div class="box-header with-border">
-        <h3 class="rf-box-title">核心设置</h3>
-    </div>
-    <div class="box-body no-padding">
-        <?php if($addon['is_setting'] == StatusEnum::ENABLED || $addon['is_cover'] == StatusEnum::ENABLED || $addon['is_rule'] == StatusEnum::ENABLED){ ?>
+    <?php if($addon['is_setting'] == StatusEnum::ENABLED || $addon['is_cover'] == StatusEnum::ENABLED || $addon['is_rule'] == StatusEnum::ENABLED){ ?>
+        <div class="box-header with-border">
+            <h3 class="rf-box-title">核心设置</h3>
+        </div>
+        <div class="box-body no-padding">
             <ul class="nav nav-pills nav-stacked">
                 <?php if($addon['is_cover'] == StatusEnum::ENABLED){ ?>
                     <li>
@@ -37,21 +37,23 @@ $addonName = StringHelper::toUnderScore($addonName);
                     </li>
                 <?php } ?>
             </ul>
-        <?php } ?>
-    </div>
-    <div class="box-header with-border">
-        <h3 class="rf-box-title">业务菜单</h3>
-    </div>
-    <div class="box-body no-padding">
-        <ul class="nav nav-pills nav-stacked">
-            <?php foreach ($menus as $vo){ ?>
-                <li>
-                    <a href="<?= AddonUrl::to([$vo['route']]); ?>" title="<?= $vo['title']; ?>">
-                        <i class="<?= $vo['icon'] ? $vo['icon'] : 'fa fa-puzzle-piece'; ?>"></i><?= $vo['title']; ?>
-                    </a>
-                </li>
-            <?php } ?>
-        </ul>
-        <div class="hr-line-dashed"></div>
-    </div>
+        </div>
+    <?php } ?>
+    <?php if(!empty($menus)){ ?>
+        <div class="box-header with-border">
+            <h3 class="rf-box-title">业务菜单</h3>
+        </div>
+        <div class="box-body no-padding">
+            <ul class="nav nav-pills nav-stacked">
+                <?php foreach ($menus as $vo){ ?>
+                    <li>
+                        <a href="<?= AddonUrl::to([$vo['route']]); ?>" title="<?= $vo['title']; ?>">
+                            <i class="<?= $vo['icon'] ? $vo['icon'] : 'fa fa-puzzle-piece'; ?>"></i><?= $vo['title']; ?>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+            <div class="hr-line-dashed"></div>
+        </div>
+    <?php } ?>
 </div>

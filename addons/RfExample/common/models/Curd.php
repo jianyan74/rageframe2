@@ -55,12 +55,12 @@ class Curd extends \common\models\common\BaseModel
         return [
             [['cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
-            [['content', 'covers', 'files'], 'string'],
+            [['content', 'files'], 'string'],
             [['price'], 'number'],
             [['start_time', 'end_time'], 'safe'],
             [['title'], 'string', 'max' => 50],
             [['cover', 'attachfile', 'keywords', 'tag'], 'string', 'max' => 100],
-            [['description'], 'string', 'max' => 255],
+            [['description'], 'string', 'max' => 200],
             [['email'], 'string', 'max' => 60],
             [['provinces', 'city', 'area'], 'integer'],
             [['ip'], 'string', 'max' => 16],
@@ -111,7 +111,7 @@ class Curd extends \common\models\common\BaseModel
      */
     public function getManager()
     {
-        return $this->hasOne(Manager::className(), ['id' => 'manager_id']);
+        return $this->hasOne(Manager::class, ['id' => 'manager_id']);
     }
 
     /**

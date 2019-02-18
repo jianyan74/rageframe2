@@ -17,7 +17,7 @@ class AppAsset extends AssetBundle {
     ];
 
     public $js = [
-        'ueditor.all.min.js',
+        // 'ueditor.all.min.js',
     ];
 
     public $publishOptions = [

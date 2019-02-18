@@ -1,10 +1,12 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use common\helpers\AuthHelper;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use common\helpers\HtmlHelper;
 
 $this->title = '自动回复';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -17,11 +19,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <li class="active"><a href="<?= Url::to(['rule/index'])?>"> 关键字自动回复</a></li>
                 <li><a href="<?= Url::to(['setting/special-message'])?>"> 非文字自动回复</a></li>
                 <li><a href="<?= Url::to(['reply-default/index'])?>"> 关注/默认回复</a></li>
-                <li class="pull-right">
-                    <a class="btn btn-primary btn-xs" onclick="openEdit()">
-                        <i class="fa fa-plus"></i> 创建
-                    </a>
-                </li>
+                <!-- 权限校验判断 -->
+                <?php if(AuthHelper::verify('/wechat/rule/edit')){?>
+                    <li class="pull-right">
+                        <a class="btn btn-primary btn-xs" onclick="openEdit()">
+                            <i class="fa fa-plus"></i> 创建
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane">
@@ -55,7 +60,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <div class="panel-heading">
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
-                                            <span class="label label-info">优先级：<?= $model->sort; ?></span>
+                                    <span class="label label-info">优先级：<?= $model->sort; ?></span>
                                     <?php if(RuleKeyword::verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
@@ -63,9 +68,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         <span class="label label-info" onclick="statusRule(this)">已启用</span>
                                     <?php }else{ ?>
                                         <span class="label label-danger" onclick="statusRule(this)">已禁用</span>
-
                                     <?php } ?>
-                                        </span>
+                                </span>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true" style="">
                                 <div class="panel-body">
@@ -80,8 +84,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="btn-group pull-right">
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['edit','id'=>$model->id, 'module' => $model->module])?>"><i class="fa fa-edit"></i> 编辑</a>
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['delete','id' => $model->id])?>" onclick="rfDelete(this);return false;"><i class="fa fa-times"></i> 删除</a>
+                                            <?= HtmlHelper::linkButton(['edit', 'id' => $model->id, 'module' => $model->module], '<i class="fa fa-edit"></i>编辑')?>
+                                            <?= HtmlHelper::delete(['delete', 'id' => $model->id], '<i class="fa fa-times"></i>删除')?>
                                             <!-- <a class="btn btn-white btn-sm" href="#"><i class="fa fa-bar-chart-o"></i> 使用率走势</a>-->
                                         </div>
                                     </div>

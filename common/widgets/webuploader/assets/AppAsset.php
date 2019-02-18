@@ -8,17 +8,20 @@ use yii\web\AssetBundle;
  * @package common\widgets\webuploader\assets
  * @author jianyan74 <751393839@qq.com>
  */
-class AppAsset extends AssetBundle {
-
+class AppAsset extends AssetBundle
+{
+    /**
+     * @var string
+     */
     public $sourcePath = '@common/widgets/webuploader/resources/';
 
     public $css = [
-        'css/common.css',
+
     ];
 
     public $js = [
-        'js/uploader.js',
-        'js/sortable.min.js'
+        'js/sortable.min.js',
+        'webuploader/webuploader.min.js',
     ];
 
     public $depends = [

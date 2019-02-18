@@ -74,7 +74,8 @@ class Attachment extends \common\models\common\BaseModel
     {
         return [
             [['width', 'height', 'link_type', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['file_name', 'local_url', 'media_id'], 'string', 'max' => 255],
+            [['file_name', 'local_url', 'media_id'], 'string', 'max' => 150],
+            [['media_id'], 'string', 'max' => 50],
             [['media_type'], 'string', 'max' => 15],
             [['media_url'], 'string', 'max' => 5000],
             [['is_temporary'], 'string', 'max' => 10],
@@ -153,7 +154,7 @@ class Attachment extends \common\models\common\BaseModel
      */
     public function getNews()
     {
-        return $this->hasMany(AttachmentNews::className(), ['attachment_id' => 'id']);
+        return $this->hasMany(AttachmentNews::class, ['attachment_id' => 'id']);
     }
 
     /**

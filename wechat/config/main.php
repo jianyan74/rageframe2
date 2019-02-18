@@ -50,6 +50,10 @@ return [
 
             ],
         ],
+        /** ------ 资源替换 ------ **/
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ],
         'response' => [
             'class' => 'yii\web\Response',
             'on beforeSend' => function($event) {

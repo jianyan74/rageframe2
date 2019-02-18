@@ -60,8 +60,7 @@ class Attachment extends \common\models\common\BaseModel
             [['size', 'year', 'month', 'day', 'status', 'created_at', 'updated_at'], 'integer'],
             [['drive', 'extension'], 'string', 'max' => 50],
             [['upload_type'], 'string', 'max' => 10],
-            [['specific_type'], 'string', 'max' => 255],
-            [['base_url', 'path', 'name'], 'string', 'max' => 100],
+            [['base_url', 'path', 'name', 'specific_type'], 'string', 'max' => 100],
             [['upload_ip'], 'string', 'max' => 16],
         ];
     }

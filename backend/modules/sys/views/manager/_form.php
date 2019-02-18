@@ -2,6 +2,7 @@
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use common\helpers\HtmlHelper;
+use common\enums\GenderEnum;
 ?>
 
 <?= HtmlHelper::cssFile('@web/resources/plugins/cropper/cropper.min.css'); ?>
@@ -11,11 +12,11 @@ use common\helpers\HtmlHelper;
     <div class="col-sm-3">
         <div class="box">
             <div class="modal-body text-center">
-                <p><img class="profile-user-img img-responsive img-circle rf-img-lg" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"></p>
-                <p><a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a></p>
+            <p><img class="profile-user-img img-responsive img-circle rf-img-lg" src="<?= HtmlHelper::headPortrait($model->head_portrait);?>"></p>
+            <p><a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-upload"></i> 头像更改</a></p>
                 <p class="profile-username"><?= $model->username; ?></p>
-                <p>最后登陆IP : <?= $model->last_ip ?></p>
-                <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
+            <p>最后登陆IP : <?= $model->last_ip ?></p>
+            <p>最后登陆时间 : <?= Yii::$app->formatter->asDatetime($model->last_time) ?></p>
             </div>
         </div>
     </div>
@@ -32,7 +33,7 @@ use common\helpers\HtmlHelper;
             <div class="box-body">
                 <?= $form->field($model, 'head_portrait')->hiddenInput()->label(false) ?>
                 <?= $form->field($model, 'realname')->textInput() ?>
-                <?= $form->field($model, 'sex')->radioList(['1' => '男','2' => '女']) ?>
+                <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
                 <?= \backend\widgets\provinces\Provinces::widget([
                     'form' => $form,
@@ -59,7 +60,7 @@ use common\helpers\HtmlHelper;
                 <?= $form->field($model, 'address')->textarea() ?>
             </div>
             <div class="box-footer text-center">
-                <button class="btn btn-primary" type="submit" onclick="SendForm()">保存</button>
+                <button class="btn btn-primary" type="submit" onclick="sendForm()">保存</button>
                 <?= $backBtn ?>
             </div>
             <?php ActiveForm::end(); ?>
@@ -190,7 +191,7 @@ use common\helpers\HtmlHelper;
     }
 
     // 提交表单时候触发
-    function SendForm(){
+    function sendForm(){
         var status = "<?= Yii::$app->user->id == $model->id ? true : false ;?>";
         if(status){
             var src = $('#manager-head_portrait').val();

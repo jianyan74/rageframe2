@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'filter' => false, //不显示搜索框
                         ],
                         'realname',
-                        'mobile_phone',
+                        'mobile',
                         [
                             'label'=> '账户金额',
                             'filter' => false, //不显示搜索框

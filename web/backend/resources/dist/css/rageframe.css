@@ -77,6 +77,7 @@ nav.page-tabs .page-tabs-content {
 
 .page-tabs a i {
     color: #777;
+    padding-left: 6px;
 }
 
 .page-tabs a.active,
@@ -114,29 +115,6 @@ nav.page-tabs .page-tabs-content {
     background-color: #ffffff;
     height: 1px;
     margin: 20px 0;
-}
-
-/* 上传图片/文件 */
-.upload-box {
-    margin-top: 15px;
-    width: 112px;
-    height: 112px;
-}
-
-.fontColorWhite {
-    color: #fff !important;
-}
-
-.halfOpacityBlackBG {
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.absoluteFullSize {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
 }
 
 /* MARGINS & PADDINGS */
@@ -725,6 +703,200 @@ nav.page-tabs .page-tabs-content {
     min-width: 140px;
 }
 
+/* ====== 图片文件上传 ====== */
+
+/* 上传图片/文件 */
+.upload-box {
+    margin-top: 15px;
+    width: 112px;
+    height: 112px;
+}
+
+.fontColorWhite {
+    color: #fff !important;
+}
+
+.halfOpacityBlackBG {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.absoluteFullSize {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+/* 图片相册样式 */
+.photo-list{
+    margin: 0;
+    padding: 0;
+}
+.photo-list ul{
+    margin-top: -25px;
+    margin-left: -55px;
+}
+.photo-list ul li{
+    float: left;
+    margin-right: 15px;
+    text-align: center;
+    *width: 118px;
+    list-style-type:none;
+}
+.photo-list ul li .img-box{
+    position: relative;
+    overflow: hidden;
+    width: 112px;
+    height: 112px;
+    margin-top: 15px;
+    cursor: pointer;border: 1px #efefed solid;
+}
+.photo-list ul li .img-box .backgroundCover{
+    background-size: cover;
+    background-position: center center;
+}
+
+.photo-list ul li .img-box.selected{
+    border: 3px #f60 solid;
+}
+.photo-list ul li .img-box img{
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+    opacity: 1;
+}
+.photo-list ul li .img-box:hover .delimg{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    right: 0;
+    background: url(../img/delete.png) no-repeat;
+    background-size:25px 25px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* 多图上传 */
+.multi-container {
+    margin-bottom: 10px;
+}
+.multi-container .webuploader-container{
+    position: relative;
+}
+.multi-container .webuploader-element-invisible{
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+}
+.multi-container .photo-list .webuploader-container .webuploader-pick{
+    line-height: 110px;position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 110px;height: 110px;
+    padding: 0;cursor: pointer;text-align: center;
+    color: #333;border: 1px #ddd dashed;
+    background: url(../img/add-img2.png) no-repeat center center;
+}
+
+.multi-container .file-list .webuploader-container .webuploader-pick{
+    line-height: 110px;position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 110px;height: 110px;
+    padding: 0;cursor: pointer;text-align: center;
+    color: #333;border: 1px #ddd dashed;
+    background: url(../img/add-img2.png) no-repeat center center;
+}
+
+.multi-container .webuploader-container .webuploader-pick-disable{
+    pointer-events: none;
+    opacity: .6;
+}
+.multi-container .webuploader-container .preview{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.multi-container .webuploader-container .preview a{
+    line-height: 110px;
+    display: block;
+    width: 110px;
+    height: 110px;
+    text-align: center;
+    vertical-align: middle;
+}
+.multi-container .webuploader-container .preview a img{
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+}
+
+
+/* 文件样式 */
+.file-list{
+    margin: 0;
+    padding: 0;
+}
+.file-list ul{
+    margin-top: -25px;
+    margin-left: -55px;
+}
+.file-list ul li{
+    float: left;
+    margin-right: 15px;
+    text-align: center;
+    *width: 118px;
+    list-style-type:none;
+}
+.file-list ul li .img-box{
+    position: relative;
+    overflow: hidden;
+    width: 112px;
+    height: 112px;
+    line-height: 112px;
+    margin-top: 15px;
+    cursor: pointer;border: 1px #efefed solid;
+}
+.file-list ul li .img-box .fa{
+    font-size: 30px;
+    color: #999999;
+}
+
+.file-list ul li .img-box.selected{
+    border: 3px #f60 solid;
+}
+.file-list ul li .img-box img{
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+    opacity: 1;
+}
+.file-list ul li .img-box:hover .delimg{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    right: 0;
+    background: url(../img/delete.png) no-repeat;
+    background-size:25px 25px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.multi-container .file-list .webuploader-container .webuploader-pick{
+    line-height: 110px;position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 110px;height: 110px;
+    padding: 0;cursor: pointer;text-align: center;
+    color: #333;border: 1px #ddd dashed;
+    background: url(../img/add-file.png) no-repeat center center;
+    background-size: 35px;
+}
+
 /* ====== 替换AdminLTE样式 ====== */
 
 .content-header > .breadcrumb {
@@ -841,10 +1013,6 @@ nav.page-tabs .page-tabs-content {
     border-color: #ddd;
 }
 
-.select2-container .select2-selection--single .select2-selection__rendered {
-    margin-top: 0;
-}
-
 .bg-light-blue, .label-primary, .modal-primary .modal-body {
     background-color: #62a8ea !important;
 }
@@ -853,8 +1021,47 @@ nav.page-tabs .page-tabs-content {
     border-top-color: #62a8ea;
 }
 
+.form-control {
+    color: #555555;
+}
+
+.form-control:focus {
+    border-color: rgb(62, 142, 247);
+}
+
+a:hover, a:active, a:focus {
+    color: rgb(62, 142, 247);
+}
+
+/* ====== 替换其他组件样式 ====== */
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    margin-top: 0;
+}
+
+.select2-container--krajee .select2-selection {
+    border-radius: 0;
+}
+
+.select2-container--krajee .select2-search--dropdown .select2-search__field {
+    border-radius: 0;
+}
+
+.select2-container--krajee .select2-results__option--highlighted[aria-selected] {
+    background-color: #62a8ea;
+}
+
+.datepicker table tr td .active:active,
+.datepicker table tr td .active.highlighted:active,
+.datepicker table tr td.active.active,
+.datepicker table tr td.active.highlighted.active {
+    color: #fff;
+    background-color: #62a8ea;
+    border-color: #62a8ea;
+}
 
 /* ====== 替换基础样式 ====== */
+
 .modal-body {
     padding: 20px 30px 10px 30px;
     overflow: auto;
@@ -897,11 +1104,15 @@ body {
     vertical-align: middle;
 }
 
-.form-control {
-    color: #555555;
-}
-
 .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
     background-color: #62a8ea;
     border-color: #62a8ea;
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover {
+    background-color: #62a8ea;
+}
+
+.text-success {
+    color: #18bc9c;
 }

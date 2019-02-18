@@ -1,11 +1,13 @@
 <?php
 namespace backend\modules\sys\controllers;
 
+use common\models\sys\AddonsAuthItemChild;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use common\helpers\AuthHelper;
 use common\helpers\ResultDataHelper;
 use common\helpers\FileHelper;
 use common\helpers\AddonHelper;
@@ -43,6 +45,9 @@ class AddonsPlugController extends SController
                 $model->delete();
             }
 
+            // 更新缓存
+            AuthHelper::updateCache();
+
             // 验证模块信息
             $class = AddonHelper::getAddonConfig($addonName);
             if (!class_exists($class))
@@ -77,6 +82,15 @@ class AddonsPlugController extends SController
             $item['upgradeUrl'] = Url::to(['upgrade', 'name' => $item['name']]);
             $item['ajaxEditUrl'] = Url::to(['ajax-edit', 'id' => $item['id']]);
             $item['uninstallUrl'] = Url::to(['uninstall', 'name' => $item['name']]);
+
+            // 权限校验显示
+            $item['auth'] = [
+                'upgradeConfig' => AuthHelper::verify('/sys/addons-plug/upgrade-config'),
+                'upgrade' => AuthHelper::verify('/sys/addons-plug/upgrade'),
+                'ajaxUpdate' => AuthHelper::verify('/sys/addons-plug/ajax-update'),
+                'ajaxEdit' => AuthHelper::verify('/sys/addons-plug/ajax-edit'),
+                'uninstal' => AuthHelper::verify('/sys/addons-plug/uninstal'),
+            ];
         }
 
         if ($request->isAjax)
@@ -130,7 +144,7 @@ class AddonsPlugController extends SController
                 isset($addonsConfig->cover) && AddonsBinding::careteEntry($addonsConfig->cover, 'cover', $addonName);
 
                 // 添加权限
-                isset($addonsConfig->authItem) && AddonsAuthItem::add($addonsConfig->authItem, $addonName);
+                AddonsAuthItem::add($addonsConfig, $addonName);
 
                 Addons::edit(new Addons(), $addonsConfig);
 
@@ -245,13 +259,17 @@ class AddonsPlugController extends SController
             return $this->message('实例化失败,插件不存在或检查插件名称', $this->redirect(['uninstall']), 'error');
         }
 
+        // 更新缓存
+        AuthHelper::updateCache();
+
         // 更新配置
         $addonsConfig = new $class;
         isset($addonsConfig->menu) && AddonsBinding::careteEntry($addonsConfig->menu, 'menu', $addonName);
         isset($addonsConfig->cover) && AddonsBinding::careteEntry($addonsConfig->cover, 'cover', $addonName);
 
-        // 添加权限
-        isset($addonsConfig->authItem) && AddonsAuthItem::add($addonsConfig->authItem, $addonName);
+        // 更新权限
+        AddonsAuthItem::add($addonsConfig, $addonName);
+
         Addons::edit($addon, $addonsConfig);
 
         return $this->message('更新配置成功', $this->redirect(['uninstall']));

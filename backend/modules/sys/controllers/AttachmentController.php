@@ -30,7 +30,7 @@ class AttachmentController extends SController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Attachment::className(),
+            'model' => Attachment::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['title'], // 模糊查询
             'defaultOrder' => [

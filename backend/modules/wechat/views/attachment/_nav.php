@@ -2,6 +2,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use common\helpers\HtmlHelper;
+use common\helpers\AuthHelper;
 ?>
 
 <div class="row separateFromNextBlock">
@@ -32,22 +34,26 @@ use yii\helpers\Url;
     <div class="col-sm-2">
         <div class="pull-right" style="margin-top: 4px">
             共 <strong class="text-danger"><?= $count ?></strong> 条
-            <a class="btn btn-primary btn-xs" id="getAllAttachment">
-                <i class="fa fa-cloud-download"></i> 同步
-            </a>
+            <?php if(AuthHelper::verify('/wechat/attachment/get-all-attachment')){ ?>
+                <a class="btn btn-primary btn-xs" id="getAllAttachment">
+                    <i class="fa fa-cloud-download"></i> 同步
+                </a>
+            <?php } ?>
             <?php if($mediaType == 'news'){ ?>
-                <a id="createPostBtn" class="btn btn-primary btn-xs">
-                    <i class="fa fa-plus"></i> 创建
-                </a>
+                <?php if(AuthHelper::verify('/wechat/attachment/news-create')){ ?>
+                    <a id="createPostBtn" class="btn btn-primary btn-xs">
+                        <i class="fa fa-plus"></i> 创建
+                    </a>
+                <?php } ?>
             <?php }else{ ?>
-                <a class="btn btn-primary btn-xs" href="<?= Url::to([ $mediaType . '-create','model' => 'perm'])?>"  data-toggle='modal' data-target='#ajaxModal'>
-                    <i class="fa fa-plus"></i> 创建
-                </a>
+                <?= HtmlHelper::create([$mediaType . '-create'], '新增', [
+                    'data-toggle' => 'modal',
+                    'data-target' => '#ajaxModal',
+                ])?>
             <?php } ?>
         </div>
     </div>
 </div>
-
 
 <script>
     // 获取资源

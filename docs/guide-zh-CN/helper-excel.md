@@ -64,5 +64,5 @@ return ExcelHelper::exportData($list, $header, '测试', 'xlsx');
  * @param int $startRow 开始行数 默认 1
  * @return array|bool|mixed
  */
-$data = ExcelHelper::getExcelData($filePath, $startRow);
+$data = ExcelHelper::import($filePath, $startRow);
 ```

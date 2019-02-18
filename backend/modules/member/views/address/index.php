@@ -37,8 +37,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </thead>
                     <tbody>
                     <?php foreach($models as $model){ ?>
-                        <tr id="<?= $model->id?>">
-                            <td><?= $model->id?></td>
+                        <tr id="<?= $model->id ?>">
+                            <td><?= $model->id ?></td>
                             <td><?= Html::encode($model->realname) ?></td>
                             <td><?= $model->mobile ?></td>
                             <td><?= $model->address_name ?></td>

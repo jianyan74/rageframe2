@@ -37,7 +37,7 @@ class ArticleController extends AddonsBaseController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Article::className(),
+            'model' => Article::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['title'], // 模糊查询
             'defaultOrder' => [

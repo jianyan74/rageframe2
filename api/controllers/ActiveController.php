@@ -58,31 +58,31 @@ class ActiveController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
         // 跨域支持
-        $behaviors['class'] = Cors::className();
+        $behaviors['class'] = Cors::class;
         $behaviors['authenticator'] = [
-            'class' => CompositeAuth::className(),
+            'class' => CompositeAuth::class,
             'authMethods' => [
                 /**
                  * 下面是四种验证access_token方式
                  *
                  * 1.HTTP 基本认证: access token 当作用户名发送，应用在access token可安全存在API使用端的场景，例如，API使用端是运行在一台服务器上的程序。
-                 * \yii\filters\auth\HttpBasicAuth::className(),
+                 * \yii\filters\auth\HttpBasicAuth::class,
                  *
                  * 2.OAuth : 使用者从认证服务器上获取基于OAuth2协议的access token，然后通过 HTTP Bearer Tokens 发送到API 服务器。
                  * header格式：Authorization:Bearer+空格+access-token
-                 * yii\filters\auth\HttpBearerAuth::className(),
+                 * yii\filters\auth\HttpBearerAuth::class,
                  *
                  * 3.请求参数 access token 当作API URL请求参数发送，这种方式应主要用于JSONP请求，因为它不能使用HTTP头来发送access token
                  * http://rageframe.com/user/index/index?access-token=123
                  *
                  * 4.请求参数 access token 当作API header请求参数发送
                  * header格式: X-Api-Key: access-token
-                 * yii\filters\auth\HttpHeaderAuth::className(),
+                 * yii\filters\auth\HttpHeaderAuth::class,
                  */
-                HttpBasicAuth::className(),
-                HttpBearerAuth::className(),
-                HttpHeaderAuth::className(),
-                QueryParamAuth::className(),
+                HttpBasicAuth::class,
+                HttpBearerAuth::class,
+                HttpHeaderAuth::class,
+                QueryParamAuth::class,
             ],
             // 不进行认证判断方法
             'optional' => $this->optional,
@@ -90,7 +90,7 @@ class ActiveController extends \yii\rest\ActiveController
 
         // 进行签名验证，前提开启了签名验证
         $behaviors['signTokenValidate'] = [
-            'class' => HttpSignAuth::className(),
+            'class' => HttpSignAuth::class,
         ];
 
         /**
@@ -104,7 +104,7 @@ class ActiveController extends \yii\rest\ActiveController
          * enableRateLimitHeaders：false: 不开启限制 true：开启限制
          */
         $behaviors['rateLimiter'] = [
-            'class' => RateLimiter::className(),
+            'class' => RateLimiter::class,
             'enableRateLimitHeaders' => true,
         ];
 

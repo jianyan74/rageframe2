@@ -1,12 +1,12 @@
-<?php if (!empty($models)){ ?>
+<?php if (!empty($menus)){ ?>
     <?= $this->render('menu-tree', [
-        'models' => $models,
+        'menus' => $menus,
         'level' => 1,
     ])?>
 <?php } ?>
 
 <!--扩展插件模块信息-->
-<?php foreach($addonsInfo as $key => $addon){ ?>
+<?php foreach($addonMenus as $key => $addon){ ?>
     <li class="treeview rfLeftMenu rfLeftMenu-addons <?php if(Yii::$app->params['isMobile'] == false) echo 'hide'; ?>">
         <a href="#">
             <i class="<?= Yii::$app->params['addonsGroup'][$key]['icon']; ?>"></i>

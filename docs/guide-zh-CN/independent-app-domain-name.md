@@ -55,15 +55,13 @@ Yii::setAlias('@attachurl', 'http://storage.rageframe.local/attachment');
 'fullPath' => false, // 是否开启返回完整的文件路径
 ```
 
-并在 `siteDomain` 里面填写对应的域名信息
+并在 `common/config/bootstrap.php` 里面填写对应的域名信息例如：
 
 ```
-'siteDomain' => [
-    'backend' => 'http://backend.rageframe.local',
-    'frontend' => 'http://frontend.rageframe.local',
-    'wechat' => 'http://wechat.rageframe.local',
-    'api' => 'http://api.rageframe.local',
-],
+Yii::setAlias('@backendUrl', 'http://backend.rageframe.local');
+Yii::setAlias('@frontendUrl', 'http://frontend.rageframe.local');
+Yii::setAlias('@wechatUrl', 'http://wechat.rageframe.local');
+Yii::setAlias('@apiUrl', 'http://api.rageframe.local');
 ```
 
 ##### 8、删除根目录下的`web`目录

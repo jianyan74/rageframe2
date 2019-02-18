@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\Menu;
 use common\helpers\HtmlHelper;
+use common\helpers\AuthHelper;
 
 $this->title = Menu::$typeExplain[$type];
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -18,9 +19,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <li class="pull-right">
                     <div class="row">
                         <div class="col-lg-12 normalPaddingTop">
-                            <a class="btn btn-primary btn-xs" id="getNewMenu">
-                                <i class="fa fa-cloud-download"></i> 同步
-                            </a>
+                            <!-- 权限校验判断 -->
+                            <?php if(AuthHelper::verify('/wechat/menu/sync')){ ?>
+                                <a class="btn btn-primary btn-xs" id="getNewMenu">
+                                    <i class="fa fa-cloud-download"></i> 同步
+                                </a>
+                            <?php } ?>
                             <?= HtmlHelper::create(['edit','type' => $type])?>
                         </div>
                     </div>
@@ -57,16 +61,16 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 </td>
                                 <td>
                                     <?php if ($model->status == 1){ ?>
-                                        <font color="green">菜单生效中</font>
+                                        <span class="text-success">菜单生效中</span>
                                     <?php }else{ ?>
                                         <a href="<?= Url::to(['save','id' => $model->id])?>" class="color-default">生效并置顶</a>
                                     <?php } ?>
                                 </td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <?= HtmlHelper::edit(['edit', 'id' => $model->id,'type' => $model->type], $model->type == 2 ? '查看': '编辑'); ?>
+                                    <?= HtmlHelper::edit(['edit', 'id' => $model->id, 'type' => $model->type], $model->type == 2 ? '查看': '编辑'); ?>
                                     <?php if ($model->status == 0 || $model->type == 2){ ?>
-                                        <?= HtmlHelper::delete(['delete', 'id' => $model->id,'type' => $model->type]); ?>
+                                        <?= HtmlHelper::delete(['delete', 'id' => $model->id, 'type' => $model->type]); ?>
                                     <?php } ?>
                                 </td>
                             </tr>

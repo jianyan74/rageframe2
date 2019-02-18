@@ -3,6 +3,7 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\helpers\HtmlHelper;
 use common\enums\StatusEnum;
+use common\helpers\AuthHelper;
 
 $this->title = '定时群发';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -14,9 +15,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <a class="btn btn-primary btn-xs" onclick="openEdit()">
-                        <i class="fa fa-plus"></i> 创建
-                    </a>
+                    <!-- 权限校验判断 -->
+                    <?php if(AuthHelper::verify('/wechat/mass-record/edit')){ ?>
+                        <a class="btn btn-primary btn-xs" onclick="openEdit()">
+                            <i class="fa fa-plus"></i> 创建
+                        </a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="box-body table-responsive">

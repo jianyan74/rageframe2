@@ -109,7 +109,7 @@ class AddonUrl
      * @param array $url
      * @return string
      */
-    protected static function regroupRoute($url)
+    public static function regroupRoute($url)
     {
         $oldRoute = Yii::$app->params['addonInfo']['oldRoute'];
 

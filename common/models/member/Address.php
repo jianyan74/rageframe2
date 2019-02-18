@@ -2,27 +2,28 @@
 namespace common\models\member;
 
 use common\enums\StatusEnum;
+use common\helpers\RegularHelper;
 use common\models\common\Provinces;
 use common\models\common\BaseModel;
 
 /**
  * This is the model class for table "{{%member_address}}".
  *
- * @property string $id 主键
- * @property int $member_id 用户id
- * @property int $provinces 省id
- * @property int $city 市id
- * @property int $area 区id
- * @property int $is_default 是否默认
+ * @property int $id 主键
+ * @property string $member_id 用户id
+ * @property string $provinces 省id
+ * @property string $city 市id
+ * @property string $area 区id
  * @property string $address_name 地址
  * @property string $address_details 详细地址
- * @property int $zip_code 邮编
+ * @property int $is_default 默认地址
+ * @property string $zip_code 邮编
  * @property string $realname 真实姓名
- * @property string $tel 家庭号码
+ * @property string $home_phone 家庭号码
  * @property string $mobile 手机号码
  * @property int $status 状态(-1:已删除,0:禁用,1:正常)
- * @property int $created_at 创建时间
- * @property int $updated_at 修改时间
+ * @property string $created_at 创建时间
+ * @property string $updated_at 修改时间
  */
 class Address extends BaseModel
 {
@@ -41,11 +42,11 @@ class Address extends BaseModel
     {
         return [
             [['member_id', 'provinces', 'city', 'area', 'realname', 'mobile'], 'required'],
-            [['is_default', 'member_id', 'provinces', 'city', 'area', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['address_details', 'address_name'], 'string', 'max' => 255],
+            ['mobile', 'match', 'pattern' => RegularHelper::mobile(),'message' => '不是一个有效的手机号码'],
+            [['member_id', 'provinces', 'city', 'area', 'is_default', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['address_name', 'address_details'], 'string', 'max' => 200],
             [['realname'], 'string', 'max' => 100],
-            [['tel', 'mobile'], 'string', 'max' => 20],
-            ['mobile', 'match', 'pattern' => '/^[1][3578][0-9]{9}$/','message' => '不是一个有效的手机号码'],
+            [['home_phone', 'mobile'], 'string', 'max' => 20],
         ];
     }
 
@@ -65,7 +66,7 @@ class Address extends BaseModel
             'is_default' => '默认地址',
             'zip_code' => '邮编',
             'realname' => '真实姓名',
-            'tel' => '电话',
+            'home_phone' => '电话',
             'mobile' => '手机号码',
             'status' => '状态',
             'created_at' => '创建时间',
@@ -80,7 +81,7 @@ class Address extends BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::className(), ['id' => 'member_id']);
+        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
     }
 
     /**

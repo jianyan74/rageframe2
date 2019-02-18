@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-body">
                 <?= $form->field($model, 'title')->textInput(); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
-                <?= $form->field($model, 'cover')->widget(Images::className(), [
+                <?= $form->field($model, 'cover')->widget(Images::class, [
                     'config' => [
                         // 可设置自己的上传地址, 不设置则默认地址
                         // 'server' => '',

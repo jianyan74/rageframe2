@@ -82,7 +82,7 @@ return [
         'assetManager' => [
             // 线上建议将forceCopy设置成false，如果访问量不大无所谓
             'forceCopy' => true,
-            //'appendTimestamp' => true,
+            'appendTimestamp' => true,
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,

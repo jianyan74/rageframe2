@@ -62,6 +62,6 @@ class Record extends \common\models\common\BaseModel
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['openid' => 'openid']);
+        return $this->hasOne(User::class, ['openid' => 'openid']);
     }
 }

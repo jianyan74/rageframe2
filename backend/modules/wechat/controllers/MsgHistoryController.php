@@ -34,6 +34,7 @@ class MsgHistoryController extends WController
         $data = MsgHistory::find()->andFilterWhere(['like', 'message', $keywords]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
+            ->with(['fans', 'rule'])
             ->orderBy('id desc')
             ->limit($pages->limit)
             ->all();

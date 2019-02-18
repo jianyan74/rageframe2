@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <tr>
                                 <td>
                                     <a href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=<?= $model->ticket ?>" data-fancybox="gallery">
-                                        <img src="<?= Url::to(['qr','shortUrl' => Yii::$app->request->hostInfo])?>" alt="" width="45">
+                                        <img src="<?= Url::to(['qr', 'shortUrl' => Yii::$app->request->hostInfo])?>" alt="" width="45">
                                     </a>
                                 </td>
                                 <td><a href="<?= Url::to(['qrcode-stat/index','keyword' =>  $model->name])?>"><?= $model->name ?></a></td>
@@ -79,8 +79,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     'class' => 'btn btn-warning btn-sm'
                                 ]); ?>
                                 <span>注意：永久二维码无法在微信平台删除，但是您可以点击
-                                         <a href="javascript:;" class="color-default">【删除】</a>来删除本地数据。
-                                    </span>
+                                     <a href="javascript:;" class="color-default">【删除】</a>来删除本地数据。
+                                </span>
                             </td>
                         </tr>
                         </tbody>

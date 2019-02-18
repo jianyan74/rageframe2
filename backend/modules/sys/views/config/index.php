@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <tr id = <?= $model->id; ?>>
                                 <td><?= $model->id; ?></td>
                                 <td><?= $model->title; ?></td>
-                                <td><a href="<?= Url::to(['edit','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal'><?= $model->name; ?></a></td>
+                                <td><a href="<?= Url::to(['ajax-edit','id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal'><?= $model->name; ?></a></td>
                                 <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
                                 <td><?= $model['cate']['title'] ?? '' ?></td>
                                 <td><?= Yii::$app->params['configTypeList'][$model->type] ?></td>

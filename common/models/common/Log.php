@@ -96,7 +96,7 @@ class Log extends \common\models\common\BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::className(), ['id' => 'member_id']);
+        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
     }
 
     /**
@@ -104,6 +104,6 @@ class Log extends \common\models\common\BaseModel
      */
     public function getManager()
     {
-        return $this->hasOne(Manager::className(), ['id' => 'member_id']);
+        return $this->hasOne(Manager::class, ['id' => 'member_id']);
     }
 }

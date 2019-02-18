@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-body">
                  <div class="col-sm-12">
                     <?= $form->field($model, \'share_title\')->textInput(); ?>
-                    <?= $form->field($model, \'share_cover\')->widget(Images::className(), [
+                    <?= $form->field($model, \'share_cover\')->widget(Images::class, [
                         \'config\' => [
                             \'pick\' => [
                                 \'multiple\' => false,

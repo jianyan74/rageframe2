@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use common\enums\StatusEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -26,7 +27,7 @@ $form = ActiveForm::begin([
         ]); ?>
         <?= $form->field($model, 'address_details')->textarea() ?>
         <?= $form->field($model, 'is_default')->checkbox() ?>
-        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain) ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

@@ -2,16 +2,16 @@
 use yii\helpers\Url;
 use common\helpers\HtmlHelper;
 use common\enums\StatusEnum;
+use common\helpers\AuthHelper;
 use backend\widgets\menu\MenuLeftWidget;
-use backend\assets\AppAsset;
+use backend\assets\MainAsset;
 
-AppAsset::register($this);
+MainAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
     <html lang="<?= Yii::$app->language ?>">
     <head>
-        <!-- Meta -->
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"<
         <meta name="renderer" content="webkit">
@@ -19,14 +19,13 @@ AppAsset::register($this);
         <title><?= Yii::$app->params['adminTitle'];?></title>
         <?php $this->head() ?>
     </head>
-
     <body class="hold-transition skin-blue sidebar-mini fixed">
     <?php $this->beginBody() ?>
     <div class="wrapper">
         <!-- 头部区域 -->
         <header class="main-header">
             <!-- Logo区域 -->
-            <a href="<?= Url::to(['index']); ?>" class="logo">
+            <a href="<?= Yii::$app->homeUrl; ?>" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><?= Yii::$app->params['adminAcronym']; ?></span>
                 <!-- logo for regular state and mobile devices -->
@@ -46,7 +45,7 @@ AppAsset::register($this);
                         </li>
                         <!-- Notifications: style can be found in dropdown.less -->
                         <?php foreach ($menuCates as $cate){ ?>
-                            <?php if ($cate['status'] == StatusEnum::ENABLED) { ?>
+                            <?php if ($cate['status'] == StatusEnum::ENABLED && AuthHelper::verify('cate:' . $cate['id'])) { ?>
                                 <li class="dropdown notifications-menu rfTopMenu <?php if(Yii::$app->params['isMobile'] == true) echo 'hide'; ?> <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>">
                                     <a class="dropdown-toggle">
                                         <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
@@ -54,7 +53,7 @@ AppAsset::register($this);
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                        <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED) { ?>
+                        <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED && AuthHelper::verify('addons')) { ?>
                             <li class="dropdown notifications-menu rfTopMenu <?php if(Yii::$app->params['isMobile'] == true) echo 'hide'; ?>" data-type="addons">
                                 <a class="dropdown-toggle">
                                     <i class="fa fa-th-large"></i> 应用中心
@@ -65,31 +64,59 @@ AppAsset::register($this);
                 </div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        <?php if (AuthHelper::verify('/sys/manager-notify/index')){ ?>
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-bell-o"></i>
+                                    <span class="label label-warning"><?= $notifyPage->totalCount ?? 0; ?></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header">你有 <?= $notifyPage->totalCount ?? 0; ?> 条未读消息</li>
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu">
+                                            <?php foreach ($notify as $item){ ?>
+                                                <li>
+                                                    <a href="javascript:void (0);">
+                                                        收到一条<?= $item['type']; ?>消息
+                                                        <small><i class="fa fa-clock-o"></i> <?= Yii::$app->formatter->asRelativeTime($item['notify']['created_at'])?></small>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </li>
+                                    <!-- 验证权限 -->
+                                    <?php if(AuthHelper::verify('base-announce') && AuthHelper::verify('/sys/manager-notify/announce')){ ?>
+                                        <li class="footer"><a href="<?= Url::to(['/sys/manager-notify/announce']); ?>" class="J_menuItem">查看消息</a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        <?php } ?>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img class="user-image head_portrait" src="<?= HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"/>
-                                <span class="hidden-xs"><?= Yii::$app->user->identity->username; ?></span>
+                                <img class="user-image head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
+                                <span class="hidden-xs"><?= $manager->username; ?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"/>
+                                    <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
                                     <p>
-                                        <?= Yii::$app->user->identity->username; ?>
-                                        <small><?= Yii::$app->formatter->asDatetime(Yii::$app->user->identity->last_time); ?></small>
+                                        <?= $manager->username; ?>
+                                        <small><?= Yii::$app->request->userIP; ?></small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
                                 <li class="user-body">
                                     <div class="row">
-                                        <div class="col-xs-4 text-center">
+                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/sys/manager/personal')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/sys/manager/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
                                         </div>
-                                        <div class="col-xs-4 text-center">
+                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/sys/manager/up-password')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/sys/manager/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
                                         </div>
-                                        <div class="col-xs-4 text-center">
+                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/main/clear-cache')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/main/clear-cache']); ?>" class="J_menuItem" onclick="$('body').click();">清空缓存</a>
                                         </div>
                                     </div>
@@ -100,6 +127,9 @@ AppAsset::register($this);
                         <!-- Control Sidebar Toggle Button -->
                         <li>
                             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+                        <li id="logout" class="<?php if(Yii::$app->debris->config('sys_tags') == true) echo 'hide'; ?>">
+                            <a href="<?= Url::to(['site/logout']); ?>" data-method="post"><i class="fa fa fa-sign-out"></i>退出</a>
                         </li>
                     </ul>
                 </div>
@@ -112,16 +142,16 @@ AppAsset::register($this);
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait(Yii::$app->user->identity->head_portrait);?>" onerror="this.src='<?= HtmlHelper::onErrorImg();?>'"/>
+                        <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
                     </div>
                     <div class="pull-left info">
-                        <p><?= Yii::$app->user->identity->username; ?></p>
+                        <p><?= $manager->username; ?></p>
                         <a href="#">
                             <i class="fa fa-circle text-success"></i>
-                            <?php if (Yii::$app->user->id == Yii::$app->params['adminAccount']){; ?>
+                            <?php if (Yii::$app->services->sys->isAuperAdmin()){; ?>
                                 超级管理员
                             <?php }else{ ?>
-                                <?= Yii::$app->user->identity->assignment->item_name ?? '游客'?>
+                                <?= Yii::$app->services->sys->auth->getRole()->name ?? '游客'?>
                             <?php } ?>
                         </a>
                     </div>
@@ -129,9 +159,9 @@ AppAsset::register($this);
                 <!-- 侧边菜单 -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header" data-rel="external">系统菜单</li>
-                    <?= MenuLeftWidget::widget() ?>
+                    <?= MenuLeftWidget::widget(); ?>
                     <li class="header" data-rel="external">相关链接</li>
-                    <li><a href="http://www.rageframe.com" target="_blank"><i class="fa fa-bookmark text-red"></i> <span>官网</span></a></li>
+                    <li><a href="http://www.rageframe.com" target="_blank"><i class="fa fa-bookmark text-red"></i> <span>系统官网</span></a></li>
                     <li><a href="https://github.com/jianyan74/rageframe2/blob/master/docs/guide-zh-CN/README.md" target="_blank"><i class="fa fa-list text-yellow"></i> <span>在线文档</span></a></li>
                     <li><a href="https://jq.qq.com/?_wv=1027&k=5yvRLd7" target="_blank"><i class="fa fa-qq text-aqua"></i> <span>QQ交流群</span></a></li>
                 </ul>
@@ -140,7 +170,7 @@ AppAsset::register($this);
         </aside>
         <!-- 主体内容区域 -->
         <div class="content-wrapper" style="overflow: hidden; width: auto; height: 567px;">
-            <div class="content-tabs">
+            <div class="content-tabs <?php if(Yii::$app->debris->config('sys_tags') == false) echo 'hide'; ?>">
                 <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-angle-double-left"></i></button>
                 <nav class="page-tabs J_menuTabs" id="rftags">
                     <div class="page-tabs-content">
@@ -182,6 +212,13 @@ AppAsset::register($this);
         <!-- 右侧区域 -->
         <div class="control-sidebar-bg"></div>
     </div>
+    <script>
+        // 配置
+        var config = {
+            tag: <?= Yii::$app->debris->config('sys_tags') ?? false; ?>,
+            isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
+        };
+    </script>
     <?php $this->endBody() ?>
     </body>
     </html>

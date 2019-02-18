@@ -25,7 +25,7 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerFront'))
         {
-            $domainName = Yii::$app->params['siteDomain']['frontend'];
+            $domainName = Yii::getAlias('@frontendUrl');
             Yii::$app->set('urlManagerFront', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo,
@@ -53,7 +53,7 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerWechat'))
         {
-            $domainName = Yii::$app->params['siteDomain']['wechat'];
+            $domainName = Yii::getAlias('@wechatUrl');
             Yii::$app->set('urlManagerWechat', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/wechat',
@@ -81,7 +81,7 @@ class UrlHelper extends BaseUrl
     {
         if (!Yii::$app->has('urlManagerApi'))
         {
-            $domainName = Yii::$app->params['siteDomain']['api'];
+            $domainName = Yii::getAlias('@apiUrl');
             Yii::$app->set('urlManagerApi', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/api',
@@ -95,5 +95,16 @@ class UrlHelper extends BaseUrl
         }
 
         return urldecode(Yii::$app->urlManagerApi->createAbsoluteUrl($url, $scheme));
+    }
+
+    /**
+     * 获取权限所需的url
+     *
+     * @param $url
+     * @return string
+     */
+    public static function getAuthUrl($url)
+    {
+        return static::normalizeRoute($url);
     }
 }

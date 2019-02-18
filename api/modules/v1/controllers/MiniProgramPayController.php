@@ -26,14 +26,9 @@ class MiniProgramPayController extends OnAuthController
      */
     public function init()
     {
-        $config = Yii::$app->debris->configAll();
-
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
-            'app_id' => $config['miniprogram_appid'],
-            'mch_id' => $config['wechat_mchid'],
-            'key' => $config['wechat_api_key'], // API 密钥
-            'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
+            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
         ], Yii::$app->params['wechatPaymentConfig']);
 
         parent::init();

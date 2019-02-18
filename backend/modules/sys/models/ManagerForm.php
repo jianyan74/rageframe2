@@ -43,7 +43,7 @@ class ManagerForm extends Model
         return [
             [['password', 'username'], 'required'],
             ['password', 'string', 'min' => 6],
-            [['auth_key'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['auth_key' => 'key']],
+            [['auth_key'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::class, 'targetAttribute' => ['auth_key' => 'key']],
             [['username'], 'isUnique'],
             [['auth_key'], 'required'],
         ];

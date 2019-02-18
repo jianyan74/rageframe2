@@ -34,7 +34,7 @@ class AuthAssignment extends \common\models\common\BaseModel
             [['created_at', 'user_id'], 'integer'],
             [['item_name'], 'string', 'max' => 64],
             [['item_name', 'user_id'], 'unique', 'targetAttribute' => ['item_name', 'user_id']],
-            [['item_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['item_name' => 'name']],
+            [['item_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::class, 'targetAttribute' => ['item_name' => 'name']],
         ];
     }
 
@@ -102,7 +102,7 @@ class AuthAssignment extends \common\models\common\BaseModel
      */
     public function getItemName()
     {
-        return $this->hasOne(AuthItem::className(), ['name' => 'item_name']);
+        return $this->hasOne(AuthItem::class, ['name' => 'item_name']);
     }
 
     /**
@@ -112,7 +112,7 @@ class AuthAssignment extends \common\models\common\BaseModel
      */
     public function getAuthItemChild()
     {
-        return $this->hasMany(AuthItemChild::className(), ['parent' => 'item_name']);
+        return $this->hasMany(AuthItemChild::class, ['parent' => 'item_name']);
     }
 
     /**
@@ -122,7 +122,7 @@ class AuthAssignment extends \common\models\common\BaseModel
      */
     public function getAddonsAuthItemChild()
     {
-        return $this->hasMany(AddonsAuthItemChild::className(), ['parent' => 'item_name']);
+        return $this->hasMany(AddonsAuthItemChild::class, ['parent' => 'item_name']);
     }
 
     /**
@@ -132,7 +132,7 @@ class AuthAssignment extends \common\models\common\BaseModel
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
                 ],
