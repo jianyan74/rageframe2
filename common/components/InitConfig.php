@@ -21,14 +21,18 @@ class InitConfig implements BootstrapInterface
      */
     public function bootstrap($application)
     {
-        $config = Yii::$app->debris->configAll();
-        $this->id = $application->id;
+        try
+        {
+            $config = Yii::$app->debris->configAll();
+            $this->id = $application->id;// 初始化变量
+            $this->initParams($config);// 初始化组件
+            $this->initComponents($config);
+            unset($config);
+        }
+        catch (\Exception $e)
+        {
 
-        // 初始化变量
-        $this->initParams($config);
-        // 初始化组件
-        $this->initComponents($config);
-        unset($config);
+        }
     }
 
     /**
