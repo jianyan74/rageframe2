@@ -63,7 +63,7 @@ HtmlHelper::whether(1);
 /**
  * 点击大图
  *
- * @param string $imgSrc
+ * @param string $imgSrc 图片地址
  * @param int $width 宽度 默认45px
  * @param int $height 高度 默认45px
  */

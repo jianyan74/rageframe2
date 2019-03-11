@@ -14,6 +14,8 @@ class UnionPay
 {
     protected $config;
 
+    const DEFAULT = 'UnionPay_Express';
+
     /**
      * UnionPay constructor.
      */
@@ -28,7 +30,7 @@ class UnionPay
      * @param string $type
      * @return \Omnipay\UnionPay\ExpressGateway
      */
-    private function create($type = 'UnionPay_Express')
+    private function create($type = self::DEFAULT)
     {
         /* @var $gateway \Omnipay\UnionPay\ExpressGateway */
         $gateway = Omnipay::create($type);

@@ -3,52 +3,52 @@ use yii\helpers\Url;
 $jsConfig = json_encode($config);
 ?>
 
-<div class="row">
-    <div class="multi-container col-sm-12 rf-m">
-        <div class="photo-list">
-            <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>" id="<?= $boxId?>">
-                <?php if($config['pick']['multiple'] == true){ ?>
-                    <?php foreach ($value as $vo){ ?>
-                        <li>
-                            <input name="<?= $name?>" value="<?= $vo?>" type="hidden">
-                            <div class="img-box">
-                                <a href="<?= trim($vo) ?>" data-fancybox="rfUploadImg">
-                                    <div class="backgroundCover" style="background-image: url(<?= $vo?>);height: 110px"></div>
-                                </a>
-                                <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
-                            </div>
-                        </li>
+    <div class="row">
+        <div class="multi-container col-sm-12 rf-m">
+            <div class="photo-list">
+                <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>" id="<?= $boxId?>">
+                    <?php if($config['pick']['multiple'] == true){ ?>
+                        <?php foreach ($value as $vo){ ?>
+                            <li>
+                                <input name="<?= $name?>" value="<?= $vo?>" type="hidden">
+                                <div class="img-box">
+                                    <a href="<?= trim($vo) ?>" data-fancybox="rfUploadImg">
+                                        <div class="backgroundCover" style="background-image: url(<?= $vo?>);height: 110px"></div>
+                                    </a>
+                                    <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
+                                </div>
+                            </li>
+                        <?php } ?>
+                        <li class="upload-box upload-album-<?= $boxId?>"  data-select="<?= $config['select']?>"></li>
+                        <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
+                            <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传图片</a>
+                            <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => true])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
+                        </div>
+                    <?php }else{ ?>
+                        <?php if($value){ ?>
+                            <li>
+                                <input name="<?= $name?>" value="<?= $value?>" type="hidden">
+                                <div class="img-box">
+                                    <a href="<?= $value ?>" data-fancybox="rfUploadImg">
+                                        <div class="backgroundCover" style="background-image: url(<?= $value?>);height: 110px"></div>
+                                    </a>
+                                    <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
+                                </div>
+                            </li>
+                        <?php } ?>
+                        <li class="upload-box upload-album-<?= $boxId ?>" <?php if(!empty($value)){?> style="display: none"<?php } ?>  data-select="<?= $config['select']?>"></li>
+                        <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
+                            <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传图片</a>
+                            <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => false])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
+                        </div>
                     <?php } ?>
-                    <li class="upload-box upload-album-<?= $boxId?>"  data-select="<?= $config['select']?>"></li>
-                    <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
-                        <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传图片</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/attachment', 'boxId' => $boxId, 'multiple' => true])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
-                    </div>
-                <?php }else{ ?>
-                    <?php if($value){ ?>
-                        <li>
-                            <input name="<?= $name?>" value="<?= $value?>" type="hidden">
-                            <div class="img-box">
-                                <a href="<?= $value ?>" data-fancybox="rfUploadImg">
-                                    <div class="backgroundCover" style="background-image: url(<?= $value?>);height: 110px"></div>
-                                </a>
-                                <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
-                            </div>
-                        </li>
-                    <?php } ?>
-                    <li class="upload-box upload-album-<?= $boxId ?>" <?php if(!empty($value)){?> style="display: none"<?php } ?>  data-select="<?= $config['select']?>"></li>
-                    <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
-                        <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传图片</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/attachment', 'boxId' => $boxId, 'multiple' => false])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
-                    </div>
-                <?php } ?>
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    var mergeUrl = "<?= \yii\helpers\Url::to(['/file/merge']) ?>";
-</script>
+    <script>
+        var mergeUrl = "<?= \yii\helpers\Url::to(['/file/merge']) ?>";
+    </script>
 
 <?php $this->registerJs(<<<Js
     $('.upload-album-{$boxId}').mouseenter(function(e){
@@ -63,6 +63,11 @@ $jsConfig = json_encode($config);
         if (!obj.is(":hidden")) {
             obj.parent().find('.halfOpacityBlackBG').show();
         }
+    });
+
+    // 移除图像蒙层
+    $('.photo-list').mouseleave(function(e){
+        $(e.currentTarget).parent().find('.halfOpacityBlackBG').hide();
     });
     
     $(".upload-album-{$boxId}").InitMultiUploader({$jsConfig});

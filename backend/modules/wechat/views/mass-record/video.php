@@ -1,4 +1,4 @@
-<?= \backend\widgets\wechatselectattachment\Select::widget([
+<?= \backend\widgets\selector\Select::widget([
     'name' => 'SendForm[media_id]',
     'value' => $model->media_id,
     'type' => 'video',

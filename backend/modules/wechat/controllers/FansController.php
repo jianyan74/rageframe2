@@ -147,7 +147,7 @@ class FansController extends WController
                     break;
             }
 
-            $result = $this->app->customer_service->message($message)->to($model['openid'])->send();
+            $result = Yii::$app->wechat->app->customer_service->message($message)->to($model['openid'])->send();
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
                 return ResultDataHelper::json(422, $error);
@@ -166,7 +166,10 @@ class FansController extends WController
      *
      * @param $fan_id
      * @return string|Response
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionMoveTag($fan_id)
@@ -194,7 +197,7 @@ class FansController extends WController
             {
                 if (!in_array($tag_id, $fansTags))
                 {
-                    $this->app->user_tag->tagUsers([$fans['openid']], $tag_id);
+                    Yii::$app->wechat->app->user_tag->tagUsers([$fans['openid']], $tag_id);
                 }
 
                 $model = new FansTagMap();
@@ -208,7 +211,7 @@ class FansController extends WController
             {
                 if (!in_array($tag_id, $tags))
                 {
-                    $this->app->user_tag->untagUsers([$fans['openid']], $tag_id);
+                    Yii::$app->wechat->app->user_tag->untagUsers([$fans['openid']], $tag_id);
                 }
             }
 
@@ -237,7 +240,7 @@ class FansController extends WController
         $next_openid = $request->get('next_openid', '');
 
         // 获取全部列表
-        $fans_list = $this->app->user->list();
+        $fans_list = Yii::$app->wechat->app->user->list();
         $fans_count = $fans_list['total'];
 
         // 设置关注全部为为关注
@@ -291,6 +294,7 @@ class FansController extends WController
      * 开始同步粉丝数据
      *
      * @return array
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws yii\db\Exception
      */
     public function actionSync()

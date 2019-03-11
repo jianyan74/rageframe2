@@ -4,18 +4,12 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 ?>
 
-<style>
-    .normalPaddingRight .active {
-        border: 2px solid #1ab394 !important;
-    }
-</style>
-
 <!--模板列表-->
 <script type="text/html" id="rfAttachmentlistModel">
     {{each data as value i}}
     <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
-        <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" style="margin-bottom: 20px;" data-url="{{value.base_url}}">
-            <div class="normalPadding rule-ajax-img">
+        <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" data-url="{{value.base_url}}">
+            <div class="normalPadding">
                 {{if value.upload_type == "images"}}
                 <div style="background-image: url({{value.base_url}}); height: 160px;" class="backgroundCover relativePosition mainPostCover">
                     <div class="bottomBar">{{value.name}}</div>
@@ -59,7 +53,7 @@ use yii\helpers\ArrayHelper;
     <div class="inlineBlockContainer col3 vAlignTop" id="rfAttachmentList">
         <?php foreach ($models as $model){ ?>
             <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
-                <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" style="margin-bottom: 20px;" data-url="<?= $model['base_url']?>">
+                <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" data-url="<?= $model['base_url']?>">
                     <div class="normalPadding">
                         <?php if ($model['upload_type'] == 'images'){?>
                             <div style="background-image: url(<?= $model['base_url']?>); height: 160px;" class="backgroundCover relativePosition mainPostCover">
@@ -77,7 +71,7 @@ use yii\helpers\ArrayHelper;
             </div>
         <?php } ?>
     </div>
-    <div class="row text-center" id="loadingAttachment">
+    <div class="row text-center m-t" id="loadingAttachment">
         <span onclick="rfGetAttachment()" class="btn btn-white">加载更多</span>
     </div>
 </div>
@@ -182,7 +176,7 @@ use yii\helpers\ArrayHelper;
     function rfGetAttachment() {
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['/file/ajax-attachment'])?>",
+            url:"<?= Url::to(['/file/selector', 'json' => true])?>",
             dataType: "json",
             data: {
                 page:page,

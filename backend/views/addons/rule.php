@@ -3,7 +3,7 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
-use common\helpers\HtmlHelper;
+use common\helpers\AddonHtmlHelper;
 
 $this->title = '规则管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['rule-edit', 'addon' => Yii::$app->params['addon']['name']])?>
+                    <a class="btn btn-primary btn-xs" href="<?= Url::to(['rule-edit', 'addon' => Yii::$app->params['addon']['name']]); ?>"><i class="fa fa-plus"></i> 创建</a>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -30,9 +30,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
                                     <?php if ($model->status == StatusEnum::ENABLED){ ?>
-                                        <span class="label label-info" onclick="statusRule(this)">已启用</span>
+                                        <span class="label label-info pointer" onclick="statusRule(this)">已启用</span>
                                     <?php }else{ ?>
-                                        <span class="label label-danger" onclick="statusRule(this)">已禁用</span>
+                                        <span class="label label-danger pointer" onclick="statusRule(this)">已禁用</span>
                                     <?php } ?>
                                  </span>
                             </div>
@@ -49,8 +49,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="btn-group pull-right">
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-edit','id' => $model->id, 'addon' => Yii::$app->params['addon']['name']])?>"><i class="fa fa-edit"></i> 编辑</a>
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-delete','id' => $model->id, 'addon' => Yii::$app->params['addon']['name']])?>" onclick="rfDelete(this);return false;"><i class="fa fa-times"></i> 删除</a>
+                                            <div class="btn-group pull-right">
+                                                <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-edit', 'addon' => Yii::$app->params['addon']['name'], 'id' => $model->id]); ?>"><i class="fa fa-edit"></i> 编辑</a>
+                                                <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-delete', 'addon' => Yii::$app->params['addon']['name'], 'id' => $model->id]); ?>" onclick="rfDelete(this);return false;"><i class="fa fa-times"></i> 删除</a>                                            <!-- <a class="btn btn-white btn-sm" href="#"><i class="fa fa-bar-chart-o"></i> 使用率走势</a>-->
+                                            </div>
                                             <!-- <a class="btn btn-white btn-sm" href="#"><i class="fa fa-bar-chart-o"></i> 使用率走势</a>-->
                                         </div>
                                     </div>
@@ -59,11 +61,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         </div>
                     <?php } ?>
                 </div>
-            </div>
-            <div class="box-footer">
-                <?= LinkPager::widget([
-                    'pagination' => $pages
-                ]);?>
+                <div class="col-sm-12">
+                    <?= LinkPager::widget([
+                        'pagination' => $pages,
+                    ]);?>
+                </div>
             </div>
         </div>
     </div>

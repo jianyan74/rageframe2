@@ -3,7 +3,6 @@ namespace backend\modules\wechat\controllers;
 
 use Yii;
 use yii\data\Pagination;
-use yii\web\NotFoundHttpException;
 use common\models\wechat\Menu;
 use common\helpers\ResultDataHelper;
 use common\models\wechat\FansTags;
@@ -24,6 +23,7 @@ class MenuController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -38,7 +38,7 @@ class MenuController extends WController
             ->all();
 
         // 查询下菜单
-        !$models && Yii::$app->debris->getWechatError($this->app->menu->current());
+        !$models && Yii::$app->debris->getWechatError(Yii::$app->wechat->app->menu->current());
 
         return $this->render('index', [
             'pages' => $pages,
@@ -55,6 +55,7 @@ class MenuController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -123,7 +124,7 @@ class MenuController extends WController
                 ];
 
                 // 创建自定义菜单
-                $menuResult = $this->app->menu->create($buttons, $matchRule);
+                $menuResult = Yii::$app->wechat->app->menu->create($buttons, $matchRule);
                 if ($error = Yii::$app->debris->getWechatError($menuResult, false))
                 {
                     return ResultDataHelper::json(422, $error);
@@ -136,7 +137,7 @@ class MenuController extends WController
             }
 
             // 验证微信报错
-            if ($error = Yii::$app->debris->getWechatError($this->app->menu->create($buttons), false))
+            if ($error = Yii::$app->debris->getWechatError(Yii::$app->wechat->app->menu->create($buttons), false))
             {
                 return ResultDataHelper::json(422, $error);
             }
@@ -173,7 +174,7 @@ class MenuController extends WController
         if ($model->delete())
         {
             // 个性化菜单删除
-            !empty($model['menu_id']) && $this->app->menu->delete($model['menu_id']);
+            !empty($model['menu_id']) && Yii::$app->wechat->app->menu->delete($model['menu_id']);
             return $this->message("删除成功", $this->redirect(['index', 'type' => $type]));
         }
 
@@ -188,6 +189,7 @@ class MenuController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -199,7 +201,7 @@ class MenuController extends WController
             $model->save();
 
             // 创建微信菜单
-            $createReturn = $this->app->menu->create(unserialize($model->menu_data));
+            $createReturn = Yii::$app->wechat->app->menu->create(unserialize($model->menu_data));
             // 解析微信接口是否报错
             if ($error = Yii::$app->debris->getWechatError($createReturn, false))
             {
@@ -217,20 +219,21 @@ class MenuController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSync()
     {
         // 获取菜单列表
-        $list = $this->app->menu->list();
+        $list = Yii::$app->wechat->app->menu->list();
         // 解析微信接口是否报错
         if ($error = Yii::$app->debris->getWechatError($list, false))
         {
             return ResultDataHelper::json(404, $error);
         }
 
-        // 开始获取同步
+        // 开始获取自定义菜单同步
         if (!empty($list['menu']))
         {
             $model = new Menu;

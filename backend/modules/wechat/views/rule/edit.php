@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= $form->field($model, 'sort')->textInput()->hint('规则优先级，越大则越靠前，最大不得超过255') ?>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-2" style="padding-top: 14px;">
+                        <div class="col-sm-3 col-md-2 m-t-md">
                             <div class="checkbox m-2 m-r-xs">
                                 <label><input type="checkbox" id="setting" class="adv"> 高级设置</label>
                             </div>
@@ -142,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-2" style="padding-top: 14px;">
+                        <div class="col-sm-3 col-md-2 m-t-md">
                             <div class="checkbox m-2 m-r-xs">
                                 <label><input type="checkbox" id="trigger" class="adv"> 高级触发</label>
                             </div>
@@ -165,7 +165,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 <?php ActiveForm::end(); ?>
-
 
 <!--关键字模板-->
 <script id="keylist" type="text/html">
@@ -197,6 +196,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function(){
+        // 单击展开
         $('.adv').click(function () {
             var id = $(this).attr('id');
             if($(this).is(':checked')) {
@@ -207,7 +207,12 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         });
 
-        // 添加
+        // 展开高级触发
+        if ($('#list-key-2').html().length > 121 || $('#list-key-3').html().length > 121 || $('#list-key-4').html().length > 121){
+            $('#trigger').trigger('click');
+        }
+
+        // 添加关键字
         var take = "<?= RuleKeyword::TYPE_TAKE?>";
         $('.addKeyword').click(function(){
             var self = $(this);

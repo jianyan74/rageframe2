@@ -1,10 +1,10 @@
 <?php
 namespace backend\controllers;
 
-use common\helpers\AuthHelper;
 use Yii;
 use yii\web\UnauthorizedHttpException;
 use yii\filters\AccessControl;
+use common\helpers\AuthHelper;
 
 /**
  * 基类控制器
@@ -12,37 +12,10 @@ use yii\filters\AccessControl;
  * Class MController
  * @package backend\controllers
  * @property \yii\db\ActiveRecord $modelClass;
- * @property \EasyWeChat\OfficialAccount\Application $app;
- * @property \common\services\Application $services;
  * @author jianyan74 <751393839@qq.com>
  */
 class MController extends \common\controllers\BaseController
 {
-    /**
-     * 微信实例化SDK
-     *
-     * @var
-     */
-    protected $app;
-
-    /**
-     * 服务
-     *
-     * @var
-     */
-    protected $services;
-
-    /**
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function init()
-    {
-        parent::init();
-
-        empty($this->app) && $this->app = Yii::$app->wechat->app;
-        empty($this->services) && $this->services = Yii::$app->services;
-    }
-
     /**
      * @return array
      */

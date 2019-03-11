@@ -13,6 +13,13 @@ use Omnipay\Omnipay;
  */
 class WechatPay
 {
+    const DEFAULT = 'WechatPay';
+    const APP = 'WechatPay_App';
+    const NATIVE = 'WechatPay_Native';
+    const JS = 'WechatPay_Js';
+    const POS = 'WechatPay_Pos';
+    const MWEB = 'WechatPay_Mweb';
+
     /**
      * 订单
      *
@@ -67,7 +74,7 @@ class WechatPay
      */
     public function notify()
     {
-        $gateway = $this->create('WechatPay');
+        $gateway = $this->create(self::DEFAULT);
 
         return $gateway->completePurchase([
             'request_params' => file_get_contents('php://input')
@@ -87,7 +94,7 @@ class WechatPay
      */
     public function app($order, $debug = false)
     {
-        $gateway = $this->create('WechatPay_App');
+        $gateway = $this->create(self::APP);
         $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -108,7 +115,7 @@ class WechatPay
      */
     public function native($order, $debug = false)
     {
-        $gateway = $this->create('WechatPay_Native');
+        $gateway = $this->create(self::NATIVE);
         $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -130,7 +137,7 @@ class WechatPay
      */
     public function js($order, $debug = true)
     {
-        $gateway = $this->create('WechatPay_Js');
+        $gateway = $this->create(self::JS);
         $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -152,7 +159,7 @@ class WechatPay
      */
     public function pos($order, $debug = false)
     {
-        $gateway = $this->create('WechatPay_Pos');
+        $gateway = $this->create(self::POS);
         $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -172,7 +179,7 @@ class WechatPay
      */
     public function mweb($order, $debug = false)
     {
-        $gateway = $this->create('WechatPay_Mweb');
+        $gateway = $this->create(self::MWEB);
         $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -186,7 +193,7 @@ class WechatPay
      */
     public function close($out_trade_no)
     {
-        $gateway = $this->create('WechatPay');
+        $gateway = $this->create(self::DEFAULT);
         $response = $gateway->close([
             'out_trade_no' => $out_trade_no, //The merchant trade no
         ])->send();
@@ -201,7 +208,7 @@ class WechatPay
      */
     public function query($transaction_id)
     {
-        $gateway = $this->create('WechatPay');
+        $gateway = $this->create(self::DEFAULT);
         $response = $gateway->query([
             'transaction_id' => $transaction_id, //The wechat trade no
         ])->send();
@@ -224,7 +231,7 @@ class WechatPay
      */
     public function refund($info)
     {
-        $gateway = $this->create('WechatPay');
+        $gateway = $this->create(self::DEFAULT);
         $response = $gateway->refund($info)->send();
 
         return $response->getData();

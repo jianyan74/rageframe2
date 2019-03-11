@@ -1,6 +1,9 @@
 <?php
 namespace common\models\sys;
 
+use common\models\wechat\ReplyAddon;
+use common\models\wechat\Rule;
+use common\models\wechat\RuleKeyword;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\common\BaseModel;
@@ -260,10 +263,20 @@ class Addons extends BaseModel
      */
     public function afterDelete()
     {
+        // 移除绑定的菜单导航
         AddonsBinding::deleteAll(['addons_name' => $this->name]);
+        //权限清理
         AddonsAuthItemChild::deleteAll(['addons_name' => $this->name]);
         AddonsAuthItem::deleteAll(['addons_name' => $this->name]);
-        // Rule::deleteAll($this->name);
+        // 移除关键字
+        if ($replys = ReplyAddon::find()->where(['addon' => $this->name])->asArray()->all())
+        {
+            $ruleIds = array_column($replys, 'rule_id');
+            Rule::deleteAll(['in', 'id', $ruleIds]);
+            RuleKeyword::deleteAll(['in', 'rule_id', $ruleIds]);
+        }
+
+        ReplyAddon::deleteAll(['addon' => $this->name]);
         parent::afterDelete();
     }
 }

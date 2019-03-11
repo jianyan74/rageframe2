@@ -20,23 +20,7 @@
 
 ### 速率和参数配置
 
-> 可自行修改 `api/config/params.php` 配置
-
-```
-return [
-    // 是否开启api log 日志记录
-    'user.log' => true,
-    'user.log.noPostData' => [ // 安全考虑，不接收Post存储到日志的路由
-        'v1/site/login',
-    ],
-    // token有效期是否验证 默认不验证
-    'user.accessTokenValidity' => false,
-    // api接口token有效期 默认2天
-    'user.accessTokenExpire' => 2 * 24 * 3600,
-    // 默认分页数量
-    'user.pageSize' => 10,
-];
-```
+> 可自行修改 `common\models\common\RateLimit` 配置
 
 ### 不需要速率控制设置
 

@@ -10,9 +10,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-sm-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li><a href="<?= Url::to(['rule/index'])?>"> 关键字自动回复</a></li>
-                <li class="active"><a href="<?= Url::to(['setting/special-message'])?>"> 非文字自动回复</a></li>
-                <li><a href="<?= Url::to(['reply-default/index'])?>"> 关注/默认回复</a></li>
+                <li><a href="<?= Url::to(['rule/index']); ?>"> 关键字自动回复</a></li>
+                <li class="active"><a href="<?= Url::to(['setting/special-message']); ?>"> 非文字自动回复</a></li>
+                <li><a href="<?= Url::to(['reply-default/index']); ?>"> 关注/默认回复</a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane rf-auto">

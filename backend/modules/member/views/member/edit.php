@@ -9,7 +9,6 @@ $this->params['breadcrumbs'][] = ['label' => '会员信息', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-
 <div class="row">
     <div class="col-lg-12">
         <div class="box">
@@ -19,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <?php $form = ActiveForm::begin([
                 'fieldConfig' => [
                     'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
-                ]
+                ],
             ]); ?>
             <div class="box-body">
                 <?= $form->field($model, 'realname')->textInput() ?>
@@ -46,7 +45,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     ],
                     'options'=>[
                         'class' => 'form-control no_bor',
-                        'readonly' => 'readonly',// 禁止输入
                     ]
                 ]); ?>
                 <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>

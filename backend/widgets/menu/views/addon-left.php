@@ -8,7 +8,7 @@ $addonName = $addon['name'];
 $addonName = StringHelper::toUnderScore($addonName);
 ?>
 
-<div class="box box-solid rfAddonMenu">
+<div class="box box-solid p-xs rfAddonMenu">
     <?php if($addon['is_setting'] == StatusEnum::ENABLED || $addon['is_cover'] == StatusEnum::ENABLED || $addon['is_rule'] == StatusEnum::ENABLED){ ?>
         <div class="box-header with-border">
             <h3 class="rf-box-title">核心设置</h3>

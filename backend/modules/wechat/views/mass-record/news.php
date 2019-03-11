@@ -1,4 +1,4 @@
-<?= \backend\widgets\wechatselectattachment\Select::widget([
+<?= \backend\widgets\selector\Select::widget([
     'name' => 'SendForm[attachment_id]',
     'value' => $model->attachment_id,
     'type' => 'news',

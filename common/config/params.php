@@ -4,7 +4,7 @@ return [
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
 
-    // 上传配置
+    // 全局上传配置
     'uploadConfig' => [
         // 图片
         'images' => [

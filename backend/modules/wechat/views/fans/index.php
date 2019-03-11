@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <div class="panel-body">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 m-l-n-sm">
                                 <!-- 权限校验判断 -->
                                 <?php if(AuthHelper::verify('/wechat/fans/sync')){ ?>
                                     <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>

@@ -190,6 +190,15 @@ function rfText(text) {
     }
 }
 
+// 选中
+$(document).on("click",".rfWechatAttachmentActive",function() {
+    if (!$(this).hasClass('active')){
+        $(this).addClass('active');
+    }else{
+        $(this).removeClass('active');
+    }
+});
+
 // 初始化上传
 $(function() {
     //初始化上传控件

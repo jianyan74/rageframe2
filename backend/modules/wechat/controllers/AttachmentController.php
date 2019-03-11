@@ -58,6 +58,7 @@ class AttachmentController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -74,7 +75,7 @@ class AttachmentController extends WController
         if ($request->isAjax)
         {
             // 素材库
-            $material = $this->app->material;
+            $material = Yii::$app->wechat->app->material;
 
             $attach_id = $request->post('attach_id');
             $attachment = $this->findModel($attach_id);
@@ -206,6 +207,7 @@ class AttachmentController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -215,7 +217,7 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $result = $this->app->material->uploadImage(StringHelper::getLocalFilePath($model->local_url));
+            $result = Yii::$app->wechat->app->material->uploadImage(StringHelper::getLocalFilePath($model->local_url));
             // 验证微信报错
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -239,6 +241,7 @@ class AttachmentController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -248,7 +251,7 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()) && $model->local_url)
         {
             // 本地前缀
-            $result = $this->app->material->uploadVoice(StringHelper::getLocalFilePath($model->local_url, 'voices'));
+            $result = Yii::$app->wechat->app->material->uploadVoice(StringHelper::getLocalFilePath($model->local_url, 'voices'));
             // 验证微信报错
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -272,6 +275,7 @@ class AttachmentController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -281,7 +285,7 @@ class AttachmentController extends WController
         if ($model->load(Yii::$app->request->post()))
         {
             // 本地前缀
-            $result = $this->app->material->uploadVideo(StringHelper::getLocalFilePath($model->local_url, 'videos'), $model->file_name, $model->description);
+            $result = Yii::$app->wechat->app->material->uploadVideo(StringHelper::getLocalFilePath($model->local_url, 'videos'), $model->file_name, $model->description);
             // 验证微信报错
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -319,7 +323,7 @@ class AttachmentController extends WController
         if ($model->delete())
         {
             // 删除微信服务器数据
-            $result = $this->app->material->delete($model['media_id']);
+            $result = Yii::$app->wechat->app->material->delete($model['media_id']);
             // 验证微信报错
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -341,6 +345,7 @@ class AttachmentController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -363,7 +368,7 @@ class AttachmentController extends WController
             $method = $preview[$attachment->media_type];
             // 1:openid预览 2:微信号预览
             $model->type == 1 && $method = $method . 'ByName';
-            $result = $this->app->broadcasting->$method($attachment->media_id, $model->content);
+            $result = Yii::$app->wechat->app->broadcasting->$method($attachment->media_id, $model->content);
             // 验证微信报错
             if ($error = Yii::$app->debris->getWechatError($result, false))
             {
@@ -432,7 +437,7 @@ class AttachmentController extends WController
         // 查找素材
         try
         {
-            $lists = $this->app->material->list($type, $offset, $count);
+            $lists = Yii::$app->wechat->app->material->list($type, $offset, $count);
             // 解析微信接口是否报错.报错则抛出错误信息
             Yii::$app->debris->getWechatError($lists);
             if (empty($lists))

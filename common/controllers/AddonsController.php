@@ -39,8 +39,8 @@ class AddonsController extends Controller
     {
         parent::init();
 
-        $this->route = Yii::$app->request->get('route', null) ?? Yii::$app->request->post('route');
-        $this->addonName = Yii::$app->request->get('addon', null) ?? Yii::$app->request->post('addon');
+        $this->route = Yii::$app->request->get('route', Yii::$app->request->post('route', ''));
+        $this->addonName = Yii::$app->request->get('addon', Yii::$app->request->post('addon', ''));
         $this->addonName = StringHelper::strUcwords($this->addonName);
     }
 

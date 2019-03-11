@@ -46,7 +46,7 @@ class QrcodeController extends WController
 
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {
-            $qrcode = $this->app->qrcode;
+            $qrcode = Yii::$app->wechat->app->qrcode;
             try
             {
                 if ($model->model == Qrcode::MODEL_TEM)
@@ -68,7 +68,7 @@ class QrcodeController extends WController
             }
             catch (\Exception $e)
             {
-                return $this->message($e->getMessage(), $this->redirect(['index']), 'error', 0, false);
+                return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }
 
             return $this->redirect(['index']);
@@ -152,7 +152,7 @@ class QrcodeController extends WController
     {
         $id = Yii::$app->request->get('id');
         $model = Qrcode::findOne($id);
-        $url = $this->app->qrcode->url($model['ticket']);
+        $url = Yii::$app->wechat->app->qrcode->url($model['ticket']);
 
         header("Cache-control:private");
         header('content-type:image/jpeg');
@@ -167,6 +167,7 @@ class QrcodeController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */
@@ -177,7 +178,7 @@ class QrcodeController extends WController
             $postUrl = Yii::$app->request->post('shortUrl', '');
 
             // 长链接转短链接
-            $shortUrl = $this->app->url->shorten($postUrl);
+            $shortUrl = Yii::$app->wechat->app->url->shorten($postUrl);
             if ($error = Yii::$app->debris->getWechatError($shortUrl, false))
             {
                 return ResultDataHelper::json(422, $error);

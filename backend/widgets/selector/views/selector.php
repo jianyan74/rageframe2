@@ -3,12 +3,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 
-<style>
-    .normalPaddingRight .active {
-        border: 2px solid #1ab394 !important;
-    }
-</style>
-
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
     <h4 class="modal-title">文件列表</h4>
@@ -29,7 +23,7 @@ use yii\helpers\Url;
     <div class="inlineBlockContainer col3 vAlignTop" id="rfAttachmentList">
         <?php foreach ($models as $model){ ?>
             <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
-                <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" style="margin-bottom: 20px;" data-url="<?= $model['imgUrl']?>" data-key="<?= $model['key']?>" data-title="<?= $model['title']?>">
+                <div class="borderColorGray separateChildrenWithLine whiteBG rfWechatAttachmentActive" data-url="<?= $model['imgUrl']?>" data-key="<?= $model['key']?>" data-title="<?= $model['title']?>">
                     <div class="normalPadding">
                         <?php if ($model['type'] == 'image'){?>
                             <div style="background-image: url(<?= $model['imgUrl']?>); height: 160px;" class="backgroundCover relativePosition mainPostCover">
@@ -46,7 +40,7 @@ use yii\helpers\Url;
             </div>
         <?php } ?>
     </div>
-    <div class="row text-center" id="loadingAttachment">
+    <div class="row text-center m-t" id="loadingAttachment">
         <span onclick="rfGetWechatAttachment()" class="btn btn-white">加载更多</span>
     </div>
 </div>
@@ -59,8 +53,8 @@ use yii\helpers\Url;
 <script type="text/html" id="rfAttachmentlistModel">
     {{each data as value i}}
     <div class="normalPaddingRight" style="width:20%;margin-top: 10px;">
-        <div class="borderColorGray separateChildrenWithLine whiteBG rfAttachmentActive" style="margin-bottom: 20px;" data-title="{{value.title}}" data-key="{{value.key}}" data-url="{{value.imgUrl}}">
-            <div class="normalPadding rule-ajax-img">
+        <div class="borderColorGray separateChildrenWithLine whiteBG rfWechatAttachmentActive" data-title="{{value.title}}" data-key="{{value.key}}" data-url="{{value.imgUrl}}">
+            <div class="normalPadding">
                 {{if value.type == "image"}}
                 <div style="background-image: url({{value.imgUrl}}); height: 160px;" class="backgroundCover relativePosition mainPostCover">
                     <div class="bottomBar">{{value.title}}</div>
@@ -138,7 +132,7 @@ use yii\helpers\Url;
     function rfGetWechatAttachment() {
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['/wechat-select-attachment/ajax-list'])?>",
+            url:"<?= Url::to(['/selector/list', 'json' => true])?>",
             dataType: "json",
             data: {
                 page:page,

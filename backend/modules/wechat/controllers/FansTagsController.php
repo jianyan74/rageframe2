@@ -39,13 +39,13 @@ class FansTagsController extends WController
                     return $this->message("标签名称不能为空", $this->redirect(['index']), 'error');
                 }
 
-                $this->app->user_tag->update($key, $value);
+                Yii::$app->wechat->app->user_tag->update($key, $value);
             }
 
             // 插入标签
             foreach ($tag_add as $value)
             {
-                $this->app->user_tag->create($value);
+                Yii::$app->wechat->app->user_tag->create($value);
             }
 
             FansTags::updateList();

@@ -1,7 +1,6 @@
 <?php
-namespace backend\widgets\wechatselectattachment;
+namespace backend\widgets\selector;
 
-use backend\widgets\wechatselectattachment\assets\AttachmentAsset;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -13,11 +12,13 @@ use common\models\wechat\AttachmentNews;
 use common\helpers\ResultDataHelper;
 
 /**
- * Class WechatSelectAttachment
- * @package backend\widgets\wechatselectattachment
+ * 微信资源选择器
+ *
+ * Class SelectorController
+ * @package backend\widgets\selector
  * @author jianyan74 <751393839@qq.com>
  */
-class WechatSelectAttachment extends Controller
+class SelectorController extends Controller
 {
     /**
      * 行为控制
@@ -42,35 +43,25 @@ class WechatSelectAttachment extends Controller
     /**
      * 获取图片/视频/音频/图文
      *
-     * @param $media_type
-     * @return string
+     * @param bool $json 返回json格式
+     * @return array|string
      */
-    public function actionList()
+    public function actionList($json = false)
     {
         $keyword = Yii::$app->request->get('keyword');
         $media_type = Yii::$app->request->get('media_type');
         $models = $media_type == Attachment::TYPE_NEWS ? $this->news($keyword) : $this->attachment($media_type, $keyword);
 
-        // 资源注册
-        AttachmentAsset::register($this->view);
+        if ($json == true)
+        {
+            return ResultDataHelper::json(200, '获取成功', $models);
+        }
 
-        return $this->renderAjax('@backend/widgets/wechatselectattachment/views/list-model', [
+        return $this->renderAjax('@backend/widgets/selector/views/selector', [
             'models' => $models,
             'media_type' => $media_type,
             'boxId' => Yii::$app->request->get('boxId'),
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function actionAjaxList()
-    {
-        $keyword = Yii::$app->request->get('keyword');
-        $media_type = Yii::$app->request->get('media_type');
-        $models = $media_type == Attachment::TYPE_NEWS ? $this->news($keyword) : $this->attachment($media_type, $keyword);
-
-        return ResultDataHelper::json(200, '获取成功', $models);
     }
 
     /**

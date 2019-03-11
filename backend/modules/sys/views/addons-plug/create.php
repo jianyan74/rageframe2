@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="col-sm-12">
                                 <?= $form->field($model, 'title')->textInput()->hint('模块的名称, 显示在用户的模块列表中. 不要超过20个字符') ?>
                                 <?= $form->field($model, 'name')->textInput()->hint('模块标识符, 应对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能英文和下划线组成，建议大写驼峰，例如：RfArticle') ?>
-                                <?= $form->field($model, 'group')->dropDownList(ArrayHelper::map($addonsGroup,'name','title')) ?>
+                                <?= $form->field($model, 'group')->dropDownList(ArrayHelper::map($addonsGroup, 'name', 'title')) ?>
                                 <?= $form->field($model, 'version')->textInput()->hint('模块当前版本, 此版本号用于模块的版本更新')?>
                                 <?= $form->field($model, 'brief_introduction')->textInput() ?>
                                 <?= $form->field($model, 'description')->textarea()->hint('模块详细描述, 详细介绍模块的功能和使用方法 ')?>
@@ -52,19 +52,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <div class="well well-sm desk-menu">
                                     <div class="col-sm-12">
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单名称</span>
                                                 <input class="form-control" name="bindings[cover][title][]" placeholder="例如:首页入口" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单路由</span>
                                                 <input class="form-control" name="bindings[cover][route][]" placeholder="例如:test/index" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单图标</span>
                                                 <input class="form-control" name="bindings[cover][icon][]" placeholder="例如:fa fa-wechat" type="text">
                                             </div>
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         </div>
                                     </div>
                                     <div class="add">
-                                        <a href="javascript:;" onclick="addOption('cover',this);">添加菜单 <i class="fa fa-plus-circle" title="添加菜单"></i></a><br>
+                                        <a href="javascript:;" class="m-l" onclick="addOption('cover',this);">添加菜单 <i class="fa fa-plus-circle" title="添加菜单"></i></a><br>
                                         前台(含api/微信)导航入口菜单,点击后进入系统中对应的功能..
                                     </div>
                                 </div>
@@ -86,19 +86,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <div class="well well-sm">
                                     <div class="col-sm-12">
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单名称</span>
                                                 <input class="form-control" name="bindings[menu][title][]" placeholder="例如:首页管理" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单路由</span>
                                                 <input class="form-control" name="bindings[menu][route][]" placeholder="例如:test/index" type="text">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+                                            <div class="input-group rfAddonAddMenu">
                                                 <span class="input-group-addon">菜单图标</span>
                                                 <input class="form-control" name="bindings[menu][icon][]" placeholder="例如:fa fa-wechat" type="text">
                                             </div>
@@ -110,7 +110,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         </div>
                                     </div>
                                     <div class="add">
-                                        <a href="javascript:;" onclick="addOption('menu',this);">添加菜单 <i class="fa fa-plus-circle" title="添加菜单"></i></a><br>
+                                        <a href="javascript:;" class="m-l" onclick="addOption('menu',this);">添加菜单 <i class="fa fa-plus-circle" title="添加菜单"></i></a><br>
                                         后台管理中心导航菜单将会在管理中心生成一个导航入口(管理后台操作), 用于对模块定义的内容进行管理.
                                     </div>
                                 </div>
@@ -137,19 +137,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 <script id="menuModel" type="text/html">
     <div class="col-sm-12">
         <div class="col-md-3">
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+            <div class="input-group rfAddonAddMenu">
                 <span class="input-group-addon">菜单名称</span>
                 <input class="form-control" name="bindings[{{type}}][title][]" placeholder="例如:首页管理/入口" type="text">
             </div>
         </div>
         <div class="col-md-3">
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+            <div class="input-group rfAddonAddMenu">
                 <span class="input-group-addon">菜单路由</span>
                 <input class="form-control" name="bindings[{{type}}][route][]" placeholder="例如:test/index" type="text">
             </div>
         </div>
         <div class="col-md-3">
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+            <div class="input-group rfAddonAddMenu">
                 <span class="input-group-addon">菜单图标</span>
                 <input class="form-control" name="bindings[{{type}}][icon][]" placeholder="例如:fa fa-wechat" type="text">
             </div>

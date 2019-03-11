@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         <div class="inlineBlockContainer col3 vAlignTop">
             <?php foreach ($models as $model){ ?>
                 <div class="normalPaddingRight" style="width:20%;">
-                    <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 20px;">
+                    <div class="borderColorGray separateChildrenWithLine whiteBG m-b-sm">
                         <div class="normalPadding">
                             <div style="background-image: url(<?= Url::to(['analysis/image','attach' => $model['media_url']]) ?>); height: 160px" class="backgroundCover relativePosition mainPostCover">
                                 <div class="bottomBar"><?= $model['file_name'] ?></div>

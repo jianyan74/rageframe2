@@ -31,7 +31,6 @@ use common\enums\GenderEnum;
                 ]
             ]); ?>
             <div class="box-body">
-                <?= $form->field($model, 'head_portrait')->hiddenInput()->label(false) ?>
                 <?= $form->field($model, 'realname')->textInput() ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
@@ -58,6 +57,7 @@ use common\enums\GenderEnum;
                     ]
                 ]); ?>
                 <?= $form->field($model, 'address')->textarea() ?>
+                <?= $form->field($model, 'head_portrait')->hiddenInput()->label(false) ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit" onclick="sendForm()">保存</button>

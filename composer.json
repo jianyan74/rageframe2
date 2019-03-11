@@ -21,10 +21,10 @@
         "yiisoft/yii2-authclient": "~2.1.0",
         "yiisoft/yii2-redis": "^2.0",
         "yiisoft/yii2-queue": "dev-master",
-        "omnipay/common": "^2.5",
-        "lokielse/omnipay-alipay": "dev-legacy",
-        "lokielse/omnipay-wechatpay": "^1.0",
-        "lokielse/omnipay-unionpay": "^0.4",
+        "omnipay/common": "^3.0",
+        "lokielse/omnipay-alipay": "^3.0",
+        "lokielse/omnipay-wechatpay": "^3.0",
+        "lokielse/omnipay-unionpay": "^3.0",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "kartik-v/yii2-widget-timepicker": "*",
         "kartik-v/yii2-widget-colorinput": "*",
@@ -38,7 +38,7 @@
         "overtrue/pinyin": "~3.0",
         "overtrue/easy-sms": "^1.0",
         "overtrue/flysystem-qiniu": "^1.0",
-        "e282486518/yii2-console-migration": "*",
+        "e282486518/yii2-console-migration": "@dev",
         "xj/yii2-oauth": "~2.0.0",
         "ramsey/uuid": "^3.7",
         "moontoast/math": "^1.1",
@@ -50,7 +50,8 @@
         "jpush/jpush": "*",
         "omnilight/yii2-scheduling": "*",
         "league/flysystem": "^1.0",
-        "xxtime/flysystem-aliyun-oss": "^1.2"
+        "xxtime/flysystem-aliyun-oss": "^1.2",
+        "hashids/hashids": "^3.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

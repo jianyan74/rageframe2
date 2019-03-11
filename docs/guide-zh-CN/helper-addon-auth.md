@@ -30,7 +30,7 @@ AddonAuthHelper::verify($route);
 ```
 /**
  * 过滤自己拥有的权限
- * 传递权限数组返回自己拥有的权限
+ * 传递权限数组返回自己拥有的权限数组
  
  * @param array $route
  * @return array|bool

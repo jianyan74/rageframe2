@@ -5,7 +5,7 @@
     <div class="box-body">
         <div class="col-sm-12">
             <?= $form->field($moduleModel, 'title')->textInput() ?>
-            <?= \backend\widgets\wechatselectattachment\Select::widget([
+            <?= \backend\widgets\selector\Select::widget([
                 'name' => 'ReplyVideo[media_id]',
                 'value' => $moduleModel->media_id,
                 'type' => 'video',

@@ -9,7 +9,7 @@ use yii\helpers\Url;
     </div>
     <div class="box-body">
         <div class="col-lg-12">
-            <?= \backend\widgets\wechatselectattachment\Select::widget([
+            <?= \backend\widgets\selector\Select::widget([
                 'name' => 'ReplyImages[media_id]',
                 'value' => $moduleModel->media_id,
                 'type' => 'image',

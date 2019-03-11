@@ -13,7 +13,6 @@
 
 - [目录结构](sys-catalog.md)
 - [开发规范](sys-exploit.md)
-- [系统常用](sys-method.md)
 - [全局说明](sys-global-description.md)
 - [表单控件](sys-widget.md)
 - [组件调用](sys-subassembly.md)
@@ -66,6 +65,7 @@
 - [StringHelper](helper-string.md) - 字符串辅助类
 - [UrlHelper](helper-url.md) - Url生成辅助类
 - RegularHelper - 正则验证辅助类
+- HashidsHelper - ID加密辅助类
 - UploadHelper - 上传辅助类
 - [ResultDataHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类

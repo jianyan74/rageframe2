@@ -42,7 +42,7 @@ class Address extends BaseModel
     {
         return [
             [['member_id', 'provinces', 'city', 'area', 'realname', 'mobile'], 'required'],
-            ['mobile', 'match', 'pattern' => RegularHelper::mobile(),'message' => '不是一个有效的手机号码'],
+            ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '不是一个有效的手机号码'],
             [['member_id', 'provinces', 'city', 'area', 'is_default', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
             [['address_name', 'address_details'], 'string', 'max' => 200],
             [['realname'], 'string', 'max' => 100],

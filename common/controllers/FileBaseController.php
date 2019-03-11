@@ -213,58 +213,12 @@ class FileBaseController extends Controller
     }
 
     /**
-     * 获取资源列表
+     * 资源选择器
      *
-     * @return string
+     * @param bool $json
+     * @return array|string
      */
-    public function actionAttachment()
-    {
-        $upload_type = Yii::$app->request->get('upload_type', Attachment::UPLOAD_TYPE_IMAGES);
-
-        $data = Attachment::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['upload_type' => $upload_type]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 10]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->all();
-
-        $year = [];
-        for ($i = 2019; $i <= date('Y'); $i++)
-        {
-            $year[$i] = $i;
-        }
-
-        $month = [];
-        for ($i = 1; $i <= 12; $i++)
-        {
-            $month[$i] = $i;
-        }
-
-        // 如果是以文件形式上传的图片手动修改为图片类型显示
-        foreach ($models as &$model)
-        {
-            if (preg_match("/^image/", $model['specific_type']) && $model['extension'] != 'psd')
-            {
-                $model['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
-            }
-        }
-
-        return $this->renderAjax('@common/widgets/webuploader/views/ajax-list/list', [
-            'models' => $models,
-            'upload_type' => $upload_type,
-            'month' => $month,
-            'year' => $year,
-            'boxId' => Yii::$app->request->get('boxId'),
-            'multiple' => Yii::$app->request->get('multiple'),
-        ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function actionAjaxAttachment()
+    public function actionSelector($json = false)
     {
         $upload_type = Yii::$app->request->get('upload_type', Attachment::UPLOAD_TYPE_IMAGES);
         $year = Yii::$app->request->get('year', '');
@@ -285,13 +239,38 @@ class FileBaseController extends Controller
         // 如果是以文件形式上传的图片手动修改为图片类型显示
         foreach ($models as &$model)
         {
-            if (preg_match("/^image/", $model['specific_type']))
+            if (preg_match("/^image/", $model['specific_type']) && $model['extension'] != 'psd')
             {
                 $model['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
             }
         }
 
-        return ResultDataHelper::json(200, '获取成功', $models);
+        // 判断是否直接返回json格式
+        if ($json == true)
+        {
+            return ResultDataHelper::json(200, '获取成功', $models);
+        }
+
+        $year = [];
+        for ($i = 2019; $i <= date('Y'); $i++)
+        {
+            $year[$i] = $i;
+        }
+
+        $month = [];
+        for ($i = 1; $i <= 12; $i++)
+        {
+            $month[$i] = $i;
+        }
+
+        return $this->renderAjax('@common/widgets/webuploader/views/selector', [
+            'models' => $models,
+            'upload_type' => $upload_type,
+            'month' => $month,
+            'year' => $year,
+            'boxId' => Yii::$app->request->get('boxId'),
+            'multiple' => Yii::$app->request->get('multiple'),
+        ]);
     }
 
     /**

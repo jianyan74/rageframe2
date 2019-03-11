@@ -8,7 +8,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-xs-7">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title"><i class="fa fa-cog"></i> 开发环境</h3>
+                <h3 class="box-title"><i class="fa fa-cog"></i> 环境配置</h3>
             </div>
             <div class="box-body table-responsive">
                 <table class="table table-hover">
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>数据库大小</td>
-                        <td><?= Yii::$app->formatter->asShortSize($mysql_size); ?></td>
+                        <td><?= Yii::$app->formatter->asShortSize($mysql_size, 2); ?></td>
                     </tr>
                     <tr>
                         <td>附件目录</td>
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>附件目录大小</td>
-                        <td><?= Yii::$app->formatter->asShortSize($attachment_size); ?></td>
+                        <td><?= Yii::$app->formatter->asShortSize($attachment_size, 2); ?></td>
                     </tr>
                     <tr>
                         <td>文件上传限制</td>
@@ -55,13 +55,13 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-xs-5">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title"><i class="fa fa-code"></i> 开发系统</h3>
+                <h3 class="box-title"><i class="fa fa-code"></i> 系统信息</h3>
             </div>
             <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <tr>
-                        <td width="150px">系统名称</td>
-                        <td><?= Yii::$app->params['exploitSysName']?></td>
+                        <td width="150px">系统全称</td>
+                        <td><?= Yii::$app->params['exploitFullName']; ?></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>系统版本</td>
-                        <td><?= Yii::$app->params['exploitVersions']?></td>
+                        <td><?= Yii::$app->version; ?></td>
                     </tr>
                     <tr>
                         <td width="150px">Yii2版本</td>
@@ -89,7 +89,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>开发者</td>
-                        <td><?= Yii::$app->params['exploitName']?></td>
+                        <td><?= Yii::$app->params['exploitDeveloper']?></td>
                     </tr>
                 </table>
             </div>

@@ -3,8 +3,6 @@ namespace common\controllers;
 
 use Yii;
 use yii\web\Controller;
-use common\helpers\FileHelper;
-use common\helpers\ArrayHelper;
 
 /**
  * 基类

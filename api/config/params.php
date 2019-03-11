@@ -8,8 +8,9 @@ return [
     ],
     'user.log.except.code' => [], // 不记录的code
 
-    // token有效期是否验证 默认不关闭验证
-    'user.accessTokenValidity' => false,
+    /** ------ token相关 ------ **/
+    // token有效期是否验证 默认开启验证
+    'user.accessTokenValidity' => true,
     // token有效期 默认 2 小时
     'user.accessTokenExpire' => 2 * 60 * 60,
     // refresh token有效期是否验证 默认开启验证

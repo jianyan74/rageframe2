@@ -1,6 +1,7 @@
 <?php
 namespace common\components\payment;
 
+use Omnipay\Alipay\Requests\AopTradeAppPayRequest;
 use Yii;
 use Omnipay\Omnipay;
 
@@ -12,17 +13,10 @@ class AliPay
 {
     protected $config;
 
-    /**
-     * 类型
-     *
-     * @var array
-     */
-    protected $type = [
-        'pc' => 'Alipay_AopPage',
-        'app' => 'Alipay_AopApp',
-        'f2f' => 'Alipay_AopF2F',
-        'wap' => 'Alipay_AopWap',
-    ];
+    const PC = 'Alipay_AopPage';
+    const APP = 'Alipay_AopApp';
+    const F2F = 'Alipay_AopF2F';
+    const WAP = 'Alipay_AopWap';
 
     public function __construct($config)
     {
@@ -33,11 +27,11 @@ class AliPay
      * 实例化类
      *
      * @param string $type
-     * @return \Omnipay\Alipay\BaseAbstractGateway
+     * @return \Omnipay\Alipay\AbstractAopGateway
      */
-    private function create($type = 'Alipay_AopApp')
+    private function create($type = self::PC)
     {
-        /* @var $gateway \Omnipay\Alipay\BaseAbstractGateway */
+        /* @var $gateway \Omnipay\Alipay\AbstractAopGateway */
         $gateway = Omnipay::create($type);
         $gateway->setSignType('RSA2'); // RSA/RSA2/MD5
         $gateway->setAppId($this->config['app_id']);
@@ -64,12 +58,12 @@ class AliPay
     {
         $order['product_code'] = 'FAST_INSTANT_TRADE_PAY';
 
-        $gateway = $this->create('Alipay_AopPage');
+        $gateway = $this->create(self::PC);
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
         /**
-         * @var AopTradeAppPayResponse $response
+         * @var \Omnipay\Common\Message\AbstractResponse $response
          */
         $response = $request->send();
         $redirectUrl = $response->getRedirectUrl();
@@ -107,7 +101,7 @@ class AliPay
     {
         $order['product_code'] = 'QUICK_MSECURITY_PAY';
 
-        $gateway = $this->create('Alipay_AopApp');
+        $gateway = $this->create(self::APP);
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -126,7 +120,7 @@ class AliPay
      */
     public function f2f($order)
     {
-        $gateway = $this->create('Alipay_AopF2F');
+        $gateway = $this->create(self::F2F);
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
@@ -147,12 +141,12 @@ class AliPay
     {
         $order['product_code'] = 'QUICK_WAP_PAY';
 
-        $gateway = $this->create('Alipay_AopWap');
+        $gateway = $this->create(self::WAP);
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
         /**
-         * @var AopTradeAppPayResponse $response
+         * @var \Omnipay\Common\Message\AbstractResponse $response
          */
         $response = $request->send();
 
@@ -198,7 +192,8 @@ class AliPay
     /**
      * 异步/同步通知
      *
-     * @return mixed
+     * @return \Omnipay\Alipay\Requests\AopCompletePurchaseRequest
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function notify()
     {

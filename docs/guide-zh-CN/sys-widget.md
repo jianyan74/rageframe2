@@ -112,7 +112,7 @@ HTML;
 
 ### 图片上传控件
 
-> 注意OSS/七牛暂不支持切片和缩略图操作
+> 注意OSS/七牛暂不支持切片和缩略图操作，以下是完整案例
 
 ```
 <?= $form->field($model, 'cover')->widget('common\widgets\webuploader\Images', [
@@ -134,7 +134,7 @@ HTML;
                     'height' => 200,
                 ],
             ],
-            'drive' => 'local',// 默认本地 qiniu/oss 上传
+            'drive' => 'local',// 默认本地 支持 qiniu/oss 上传
         ],
          'chunked' => false,// 开启分片上传
          'chunkSize' => 512 * 1024,// 分片大小

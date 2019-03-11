@@ -34,7 +34,6 @@ class RuleController extends WController
 
         $data = Rule::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->with('ruleKeyword')
             ->andWhere(['in', 'module', array_keys(Rule::$moduleExplain)])
             ->andFilterWhere(['module' => $module])
             ->andFilterWhere(['like', 'name', $keyword]);
@@ -42,6 +41,7 @@ class RuleController extends WController
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('sort asc,created_at desc')
+            ->with('ruleKeyword')
             ->limit($pages->limit)
             ->all();
 

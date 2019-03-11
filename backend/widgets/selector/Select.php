@@ -1,14 +1,14 @@
 <?php
-namespace backend\widgets\wechatselectattachment;
+namespace backend\widgets\selector;
 
+use yii\widgets\InputWidget;
 use common\models\wechat\Attachment;
 use common\models\wechat\AttachmentNews;
-use yii\widgets\InputWidget;
 use common\helpers\StringHelper;
 
 /**
  * Class Select
- * @package backend\widgets\wechatselectattachment
+ * @package backend\widgets\selector
  * @author jianyan74 <751393839@qq.com>
  */
 class Select extends InputWidget

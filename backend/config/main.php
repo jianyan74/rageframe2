@@ -82,7 +82,7 @@ return [
         'assetManager' => [
             // 线上建议将forceCopy设置成false，如果访问量不大无所谓
             'forceCopy' => true,
-            'appendTimestamp' => true,
+            // 'appendTimestamp' => true,
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,
@@ -108,8 +108,9 @@ return [
         'provinces' => [
             'class' => 'backend\widgets\provinces\ProvincesController',
         ],
-        'wechat-select-attachment' => [
-            'class' => 'backend\widgets\wechatselectattachment\WechatSelectAttachment',
+        // 微信资源选择
+        'selector' => [
+            'class' => 'backend\widgets\selector\SelectorController',
         ],
     ],
     'params' => $params,

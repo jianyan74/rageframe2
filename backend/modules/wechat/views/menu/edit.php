@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ])->label('系统') ?>
                             </div>
                             <div class="col-sm-3">
-                                <?= $form->field($model, 'language')->dropDownList(Yii::$app->params['individuationMenuLanguage'],[
+                                <?= $form->field($model, 'language')->dropDownList(Yii::$app->params['individuationMenuLanguage'], [
                                     'disabled' => $model->isNewRecord ? false : true
                                 ])->label('语言') ?>
                             </div>

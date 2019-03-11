@@ -13,6 +13,7 @@ use common\helpers\ResultDataHelper;
 use common\helpers\AddonHelper;
 use common\models\sys\AddonsAuthItemChild;
 use common\helpers\AddonAuthHelper;
+use common\helpers\DebrisHelper;
 use backend\modules\wechat\models\RuleForm;
 
 /**
@@ -33,7 +34,7 @@ class AddonsController extends \common\controllers\AddonsController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],// 登录
+                        'roles' => ['@'], // 登录
                     ],
                 ],
             ],
@@ -48,6 +49,14 @@ class AddonsController extends \common\controllers\AddonsController
      */
     public function beforeAction($action)
     {
+        if (Yii::$app->user->isGuest)
+        {
+            throw new UnauthorizedHttpException('对不起，请先登录');
+        }
+
+        // 判断是否手机
+        Yii::$app->params['isMobile'] = DebrisHelper::isMobile();
+
         // 验证是否登录且验证是否超级管理员
         if (!Yii::$app->user->isGuest && Yii::$app->services->sys->isAuperAdmin())
         {
@@ -61,9 +70,9 @@ class AddonsController extends \common\controllers\AddonsController
 
         // 当前菜单路由
         $route = $this->route;
-        in_array($action->id, ['cover', 'qr-code']) && $route = AddonsAuthItemChild::AUTH_COVER;
+        in_array($action->id, ['cover']) && $route = AddonsAuthItemChild::AUTH_COVER;
         in_array($action->id, ['rule', 'rule-edit', 'rule-delete', 'ajax-update']) && $route = AddonsAuthItemChild::AUTH_RULE;
-        if (AddonAuthHelper::verify($route) == false)
+        if (AddonAuthHelper::verify($route) === false)
         {
             throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
         }
@@ -113,8 +122,9 @@ class AddonsController extends \common\controllers\AddonsController
         $request = Yii::$app->request;
         $keyword = $request->get('keyword', null);
 
-        $data = Rule::find()->with('ruleKeyword')
+        $data = Rule::find()
             ->where(['module' => Rule::RULE_MODULE_ADDON])
+            ->with('ruleKeyword')
             ->joinWith('addon as b')
             ->andWhere(['b.addon' => Yii::$app->params['addon']['name']])
             ->andFilterWhere(['like', 'name', $keyword]);
@@ -247,27 +257,5 @@ class AddonsController extends \common\controllers\AddonsController
         }
 
         return ResultDataHelper::json(200, '修改成功');
-    }
-
-    /**
-     * 二维码渲染
-     *
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function actionQrCode()
-    {
-        // 初始化模块
-        AddonHelper::initAddon($this->addonName, $this->route);
-
-        $qr = Yii::$app->get('qr');
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        Yii::$app->response->headers->add('Content-Type', $qr->getContentType());
-
-        return $qr->setText(Yii::$app->request->get('url', null))
-            ->setSize(150)
-            ->setMargin(7)
-            ->writeString();
     }
 }

@@ -49,9 +49,7 @@ class WechatApiController extends BaseController
                 }
 
                 throw new NotFoundHttpException('签名验证失败.');
-
                 break;
-
             // 接收数据
             case 'POST':
                 $app = Yii::$app->wechat->getApp();
@@ -90,11 +88,8 @@ class WechatApiController extends BaseController
                 // 将响应输出
                 $response = $app->server->serve();
                 $response->send();
-
                 break;
-
             default:
-
                 throw new NotFoundHttpException('所请求的页面不存在.');
         }
 
@@ -143,6 +138,8 @@ class WechatApiController extends BaseController
                 break;
             // 上报地理位置事件
             case 'LOCATION' :
+
+                //TODO 暂时不处理
 
                 break;
             // 自定义菜单(点击)事件

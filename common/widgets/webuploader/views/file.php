@@ -22,7 +22,7 @@ $jsConfig = json_encode($config);
                     <li class="upload-box upload-album-<?= $boxId?>" data-select="<?= $config['select']?>"></li>
                     <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
                         <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/attachment', 'boxId' => $boxId, 'multiple' => true, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
+                        <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => true, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
                     </div>
                 <?php }else{ ?>
                     <?php if($value){ ?>
@@ -38,7 +38,7 @@ $jsConfig = json_encode($config);
                     <li class="upload-box upload-album-<?= $boxId ?>" <?php if(!empty($value)){?> style="display: none"<?php } ?> data-select="<?= $config['select']?>"></li>
                     <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
                         <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/attachment', 'boxId' => $boxId, 'multiple' => false, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
+                        <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => false, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
                     </div>
                 <?php } ?>
             </ul>
@@ -63,6 +63,11 @@ $jsConfig = json_encode($config);
         if (!obj.is(":hidden")) {
             obj.parent().find('.halfOpacityBlackBG').show();
         }
+    });
+
+    // 移除文件蒙层
+    $('.file-list').mouseleave(function(e){
+        $(e.currentTarget).parent().find('.halfOpacityBlackBG').hide();
     });
 
     $(".upload-album-{$boxId}").InitMultiUploader({$jsConfig});

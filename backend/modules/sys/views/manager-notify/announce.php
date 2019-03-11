@@ -38,15 +38,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             [
                                 'label'=> '浏览状态',
                                 'filter' => false, //不显示搜索框
+                                'format' => 'raw',
                                 'value' => function($model){
-                                    return $model->is_read == 1 ? '已读' : '未读';
+                                    $label = $model->is_read == 0 ? 'label-success' : 'label-default';
+                                    return HtmlHelper::label($model->is_read == 1 ? '已读' : '未读', '', [
+                                        'class' => "label " . $label
+                                    ]);
                                 },
                             ],
                             [
-                                'label'=> '创建日期',
+                                'label'=> '创建时间',
                                 'attribute' => 'created_at',
                                 'filter' => false, //不显示搜索框
-                                'format' => ['date', 'php:Y-m-d H:i:s'],
+                                'format' => ['date', 'php:Y-m-d H:i'],
                             ],
                             [
                                 'header' => "操作",

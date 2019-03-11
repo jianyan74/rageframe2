@@ -12,7 +12,7 @@
 - PHP cURL 扩展
 - PHP OpenSSL 扩展
 - PHP fileinfo 拓展 素材管理模块需要用到
-- Mysql >= 5.7
+- Mysql >= 5.6
 - Apache 或 Nginx
 - Composer (用于管理第三方扩展包)
 - 安装CA证书 (windows开发环境下)
@@ -79,8 +79,8 @@ php composer.phar update
 
 后台地址：当前域名/backend
 
-微信地址：当前域名/wechat/
+微信地址：当前域名/wechat
 
-Api地址：当前域名/api/
+Api地址：当前域名/api
 
 

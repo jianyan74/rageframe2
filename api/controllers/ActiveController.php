@@ -82,7 +82,10 @@ class ActiveController extends \yii\rest\ActiveController
                 HttpBasicAuth::class,
                 HttpBearerAuth::class,
                 HttpHeaderAuth::class,
-                QueryParamAuth::class,
+                [
+                    'class' => QueryParamAuth::class,
+                    'tokenParam' => 'access-token'
+                ],
             ],
             // 不进行认证判断方法
             'optional' => $this->optional,

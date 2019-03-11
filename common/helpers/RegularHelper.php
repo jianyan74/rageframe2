@@ -29,7 +29,8 @@ class RegularHelper
      */
     public static function mobile()
     {
-        return '/^[1][3456789][0-9]{9}$/';
+        // return '/^[1][3456789][0-9]{9}$/';
+        return '/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/';
     }
 
     /**
@@ -39,7 +40,7 @@ class RegularHelper
      */
     public static function email()
     {
-        return '';
+        return '/^[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/';
     }
 
     /**
@@ -60,7 +61,8 @@ class RegularHelper
      */
     public static function identityCard()
     {
-        return '/^\d{15}|\d{}18$/';
+        // return '/^\d{15}|\d{}18$/';
+        return '/^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/';
     }
 
     /**

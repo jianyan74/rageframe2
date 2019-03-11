@@ -104,8 +104,8 @@ AppAsset::register($this);
     <script>
         // 配置
         var config = {
-            tag: <?= Yii::$app->debris->config('sys_tags'); ?>,
-            isMobile: "<?= Yii::$app->params['isMobile']; ?>",
+            tag: <?= Yii::$app->debris->config('sys_tags') ?? false; ?>,
+            isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
         };
 
         $(document).ready(function () {

@@ -8,7 +8,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if ($result == true) { ?>
         <div class="alert alert-success alert-dismissible">
             <h4><i class="icon fa fa-check"></i> 缓存清理成功</h4>
-            可手动关闭当前标签页
+            请手动关闭当前标签页
         </div>
     <?php }else{ ?>
         <div class="alert alert-danger alert-dismissible">

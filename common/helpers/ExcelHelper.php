@@ -78,23 +78,25 @@ class ExcelHelper
             case 'xlsx' :
                 $writer = new Xlsx($spreadsheet);
                 header('Pragma:public');
-                header("Content-Type:application/x-msexecl;name=\"{$filename}.xlsx\"");
+                header("Content-Type:application/x-msexecl;charset=utf-8;name=\"{$filename}.xlsx\"");
                 header("Content-Disposition:inline;filename=\"{$filename}.xlsx\"");
                 $writer->save('php://output');
+                exit();
                 break;
 
             case 'xls' :
                 $writer = new Xls($spreadsheet);
                 header('Pragma:public');
-                header("Content-Type:application/x-msexecl;name=\"{$filename}.xls\"");
+                header("Content-Type:application/x-msexecl;charset=utf-8;name=\"{$filename}.xls\"");
                 header("Content-Disposition:inline;filename=\"{$filename}.xls\"");
                 $writer->save('php://output');
+                exit();
                 break;
 
             case 'csv' :
                 $writer = new Csv($spreadsheet);
                 header('Pragma:public');
-                header("Content-type:text/csv;");
+                header("Content-type:text/csv;charset=utf-8;");
                 header("Content-Disposition:attachment; filename={$filename}.csv");
                 $writer->save('php://output');
                 exit();
@@ -103,7 +105,7 @@ class ExcelHelper
             case 'html' :
                 $writer = new Html($spreadsheet);
                 header('Pragma:public');
-                header("Content-Type:text/html;");
+                header("Content-Type:text/html;charset=utf-8;");
                 header("Content-Disposition:attachment;filename=\"{$filename}.{$suffix}\"");
                 $writer->save('php://output');
                 exit();

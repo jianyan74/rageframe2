@@ -11,8 +11,8 @@ use common\models\wechat\Fans;
     <table class="table text-center">
         <tbody>
         <tr>
-            <td class="feed-element">
-                <img src="<?= $model->head_portrait ?>" class="img-circle img-bordered-sm rf-img-lg">
+            <td class="feed-element" >
+                <img src="<?= $model->head_portrait ?>" class="img-circle img-bordered-sm" width="48" height="48">
             </td>
             <td><?= $model['nickname']?></td>
         </tr>

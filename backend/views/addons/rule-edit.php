@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-2">
-                            <div class="checkbox m-2 m-r-xs" style="padding-top: 14px">
+                            <div class="checkbox m-2 m-r-xs m-t-lg">
                                 <label><input type="checkbox" id="setting" class="adv"> 高级设置</label>
                             </div>
                         </div>
@@ -144,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-2">
-                            <div class="checkbox m-2 m-r-xs" style="padding-top: 14px">
+                            <div class="checkbox m-2 m-r-xs m-t-lg">
                                 <label><input type="checkbox" id="trigger" class="adv"> 高级触发</label>
                             </div>
                         </div>
@@ -154,19 +154,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用'])->hint('您可以临时禁用这条回复') ?>
                         </div>
                     </div>
+                    <div class="form-group">　
+                        <div class="col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">保存</button>
+                            <span class="btn btn-white" onclick="history.go(-1)">返回</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="form-group">　
-    <div class="col-sm-12 text-center">
-        <button class="btn btn-primary" type="submit">保存</button>
-        <span class="btn btn-white" onclick="history.go(-1)">返回</span>
-    </div>
-</div>
-<?php ActiveForm::end(); ?>
 
+<?php ActiveForm::end(); ?>
 
 <!--关键字模板-->
 <script id="keylist" type="text/html">
@@ -207,6 +207,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 $('.' + id).hide();
             }
         });
+
+        // 展开高级触发
+        if ($('#list-key-2').html().length > 121 || $('#list-key-3').html().length > 121 || $('#list-key-4').html().length > 121){
+            $('#trigger').trigger('click');
+        }
 
         // 添加
         var take = "<?= RuleKeyword::TYPE_TAKE?>";

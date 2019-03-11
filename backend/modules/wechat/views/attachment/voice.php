@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         <div class="inlineBlockContainer col3 vAlignTop">
             <?php foreach ($models as $model){ ?>
                 <div class="normalPaddingRight" style="width:20%;">
-                    <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 20px;">
+                    <div class="borderColorGray separateChildrenWithLine whiteBG m-b-sm">
                         <div class="normalPadding">
                             <div style="height: 160px;text-align:center;" class="backgroundCover relativePosition mainPostCover">
                                 <i class="fa fa-music" style="font-size: 40px;margin:0 auto;padding-top: 40px"></i>

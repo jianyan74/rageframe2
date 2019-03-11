@@ -25,7 +25,7 @@ class AddonUrl
      * @param bool $scheme
      * @return bool| string
      */
-    public static function to(array $url, $scheme = false)
+    public static function to($url, $scheme = false)
     {
         return urldecode(Url::to(self::regroupUrl($url), $scheme));
     }
@@ -88,6 +88,11 @@ class AddonUrl
      */
     protected static function regroupUrl($url)
     {
+        if (!is_array($url))
+        {
+            return $url;
+        }
+
         $addonsUrl = [];
         $addonsUrl[0] = self::ADDON_EXECUTE;
         $addonsUrl['route'] = self::regroupRoute($url);

@@ -9,7 +9,7 @@ use yii\helpers\Url;
     </div>
     <div class="box-body">
         <div class="col-lg-12">
-            <?= \backend\widgets\wechatselectattachment\Select::widget([
+            <?= \backend\widgets\selector\Select::widget([
                 'type' => 'news',
                 'label' => '图文',
                 'block' => '由于微信限制，自动回复只能回复一条图文信息，如果有多条图文，默认选择第一条图文',

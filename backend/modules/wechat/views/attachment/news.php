@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="inlineBlockContainer col5 vAlignTop separateChildren">
                 <?php foreach ($models as $item){ ?>
                     <div class="normalPaddingRight" style="position:absolute">
-                        <div class="borderColorGray separateChildrenWithLine whiteBG" style="margin-bottom: 30px;">
+                        <div class="borderColorGray separateChildrenWithLine whiteBG m-b-sm">
                             <?php foreach ($item['news'] as $index => $news){ ?>
                                 <div class="normalPadding relativePosition postItem">
                                     <?php if($index == 0){ ?>

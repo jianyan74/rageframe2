@@ -2,7 +2,7 @@
 namespace common\helpers;
 
 /**
- * 文件帮助类
+ * 文件辅助类
  *
  * Class FileHelper
  * @package common\helpers

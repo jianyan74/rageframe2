@@ -121,7 +121,7 @@ class MiniProgramController extends OnAuthController
         {
             $member = new MemberInfo();
             $member->attributes = [
-                'sex' => $userinfo['gender'],
+                'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
                 'head_portrait' => $userinfo['avatarUrl'],
             ];

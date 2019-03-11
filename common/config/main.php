@@ -1,5 +1,7 @@
 <?php
 return [
+    'name' => 'RageFrame',
+    'version' => '2.2.32',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',

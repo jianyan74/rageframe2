@@ -19,14 +19,14 @@ class ArrayHelper extends BaseArrayHelper
      * @param string $pidField
      * @return array
      */
-    public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid')
+    public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid', $child = '-')
     {
         $arr = [];
         foreach($items as $v)
         {
             if ($v[$pidField] == $pid)
             {
-                $v['-'] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
+                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
                 $arr[] = $v;
             }
         }

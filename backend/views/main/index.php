@@ -37,7 +37,7 @@ MainAsset::register($this);
                     <ul class="nav navbar-nav">
                         <li class="dropdown notifications-menu rfTopMenu">
                             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                                <span class="sr-only">Toggle navigation</span>
+                                <span class="sr-only">切换导航</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
@@ -46,7 +46,7 @@ MainAsset::register($this);
                         <!-- Notifications: style can be found in dropdown.less -->
                         <?php foreach ($menuCates as $cate){ ?>
                             <?php if ($cate['status'] == StatusEnum::ENABLED && AuthHelper::verify('cate:' . $cate['id'])) { ?>
-                                <li class="dropdown notifications-menu rfTopMenu <?php if(Yii::$app->params['isMobile'] == true) echo 'hide'; ?> <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>">
+                                <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>">
                                     <a class="dropdown-toggle">
                                         <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
                                     </a>
@@ -54,7 +54,7 @@ MainAsset::register($this);
                             <?php } ?>
                         <?php } ?>
                         <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED && AuthHelper::verify('addons')) { ?>
-                            <li class="dropdown notifications-menu rfTopMenu <?php if(Yii::$app->params['isMobile'] == true) echo 'hide'; ?>" data-type="addons">
+                            <li class="dropdown notifications-menu rfTopMenu hide" data-type="addons">
                                 <a class="dropdown-toggle">
                                     <i class="fa fa-th-large"></i> 应用中心
                                 </a>
@@ -64,7 +64,7 @@ MainAsset::register($this);
                 </div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <?php if (AuthHelper::verify('/sys/manager-notify/index')){ ?>
+                        <?php if (AuthHelper::verify('base-announce')){ ?>
                             <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-bell-o"></i>
@@ -86,9 +86,7 @@ MainAsset::register($this);
                                         </ul>
                                     </li>
                                     <!-- 验证权限 -->
-                                    <?php if(AuthHelper::verify('base-announce') && AuthHelper::verify('/sys/manager-notify/announce')){ ?>
-                                        <li class="footer"><a href="<?= Url::to(['/sys/manager-notify/announce']); ?>" class="J_menuItem">查看消息</a></li>
-                                    <?php } ?>
+                                    <li class="footer"><a href="<?= Url::to(['/sys/manager-notify/announce']); ?>" class="J_menuItem" onclick="$('body').click();">查看消息</a></li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -128,7 +126,7 @@ MainAsset::register($this);
                         <li>
                             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                         </li>
-                        <li id="logout" class="<?php if(Yii::$app->debris->config('sys_tags') == true) echo 'hide'; ?>">
+                        <li id="logout" class="hide">
                             <a href="<?= Url::to(['site/logout']); ?>" data-method="post"><i class="fa fa fa-sign-out"></i>退出</a>
                         </li>
                     </ul>
@@ -170,7 +168,7 @@ MainAsset::register($this);
         </aside>
         <!-- 主体内容区域 -->
         <div class="content-wrapper" style="overflow: hidden; width: auto; height: 567px;">
-            <div class="content-tabs <?php if(Yii::$app->debris->config('sys_tags') == false) echo 'hide'; ?>">
+            <div class="content-tabs hide">
                 <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-angle-double-left"></i></button>
                 <nav class="page-tabs J_menuTabs" id="rftags">
                     <div class="page-tabs-content">
@@ -200,9 +198,9 @@ MainAsset::register($this);
             <div class="pull-right hidden-xs">
                 <?= Yii::$app->debris->config('web_copyright'); ?>
             </div>
-            当前版本：<?= Yii::$app->params['exploitVersions']; ?>
+            当前版本：<?= Yii::$app->version; ?>
         </footer>
-        <!-- Control Sidebar -->
+        <!-- 布局样式设置 -->
         <aside class="control-sidebar control-sidebar-dark">
             <div class="tab-content">
                 <!-- Home tab content -->
@@ -218,6 +216,16 @@ MainAsset::register($this);
             tag: <?= Yii::$app->debris->config('sys_tags') ?? false; ?>,
             isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
         };
+
+        if (config.isMobile == false){
+            $('.rfTopMenu').removeClass('hide');
+        }
+
+        if (config.tag == false){
+            $('.logout').removeClass('hide');
+        }else{
+            $('.content-tabs').removeClass('hide');
+        }
     </script>
     <?php $this->endBody() ?>
     </body>

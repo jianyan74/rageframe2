@@ -20,17 +20,13 @@ use yii\widgets\ActiveForm;
             <tbody>
             <tr>
                 <td class="feed-element">
-                    <img src="<?= $model->head_portrait ?>" class="img-circle img-bordered-sm rf-img-lg">
+                    <img src="<?= $model->head_portrait ?>" class="img-circle img-bordered-sm" width="48" height="48">
                 </td>
                 <td><?= $model['nickname']?></td>
             </tr>
             <tr>
                 <td>粉丝编号</td>
                 <td><?= $model['openid']?></td>
-            </tr>
-            <tr>
-                <td>性别</td>
-                <td><?= $model->sex == 1 ? '男' : '女' ?></td>
             </tr>
             </tbody>
         </table>
@@ -56,7 +52,7 @@ use yii\widgets\ActiveForm;
                     </div>
                     <div id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\wechatselectattachment\Select::widget([
+                            <?= \backend\widgets\selector\Select::widget([
                                 'name' => 'images',
                                 'value' => '',
                                 'type' => 'image',
@@ -66,7 +62,7 @@ use yii\widgets\ActiveForm;
                     </div>
                     <div id="tab-3" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\wechatselectattachment\Select::widget([
+                            <?= \backend\widgets\selector\Select::widget([
                                 'name' => 'news',
                                 'value' => '',
                                 'type' => 'news',
@@ -85,12 +81,12 @@ use yii\widgets\ActiveForm;
                             </div>
                             <div class="form-group required">
                                 <label class="control-label" for="manager-mobile">视频说明</label>
-                                <?= Html::textarea('description', '',[
+                                <?= Html::input('text', 'description', '', [
                                     'class' => 'form-control',
                                     'id' => 'description',
                                 ])?>
                             </div>
-                            <?= \backend\widgets\wechatselectattachment\Select::widget([
+                            <?= \backend\widgets\selector\Select::widget([
                                 'name' => 'video',
                                 'value' => '',
                                 'type' => 'video',
@@ -100,7 +96,7 @@ use yii\widgets\ActiveForm;
                     </div>
                     <div id="tab-5" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\wechatselectattachment\Select::widget([
+                            <?= \backend\widgets\selector\Select::widget([
                                 'name' => 'voice',
                                 'value' => '',
                                 'type' => 'voice',
@@ -154,12 +150,12 @@ use yii\widgets\ActiveForm;
         if (type == 4) {
 
             if (!$('#title').val()){
-                rfWarning('请选择标题');
+                rfWarning('请填写标题');
                 return false;
             }
 
             if (!$('#description').val()){
-                rfWarning('请填写内容');
+                rfWarning('请填写视频说明');
                 return false;
             }
 

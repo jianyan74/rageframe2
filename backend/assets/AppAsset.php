@@ -23,7 +23,6 @@ class AppAsset extends AssetBundle
         'plugins/toastr/toastr.min.css', // 状态通知
         'dist/css/AdminLTE.min.css',
         'dist/css/rageframe.css',
-        'dist/css/wechat.css',
     ];
 
     public $js = [
@@ -33,6 +32,7 @@ class AppAsset extends AssetBundle
         'plugins/sweetalert/sweetalert.min.js',
         'plugins/fancybox/jquery.fancybox.min.js',
         'dist/js/adminlte.js',
+        'dist/js/demo.js',
         'dist/js/template.js',
         'dist/js/rageframe.js',
         'dist/js/ueditor.all.min.js',
