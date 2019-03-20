@@ -130,7 +130,7 @@ class ActiveController extends \yii\rest\ActiveController
         // 判断验证token有效性是否开启
         if (Yii::$app->params['user.accessTokenValidity'] == true)
         {
-            $token = Yii::$app->request->get('accessToken');
+            $token = Yii::$app->request->get('access-token');
             $timestamp = (int) substr($token, strrpos($token, '_') + 1);
             $expire = Yii::$app->params['user.accessTokenExpire'];
 
