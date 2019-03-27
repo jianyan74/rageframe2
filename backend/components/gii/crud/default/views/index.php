@@ -80,13 +80,13 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'template' => '{edit} {status} {delete}',
                 'buttons' => [
                 'edit' => function($url, $model, $key){
-                        return HtmlHelper::edit($model['edit', 'id' => $key]);
+                        return HtmlHelper::edit(['edit', 'id' => $key]);
                 },
                'status' => function($url, $model, $key){
                         return HtmlHelper::status($model['status']);
                   },
                 'delete' => function($url, $model, $key){
-                        return HtmlHelper::delete($model['delete', 'id' => $key]);
+                        return HtmlHelper::delete(['delete', 'id' => $key]);
                 },
                 ]
             ]
