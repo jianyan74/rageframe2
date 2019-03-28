@@ -183,7 +183,7 @@ class RuleKeyword extends \yii\db\ActiveRecord
                     break;
                 // 默认为模块回复
                 default :
-                    $class = AddonHelper::getAddonMessage($keyword->module);
+                    $class = AddonHelper::getAddonMessage($model->addon);
                     return ExecuteHelper::map($class, 'run', Yii::$app->params['wechatMessage']);
                     break;
             }
