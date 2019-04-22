@@ -100,6 +100,7 @@ class UEditor extends InputWidget
         
         //ready部分代码，是为了缩略图管理。UEditor本身就很大，在后台直接加载大文件图片会很卡。
         $script = <<<UEDITOR
+        UE.delEditor('{$id}');
         var ue = UE.getEditor('{$id}',{$config}).ready(function(){
             this.addListener( "beforeInsertImage", function ( type, imgObjs ) {
                 for(var i=0;i < imgObjs.length;i++){

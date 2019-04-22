@@ -58,7 +58,9 @@ class ActiveController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
         // 跨域支持
-        $behaviors['class'] = Cors::class;
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+        ];
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::class,
             'authMethods' => [
