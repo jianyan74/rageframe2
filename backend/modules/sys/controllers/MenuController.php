@@ -5,7 +5,7 @@ use Yii;
 use common\models\sys\Menu;
 use common\models\sys\MenuCate;
 use common\helpers\ArrayHelper;
-use common\components\CurdTrait;
+use common\components\Curd;
 
 /**
  * 菜单控制器
@@ -16,7 +16,7 @@ use common\components\CurdTrait;
  */
 class MenuController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var

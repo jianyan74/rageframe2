@@ -2,7 +2,7 @@
 namespace frontend\models;
 
 use common\enums\StatusEnum;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * Class LoginForm
@@ -33,7 +33,7 @@ class LoginForm extends \common\models\common\LoginForm
     /**
      * 邮箱或账号登录
      *
-     * @return MemberInfo|mixed|null
+     * @return Member|mixed|null
      */
     public function getUser()
     {
@@ -41,11 +41,11 @@ class LoginForm extends \common\models\common\LoginForm
         {
             if (strpos($this->username, "@"))
             {
-                $this->_user = MemberInfo::findOne(['email'=>$this->username, 'status' => StatusEnum::ENABLED]); // email 登录
+                $this->_user = Member::findOne(['email'=>$this->username, 'status' => StatusEnum::ENABLED]); // email 登录
             }
             else
             {
-                $this->_user = MemberInfo::findByUsername($this->username);
+                $this->_user = Member::findByUsername($this->username);
             }
         }
 

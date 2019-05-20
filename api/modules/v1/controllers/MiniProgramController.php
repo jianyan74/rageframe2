@@ -4,12 +4,11 @@ namespace api\modules\v1\controllers;
 use Yii;
 use api\controllers\OnAuthController;
 use api\modules\v1\models\MiniProgramLoginForm;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 use common\models\api\AccessToken;
 use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
-use common\models\member\MemberAuth;
-use common\helpers\FileHelper;
+use common\models\member\Auth;
 
 /**
  * 小程序授权验证
@@ -96,12 +95,12 @@ class MiniProgramController extends OnAuthController
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = MemberAuth::findOauthClient(MemberAuth::CLIENT_MINI_PROGRAM, $userinfo['openId'])))
+        if (!($memberAuthInfo = Auth::findOauthClient(Auth::CLIENT_MINI_PROGRAM, $userinfo['openId'])))
         {
-            $memberAuth = new MemberAuth();
+            $memberAuth = new Auth();
             $memberAuthInfo = $memberAuth->add([
                 'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
-                'oauth_client' => MemberAuth::CLIENT_MINI_PROGRAM,
+                'oauth_client' => Auth::CLIENT_MINI_PROGRAM,
                 'oauth_client_user_id' => $userinfo['openId'],
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
@@ -119,7 +118,7 @@ class MiniProgramController extends OnAuthController
         // 判断是否有管理信息 数据也可以后续在绑定
         if (!($member = $memberAuthInfo->member))
         {
-            $member = new MemberInfo();
+            $member = new Member();
             $member->attributes = [
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],

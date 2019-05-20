@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use common\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="curd-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => \common\helpers\AddonUrl::to(['index']),
+        'action' => \common\helpers\Url::to(['index']),
         'method' => 'get',
         'fieldConfig' => [
             'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",

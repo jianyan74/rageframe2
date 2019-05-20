@@ -3,7 +3,7 @@ namespace backend\modules\wechat\controllers;
 
 use Yii;
 use yii\data\Pagination;
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\enums\StatusEnum;
 use common\helpers\ResultDataHelper;
 use common\models\wechat\Attachment;

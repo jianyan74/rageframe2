@@ -24,7 +24,7 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\member\MemberInfo',
+            'identityClass' => 'common\models\member\Member',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
             'loginUrl' => ['site/login'],
@@ -52,7 +52,7 @@ return [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
             'showScriptName' => false,
-            'suffix' => '.html',// 静态
+            // 'suffix' => '.html',// 静态
             'rules' =>[
 
             ],

@@ -197,6 +197,7 @@ class AddonHelper
             'name' => $addonName,
             'oldRoute' => $route,
         ];
+       Yii::$app->params['inAddon'] = true;
 
         // 获取关联的菜单和导航
         if (!empty($addonModel->binding))

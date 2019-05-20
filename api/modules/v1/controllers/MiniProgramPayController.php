@@ -2,7 +2,7 @@
 namespace api\modules\v1\controllers;
 
 use Yii;
-use common\helpers\UrlHelper;
+use common\helpers\Url;
 use common\helpers\PayHelper;
 use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
@@ -50,7 +50,7 @@ class MiniProgramPayController extends OnAuthController
             'trade_type' => 'JSAPI',
             'body' => '支付简单说明',
             'detail' => '支付详情',
-            'notify_url' => UrlHelper::toFront(['notify/mini-program']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => Url::toFront(['notify/mini-program']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, PayLog::PAY_TYPE_MINI_PROGRAM), // 支付
             'total_fee' => $totalFee,
             'openid' => '', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，

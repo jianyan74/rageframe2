@@ -2,7 +2,7 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\Adv;
 
@@ -15,7 +15,7 @@ use addons\RfArticle\common\models\Adv;
  */
 class AdvController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

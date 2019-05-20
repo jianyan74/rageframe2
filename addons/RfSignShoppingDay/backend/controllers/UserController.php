@@ -1,7 +1,7 @@
 <?php
 namespace addons\RfSignShoppingDay\backend\controllers;
 
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 
 /**
@@ -11,7 +11,7 @@ use common\controllers\AddonsBaseController;
  */
 class UserController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

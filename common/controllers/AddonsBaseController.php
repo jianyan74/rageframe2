@@ -2,9 +2,10 @@
 namespace common\controllers;
 
 use Yii;
+use yii\web\Controller;
 use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 /**
  * 模块基类控制器
@@ -13,12 +14,19 @@ use common\helpers\AddonUrl;
  * @package common\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class AddonsBaseController extends BaseController
+class AddonsBaseController extends Controller
 {
     /**
      * @var string
      */
     public $layout = null;
+
+    /**
+     * 默认分页
+     *
+     * @var int
+     */
+    protected $pageSize = 10;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -88,7 +96,7 @@ class AddonsBaseController extends BaseController
      */
     public function redirect($url, $statusCode = 302)
     {
-        return Yii::$app->getResponse()->redirect(AddonUrl::to($url), $statusCode);
+        return Yii::$app->getResponse()->redirect(Url::to($url), $statusCode);
     }
 
     /**
@@ -124,7 +132,7 @@ class AddonsBaseController extends BaseController
     {
         $assetsPath = "addons" . '\\'. Yii::$app->params['addonInfo']['name'] . '\\' . AddonHelper::getAppName() . '\\' . 'assets';
         /* @var $assets \yii\web\AssetBundle */
-        $assets = $assetsPath . '\\' .'Asset';
+        $assets = $assetsPath . '\\' . 'Asset';
 
         // 注册资源类名
         Yii::$app->params['addonInfo']['assetBundlesName'] = $assets;
@@ -153,6 +161,17 @@ class AddonsBaseController extends BaseController
     }
 
     /**
+     * 解析错误
+     *
+     * @param $fistErrors
+     * @return string
+     */
+    protected function analyErr($firstErrors)
+    {
+        return Yii::$app->debris->analyErr($firstErrors);
+    }
+
+    /**
      * 错误提示信息
      *
      * @param string $msgText 错误内容
@@ -162,11 +181,11 @@ class AddonsBaseController extends BaseController
      */
     public function message($msgText, $skipUrl, $msgType = null)
     {
-        $msgType = $msgType ?? 'success';
-        !in_array($msgType, ['success', 'error', 'info', 'warning']) && $msgType = 'success';
+        if (!$msgType || !in_array($msgType, ['success', 'error', 'info', 'warning'])) {
+            $msgType = 'success';
+        }
 
         Yii::$app->getSession()->setFlash($msgType, $msgText);
-
         return $skipUrl;
     }
 }

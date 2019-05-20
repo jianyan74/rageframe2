@@ -1,12 +1,12 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use common\widgets\webuploader\Images;
 use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
-$this->params['breadcrumbs'][] = ['label' => '单页管理', 'url' => AddonUrl::to(['index'])];
+$this->params['breadcrumbs'][] = ['label' => '单页管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

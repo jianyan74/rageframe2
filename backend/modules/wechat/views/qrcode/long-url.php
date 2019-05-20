@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 
 $this->title = '长链接转二维码';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];

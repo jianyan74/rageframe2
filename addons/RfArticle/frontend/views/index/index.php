@@ -1,6 +1,6 @@
 <?php
 use common\helpers\AddonHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $path = AddonHelper::getResourcesUrl();
 $this->title = '我的博客';
@@ -29,7 +29,7 @@ $this->title = '我的博客';
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <div class="contentleft">
-                                        <h4><a class="title" href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a></h4>
+                                        <h4><a class="title" href="<?= Url::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a></h4>
                                         <p>
                                             <?php if(!empty($article['tags'])){ ?>
                                                 <?php foreach ($article['tags'] as $tag){ ?>
@@ -46,7 +46,7 @@ $this->title = '我的博客';
                                     <div class="contentImage">
                                         <!--<img src="img/slider/abs_img_no.jpg"/>-->
                                         <div class="row">
-                                            <a href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
+                                            <a href="<?= Url::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
                                                 <img src="<?= $article['cover']; ?>" alt="...">
                                             </a>
                                         </div>

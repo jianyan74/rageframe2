@@ -2,7 +2,7 @@
 namespace common\models\wechat;
 
 use Yii;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 use common\helpers\ArrayHelper;
 
 /**
@@ -202,7 +202,7 @@ class Fans extends \common\models\common\BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**

@@ -14,6 +14,7 @@ class AppAsset extends AssetBundle
 
     public $css = [
         '/resources/css/site.css',
+        '/resources/bower_components/font-awesome/css/font-awesome.min.css',
     ];
 
     public $js = [

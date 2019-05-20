@@ -12,7 +12,7 @@ use common\models\wechat\RuleKeyword;
 use common\helpers\ResultDataHelper;
 use common\helpers\AddonHelper;
 use common\models\sys\AddonsAuthItemChild;
-use common\helpers\AddonAuthHelper;
+use common\helpers\Auth;
 use common\helpers\DebrisHelper;
 use backend\modules\wechat\models\RuleForm;
 
@@ -72,7 +72,7 @@ class AddonsController extends \common\controllers\AddonsController
         $route = $this->route;
         in_array($action->id, ['cover']) && $route = AddonsAuthItemChild::AUTH_COVER;
         in_array($action->id, ['rule', 'rule-edit', 'rule-delete', 'ajax-update']) && $route = AddonsAuthItemChild::AUTH_RULE;
-        if (AddonAuthHelper::verify($route) === false)
+        if (Auth::verify($route) === false)
         {
             throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
         }

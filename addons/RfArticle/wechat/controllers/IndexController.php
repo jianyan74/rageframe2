@@ -2,7 +2,7 @@
 namespace addons\RfArticle\wechat\controllers;
 
 use Yii;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use common\enums\StatusEnum;
 use common\helpers\ResultDataHelper;
 use addons\RfArticle\common\models\ArticleSingle;
@@ -37,7 +37,7 @@ class IndexController extends WController
 
             foreach ($models as &$model)
             {
-                $model['link'] = AddonUrl::to(['detail', 'id' => $model['id']]);
+                $model['link'] = Url::to(['detail', 'id' => $model['id']]);
                 $model['created_at'] = date('Y-m-d', $model['created_at']);
             }
 

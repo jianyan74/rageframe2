@@ -105,6 +105,8 @@ class NotifyController extends Controller
 
     /**
      * 公用支付回调 - 支付宝
+     * 
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function actionAli()
     {

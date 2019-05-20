@@ -3,7 +3,7 @@ namespace addons\RfSignShoppingDay\backend\controllers;
 
 use yii\data\Pagination;
 use common\helpers\ExcelHelper;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 use addons\RfSignShoppingDay\common\models\Record;
 
@@ -14,7 +14,7 @@ use addons\RfSignShoppingDay\common\models\Record;
  */
 class RecordController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     public $modelClass = '\addons\RfSignShoppingDay\common\models\Record';
 

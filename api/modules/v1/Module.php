@@ -1,8 +1,6 @@
 <?php
 namespace api\modules\v1;
 
-use Yii;
-
 /**
  * Class Module
  * @package api\modules\v1

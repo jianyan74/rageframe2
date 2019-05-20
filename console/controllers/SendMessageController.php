@@ -55,7 +55,7 @@ class SendMessageController extends Controller
                 $model->send_status = StatusEnum::ENABLED;
                 $model->save();
 
-                echo date('Y-m-d H:i:s') . ' --- ' . '发送成功;' . PHP_EOL;
+                $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '发送成功;' . PHP_EOL);
                 exit();
             }
             catch (\Exception $e)
@@ -64,12 +64,12 @@ class SendMessageController extends Controller
                 $model->error_content = $e->getMessage();
                 $model->save();
 
-                echo date('Y-m-d H:i:s') . ' --- ' . '发送失败 --- ' . $e->getMessage() . PHP_EOL;
+                $this->stderr(date('Y-m-d H:i:s') . ' --- ' . '发送失败 --- ' . $e->getMessage() . PHP_EOL);
                 exit();
             }
         }
 
-        echo date('Y-m-d H:i:s') . ' --- ' . '未找到待发送的数据;' . PHP_EOL;
+        $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '未找到待发送的数据;' . PHP_EOL);
         exit();
     }
 }

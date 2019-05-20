@@ -9,7 +9,7 @@
 引入
 
 ```
-use common\helpers\UrlHelper;
+use common\helpers\Url;
 ```
 
 ### 生成前台Url

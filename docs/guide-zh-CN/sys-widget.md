@@ -154,7 +154,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
      'config' => [ // 配置同图片上传
          // 'server' => '',
          'pick' => [
-             'multiple' => true,
+             'multiple' => ture,
          ],
          'formData' => [
              // 不配置则不生成缩略图
@@ -196,7 +196,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
      'config' => [ // 配置同图片上传
           // 'server' => '',
          'pick' => [
-             'multiple' => true,
+             'multiple' => ture,
          ]
      ]
 ]);?>

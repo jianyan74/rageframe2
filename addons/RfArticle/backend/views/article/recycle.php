@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '回收站';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -28,10 +28,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr id = <?= $model->id; ?>>
                             <td><?= $model->id; ?></td>
                             <td><?= $model->title; ?></td>
-                            <td class="col-md-1"><?= AddonHtmlHelper::sort($model['sort']); ?></td>
+                            <td class="col-md-1"><?= Html::sort($model['sort']); ?></td>
                             <td>
-                                <?= AddonHtmlHelper::linkButton(['show','id' => $model->id], '还原'); ?>
-                                <?= AddonHtmlHelper::delete(['delete','id' => $model->id]); ?>
+                                <?= Html::linkButton(['show','id' => $model->id], '还原'); ?>
+                                <?= Html::delete(['delete','id' => $model->id]); ?>
                             </td>
                         </tr>
                     <?php } ?>

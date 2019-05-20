@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $this->title = '粉丝标签';
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td class="col-md-2"><input type="text" class="form-control" value="<?= $tag['name']?>" name="tag_update[<?= $tag['id']?>]"></td>
                                 <td><?= $tag['id'] ?></td>
                                 <td><?= $tag['count'] ?></td>
-                                <td><?= HtmlHelper::delete(['delete','id' => $tag['id']]);?></td>
+                                <td><?= Html::delete(['delete','id' => $tag['id']]);?></td>
                             </tr>
                         <?php } ?>
                         <tr id="position">

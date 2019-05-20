@@ -47,10 +47,6 @@
 - 控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `optional` 属性
 - 用户私有控制器请全部继承 `api\controllers\UserAuthController`
 
-##### 其他(wechat/backend/frontend)
-
-控制器需统一继承 `common\components\AddonsBaseController`  
-
 ### 开发
 
 完全可以根据Yii2正常的开发流程去开发对应的控制器、视图、插件内的应用

@@ -3,10 +3,11 @@ namespace backend\modules\member\controllers;
 
 use Yii;
 use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
 use common\enums\StatusEnum;
 use common\models\member\Address;
-use yii\helpers\ArrayHelper;
+use backend\controllers\BaseController;
 
 /**
  * 收货地址
@@ -15,7 +16,7 @@ use yii\helpers\ArrayHelper;
  * @package backend\modules\member\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class AddressController extends MController
+class AddressController extends BaseController
 {
     protected $member_id;
 
@@ -62,7 +63,6 @@ class AddressController extends MController
         $request  = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-
         if ($model->load($request->post()) && $model->save())
         {
             return $this->redirect(['index', 'member_id' => $this->member_id]);

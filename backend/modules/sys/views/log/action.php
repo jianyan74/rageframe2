@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '行为日志';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <td><?= $model->id; ?></td>
                                 <td><?= $model->behavior; ?></td>
                                 <td><?= isset($model->manager->username) ? $model->manager->username : '游客' ?></td>
-                                <td><?= HtmlHelper::encode($model->module); ?></td>
-                                <td><?= HtmlHelper::encode($model->url); ?></td>
+                                <td><?= Html::encode($model->module); ?></td>
+                                <td><?= Html::encode($model->url); ?></td>
                                 <td><?= long2ip($model->ip); ?></td>
                                 <td>
                                     <?php if (long2ip($model->ip) == '127.0.0.1'){ ?>
@@ -46,10 +46,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                         <?= $model->country; ?>·<?= $model->provinces; ?>·<?= $model->city; ?>
                                     <?php } ?>
                                 </td>
-                                <td><?= HtmlHelper::encode($model->remark); ?></td>
+                                <td><?= Html::encode($model->remark); ?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                 <td>
-                                    <?= HtmlHelper::linkButton(['action-view','id' => $model->id], '查看详情', [
+                                    <?= Html::linkButton(['action-view','id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ])?>

@@ -5,7 +5,7 @@ use common\enums\StatusEnum;
 use common\models\wechat\Attachment;
 use Yii;
 use yii\data\Pagination;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\wechat\FansTags;
 use common\models\wechat\MassRecord;
 use backend\modules\wechat\models\SendForm;
@@ -19,7 +19,7 @@ use backend\modules\wechat\models\SendForm;
  */
 class MassRecordController extends WController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

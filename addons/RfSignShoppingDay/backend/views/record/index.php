@@ -1,7 +1,7 @@
 <?php
 
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = '中奖记录';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['export'])?>"><i class="fa fa-mail-forward"></i>  导出记录</a>
+                    <a class="btn btn-primary btn-xs" href="<?= Url::to(['export'])?>"><i class="fa fa-mail-forward"></i>  导出记录</a>
                 </div>
             </div>
             <div class="box-body table-responsive">

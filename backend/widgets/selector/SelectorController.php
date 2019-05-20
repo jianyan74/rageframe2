@@ -4,7 +4,7 @@ namespace backend\widgets\selector;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\web\Controller;
 use common\enums\StatusEnum;
 use common\models\wechat\Attachment;

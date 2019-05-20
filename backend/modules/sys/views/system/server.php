@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '服务器信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

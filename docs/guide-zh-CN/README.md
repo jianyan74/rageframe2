@@ -56,28 +56,24 @@
 
 #### 助手类
 
-- [AuthHelper](helper-auth.md) - 权限辅助类
+- [Auth](helper-auth.md) - 权限辅助类
+- [Url](helper-url.md) - Url生成辅助类
+- [Html](helper-html.md) - Html辅助类
 - ArrayHelper - 数组辅助类
 - FileHelper - 文件辅助类
 - DateHelper - 日期格式辅助类
 - PayHelper - 支付辅助类
-- [HtmlHelper](helper-html.md) - Html辅助类
 - [StringHelper](helper-string.md) - 字符串辅助类
-- [UrlHelper](helper-url.md) - Url生成辅助类
 - RegularHelper - 正则验证辅助类
 - HashidsHelper - ID加密辅助类
 - UploadHelper - 上传辅助类
 - [ResultDataHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
-- [AddonAuthHelper](helper-addon-auth.md) - 模块权限辅助类
-- [AddonHelper](helper-addon.md) - 模块辅助类
-- [AddonUrl](helper-addon-url.md) - 模块Url生成辅助类
-- [AddonHtmlHelper](helper-addon-html.md) - 模块Html辅助类
 
 #### 附录
 
 - [SearchModel](component-search-model.md)
-- CurdTrait
+- Curd
 - [应用配置独立域名](independent-app-domain-name.md)
 - [代码提示/线上性能优化](system-optimize.md)
 - [PHP编程规范](php-standard.md)

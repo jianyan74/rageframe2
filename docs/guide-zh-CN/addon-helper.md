@@ -26,10 +26,6 @@ Yii::$app->params['addonInfo'];
 Yii::$app->params['addonBinding'];
 ```
 
-#### 生成模块Url地址
-
-[模块Url生成辅助类](helper-addon-url.md)
-
 ####  辅助方法
 
 [模块辅助类](helper-addon.md)

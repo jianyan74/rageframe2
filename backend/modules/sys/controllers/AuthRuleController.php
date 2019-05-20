@@ -6,7 +6,7 @@ use yii\web\Response;
 use yii\data\Pagination;
 use yii\widgets\ActiveForm;
 use common\models\sys\AuthRule;
-use common\components\CurdTrait;
+use common\components\Curd;
 
 /**
  * RBAC规则控制器
@@ -17,7 +17,7 @@ use common\components\CurdTrait;
  */
 class AuthRuleController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

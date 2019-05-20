@@ -2,7 +2,7 @@
 namespace addons\RfArticle\wechat\controllers;
 
 use Yii;
-use common\components\WechatLoginTrait;
+use common\components\WechatLogin;
 use common\controllers\AddonsBaseController;
 
 /**
@@ -12,7 +12,7 @@ use common\controllers\AddonsBaseController;
  */
 class WController extends AddonsBaseController
 {
-    use WechatLoginTrait;
+    use WechatLogin;
 
     /**
      * @var string

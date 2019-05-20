@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
-use common\helpers\AddonUrl;
-use \common\helpers\StringHelper;
+use common\helpers\Html;
+use common\helpers\Url;
+use common\helpers\StringHelper;
 
 $this->title = '应用入口';
 $this->params['breadcrumbs'][] = $this->title;
@@ -28,12 +27,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= AddonUrl::toWechat([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toWechat([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= AddonUrl::toWechat([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toWechat([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -45,12 +44,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= AddonUrl::toFront([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toFront([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= AddonUrl::toFront([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toFront([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -62,12 +61,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= AddonUrl::toApi([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toApi([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= AddonUrl::toApi([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toApi([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

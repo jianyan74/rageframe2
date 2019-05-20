@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use common\enums\StatusEnum;
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 use backend\widgets\menu\MenuLeftWidget;
 use backend\assets\MainAsset;
 
@@ -15,7 +15,7 @@ MainAsset::register($this);
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"<
         <meta name="renderer" content="webkit">
-        <?= HtmlHelper::csrfMetaTags() ?>
+        <?= Html::csrfMetaTags() ?>
         <title><?= Yii::$app->params['adminTitle'];?></title>
         <?php $this->head() ?>
     </head>
@@ -45,7 +45,7 @@ MainAsset::register($this);
                         </li>
                         <!-- Notifications: style can be found in dropdown.less -->
                         <?php foreach ($menuCates as $cate){ ?>
-                            <?php if ($cate['status'] == StatusEnum::ENABLED && AuthHelper::verify('cate:' . $cate['id'])) { ?>
+                            <?php if ($cate['status'] == StatusEnum::ENABLED && Auth::verify('cate:' . $cate['id'])) { ?>
                                 <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>">
                                     <a class="dropdown-toggle">
                                         <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
@@ -53,7 +53,7 @@ MainAsset::register($this);
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                        <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED && AuthHelper::verify('addons')) { ?>
+                        <?php if (Yii::$app->debris->config('sys_addon_show') == StatusEnum::ENABLED && Auth::verify('addons')) { ?>
                             <li class="dropdown notifications-menu rfTopMenu hide" data-type="addons">
                                 <a class="dropdown-toggle">
                                     <i class="fa fa-th-large"></i> 应用中心
@@ -64,7 +64,7 @@ MainAsset::register($this);
                 </div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <?php if (AuthHelper::verify('base-announce')){ ?>
+                        <?php if (Auth::verify('base-announce')){ ?>
                             <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                     <i class="fa fa-bell-o"></i>
@@ -93,13 +93,13 @@ MainAsset::register($this);
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img class="user-image head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
+                                <img class="user-image head_portrait" src="<?= Html::headPortrait($manager->head_portrait);?>"/>
                                 <span class="hidden-xs"><?= $manager->username; ?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
+                                    <img class="img-circle head_portrait" src="<?= Html::headPortrait($manager->head_portrait);?>"/>
                                     <p>
                                         <?= $manager->username; ?>
                                         <small><?= Yii::$app->request->userIP; ?></small>
@@ -108,13 +108,13 @@ MainAsset::register($this);
                                 <!-- Menu Body -->
                                 <li class="user-body">
                                     <div class="row">
-                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/sys/manager/personal')) echo 'hide'; ?>">
+                                        <div class="col-xs-4 text-center <?php if(!Auth::verify('/sys/manager/personal')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/sys/manager/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
                                         </div>
-                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/sys/manager/up-password')) echo 'hide'; ?>">
+                                        <div class="col-xs-4 text-center <?php if(!Auth::verify('/sys/manager/up-password')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/sys/manager/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
                                         </div>
-                                        <div class="col-xs-4 text-center <?php if(!AuthHelper::verify('/main/clear-cache')) echo 'hide'; ?>">
+                                        <div class="col-xs-4 text-center <?php if(!Auth::verify('/main/clear-cache')) echo 'hide'; ?>">
                                             <a href="<?= Url::to(['/main/clear-cache']); ?>" class="J_menuItem" onclick="$('body').click();">清空缓存</a>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@ MainAsset::register($this);
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img class="img-circle head_portrait" src="<?= HtmlHelper::headPortrait($manager->head_portrait);?>"/>
+                        <img class="img-circle head_portrait" src="<?= Html::headPortrait($manager->head_portrait);?>"/>
                     </div>
                     <div class="pull-left info">
                         <p><?= $manager->username; ?></p>

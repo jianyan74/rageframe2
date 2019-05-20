@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Html;
-use yii\helpers\Url;
+use common\helpers\Html;
+use common\helpers\Url;
 ?>
 
 <div class="modal-header">

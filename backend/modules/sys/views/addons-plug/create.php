@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\ArrayHelper;
-use yii\helpers\Url;
+use common\helpers\Url;
 
 $this->title = '设计新插件';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

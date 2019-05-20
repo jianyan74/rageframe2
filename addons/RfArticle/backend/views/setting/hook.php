@@ -20,7 +20,7 @@
             <ul class="list-unstyled sidebar">
                 <?php foreach ($articles as $article){ ?>
                 <li>
-                    <a href="<?= \common\helpers\AddonUrl::to(['index/details', 'id' => $article['id']])?>"><?= $article['title']; ?></a>
+                    <a href="<?= \common\helpers\Url::to(['index/details', 'id' => $article['id']])?>"><?= $article['title']; ?></a>
                 </li>
                 <?php } ?>
             </ul>

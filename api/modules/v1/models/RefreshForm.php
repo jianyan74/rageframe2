@@ -5,7 +5,7 @@ use Yii;
 use yii\base\Model;
 use yii\web\BadRequestHttpException;
 use common\models\api\AccessToken;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * Class RefreshForm
@@ -79,7 +79,7 @@ class RefreshForm extends Model
                 return false;
             }
 
-            $this->_user = MemberInfo::findIdentity($apiAccount->member_id);
+            $this->_user = Member::findIdentity($apiAccount->member_id);
         }
 
         return $this->_user;

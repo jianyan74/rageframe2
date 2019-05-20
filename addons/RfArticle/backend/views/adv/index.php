@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '幻灯片';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= AddonHtmlHelper::create(['edit']); ?>
+                    <?= Html::create(['edit']); ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -33,16 +33,16 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr id = <?= $model->id; ?>>
                             <td><?= $model->id; ?></td>
                             <td><?= $model->title; ?></td>
-                            <td class="col-md-1"><?= AddonHtmlHelper::sort($model['sort'])?></td>
+                            <td class="col-md-1"><?= Html::sort($model['sort'])?></td>
                             <td>
                                 开始时间：<?= Yii::$app->formatter->asDatetime($model->start_time); ?><br>
                                 结束时间：<?= Yii::$app->formatter->asDatetime($model->end_time); ?>
                             </td>
                             <td><?= \addons\RfArticle\common\models\Adv::getTimeStatus($model->start_time,$model->end_time)?></td>
                             <td>
-                                <?= AddonHtmlHelper::edit(['edit','id' => $model->id]); ?>
-                                <?= AddonHtmlHelper::status($model['status']); ?>
-                                <?= AddonHtmlHelper::delete(['delete','id'=>$model->id]); ?>
+                                <?= Html::edit(['edit','id' => $model->id]); ?>
+                                <?= Html::status($model['status']); ?>
+                                <?= Html::delete(['delete','id'=>$model->id]); ?>
                             </td>
                         </tr>
                     <?php } ?>

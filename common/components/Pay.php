@@ -7,7 +7,7 @@ use common\components\payment\AliPay;
 use common\components\payment\UnionPay;
 use common\components\payment\WechatPay;
 use common\helpers\ArrayHelper;
-use common\helpers\UrlHelper;
+use common\helpers\Url;
 
 /**
  * 支付组件
@@ -46,7 +46,7 @@ class Pay extends Component
     {
         return new AliPay(ArrayHelper::merge([
             'app_id' => $this->rfConfig['alipay_appid'],
-            'notify_url' => UrlHelper::toFront(['notify/ali']),
+            'notify_url' => Url::toFront(['notify/ali']),
             'return_url' => '',
             'ali_public_key' => $this->rfConfig['alipay_cert_path'],
             // 加密方式： ** RSA2 **
@@ -82,7 +82,7 @@ class Pay extends Component
     {
         return new UnionPay(ArrayHelper::merge([
             'mch_id' => $this->rfConfig['union_mchid'],
-            'notify_url' => UrlHelper::toFront(['notify/union']),
+            'notify_url' => Url::toFront(['notify/union']),
             'return_url' => '',
             'cert_id' => $this->rfConfig['union_cert_id'],
             'private_key' => $this->rfConfig['union_private_key'],

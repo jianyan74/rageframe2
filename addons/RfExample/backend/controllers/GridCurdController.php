@@ -2,9 +2,9 @@
 namespace addons\RfExample\backend\controllers;
 
 use Yii;
-use addons\RfExample\common\models\Curd;
+use addons\RfExample\common\models\Curd as CurdModel;
 use common\models\common\SearchModel;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 
 /**
@@ -14,12 +14,12 @@ use common\controllers\AddonsBaseController;
  */
 class GridCurdController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string
      */
-    public $modelClass = 'addons\RfExample\common\models\Curd';
+    public $modelClass = CurdModel::class;
 
     /**
      * @return string
@@ -28,7 +28,7 @@ class GridCurdController extends AddonsBaseController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Curd::class,
+            'model' => CurdModel::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['title'], // 模糊查询
             'defaultOrder' => [

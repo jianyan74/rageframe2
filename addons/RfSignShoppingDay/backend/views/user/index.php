@@ -1,7 +1,7 @@
 <?php
 
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = '用户管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

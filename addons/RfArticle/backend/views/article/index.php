@@ -1,7 +1,7 @@
 <?php
 use yii\grid\GridView;
-use common\helpers\AddonUrl;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '文章管理';
 $this->params['breadcrumbs'][] = $this->title;
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= AddonHtmlHelper::create(['edit']); ?>
+                    <?= Html::create(['edit']); ?>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'cate_id',
                             'value' => 'cate.title',
-                            'filter' => AddonHtmlHelper::activeDropDownList($searchModel,
+                            'filter' => Html::activeDropDownList($searchModel,
                                 'cate_id',
                                 $cates,
                                 [
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'sort',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return AddonHtmlHelper::sort($model->sort);
+                                return Html::sort($model->sort);
                             },
                             'format' => 'raw',
                             'headerOptions' => ['class' => 'col-md-1'],
@@ -64,13 +64,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::edit(['edit', 'id' => $model->id]);
+                                    return Html::edit(['edit', 'id' => $model->id]);
                                 },
                                 'status' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::status($model->status);
+                                    return Html::status($model->status);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::delete(['hide', 'id' => $model->id]);
+                                    return Html::delete(['hide', 'id' => $model->id]);
                                 },
                             ],
                         ],

@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '分类管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= AddonHtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>

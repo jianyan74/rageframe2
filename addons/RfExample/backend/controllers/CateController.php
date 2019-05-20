@@ -2,7 +2,7 @@
 namespace addons\RfExample\backend\controllers;
 
 use Yii;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\helpers\ArrayHelper;
 use common\controllers\AddonsBaseController;
 use addons\RfExample\common\models\Cate;
@@ -16,7 +16,7 @@ use addons\RfExample\common\models\Cate;
  */
 class CateController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string
@@ -57,7 +57,7 @@ class CateController extends AddonsBaseController
         {
             if ($request->isAjax)
             {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
                 return \yii\widgets\ActiveForm::validate($model);
             }
 

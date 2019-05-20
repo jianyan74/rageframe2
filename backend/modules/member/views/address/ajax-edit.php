@@ -1,12 +1,12 @@
 <?php
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use common\helpers\Url;
 use common\enums\StatusEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::toRoute(['ajax-edit','id' => $model['id']]),
+    'validationUrl' => Url::to(['ajax-edit', 'id' => $model['id']]),
 ]);
 ?>
     <div class="modal-header">

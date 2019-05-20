@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\ActiveForm;
-use yii\helpers\Html;
+use common\helpers\Html;
 
 $this->title = $attachment->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '图文素材', 'url' => ['index', 'type' => 'news']];

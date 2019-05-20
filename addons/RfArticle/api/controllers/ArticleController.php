@@ -41,7 +41,7 @@ class ArticleController extends OnAuthController
                 ->orderBy('sort asc, id desc')
                 ->asArray(),
             'pagination' => [
-                'pageSize' => Yii::$app->params['user.pageSize'],
+                'pageSize' => $this->pageSize,
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);

@@ -4,6 +4,8 @@ return [
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
 
+    'adminAccount' => '',
+
     // 全局上传配置
     'uploadConfig' => [
         // 图片
@@ -66,6 +68,9 @@ return [
             'path' => 'thumb/',// 图片创建路径
         ],
     ],
+
+    // 是否在模块内
+    'inAddon' => false,
 
     /** ------ 微信配置 ------ **/
 

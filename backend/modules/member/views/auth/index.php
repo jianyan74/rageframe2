@@ -1,7 +1,6 @@
 <?php
 use yii\grid\GridView;
-use yii\helpers\Html;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 use common\enums\GenderEnum;
 
 $this->title = '第三方用户';
@@ -32,7 +31,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return HtmlHelper::img(HtmlHelper::headPortrait(Html::encode($model->head_portrait)), [
+                                return Html::img(Html::headPortrait(Html::encode($model->head_portrait)), [
                                     'class' => 'img-circle rf-img-md img-bordered-sm',
                                 ]);
                             },
@@ -86,13 +85,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'template'=> '{ajax-edit} {address} {edit} {status} {destroy}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return HtmlHelper::edit(['edit', 'id' => $model->id]);
+                                    return Html::edit(['edit', 'id' => $model->id]);
                                 },
                                 'status' => function ($url, $model, $key) {
-                                    return HtmlHelper::status($model->status);
+                                    return Html::status($model->status);
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return HtmlHelper::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy','id' => $model->id]);
                                 },
                             ],
                         ],

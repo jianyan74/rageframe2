@@ -2,7 +2,7 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\helpers\ArrayHelper;
 use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\ArticleCate;
@@ -16,7 +16,7 @@ use addons\RfArticle\common\models\ArticleCate;
  */
 class ArticleCateController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

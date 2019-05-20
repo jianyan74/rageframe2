@@ -1,12 +1,11 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
-use yii\helpers\Html;
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '自动回复';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -20,7 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <li><a href="<?= Url::to(['setting/special-message']); ?>"> 非文字自动回复</a></li>
                 <li><a href="<?= Url::to(['reply-default/index']); ?>"> 关注/默认回复</a></li>
                 <!-- 权限校验判断 -->
-                <?php if (AuthHelper::verify('/wechat/rule/edit')) {?>
+                <?php if (Auth::verify('/wechat/rule/edit')) {?>
                     <li class="pull-right">
                         <a class="btn btn-primary btn-xs" onclick="openEdit()">
                             <i class="fa fa-plus"></i> 创建
@@ -84,8 +83,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="btn-group pull-right">
-                                            <?= HtmlHelper::linkButton(['edit', 'id' => $model->id, 'module' => $model->module], '<i class="fa fa-edit"></i> 编辑')?>
-                                            <?= HtmlHelper::delete(['delete', 'id' => $model->id], '<i class="fa fa-times"></i> 删除', [
+                                            <?= Html::linkButton(['edit', 'id' => $model->id, 'module' => $model->module], '<i class="fa fa-edit"></i> 编辑')?>
+                                            <?= Html::delete(['delete', 'id' => $model->id], '<i class="fa fa-times"></i> 删除', [
                                                     'class' => 'btn btn-white btn-sm'
                                             ])?>
                                             <!-- <a class="btn btn-white btn-sm" href="#"><i class="fa fa-bar-chart-o"></i> 使用率走势</a>-->

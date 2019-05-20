@@ -32,7 +32,7 @@ namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>
 use Yii;
 use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->modelClass, '\\') ?>;
-use common\components\CurdTrait;
+use common\components\Curd;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 
 /**
@@ -40,7 +40,7 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    use CurdTrait;
+    use Curd;
 
     /**
     * @var

@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
-use yii\helpers\Html;
+use common\helpers\Html;
 use common\models\wechat\Menu;
 use common\models\wechat\MenuProvinces;
 

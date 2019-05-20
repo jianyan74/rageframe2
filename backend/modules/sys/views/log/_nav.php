@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 ?>
 
 <ul class="nav nav-tabs">

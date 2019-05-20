@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
+use common\helpers\Url;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),

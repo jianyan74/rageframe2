@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use common\helpers\ArrayHelper;
 
 ?>
@@ -14,12 +14,12 @@ use common\helpers\ArrayHelper;
         <td>
             <?= ArrayHelper::itemsLevel($model['level'], $models, $k, $treeStat)?>
             <?= $model['name']?>
-            <?= HtmlHelper::a('<i class="fa fa-plus-circle"></i>', ['edit', 'parent_key' => $model['key'], 'parent_title' => $model['name'],'level' => $model['level'] + 1])?>
+            <?= Html::a('<i class="fa fa-plus-circle"></i>', ['edit', 'parent_key' => $model['key'], 'parent_title' => $model['name'],'level' => $model['level'] + 1])?>
         </td>
-        <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
+        <td class="col-md-1"><?= Html::sort($model['sort'])?></td>
         <td>
-            <?= HtmlHelper::edit(['edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']], '编辑')?>
-            <?= HtmlHelper::delete(['delete', 'name' => $model['name']])?>
+            <?= Html::edit(['edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']], '编辑')?>
+            <?= Html::delete(['delete', 'name' => $model['name']])?>
         </td>
     </tr>
     <?php if (!empty($model['-'])) { ?>

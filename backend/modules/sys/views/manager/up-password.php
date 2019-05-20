@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
+use common\helpers\Url;
 
 $this->params['breadcrumbs'][] = ['label' => '修改密码'];
 ?>
@@ -11,6 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
                 <h3 class="box-title">基本信息</h3>
             </div>
             <?php $form = ActiveForm::begin([
+                'id' => 'pwd',
                 'fieldConfig' => [
                     'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
                 ]
@@ -21,10 +23,30 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
                 <?= $form->field($model, 'passwd_repetition')->passwordInput() ?>
             </div>
             <div class="box-footer text-center">
-                <button class="btn btn-primary" type="submit">保存</button>
+                <button class="btn btn-primary submit" type="button">保存</button>
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
             <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>
+
+<script>
+    $('.submit').click(function () {
+        var data = $('#pwd').serializeArray();
+        $.ajax({
+            type : "post",
+            url : "<?= Url::to(['up-password']); ?>",
+            dataType : "json",
+            data : data,
+            success: function(data) {
+                if (data.code == 200) {
+                    parent.location.reload();
+                    window.location.reload();
+                } else {
+                    rfWarning(data.message);
+                }
+            }
+        });
+    })
+</script>

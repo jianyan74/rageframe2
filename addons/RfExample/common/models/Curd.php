@@ -1,7 +1,7 @@
 <?php
 namespace addons\RfExample\common\models;
 
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 use common\models\sys\Manager;
 use Yii;
 use common\helpers\StringHelper;

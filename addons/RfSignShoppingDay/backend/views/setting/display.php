@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\widgets\webuploader\Images;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use kartik\datetime\DateTimePicker;
 
 $this->title = '参数设置';

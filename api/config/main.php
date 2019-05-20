@@ -63,7 +63,7 @@ return [
                         'v1/site',
                         'v1/mini-program',
                         'v1/mini-program-pay',
-                        'v1/member/info',
+                        'v1/member/member',
                         'v1/member/address',
                         'v1/member/auth',
                         // 版本2

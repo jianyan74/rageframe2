@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </div>
                 <!-- /.mailbox-controls -->
                 <div class="mailbox-read-message">
-                    <p><?= \yii\helpers\Html::decode($model['notifySenderForManager']['content']); ?></p>
+                    <p><?= \common\helpers\Html::decode($model['notifySenderForManager']['content']); ?></p>
                 </div>
                 <!-- /.mailbox-read-message -->
             </div>

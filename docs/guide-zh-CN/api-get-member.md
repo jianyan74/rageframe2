@@ -12,7 +12,7 @@
 请求地址(Get)
 
 ```
-/v1/member/info/[ID]?access-token=[登陆获取到access-token]
+/v1/member/member/[ID]?access-token=[登陆获取到access-token]
 ```
 
 参数
@@ -47,7 +47,7 @@
 请求地址(Put)
 
 ```
-/v1/member/info/[ID]?access-token=[登陆获取到access-token]
+/v1/member/member/[ID]?access-token=[登陆获取到access-token]
 ```
 
 参数

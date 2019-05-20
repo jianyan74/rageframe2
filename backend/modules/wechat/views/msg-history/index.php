@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\helpers\Html;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\wechat\MsgHistory;
 use common\models\wechat\Rule;
@@ -76,11 +75,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                             <td>
                             <td>
-                                <?= HtmlHelper::linkButton(['/wechat/fans/send-message', 'openid' => $model->openid], '发送消息', [
+                                <?= Html::linkButton(['/wechat/fans/send-message', 'openid' => $model->openid], '发送消息', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModalLg',
                                 ])?>
-                                <?= HtmlHelper::delete(['delete','id' => $model->id]);?>
+                                <?= Html::delete(['delete','id' => $model->id]);?>
                             </td>
                         </tr>
                     <?php } ?>

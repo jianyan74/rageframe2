@@ -6,7 +6,7 @@ use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
-use common\components\CurdTrait;
+use common\components\Curd;
 use backend\modules\wechat\models\RuleForm;
 
 /**
@@ -16,7 +16,7 @@ use backend\modules\wechat\models\RuleForm;
  */
 class RuleController extends WController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

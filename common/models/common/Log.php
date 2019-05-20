@@ -2,7 +2,7 @@
 namespace common\models\common;
 
 use common\models\sys\Manager;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * This is the model class for table "{{%api_log}}".
@@ -96,7 +96,7 @@ class Log extends \common\models\common\BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**

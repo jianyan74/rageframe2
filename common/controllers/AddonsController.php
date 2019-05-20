@@ -74,6 +74,7 @@ class AddonsController extends Controller
         // 替换
         Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
         Yii::$classMap['yii\data\Sort'] = '@backend/components/Sort.php';// 排序
+        Yii::$classMap['yii\widgets\Breadcrumbs'] = '@backend/components/Breadcrumbs.php';// 面包屑
 
         // 实例化解获取数据
         return $this->rendering();
@@ -105,6 +106,7 @@ class AddonsController extends Controller
             Yii::$app->controller = $oldController;
         }
 
+        unset($parts, $controller);
         return $result;
     }
 }

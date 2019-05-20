@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
+use common\helpers\Url;
+use common\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use common\helpers\StringHelper;
 

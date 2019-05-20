@@ -2,7 +2,7 @@
 namespace frontend\models;
 
 use yii\base\Model;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * Class SignupForm
@@ -22,11 +22,11 @@ class SignupForm extends Model
         return [
             [['username', 'email'], 'trim'],
             [['email', 'username', 'password'], 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\member\MemberInfo', 'message' => '这个用户名已经被占用.'],
+            ['username', 'unique', 'targetClass' => '\common\models\member\Member', 'message' => '这个用户名已经被占用.'],
             ['username', 'string', 'min' => 2, 'max' => 20],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\member\MemberInfo', 'message' => '这个邮箱地址已经被占用了.'],
+            ['email', 'unique', 'targetClass' => '\common\models\member\Member', 'message' => '这个邮箱地址已经被占用了.'],
             ['password', 'string', 'min' => 6, 'max' => 20],
         ];
     }
@@ -43,12 +43,12 @@ class SignupForm extends Model
     /**
      * 注册
      *
-     * @return MemberInfo|null
+     * @return Member|null
      * @throws \yii\base\Exception
      */
     public function signup()
     {
-        $user = new MemberInfo();
+        $user = new Member();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);

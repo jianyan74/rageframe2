@@ -6,7 +6,7 @@ $this->params['breadcrumbs'][] = ['label' => '角色管理', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= \yii\helpers\Html::cssFile('@web/resources/plugins/jsTree/style.min.css')?>
+<?= \common\helpers\Html::cssFile('@web/resources/plugins/jsTree/style.min.css')?>
 
 <div class="row">
     <div class="col-lg-12">
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <!-- jsTree plugin javascript -->
-<?= \yii\helpers\Html::jsFile('@web/resources/plugins/jsTree/jstree.min.js')?>
+<?= \common\helpers\Html::jsFile('@web/resources/plugins/jsTree/jstree.min.js')?>
 <script>
     var userTreeId = "userTree";
     var userTreeCheckIds = JSON.parse('<?= json_encode($userTreeCheckIds) ?>');
@@ -176,7 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         $.ajax({
             type :"post",
-            url : "<?= \yii\helpers\Url::to(['edit', 'name' => $name])?>",
+            url : "<?= \common\helpers\Url::to(['edit', 'name' => $name])?>",
             dataType : "json",
             data : {
                 name : $("#name").val(),
@@ -186,7 +186,7 @@ $this->params['breadcrumbs'][] = $this->title;
             },
             success : function(data){
                 if (data.code == 200) {
-                    window.location = "<?= \yii\helpers\Url::to(['index'])?>";
+                    window.location = "<?= \common\helpers\Url::to(['index'])?>";
                 } else {
                     rfError(data.message);
                 }

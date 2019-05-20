@@ -106,8 +106,8 @@ $this->analyErr($model->getFirstErrors())
 ### 获取当前登录的用户信息
 
 ```
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 $tokenModel = Yii::$app->user->identity;
-$member = MemberInfo::findIdentity($tokenModel['member_id']);
+$member = Member::findIdentity($tokenModel['member_id']);
 ```

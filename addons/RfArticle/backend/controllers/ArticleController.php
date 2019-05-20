@@ -4,7 +4,7 @@ namespace addons\RfArticle\backend\controllers;
 use Yii;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\common\SearchModel;
 use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\ArticleCate;
@@ -21,7 +21,7 @@ use addons\RfArticle\common\models\Article;
  */
 class ArticleController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

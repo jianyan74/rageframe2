@@ -1,7 +1,7 @@
 <?php
 
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = 'Xunsearch';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="ibox-title">
                 <h5>Xunsearch搜索引擎</h5>
                 <div class="ibox-tools">
-                    <a class="btn btn-primary btn-xs" href="<?= AddonUrl::to(['edit'])?>">
+                    <a class="btn btn-primary btn-xs" href="<?= Url::to(['edit'])?>">
                         <i class="fa fa-plus"></i>  创建
                     </a>
                 </div>
@@ -60,8 +60,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->author; ?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                             <td>
-                                <a href="<?= AddonUrl::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
-                                <a href="<?= AddonUrl::to(['delete','id'=> $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                <a href="<?= Url::to(['edit','id' => $model->id])?>"><span class="btn btn-info btn-sm">编辑</span></a>&nbsp
+                                <a href="<?= Url::to(['delete','id'=> $model->id])?>" onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
                             </td>
                         </tr>
                     <?php } ?>

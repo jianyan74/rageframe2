@@ -3,9 +3,10 @@ namespace backend\modules\member\controllers;
 
 use Yii;
 use common\models\common\SearchModel;
-use common\components\CurdTrait;
-use common\models\member\MemberInfo;
+use common\components\Curd;
+use common\models\member\Member;
 use common\enums\StatusEnum;
+use backend\controllers\BaseController;
 
 /**
  * 会员管理
@@ -14,14 +15,14 @@ use common\enums\StatusEnum;
  * @package backend\modules\member\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MemberController extends MController
+class MemberController extends BaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string
      */
-    public $modelClass = 'common\models\member\MemberInfo';
+    public $modelClass = 'common\models\member\Member';
 
     /**
      * 首页
@@ -32,7 +33,7 @@ class MemberController extends MController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => MemberInfo::class,
+            'model' => Member::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
             'defaultOrder' => [

@@ -2,6 +2,7 @@
 namespace common\controllers;
 
 use Yii;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use common\models\wechat\Fans;
 use common\helpers\WechatHelper;
@@ -16,7 +17,7 @@ use common\models\wechat\QrcodeStat;
  * @package common\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class WechatApiController extends BaseController
+class WechatApiController extends Controller
 {
     /**
      * 微信请求关闭CSRF验证

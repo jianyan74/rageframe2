@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\helpers\ArrayHelper;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 ?>
 <?php foreach($models as $k => $model){ ?>
@@ -14,19 +14,19 @@ use common\helpers\HtmlHelper;
         <td>
             <?= ArrayHelper::itemsLevel($model['level'], $models, $k)?>
             <?= $model['description']?>
-            <?= HtmlHelper::a('<i class="fa fa-plus-circle"></i>', ['ajax-edit', 'parent_key' => $model['key'], 'parent_title' => $model['description'], 'level' => $model['level'] + 1], [
+            <?= Html::a('<i class="fa fa-plus-circle"></i>', ['ajax-edit', 'parent_key' => $model['key'], 'parent_title' => $model['description'], 'level' => $model['level'] + 1], [
                 'data-toggle' => 'modal',
                 'data-target' => '#ajaxModal',
             ])?>
         </td>
         <td><?= $model['name']?></td>
-        <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
+        <td class="col-md-1"><?= Html::sort($model['sort'])?></td>
         <td>
-            <?= HtmlHelper::edit(['ajax-edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']], '编辑', [
+            <?= Html::edit(['ajax-edit', 'parent_key' => $model['parent_key'], 'parent_title' => $parent_title, 'name' => $model['name'], 'level' => $model['level']], '编辑', [
                 'data-toggle' => 'modal',
                 'data-target' => '#ajaxModal',
             ])?>
-            <?= HtmlHelper::delete(['delete', 'name' => $model['name']])?>
+            <?= Html::delete(['delete', 'name' => $model['name']])?>
         </td>
     </tr>
     <?php if (!empty($model['-'])) { ?>

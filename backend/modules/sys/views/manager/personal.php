@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = '个人中心';

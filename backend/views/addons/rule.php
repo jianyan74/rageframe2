@@ -1,9 +1,9 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Html;
 
 $this->title = '规则管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

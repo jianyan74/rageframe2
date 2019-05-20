@@ -8,7 +8,7 @@
 引入
 
 ```
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 ```
 
 ### 校验权限是否拥有
@@ -20,7 +20,7 @@ use common\helpers\AuthHelper;
  * @param string $route
  * @return bool
  */
-AuthHelper::verify($route);
+Auth::verify($route);
 ```
 
 ### 批量校验权限是否拥有
@@ -33,5 +33,5 @@ AuthHelper::verify($route);
  * @param array $route
  * @return array|bool
  */
-AuthHelper::verifyBatch($route);
+Auth::verifyBatch($route);
 ```

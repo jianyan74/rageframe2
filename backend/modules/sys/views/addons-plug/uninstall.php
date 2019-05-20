@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use common\helpers\AddonHelper;
 
 $this->title = '已安装的插件';
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     <?php if($vo['auth']['ajaxEdit']){ ?>
                                         <a href="<?= Url::to(['ajax-edit','id' => $vo['id']])?>" data-toggle='modal' data-target='#ajaxModal'><span class="btn btn-primary btn-sm">编辑</span></a>
                                     <?php } ?>
-                                    <?= HtmlHelper::status($vo['status']) ?>
+                                    <?= Html::status($vo['status']) ?>
                                     <?php if($vo['auth']['uninstal']){ ?>
                                         <a href="<?= Url::to(['uninstall','name' => $vo['name']])?>" data-method="post"><span class="btn btn-warning btn-sm">卸载</span></a>
                                     <?php } ?>

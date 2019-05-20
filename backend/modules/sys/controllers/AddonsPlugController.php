@@ -4,10 +4,10 @@ namespace backend\modules\sys\controllers;
 use common\models\sys\AddonsAuthItemChild;
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 use common\helpers\ResultDataHelper;
 use common\helpers\FileHelper;
 use common\helpers\AddonHelper;
@@ -46,7 +46,7 @@ class AddonsPlugController extends SController
             }
 
             // 更新缓存
-            AuthHelper::updateCache();
+            Auth::updateCache();
 
             // 验证模块信息
             $class = AddonHelper::getAddonConfig($addonName);
@@ -85,11 +85,11 @@ class AddonsPlugController extends SController
 
             // 权限校验显示
             $item['auth'] = [
-                'upgradeConfig' => AuthHelper::verify('/sys/addons-plug/upgrade-config'),
-                'upgrade' => AuthHelper::verify('/sys/addons-plug/upgrade'),
-                'ajaxUpdate' => AuthHelper::verify('/sys/addons-plug/ajax-update'),
-                'ajaxEdit' => AuthHelper::verify('/sys/addons-plug/ajax-edit'),
-                'uninstal' => AuthHelper::verify('/sys/addons-plug/uninstal'),
+                'upgradeConfig' => Auth::verify('/sys/addons-plug/upgrade-config'),
+                'upgrade' => Auth::verify('/sys/addons-plug/upgrade'),
+                'ajaxUpdate' => Auth::verify('/sys/addons-plug/ajax-update'),
+                'ajaxEdit' => Auth::verify('/sys/addons-plug/ajax-edit'),
+                'uninstal' => Auth::verify('/sys/addons-plug/uninstal'),
             ];
         }
 
@@ -260,7 +260,7 @@ class AddonsPlugController extends SController
         }
 
         // 更新缓存
-        AuthHelper::updateCache();
+        Auth::updateCache();
 
         // 更新配置
         $addonsConfig = new $class;

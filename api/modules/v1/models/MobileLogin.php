@@ -4,7 +4,7 @@ namespace api\modules\v1\models;
 use common\enums\StatusEnum;
 use common\helpers\RegularHelper;
 use common\models\api\AccessToken;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 use yii\base\Model;
 
 /**
@@ -83,7 +83,7 @@ class MobileLogin extends Model
     {
         if ($this->_user == false)
         {
-            $this->_user = MemberInfo::findOne(['mobile' => $this->mobile, 'status' => StatusEnum::ENABLED]);
+            $this->_user = Member::findOne(['mobile' => $this->mobile, 'status' => StatusEnum::ENABLED]);
         }
 
         return $this->_user;

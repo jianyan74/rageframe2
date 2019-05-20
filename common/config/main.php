@@ -1,7 +1,7 @@
 <?php
 return [
     'name' => 'RageFrame',
-    'version' => '2.2.35',
+    'version' => '2.2.43',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -11,7 +11,7 @@ return [
     'sourceLanguage' => 'zh-cn',
     'timeZone' => 'Asia/Shanghai',
     'bootstrap' => [
-        'queue', // 队列系统
+        // 'queue', // 队列系统
         'common\components\InitConfig', // 加载默认的配置
     ],
     'components' => [
@@ -69,7 +69,7 @@ return [
         ],
         /** ------ 服务 ------ **/
         'services' => [
-            'class' => 'common\services\Application',
+            'class' => 'services\Application',
         ]
     ],
 ];

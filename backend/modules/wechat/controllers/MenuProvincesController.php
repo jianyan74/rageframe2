@@ -1,7 +1,7 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
-use yii\helpers\Html;
+use common\helpers\Html;
 use common\helpers\ResultDataHelper;
 use common\models\wechat\MenuProvinces;
 

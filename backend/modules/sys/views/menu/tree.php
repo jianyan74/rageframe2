@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use common\helpers\ArrayHelper;
 
 ?>
@@ -16,7 +16,7 @@ use common\helpers\ArrayHelper;
             <?= $model['title']?>
             <!--禁止显示二级分类再次添加三级分类-->
             <?php if ($model['level'] <= 2){ ?>
-                <?= HtmlHelper::a('<i class="fa fa-plus-circle"></i>', ['ajax-edit', 'pid' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $model['title'], 'level' => $model['level'] + 1], [
+                <?= Html::a('<i class="fa fa-plus-circle"></i>', ['ajax-edit', 'pid' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $model['title'], 'level' => $model['level'] + 1], [
                     'data-toggle' => 'modal',
                     'data-target' => '#ajaxModalLg',
                 ]); ?>
@@ -24,15 +24,15 @@ use common\helpers\ArrayHelper;
         </td>
         <td><?= $model['url']?></td>
         <td><div class="fa <?= $model['menu_css']?>"></div></td>
-        <td><?= HtmlHelper::whether($model['dev'])?></td>
-        <td class="col-md-1"><?= HtmlHelper::sort($model['sort'])?></td>
+        <td><?= Html::whether($model['dev'])?></td>
+        <td class="col-md-1"><?= Html::sort($model['sort'])?></td>
         <td>
-            <?= HtmlHelper::edit(['ajax-edit', 'id' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $parent_title, 'level' => $model['level']], '编辑', [
+            <?= Html::edit(['ajax-edit', 'id' => $model['id'], 'cate_id' => $cate_id, 'parent_title' => $parent_title, 'level' => $model['level']], '编辑', [
                 'data-toggle' => 'modal',
                 'data-target' => '#ajaxModalLg',
             ]); ?>
-            <?= HtmlHelper::status($model['status']); ?>
-            <?= HtmlHelper::delete(['delete','id' => $model['id'], 'cate_id' => $cate_id])?>
+            <?= Html::status($model['status']); ?>
+            <?= Html::delete(['delete','id' => $model['id'], 'cate_id' => $cate_id])?>
         </td>
     </tr>
     <?php if (!empty($model['-'])){ ?>

@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\enums\StatusEnum;
 ?>
 
@@ -19,7 +19,7 @@ use common\enums\StatusEnum;
                 ])?>
             </ul>
         <?php }else{ ?>
-            <a class="J_menuItem" href="<?= Url::toRoute($item['fullUrl']); ?>">
+            <a class="J_menuItem" href="<?= Url::to($item['fullUrl']); ?>">
                 <i class="fa <?= $level == 1 ? $item['menu_css'] : 'fa-circle-o'; ?>"></i>
                 <span><?= $item['title']; ?></span>
             </a>

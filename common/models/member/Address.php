@@ -81,7 +81,7 @@ class Address extends BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(MemberInfo::class, ['id' => 'member_id']);
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**

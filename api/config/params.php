@@ -23,7 +23,4 @@ return [
     'user.httpSignAccount' => [
         'doormen' => 'e3de3825cfbf',
     ],
-
-    // 默认分页数量
-    'user.pageSize' => 10,
 ];

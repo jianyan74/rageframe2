@@ -3,7 +3,7 @@ namespace backend\modules\sys\controllers;
 
 use Yii;
 use common\enums\StatusEnum;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\common\SearchModel;
 use common\models\sys\Notify;
 use backend\modules\sys\models\NotifyAnnounceForm;
@@ -17,7 +17,7 @@ use backend\modules\sys\models\NotifyAnnounceForm;
  */
 class NotifyAnnounceController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

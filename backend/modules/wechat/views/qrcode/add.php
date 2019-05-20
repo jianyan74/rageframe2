@@ -1,12 +1,12 @@
 <?php
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
+use common\helpers\Url;
 
 ?>
 <?php $form = ActiveForm::begin([
     'id' => $model->formName(),
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::toRoute(['validate-form']),
+    'validationUrl' => Url::to(['validate-form']),
 ]); ?>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>

@@ -5,14 +5,14 @@ use Yii;
 use common\helpers\PayHelper;
 use common\helpers\StringHelper;
 use common\models\common\PayLog;
-use common\helpers\UrlHelper;
+use common\helpers\Url;
 
 /**
  * Class SiteController
  * @package wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class SiteController extends WController
+class SiteController extends BaseController
 {
     /**
      * @return array
@@ -82,7 +82,7 @@ class SiteController extends WController
             'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
             'body' => '支付简单说明',
             'detail' => '支付详情',
-            'notify_url' => UrlHelper::toFront(['notify/wechat']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => Url::toFront(['notify/wechat']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'out_trade_no' => PayHelper::getOutTradeNo($totalFee, $orderSn, PayLog::PAY_TYPE_WECHAT), // 支付
             'total_fee' => $totalFee,
             'openid' => 'okFAZ0-5AbCyvn1m_ujTxmUwzlYo', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
@@ -117,7 +117,7 @@ class SiteController extends WController
             p($result);die();
         }
 
-        return $this->render('wxpay', [
+        return $this->render('demo', [
             'jssdk' => $payment->jssdk, // $app通过上面的获取实例来获取
             'config' => $config
         ]);

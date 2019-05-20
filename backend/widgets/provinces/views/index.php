@@ -1,40 +1,54 @@
 <?php
-use yii\helpers\Html;
+use common\helpers\Html;
 use common\models\common\Provinces;
 
-$provinces = $form->field($model, $provincesName)->dropDownList(Provinces::getCityList(),
+$col =  12 / $level;
+
+$level >=1 && $provinces = $form->field($model, $provincesName)->dropDownList(Provinces::getCityList(),
     [
         'prompt' => '-- 请选择省 --',
         'onchange' => 'widget_provinces(this, 1,"'.Html::getInputId($model, $cityName) . '","' . Html::getInputId($model, $areaName).'")',
     ]);
 
-$city = $form->field($model, $cityName)->dropDownList(Provinces::getCityList($model->$provincesName, true),
+$level >=2 && $city = $form->field($model, $cityName)->dropDownList(Provinces::getCityList($model->$provincesName, true),
     [
         'prompt' => '-- 请选择市 --',
         'onchange' => 'widget_provinces(this,2,"'.Html::getInputId($model, $areaName) . '","'.Html::getInputId($model, $areaName).'")',
     ]);
 
-$area = $form->field($model, $areaName)->dropDownList(Provinces::getCityList($model->$cityName, true),[
+$level >=3 && $area = $form->field($model, $areaName)->dropDownList(Provinces::getCityList($model->$cityName, true),[
     'prompt' => '-- 请选择区 --',
 ])
 ?>
 
 <?php if($template == 'short'){ ?>
     <div class="row">
-        <div class="col-lg-4">
-            <?= $provinces ?>
-        </div>
-        <div class="col-lg-4">
-            <?= $city ?>
-        </div>
-        <div class="col-lg-4">
-            <?= $area ?>
-        </div>
+        <?php if ($level >= 1){ ?>
+            <div class="col-lg-<?= $col; ?> <?php if ($level < 1){ echo 'hide';};?>">
+                <?= $provinces ?>
+            </div>
+        <?php }?>
+        <?php if ($level >= 2){ ?>
+            <div class="col-lg-<?= $col; ?> <?php if ($level < 2){ echo 'hide';};?>">
+                <?= $city ?>
+            </div>
+        <?php }?>
+        <?php if ($level >= 3){ ?>
+            <div class="col-lg-<?= $col; ?> <?php if ($level < 3){ echo 'hide';};?>">
+                <?= $area ?>
+            </div>
+        <?php }?>
     </div>
 <?php }else{ ?>
-    <?= $provinces ?>
-    <?= $city ?>
-    <?= $area ?>
+    <?php if ($level >= 1){ ?>
+        <?= $provinces ?>
+    <?php }?>
+    <?php if ($level >= 2){ ?>
+        <?= $city ?>
+    <?php }?>
+    <?php if ($level >= 3){ ?>
+        <?= $area ?>
+    <?php }?>
 <?php } ?>
 
 <script>

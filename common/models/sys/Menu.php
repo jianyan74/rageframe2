@@ -2,7 +2,7 @@
 namespace common\models\sys;
 
 use Yii;
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
@@ -92,7 +92,7 @@ class Menu extends \common\models\common\BaseModel
             ->all();
 
         // 获取当前所有的权限信息
-        $auth = Yii::$app->services->sys->isAuperAdmin() ? false : AuthHelper::getAuth();
+        $auth = Yii::$app->services->sys->isAuperAdmin() ? false : Auth::getAuth();
         foreach ($models as $key => &$model)
         {
             // 判断权限是否拥有且支持参数传递

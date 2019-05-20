@@ -2,11 +2,12 @@
 namespace backend\modules\sys\controllers;
 
 use common\helpers\ArrayHelper;
+use common\helpers\ResultDataHelper;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\sys\Manager;
 use backend\modules\sys\models\PasswdForm;
 use backend\modules\sys\models\ManagerForm;
@@ -20,7 +21,7 @@ use backend\modules\sys\models\ManagerForm;
  */
 class ManagerController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string
@@ -83,27 +84,34 @@ class ManagerController extends SController
     /**
      * 修改密码
      *
-     * @return string|\yii\web\Response
+     * @return array|string
      * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionUpPassword()
     {
         $model = new PasswdForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        if ($model->load(Yii::$app->request->post()))
         {
+            if (!$model->validate())
+            {
+                return ResultDataHelper::json(404, $this->analyErr($model->getFirstErrors()));
+            }
+
             /* @var $manager \common\models\sys\Manager */
             $manager = Yii::$app->user->identity;
             $manager->password_hash = Yii::$app->security->generatePasswordHash($model->passwd_new);;
 
             // 记录行为日志
             Yii::$app->services->sys->log('updateManagerPwd', '修改管理员密码|账号:' . $manager->username, false);
-
             if ($manager->save())
             {
                 // 退出登陆
                 Yii::$app->user->logout();
-                return $this->goHome();
+                return ResultDataHelper::json(200, '修改成功');
             }
+
+            return ResultDataHelper::json(404, $this->analyErr($manager->getFirstErrors()));
         }
 
         return $this->render($this->action->id, [

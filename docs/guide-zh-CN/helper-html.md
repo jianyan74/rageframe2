@@ -16,45 +16,45 @@
 引入
 
 ```
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 ```
 
 ### 新增按钮
 
 ```
-HtmlHelper::create(['index']);
+Html::create(['index']);
 ```
 
 ### 编辑按钮
 
 ```
-HtmlHelper::edit(['edit', 'id' => 1]);
+Html::edit(['edit', 'id' => 1]);
 ```
 
 ### 删除按钮
 
 ```
-HtmlHelper::create(['delete', 'id' => 1]);
+Html::create(['delete', 'id' => 1]);
 ```
 
 ### 普通按钮
 
 ```
-HtmlHelper::linkButton(['test', 'id' => 1], '测试');
+Html::linkButton(['test', 'id' => 1], '测试');
 ```
 
 ### 状态标签
 
 ```
 // 0：显示;1：隐藏
-HtmlHelper::status(1);
+Html::status(1);
 ```
 
 ### 是否标签
 
 ```
 // 1：是;0：否
-HtmlHelper::whether(1);
+Html::whether(1);
 ```
 
 ### 点击大图
@@ -67,7 +67,7 @@ HtmlHelper::whether(1);
  * @param int $width 宽度 默认45px
  * @param int $height 高度 默认45px
  */
-HtmlHelper::imageFancyBox($imgSrc, $width = 45, $height = 45)
+Html::imageFancyBox($imgSrc, $width = 45, $height = 45)
 ```
 
 ### 头像图片判断
@@ -80,6 +80,6 @@ HtmlHelper::imageFancyBox($imgSrc, $width = 45, $height = 45)
  * @param string $head_portrait
  * @return mixed
  */
-HtmlHelper::headPortrait($head_portrait)
+Html::headPortrait($head_portrait)
 ```
    

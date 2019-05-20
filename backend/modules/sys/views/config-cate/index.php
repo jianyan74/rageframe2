@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '配置分类';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <li><a href="<?= Url::to(['config/index'])?>">配置管理</a></li>
                 <li class="active"><a href="<?= Url::to(['config-cate/index'])?>">配置分类</a></li>
                 <li class="pull-right">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>

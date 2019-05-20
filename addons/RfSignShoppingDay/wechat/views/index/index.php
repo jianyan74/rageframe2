@@ -136,8 +136,8 @@ $openShare = false; // 开启微信分享
 </script>
 <script>
     var path = "<?= $path;?>";
-    var signUrl = "<?= \common\helpers\AddonUrl::to(['draw'])?>";
-    var recordUrl = "<?= \common\helpers\AddonUrl::to(['record'])?>";
+    var signUrl = "<?= \common\helpers\Url::to(['draw'])?>";
+    var recordUrl = "<?= \common\helpers\Url::to(['record'])?>";
     var isMember = true;  //是否会员
     var isStart = "<?= $isStart; ?>";   //活动是否开始
     var isEnd = "<?= $isEnd; ?>";    //活动是否结束

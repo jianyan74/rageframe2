@@ -3,7 +3,7 @@ namespace addons\RfArticle\backend\controllers;
 
 use Yii;
 use common\controllers\AddonsBaseController;
-use common\components\CurdTrait;
+use common\components\Curd;
 use addons\RfArticle\common\models\ArticleTag;
 
 /**
@@ -15,7 +15,7 @@ use addons\RfArticle\common\models\ArticleTag;
  */
 class ArticleTagController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

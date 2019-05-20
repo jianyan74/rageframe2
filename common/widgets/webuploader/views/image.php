@@ -6,7 +6,7 @@ $jsConfig = json_encode($config);
     <div class="row">
         <div class="multi-container col-sm-12 rf-m">
             <div class="photo-list">
-                <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>" id="<?= $boxId?>">
+                <ul data-name="<?= $name?>" data-boxId="<?= $boxId?>" id="<?= $boxId?>">
                     <?php if($config['pick']['multiple'] == true){ ?>
                         <?php foreach ($value as $vo){ ?>
                             <li>

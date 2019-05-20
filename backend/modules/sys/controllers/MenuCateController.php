@@ -2,7 +2,7 @@
 namespace backend\modules\sys\controllers;
 
 use yii\data\Pagination;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\sys\MenuCate;
 
 /**
@@ -14,7 +14,7 @@ use common\models\sys\MenuCate;
  */
 class MenuCateController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var

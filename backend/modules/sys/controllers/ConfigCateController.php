@@ -4,7 +4,7 @@ namespace backend\modules\sys\controllers;
 use yii;
 use common\helpers\ArrayHelper;
 use common\models\sys\ConfigCate;
-use common\components\CurdTrait;
+use common\components\Curd;
 
 /**
  * 配置分类控制器
@@ -15,7 +15,7 @@ use common\components\CurdTrait;
  */
 class ConfigCateController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var

@@ -73,7 +73,7 @@ class SiteController extends Controller
 
     /**
      * Success Callback
-     * @param QqAuth|WeiboAuth $client
+     * @param yii\authclient\OAuth2|\xj\oauth\WeiboAuth $client
      * @see http://wiki.connect.qq.com/get_user_info
      * @see http://stuff.cebe.cc/yii2docs/yii-authclient-authaction.html
      */

@@ -2,7 +2,7 @@
 namespace backend\widgets\provinces;
 
 use yii;
-use yii\helpers\Html;
+use common\helpers\Html;
 use yii\web\Response;
 use common\models\common\Provinces;
 

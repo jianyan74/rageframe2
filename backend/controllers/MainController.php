@@ -12,7 +12,7 @@ use common\helpers\DebrisHelper;
  * @package backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MainController extends MController
+class MainController extends BaseController
 {
     /**
      * 系统首页

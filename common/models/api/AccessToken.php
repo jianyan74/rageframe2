@@ -5,7 +5,7 @@ namespace common\models\api;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 use common\models\common\RateLimit;
 use common\helpers\ArrayHelper;
 
@@ -86,6 +86,7 @@ class AccessToken extends RateLimit
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        //  可以考虑加入到缓存查询，登录写入
         return static::findOne(['access_token' => $token]);
     }
 
@@ -109,7 +110,7 @@ class AccessToken extends RateLimit
      * @return array
      * @throws \yii\base\Exception
      */
-    public static function getAccessToken(MemberInfo $member, $group)
+    public static function getAccessToken(Member $member, $group)
     {
         $model = static::findModel($member->id, $group);
         $model->member_id = $member->id;

@@ -186,6 +186,10 @@ class AddonConfig
             'title' => '首页导航',
             'route' => 'index/index',
         ],
+        [
+            'title' => '测试导航',
+            'route' => 'test/index',
+        ],
     ];
 
     /**

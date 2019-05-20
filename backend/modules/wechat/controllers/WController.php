@@ -1,7 +1,7 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
-use backend\controllers\MController;
+use backend\controllers\BaseController;
 
 /**
  * 模块基类
@@ -10,7 +10,7 @@ use backend\controllers\MController;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class WController extends MController
+class WController extends BaseController
 {
 
 }

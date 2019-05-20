@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+use common\helpers\Html;
 
 $this->title = '文章详情';
 ?>

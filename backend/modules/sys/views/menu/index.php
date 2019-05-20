@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '菜单管理';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <?php } ?>
                 <li><a href="<?= Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
                 <li class="pull-right">
-                    <?= HtmlHelper::create(['ajax-edit', 'cate_id' => $cate_id], '创建', [
+                    <?= Html::create(['ajax-edit', 'cate_id' => $cate_id], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ]); ?>

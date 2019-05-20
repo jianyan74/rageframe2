@@ -4,7 +4,7 @@ namespace backend\modules\wechat\controllers;
 use Yii;
 use yii\data\Pagination;
 use common\models\wechat\QrcodeStat;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\helpers\ExcelHelper;
 
 /**
@@ -16,7 +16,7 @@ use common\helpers\ExcelHelper;
  */
 class QrcodeStatController extends WController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

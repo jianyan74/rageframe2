@@ -5,7 +5,7 @@
 
 ### 配置
 
-如果需要新服务层调用方法 请在 `common\services\Application` 中的 `childService` 添加，例如：
+如果需要新服务层调用方法 请在 `services\Application` 中的 `childService` 添加，例如：
 
 ```
     /**
@@ -13,11 +13,11 @@
      */
     public $childService = [
         'example' => [
-            'class' => 'common\services\example\Example',
+            'class' => 'services\example\Example',
             // 子服务
             'childService' => [
                 'rule' => [
-                    'class' => 'common\services\example\rule\Rule',
+                    'class' => 'services\example\rule\Rule',
                 ],
             ],
         ],

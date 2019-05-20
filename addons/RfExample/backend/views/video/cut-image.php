@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use common\widgets\webuploader\Images;
 use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;

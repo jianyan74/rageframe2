@@ -47,6 +47,13 @@ class Provinces extends Widget
     public $url;
 
     /**
+     * 级别
+     *
+     * @var int
+     */
+    public $level = 3;
+
+    /**
      * 模型
      *
      * @var array
@@ -82,6 +89,7 @@ class Provinces extends Widget
             'areaName' => $this->areaName,
             'url' => $this->url,
             'template' => $this->template,
+            'level' => $this->level,
         ]);
     }
 }

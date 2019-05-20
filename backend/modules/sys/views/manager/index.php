@@ -1,9 +1,8 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '后台用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -14,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ]); ?>
@@ -55,7 +54,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr id="<?= $model->id; ?>">
                             <td><?= $model->id; ?></td>
                             <td class="feed-element">
-                                <img src="<?= \common\helpers\HtmlHelper::headPortrait($model->head_portrait);?>" class="img-circle rf-img-md img-bordered-sm">
+                                <img src="<?= \common\helpers\Html::headPortrait($model->head_portrait);?>" class="img-circle rf-img-md img-bordered-sm">
                             </td>
                             <td><?= $model->username ?></td>
                             <td><?= $model->realname ?></td>
@@ -75,14 +74,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 访问次数：<?= $model->visit_count ?>
                             </td>
                             <td>
-                                <?= HtmlHelper::linkButton(['ajax-edit','id' => $model->id], '账号密码', [
+                                <?= Html::linkButton(['ajax-edit','id' => $model->id], '账号密码', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModal',
                                 ]); ?>
-                                <?= HtmlHelper::edit(['edit','id' => $model->id]); ?>
+                                <?= Html::edit(['edit','id' => $model->id]); ?>
                                 <?php if ($model->id != Yii::$app->params['adminAccount']){ ?>
-                                    <?= HtmlHelper::status($model['status']); ?>
-                                    <?= HtmlHelper::delete(['delete','id' => $model->id]); ?>
+                                    <?= Html::status($model['status']); ?>
+                                    <?= Html::delete(['delete','id' => $model->id]); ?>
                                 <?php } ?>
                             </td>
                         </tr>

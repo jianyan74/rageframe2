@@ -5,7 +5,7 @@ use Yii;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use common\enums\StatusEnum;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\common\SearchModel;
 use common\models\sys\Notify;
 use backend\modules\sys\models\NotifyMessageForm;
@@ -19,7 +19,7 @@ use backend\modules\sys\models\NotifyMessageForm;
  */
 class NotifyMessageController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

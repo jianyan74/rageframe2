@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\Qrcode;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '二维码管理';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
                 <li><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
                 <li class="pull-right">
-                    <?= HtmlHelper::create(['add'], '创建', [
+                    <?= Html::create(['add'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -62,20 +62,20 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <?php } ?>
                                 </td>
                                 <td>
-                                    <?= HtmlHelper::linkButton(['down', 'id' => $model->id], '下载'); ?>
-                                    <?= HtmlHelper::edit(['ajax-edit', 'id' => $model->id], '编辑', [
+                                    <?= Html::linkButton(['down', 'id' => $model->id], '下载'); ?>
+                                    <?= Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModal',
                                     ])?>
                                     <?php if($model->model == Qrcode::MODEL_PERPETUAL){ ?>
-                                        <?= HtmlHelper::delete(['delete', 'id' => $model->id]); ?>
+                                        <?= Html::delete(['delete', 'id' => $model->id]); ?>
                                     <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>
                         <tr>
                             <td colspan="11" style="line-height: 16px">
-                                <?= HtmlHelper::linkButton(['delete-all'], '删除过期二维码', [
+                                <?= Html::linkButton(['delete-all'], '删除过期二维码', [
                                     'class' => 'btn btn-warning btn-sm'
                                 ]); ?>
                                 <span>注意：永久二维码无法在微信平台删除，但是您可以点击

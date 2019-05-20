@@ -1,6 +1,6 @@
 <?php
 use wechat\assets\AppAsset;
-use yii\helpers\Html;
+use common\helpers\Html;
 use common\widgets\Alert;
 
 AppAsset::register($this);

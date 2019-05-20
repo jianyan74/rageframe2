@@ -1,54 +1,55 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 $jsConfig = json_encode($config);
 ?>
 
-<div class="row">
-    <div class="multi-container col-sm-12 rf-m">
-        <div class="file-list">
-            <ul data-name = "<?= $name?>" data-boxId = "<?= $boxId?>" id="<?= $boxId?>">
-                <?php if($config['pick']['multiple'] == true){ ?>
-                    <?php foreach ($value as $vo){ ?>
-                        <li>
-                            <input name="<?= $name?>" value="<?= $vo?>" type="hidden">
-                            <div class="img-box">
-                                <i class="fa fa-file"></i>
-                                <i><?= \common\helpers\StringHelper::clipping($vo)?></i>
-                                <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
-                            </div>
-                        </li>
+    <div class="row">
+        <div class="multi-container col-sm-12 rf-m">
+            <div class="file-list">
+                <ul data-name="<?= $name?>" data-boxId ="<?= $boxId?>" id="<?= $boxId?>">
+                    <?php if($config['pick']['multiple'] == true){ ?>
+                        <?php foreach ($value as $vo){ ?>
+                            <li>
+                                <?= Html::hiddenInput($name, $vo)?>
+                                <div class="img-box">
+                                    <i class="fa fa-file"></i>
+                                    <i><?= \common\helpers\StringHelper::clipping($vo)?></i>
+                                    <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
+                                </div>
+                            </li>
+                        <?php } ?>
+                        <li class="upload-box upload-album-<?= $boxId?>" data-select="<?= $config['select']?>"></li>
+                        <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
+                            <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
+                            <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => true, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
+                        </div>
+                    <?php }else{ ?>
+                        <?php if($value){ ?>
+                            <li>
+                                <?= Html::hiddenInput($name, $value)?>
+                                <div class="img-box">
+                                    <i class="fa fa-file"></i>
+                                    <i><?= \common\helpers\StringHelper::clipping($value)?></i>
+                                    <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
+                                </div>
+                            </li>
+                        <?php } ?>
+                        <li class="upload-box upload-album-<?= $boxId ?>" <?php if(!empty($value)){?> style="display: none"<?php } ?> data-select="<?= $config['select']?>"></li>
+                        <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
+                            <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
+                            <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => false, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
+                        </div>
                     <?php } ?>
-                    <li class="upload-box upload-album-<?= $boxId?>" data-select="<?= $config['select']?>"></li>
-                    <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
-                        <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => true, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
-                    </div>
-                <?php }else{ ?>
-                    <?php if($value){ ?>
-                        <li>
-                            <input name="<?= $name?>" value="<?= $value?>" type="hidden">
-                            <div class="img-box">
-                                <i class="fa fa-file"></i>
-                                <i><?= \common\helpers\StringHelper::clipping($value)?></i>
-                                <i class="delimg" data-multiple="<?= $config['pick']['multiple'] ?>"></i>
-                            </div>
-                        </li>
-                    <?php } ?>
-                    <li class="upload-box upload-album-<?= $boxId ?>" <?php if(!empty($value)){?> style="display: none"<?php } ?> data-select="<?= $config['select']?>"></li>
-                    <div class="halfOpacityBlackBG absoluteFullSize" style="display: none;width: 110px;height: 110px;">
-                        <a class="fontColorWhite uploadWebuploader" href="javascript:void(0)" style="left:25%;top: 25%;position: absolute;">上传文件</a>
-                        <a class="fontColorWhite" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'multiple' => false, 'upload_type' => 'files'])?>" style="right:25%;top: 55%;position: absolute;" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
-                    </div>
-                <?php } ?>
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    var mergeUrl = "<?= \yii\helpers\Url::to(['/file/merge']) ?>";
-</script>
+    <script>
+        var mergeUrl = "<?= \yii\helpers\Url::to(['/file/merge']) ?>";
+    </script>
 
 <?php $this->registerJs(<<<Js
     $('.upload-album-{$boxId}').mouseenter(function(e){

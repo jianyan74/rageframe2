@@ -2,7 +2,6 @@
 namespace wechat\controllers;
 
 use Yii;
-use yii\web\NotFoundHttpException;
 use common\helpers\ResultDataHelper;
 use common\helpers\StringHelper;
 use common\controllers\FileBaseController;

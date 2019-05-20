@@ -2,7 +2,7 @@
 namespace backend\modules\wechat\controllers;
 
 use Yii;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\wechat\MsgHistory;
 use yii\data\Pagination;
 
@@ -15,7 +15,7 @@ use yii\data\Pagination;
  */
 class MsgHistoryController extends WController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

@@ -1,7 +1,7 @@
 <?php
 $this->title = Yii::$app->params['adminTitle'];
 
-use yii\helpers\Html;
+use common\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
 ?>

@@ -1,9 +1,9 @@
 <?php
-use yii\helpers\Html;
+use common\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use backend\assets\AppAsset;
 use backend\widgets\Alert;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use backend\widgets\menu\AddonLeftWidget;
 
 AppAsset::register($this);
@@ -167,7 +167,7 @@ AppAsset::register($this);
 
             $.ajax({
                 type:"get",
-                url:"<?= AddonUrl::to(['ajax-update']); ?>",
+                url:"<?= Url::to(['ajax-update']); ?>",
                 dataType: "json",
                 data: {id:id,status:status},
                 success: function(data){
@@ -200,7 +200,7 @@ AppAsset::register($this);
             }else{
                 $.ajax({
                     type:"get",
-                    url:"<?= AddonUrl::to(['ajax-update']); ?>",
+                    url:"<?= Url::to(['ajax-update']); ?>",
                     dataType: "json",
                     data: {id:id,sort:sort},
                     success: function(data){

@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\grid\GridView;
-use yii\helpers\Html;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '会员信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -14,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -38,7 +37,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return HtmlHelper::img(HtmlHelper::headPortrait(Html::encode($model->head_portrait)), [
+                                return Html::img(Html::headPortrait(Html::encode($model->head_portrait)), [
                                         'class' => 'img-circle rf-img-md img-bordered-sm',
                                 ]);
                             },
@@ -80,22 +79,22 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'template'=> '{ajax-edit} {address} {edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
-                                    return HtmlHelper::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
+                                    return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModal',
                                     ]);
                                 },
                                 'address' => function ($url, $model, $key) {
-                                    return HtmlHelper::linkButton(['address/index', 'member_id' => $model->id], '收货地址');
+                                    return Html::linkButton(['address/index', 'member_id' => $model->id], '收货地址');
                                 },
                                 'edit' => function ($url, $model, $key) {
-                                    return HtmlHelper::edit(['edit', 'id' => $model->id]);
+                                    return Html::edit(['edit', 'id' => $model->id]);
                                 },
                                 'status' => function ($url, $model, $key) {
-                                    return HtmlHelper::status($model->status);
+                                    return Html::status($model->status);
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return HtmlHelper::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy','id' => $model->id]);
                                 },
                             ],
                         ],

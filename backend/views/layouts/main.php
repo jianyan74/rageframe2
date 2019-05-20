@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use yii\helpers\Url;
+use common\helpers\Html;
+use common\helpers\Url;
 use backend\assets\AppAsset;
 use backend\widgets\Alert;
 
@@ -106,8 +106,8 @@ AppAsset::register($this);
 
         // 配置
         var config = {
-            tag: <?= Yii::$app->debris->config('sys_tags'); ?>,
-            isMobile: "<?= Yii::$app->params['isMobile']; ?>",
+            tag: <?= Yii::$app->debris->config('sys_tags') ?? false; ?>,
+            isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
         };
 
         // 启用状态 status 1:启用;0禁用;

@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '菜单分类';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <?php } ?>
                 <li class="active"><a href="<?= Url::to(['menu-cate/index'])?>"> 菜单分类</a></li>
                 <li class="pull-right">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -41,15 +41,15 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td><?= $model->id?></td>
                                 <td><?= $model->title ?></td>
                                 <td><i class="fa <?= $model->icon ?>"></i></td>
-                                <td class="col-md-1"><?= HtmlHelper::sort($model['sort']); ?></td>
-                                <td><?= HtmlHelper::whether($model->is_default_show) ?></td>
+                                <td class="col-md-1"><?= Html::sort($model['sort']); ?></td>
+                                <td><?= Html::whether($model->is_default_show) ?></td>
                                 <td>
-                                    <?= HtmlHelper::edit(['ajax-edit', 'id' => $model->id], '编辑', [
+                                    <?= Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModal',
                                     ])?>
-                                    <?= HtmlHelper::status($model['status']); ?>
-                                    <?= HtmlHelper::delete(['delete', 'id' => $model->id]); ?>
+                                    <?= Html::status($model['status']); ?>
+                                    <?= Html::delete(['delete', 'id' => $model->id]); ?>
                                 </td>
                             </tr>
                         <?php } ?>

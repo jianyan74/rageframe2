@@ -3,7 +3,7 @@ namespace addons\RfExample\backend\controllers;
 
 use common\enums\StatusEnum;
 use common\helpers\StringHelper;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 use addons\RfExample\common\models\MongoDbCurd;
 
@@ -14,7 +14,7 @@ use addons\RfExample\common\models\MongoDbCurd;
  */
 class MongoDbCurdController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     public $modelClass = 'addons\RfExample\common\models\MongoDbCurd';
 

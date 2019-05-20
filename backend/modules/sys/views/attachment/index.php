@@ -1,6 +1,6 @@
 <?php
 use yii\grid\GridView;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '文件列表';
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,10 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'filter' => false, //不显示搜索框
                             'value' => function($model){
                                 if (($model['upload_type'] == 'images' || preg_match("/^image/", $model['specific_type'])) && $model['extension'] != 'psd') {
-                                    return HtmlHelper::imageFancyBox($model->base_url);
+                                    return Html::imageFancyBox($model->base_url);
                                 }
 
-                                return \yii\helpers\Html::a('在线预览', $model->base_url, [
+                                return \common\helpers\Html::a('在线预览', $model->base_url, [
                                     'target' => '_blank'
                                 ]);
                             },
@@ -73,10 +73,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{status} {delete}',
                             'buttons' => [
                                 'status' => function ($url, $model, $key) {
-                                    return HtmlHelper::status($model->status);
+                                    return Html::status($model->status);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return HtmlHelper::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy','id' => $model->id]);
                                 },
                             ],
                         ],

@@ -1,5 +1,5 @@
 <?php
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 use common\helpers\AddonHelper;
 
 $this->title = '文章列表';
@@ -29,7 +29,7 @@ $this->title = '文章列表';
         var loadData = function(page,mescroll){
             $.ajax({
                 type:"get",
-                url:"<?= AddonUrl::to(['index'])?>",
+                url:"<?= Url::to(['index'])?>",
                 dataType: "json",
                 data: {
                     page:page.num,

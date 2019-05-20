@@ -1,7 +1,7 @@
 <?php
 namespace addons\RfSignShoppingDay\backend\controllers;
 
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\controllers\AddonsBaseController;
 use addons\RfSignShoppingDay\common\models\Award;
 use common\enums\StatusEnum;
@@ -14,7 +14,7 @@ use yii\data\Pagination;
  */
 class AwardController extends AddonsBaseController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

@@ -12,9 +12,9 @@ $nameAttribute = $generator->getNameAttribute();
 echo "<?php\n";
 ?>
 
-use yii\helpers\Html;
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
+use common\helpers\Url;
+use common\helpers\Html;
 use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
 <?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="ibox-title">
                     <h5><?= "<?= " ?>Html::encode($this->title) ?></h5>
                     <div class="ibox-tools">
-                        <?= "<?= " ?>HtmlHelper::create(['edit']) ?>
+                        <?= "<?= " ?>Html::create(['edit']) ?>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -80,13 +80,13 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                 'template' => '{edit} {status} {delete}',
                 'buttons' => [
                 'edit' => function($url, $model, $key){
-                        return HtmlHelper::edit(['edit', 'id' => $key]);
+                        return Html::edit(['edit', 'id' => $key]);
                 },
                'status' => function($url, $model, $key){
-                        return HtmlHelper::status($model['status']);
+                        return Html::status($model['status']);
                   },
                 'delete' => function($url, $model, $key){
-                        return HtmlHelper::delete(['delete', 'id' => $key]);
+                        return Html::delete(['delete', 'id' => $key]);
                 },
                 ]
             ]

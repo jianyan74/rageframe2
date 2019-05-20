@@ -1,9 +1,9 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\wechat\Menu;
-use common\helpers\HtmlHelper;
-use common\helpers\AuthHelper;
+use common\helpers\Html;
+use common\helpers\Auth;
 
 $this->title = Menu::$typeExplain[$type];
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -20,12 +20,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <div class="row">
                         <div class="col-lg-12 normalPaddingTop">
                             <!-- 权限校验判断 -->
-                            <?php if(AuthHelper::verify('/wechat/menu/sync')){ ?>
+                            <?php if(Auth::verify('/wechat/menu/sync')){ ?>
                                 <a class="btn btn-primary btn-xs" id="getNewMenu">
                                     <i class="fa fa-cloud-download"></i> 同步
                                 </a>
                             <?php } ?>
-                            <?= HtmlHelper::create(['edit','type' => $type])?>
+                            <?= Html::create(['edit','type' => $type])?>
                         </div>
                     </div>
                 </li>
@@ -68,9 +68,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 </td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                                 <td>
-                                    <?= HtmlHelper::edit(['edit', 'id' => $model->id, 'type' => $model->type], $model->type == 2 ? '查看': '编辑'); ?>
+                                    <?= Html::edit(['edit', 'id' => $model->id, 'type' => $model->type], $model->type == 2 ? '查看': '编辑'); ?>
                                     <?php if ($model->status == 0 || $model->type == 2){ ?>
-                                        <?= HtmlHelper::delete(['delete', 'id' => $model->id, 'type' => $model->type]); ?>
+                                        <?= Html::delete(['delete', 'id' => $model->id, 'type' => $model->type]); ?>
                                     <?php } ?>
                                 </td>
                             </tr>

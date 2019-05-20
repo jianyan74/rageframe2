@@ -3,7 +3,7 @@ namespace api\modules\v1\models;
 
 use common\enums\StatusEnum;
 use common\models\api\AccessToken;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * Login form
@@ -45,11 +45,11 @@ class LoginForm extends \common\models\common\LoginForm
             // email 登录
             if (strpos($this->username, "@"))
             {
-                $this->_user = MemberInfo::findOne(['email' => $this->username, 'status' => StatusEnum::ENABLED]);
+                $this->_user = Member::findOne(['email' => $this->username, 'status' => StatusEnum::ENABLED]);
             }
             else
             {
-                $this->_user = MemberInfo::findByUsername($this->username);
+                $this->_user = Member::findByUsername($this->username);
             }
         }
 

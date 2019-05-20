@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '角色管理';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['edit'], '创建', [
+                    <?= Html::create(['edit'], '创建', [
                         'class' => 'btn btn-primary btn-xs pull-right'
                     ])?>
                 </div>

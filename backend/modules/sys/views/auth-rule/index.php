@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use yii\widgets\LinkPager;
 use common\models\sys\AuthRule;
 
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -37,11 +37,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= AuthRule::getClassName($model->data)?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                             <td>
-                                <?= HtmlHelper::edit(['ajax-edit', 'name' => $model->name,], '编辑', [
+                                <?= Html::edit(['ajax-edit', 'name' => $model->name,], '编辑', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModal',
                                 ])?>
-                                <?= HtmlHelper::delete(['delete', 'name' => $model->name])?>
+                                <?= Html::delete(['delete', 'name' => $model->name])?>
                             </td>
                         </tr>
                     <?php } ?>

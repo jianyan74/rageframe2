@@ -1,13 +1,13 @@
 <?php
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\enums\StatusEnum;
 use common\enums\WhetherEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::toRoute(['ajax-edit']),
+    'validationUrl' => Url::to(['ajax-edit']),
 ]);
 ?>
 

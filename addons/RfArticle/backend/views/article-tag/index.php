@@ -1,7 +1,7 @@
 <?php
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Html;
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = '标签管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= AddonHtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ]); ?>
@@ -35,14 +35,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr id = <?= $model->id; ?>>
                             <td><?= $model->id; ?></td>
                             <td><?= $model->title; ?></td>
-                            <td class="col-md-1"><?= AddonHtmlHelper::sort($model['sort']); ?></td>
+                            <td class="col-md-1"><?= Html::sort($model['sort']); ?></td>
                             <td>
-                                <?= AddonHtmlHelper::edit(['ajax-edit','id' => $model['id']], '编辑', [
+                                <?= Html::edit(['ajax-edit','id' => $model['id']], '编辑', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModal',
                                 ]); ?>
-                                <?= AddonHtmlHelper::status($model['status']); ?>
-                                <?= AddonHtmlHelper::delete(['delete', 'id' => $model['id']]); ?>
+                                <?= Html::status($model['status']); ?>
+                                <?= Html::delete(['delete', 'id' => $model['id']]); ?>
                             </td>
                         </tr>
                     <?php } ?>

@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\models\wechat\RuleKeyword;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '规则管理', 'url' => ['rule', 'addon' => Yii::$app->params['addon']['name']]];

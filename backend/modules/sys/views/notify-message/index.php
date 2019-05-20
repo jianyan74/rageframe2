@@ -1,6 +1,6 @@
 <?php
 use yii\grid\GridView;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '私信管理';
 $this->params['breadcrumbs'][] = $this->title;
@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['ajax-edit'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{delete}',
                             'buttons' => [
                                 'delete' => function ($url, $model, $key) {
-                                    return HtmlHelper::delete(['destroy', 'id' => $model->id]);
+                                    return Html::delete(['destroy', 'id' => $model->id]);
                                 },
                             ],
                         ],

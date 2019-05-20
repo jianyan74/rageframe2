@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Html;
 use yii\grid\GridView;
-use common\helpers\AddonUrl;
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = 'Curd Grid';
 $this->params['breadcrumbs'][] = $this->title;
@@ -13,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="pull-right">
-                    <?= AddonHtmlHelper::create(['edit']); ?>
+                    <?= Html::create(['edit']); ?>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -78,13 +77,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::edit(['edit','id' => $model->id]);
+                                    return Html::edit(['edit','id' => $model->id]);
                                 },
                                 'status' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::status($model->status);
+                                    return Html::status($model->status);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return AddonHtmlHelper::delete(['edit','id' => $model->id]);
+                                    return Html::delete(['edit','id' => $model->id]);
                                 },
                             ],
                         ],

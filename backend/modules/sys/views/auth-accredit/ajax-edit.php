@@ -1,13 +1,13 @@
 <?php
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\models\sys\AuthRule;
 ?>
 
 <?php $form = ActiveForm::begin([
     'id' => $model->formName(),
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::toRoute(['ajax-edit','name' => $model['name']]),
+    'validationUrl' => Url::to(['ajax-edit','name' => $model['name']]),
     'fieldConfig' => [
         'template' => "<div class='col-sm-3 text-right'>{label}</div><div class='col-sm-9'>{input}\n{hint}\n{error}</div>",
     ]

@@ -1,7 +1,7 @@
 <?php
 use yii\grid\GridView;
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '私信列表';
 $this->params['breadcrumbs'][] = $this->title;

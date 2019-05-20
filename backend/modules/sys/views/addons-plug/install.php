@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use common\helpers\AddonHelper;
 
 $this->title = '安装插件';

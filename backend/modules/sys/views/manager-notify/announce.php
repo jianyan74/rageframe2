@@ -1,7 +1,7 @@
 <?php
 use yii\grid\GridView;
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '公告列表';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'format' => 'raw',
                                 'value' => function($model){
                                     $label = $model->is_read == 0 ? 'label-success' : 'label-default';
-                                    return HtmlHelper::label($model->is_read == 1 ? '已读' : '未读', '', [
+                                    return Html::label($model->is_read == 1 ? '已读' : '未读', '', [
                                         'class' => "label " . $label
                                     ]);
                                 },
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'template'=> '{view}',
                                 'buttons' => [
                                     'view' => function ($url, $model, $key) {
-                                        return HtmlHelper::linkButton(['announce-view', 'id' => $model->id], '详情');
+                                        return Html::linkButton(['announce-view', 'id' => $model->id], '详情');
                                     },
                                 ],
                             ],

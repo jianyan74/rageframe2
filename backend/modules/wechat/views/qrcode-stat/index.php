@@ -1,7 +1,6 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
@@ -70,7 +69,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 关注扫描 <strong class="text-danger"><?= $attention_count ?></strong> 次 ;
                                 已关注扫描 <strong class="text-danger"><?= $scan_count ?></strong> 次 ;
                                 总计 <strong class="text-danger"><?= $pages->totalCount ?></strong> 次 ;
-                                <?= HtmlHelper::a('导出Excel', ['export','from_date' => $from_date,'to_date' => $to_date,'type' => $type,'keyword' => $keyword])?>
+                                <?= Html::a('导出Excel', ['export','from_date' => $from_date,'to_date' => $to_date,'type' => $type,'keyword' => $keyword])?>
                             </div>
                         </div>
                     </div>
@@ -100,7 +99,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <td><?= isset($model->fans->follow) && $model->fans->follow == 1 ? '已关注': '取消关注'; ?></td>
                                     <td><?= $model->openid ?></td>
                                     <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
-                                    <td><?= HtmlHelper::delete(['delete','id' => $model->id]); ?></td>
+                                    <td><?= Html::delete(['delete','id' => $model->id]); ?></td>
                                 </tr>
                             <?php } ?>
                             </tbody>

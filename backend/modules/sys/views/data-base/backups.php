@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\AuthHelper;
+use common\helpers\Url;
+use common\helpers\Auth;
 
 $this->title = '数据备份';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -18,19 +18,19 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <div class="col-sm-12 normalPaddingJustV">
                         <div class="btn-group">
                             <!-- 权限校验 -->
-                            <?php if(AuthHelper::verify('/sys/data-base/export')){ ?>
+                            <?php if(Auth::verify('/sys/data-base/export')){ ?>
                                 <a class="btn btn-white table-list-database" href="javascript:;" data-type="1">立即备份</a>
                             <?php } ?>
                             <!-- 权限校验 -->
-                            <?php if(AuthHelper::verify('/sys/data-base/repair')){ ?>
+                            <?php if(Auth::verify('/sys/data-base/repair')){ ?>
                                 <a class="btn btn-white table-list-database" href="javascript:;" data-type="2">修复表</a>
                             <?php } ?>
                             <!-- 权限校验 -->
-                            <?php if(AuthHelper::verify('/sys/data-base/optimize')){ ?>
+                            <?php if(Auth::verify('/sys/data-base/optimize')){ ?>
                                 <a class="btn btn-white table-list-database" href="javascript:;" data-type="3">优化表</a>
                             <?php } ?>
                             <!-- 权限校验 -->
-                            <?php if(AuthHelper::verify('/sys/data-base/data-dictionary')){ ?>
+                            <?php if(Auth::verify('/sys/data-base/data-dictionary')){ ?>
                                 <a class="btn btn-white dictionary" href="javascript:;">Markdown数据字典</a>
                             <?php } ?>
                         </div>
@@ -64,11 +64,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td id="<?= $model['name']?>">未备份</td>
                                 <td>
                                     <!-- 权限校验 -->
-                                    <?php if(AuthHelper::verify('/sys/data-base/optimize')){ ?>
+                                    <?php if(Auth::verify('/sys/data-base/optimize')){ ?>
                                         <a href="#" class="table-list-optimize">优化表</a>
                                     <?php } ?>
                                     <!-- 权限校验 -->
-                                    <?php if(AuthHelper::verify('/sys/data-base/repair')){ ?>
+                                    <?php if(Auth::verify('/sys/data-base/repair')){ ?>
                                         <a href="#" class="table-list-repair">修复表</a>
                                     <?php } ?>
                                 </td>

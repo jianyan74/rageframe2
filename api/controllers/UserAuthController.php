@@ -2,7 +2,6 @@
 namespace api\controllers;
 
 use Yii;
-use yii\rest\OptionsAction;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
@@ -86,7 +85,7 @@ class UserAuthController extends ActiveController
                 ->orderBy('id desc')
                 ->asArray(),
             'pagination' => [
-                'pageSize' => Yii::$app->params['user.pageSize'],
+                'pageSize' => $this->pageSize,
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);

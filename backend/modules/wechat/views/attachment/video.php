@@ -1,7 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\helpers\Html;
+use common\helpers\Html;
 
 $this->title = '视频';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];

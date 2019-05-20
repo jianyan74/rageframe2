@@ -1,9 +1,9 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
-$this->params['breadcrumbs'][] = ['label' => 'Xunsearch', 'url' => AddonUrl::to(['index'])];
+$this->params['breadcrumbs'][] = ['label' => 'Xunsearch', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

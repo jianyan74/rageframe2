@@ -1,9 +1,9 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 use common\enums\StatusEnum;
-use common\helpers\AuthHelper;
+use common\helpers\Auth;
 
 $this->title = '定时群发';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
                     <!-- 权限校验判断 -->
-                    <?php if(AuthHelper::verify('/wechat/mass-record/edit')){ ?>
+                    <?php if(Auth::verify('/wechat/mass-record/edit')){ ?>
                         <a class="btn btn-primary btn-xs" onclick="openEdit()">
                             <i class="fa fa-plus"></i> 创建
                         </a>
@@ -60,11 +60,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                             <td>
                                 <?php if($model->send_status == StatusEnum::DISABLED){ ?>
-                                    <?= HtmlHelper::edit(['edit','id' => $model->id, 'media_type' => $model->media_type]);?>
+                                    <?= Html::edit(['edit','id' => $model->id, 'media_type' => $model->media_type]);?>
                                 <?php }else{ ?>
-                                    <?= HtmlHelper::linkButton(['view','id' => $model->id, 'media_type' => $model->media_type], '查看');?>
+                                    <?= Html::linkButton(['view','id' => $model->id, 'media_type' => $model->media_type], '查看');?>
                                 <?php }?>
-                                <?= HtmlHelper::delete(['delete','id' => $model->id]);?>
+                                <?= Html::delete(['delete','id' => $model->id]);?>
                             </td>
                         </tr>
                     <?php } ?>

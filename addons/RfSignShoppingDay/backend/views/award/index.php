@@ -1,7 +1,7 @@
 <?php
-use common\helpers\AddonHtmlHelper;
+use common\helpers\Html;
 use yii\widgets\LinkPager;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = '奖品管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
                     当前有效的奖品概率为: <?= $prob ?>/1000
-                    <?= AddonHtmlHelper::create(['edit'], '创建'); ?>
+                    <?= Html::create(['edit'], '创建'); ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -36,13 +36,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->id; ?></td>
                             <td><?= $model->title; ?></td>
                             <td><?= $model->cate_id == 1 ? '<span class="label label-primary">积分</span>' : '<span class="label label-info">卡卷</span>'; ?></td>
-                            <td class="col-md-1"><?= AddonHtmlHelper::sort($model['sort']); ?></td>
+                            <td class="col-md-1"><?= Html::sort($model['sort']); ?></td>
                             <td><?= $model->prob; ?></td>
                             <td><?= $model->surplus_num; ?>/<?= $model->all_num; ?></td>
                             <td>
-                                <?= AddonHtmlHelper::edit(['edit', 'id' => $model['id']]); ?>
-                                <?= AddonHtmlHelper::status($model['status']); ?>
-                                <?= AddonHtmlHelper::delete(['delete', 'id' => $model['id']]); ?>
+                                <?= Html::edit(['edit', 'id' => $model['id']]); ?>
+                                <?= Html::status($model['status']); ?>
+                                <?= Html::delete(['delete', 'id' => $model['id']]); ?>
                             </td>
                         </tr>
                     <?php } ?>

@@ -5,7 +5,7 @@ echo "<?php\n";
 
 use yii\widgets\ActiveForm;
 use common\widgets\webuploader\Images;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
 $this->title = '参数设置';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

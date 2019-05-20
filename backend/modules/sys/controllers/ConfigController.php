@@ -9,7 +9,7 @@ use common\helpers\ArrayHelper;
 use common\models\sys\Config;
 use common\models\sys\ConfigCate;
 use common\helpers\ResultDataHelper;
-use common\components\CurdTrait;
+use common\components\Curd;
 
 /**
  * 配置控制器
@@ -20,7 +20,7 @@ use common\components\CurdTrait;
  */
 class ConfigController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var

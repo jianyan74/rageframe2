@@ -3,7 +3,7 @@ namespace frontend\models;
 
 use yii\base\Model;
 use yii\web\UnprocessableEntityHttpException;
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 /**
  * 密码重置表单
@@ -33,7 +33,7 @@ class ResetPasswordForm extends Model
             throw new UnprocessableEntityHttpException('密码重置令牌不能为空.');
         }
 
-        $this->_user = MemberInfo::findByPasswordResetToken($token);
+        $this->_user = Member::findByPasswordResetToken($token);
         if (!$this->_user)
         {
             throw new UnprocessableEntityHttpException('密码重置令牌错误.');

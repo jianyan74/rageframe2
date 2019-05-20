@@ -1,8 +1,7 @@
 <?php
-use yii\helpers\Url;
+use common\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\helpers\Html;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '收货地址';
 $this->params['breadcrumbs'][] = ['label' => '会员信息', 'url' => ['member/index']];
@@ -15,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['ajax-edit', 'member_id' => $member_id], '创建', [
+                    <?= Html::create(['ajax-edit', 'member_id' => $member_id], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>
@@ -43,15 +42,15 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->mobile ?></td>
                             <td><?= $model->address_name ?></td>
                             <td><?= $model->address_details ?></td>
-                            <td><?= HtmlHelper::whether($model->is_default) ?></td>
+                            <td><?= Html::whether($model->is_default) ?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
                             <td>
-                                <?= HtmlHelper::edit(['ajax-edit', 'id' => $model->id, 'member_id' => $member_id], '编辑', [
+                                <?= Html::edit(['ajax-edit', 'id' => $model->id, 'member_id' => $member_id], '编辑', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModal',
                                 ])?>
-                                <?= HtmlHelper::status($model['status']); ?>
-                                <?= HtmlHelper::delete(['destroy','id' => $model->id, 'member_id' => $member_id])?>
+                                <?= Html::status($model['status']); ?>
+                                <?= Html::delete(['destroy','id' => $model->id, 'member_id' => $member_id])?>
                             </td>
                         </tr>
                     <?php } ?>

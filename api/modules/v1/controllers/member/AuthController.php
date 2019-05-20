@@ -2,6 +2,7 @@
 namespace api\modules\v1\controllers\member;
 
 use api\controllers\UserAuthController;
+use common\models\member\Auth;
 
 /**
  * Class AuthController
@@ -10,5 +11,5 @@ use api\controllers\UserAuthController;
  */
 class AuthController extends UserAuthController
 {
-    public $modelClass = 'common\models\member\MemberAuth';
+    public $modelClass = Auth::class;
 }

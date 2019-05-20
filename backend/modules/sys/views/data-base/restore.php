@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 
 $this->title = '数据备份';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -35,10 +35,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td><?= Yii::$app->formatter->asShortSize($row['size'], 0)?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($row['time'])?></td>
                                 <td>
-                                    <?= HtmlHelper::a('还原', 'javascript:void(0);', [
+                                    <?= Html::a('还原', 'javascript:void(0);', [
                                         'class' => 'btn btn-info btn-sm table-restore'
                                     ])?>
-                                    <?= HtmlHelper::delete(['delete','time' => $row['time']])?>
+                                    <?= Html::delete(['delete','time' => $row['time']])?>
                                 </td>
                             </tr>
                         <?php } ?>

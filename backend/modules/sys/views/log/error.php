@@ -1,6 +1,6 @@
 <?php
-use yii\helpers\Url;
-use common\helpers\HtmlHelper;
+use common\helpers\Url;
+use common\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\LinkPager;
 
@@ -23,10 +23,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'method' => 'get'
                             ]); ?>
                             <div class="col-sm-5">
-                                <?= HtmlHelper::dropDownList('error_code', $error_code, ['' => '全部', 1 => '正常状态', 2 => '异常状态'], ['class' => 'form-control']);?>
+                                <?= Html::dropDownList('error_code', $error_code, ['' => '全部', 1 => '正常状态', 2 => '异常状态'], ['class' => 'form-control']);?>
                             </div>
                             <div class="input-group m-b">
-                                <?= HtmlHelper::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
                             </div>
                             <?php ActiveForm::end(); ?>
                         </div>
@@ -51,11 +51,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?php foreach($models as $model){ ?>
                             <tr id = <?= $model->id; ?>>
                                 <td><?= $model->id; ?></td>
-                                <td><?= HtmlHelper::encode($model->method); ?></td>
+                                <td><?= Html::encode($model->method); ?></td>
                                 <td><?= !empty($model->member_id) ? '登录用户' : '游客' ?></td>
                                 <td><?= $model->module; ?></td>
-                                <td><?= HtmlHelper::encode($model->controller); ?>/<?= HtmlHelper::encode($model->action); ?></td>
-                                <td><?= HtmlHelper::encode($model->url); ?></td>
+                                <td><?= Html::encode($model->controller); ?>/<?= Html::encode($model->action); ?></td>
+                                <td><?= Html::encode($model->url); ?></td>
                                 <td><?= long2ip($model->ip); ?></td>
                                 <td>
                                     <?php
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 </td>
                                 <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                 <td>
-                                    <?= HtmlHelper::linkButton(['error-view','id' => $model->id], '查看详情', [
+                                    <?= Html::linkButton(['error-view','id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ])?>

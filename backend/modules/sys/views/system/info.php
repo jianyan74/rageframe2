@@ -164,7 +164,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <td><?= ini_get('memory_limit'); ?></td>
                     </tr>
                     <tr>
-                        <td>POST数据最大尺寸</td>
+                        <td>Post数据最大尺寸</td>
                         <td><?= ini_get('post_max_size'); ?></td>
                     </tr>
                     <tr>

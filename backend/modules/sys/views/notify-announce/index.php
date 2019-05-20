@@ -1,6 +1,6 @@
 <?php
 use yii\grid\GridView;
-use common\helpers\HtmlHelper;
+use common\helpers\Html;
 
 $this->title = '公告管理';
 $this->params['breadcrumbs'][] = $this->title;
@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= HtmlHelper::create(['edit'])?>
+                    <?= Html::create(['edit'])?>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -40,10 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return HtmlHelper::edit(['edit', 'id' => $model->id]);
+                                    return Html::edit(['edit', 'id' => $model->id]);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return HtmlHelper::delete(['destroy', 'id' => $model->id]);
+                                    return Html::delete(['destroy', 'id' => $model->id]);
                                 },
                             ],
                         ],

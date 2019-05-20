@@ -4,7 +4,7 @@ namespace backend\modules\sys\controllers;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\common\SearchModel;
-use common\components\CurdTrait;
+use common\components\Curd;
 use common\models\common\Attachment;
 
 /**
@@ -14,7 +14,7 @@ use common\models\common\Attachment;
  */
 class AttachmentController extends SController
 {
-    use CurdTrait;
+    use Curd;
 
     /**
      * @var string

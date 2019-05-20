@@ -30,13 +30,13 @@
 
 按钮快捷方式：
 
-- 系统下如果是按钮可以使用 [HtmlHelper](helper-html.md) 辅助类
-- 插件下如果是按钮可以使用 [AddonHtmlHelper](helper-addon-html.md) 辅助类
+- 系统下如果是按钮可以使用 [Html](helper-html.md) 辅助类
+- 插件下如果是按钮可以使用 [Html](helper-addon-html.md) 辅助类
 
 自定义验证如下：
 
-- 系统下可以使用 [AuthHelper](helper-auth.md) 辅助类
-- 插件下可以使用 [AddonAuthHelper](helper-addon-auth.md) 辅助类
+- 系统下可以使用 [Auth](helper-auth.md) 辅助类
+- 插件下可以使用 [Auth](helper-addon-auth.md) 辅助类
 
 ### 不进行权限认证的路由
 

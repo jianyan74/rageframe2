@@ -51,10 +51,10 @@ rfSuccess(title,text)
 ```
 <tr id = "<?= $model['id']?>">
     <td>
-         <?= \common\helpers\HtmlHelper::sort($model['sort']); ?>
+         <?= \common\helpers\Html::sort($model['sort']); ?>
     </td>
     <td>
-        <?= \common\helpers\HtmlHelper::status($model['status']); ?>
+        <?= \common\helpers\Html::status($model['status']); ?>
     </td>
 </tr>
 ```
