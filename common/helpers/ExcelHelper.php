@@ -36,6 +36,10 @@ class ExcelHelper
             return false;
         }
 
+        // 清除之前的错误输出
+        ob_end_clean();
+        ob_start();
+
         !$filename && $filename = time();
 
         // 初始化

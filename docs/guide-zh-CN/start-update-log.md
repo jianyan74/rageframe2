@@ -8,7 +8,7 @@
 
 > 各个小版本升级例如 2.1.x 升级到 2.2.x 以上不能完美升级最好重新安装
 
-### v2.2.43
+### v2.2.46
 updated 2019.5.20
 
 - 增加: 省市区三级联动可自由显示级别，例如只需要省市
@@ -18,6 +18,8 @@ updated 2019.5.20
 - 合并: `AuthHelper` 和 `AddonAuthHelper` 做到插件和系统校验无感切换
 - 合并: `HtmlHelper `和 `AddonHtmlHelper` 做到插件和系统无感切换
 - 合并: `UrlHelper `和 `AddonUrlHelper` 做到插件和系统无感切换
+- 修复: 百度编辑器 ajax model 渲染只渲染一次的问题
+- 修复: ExcleHelper辅助类导出报格式错误
 - 移动: 服务层 `services` 到根目录
 - 移除: 默认路由 `.html` 后缀
 
