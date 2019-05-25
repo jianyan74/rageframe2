@@ -253,7 +253,7 @@ class Html extends BaseHtml
 
         return Auth::verify($route);
     }
-
+//aaa
     /**
      * 插件模块校验权限
      *
