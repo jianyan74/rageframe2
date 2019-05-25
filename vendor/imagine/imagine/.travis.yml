@@ -1,0 +1,10 @@
+language: php
+before_script:
+  - composer self-update
+  - composer install --prefer-source 
+php:
+  - 5.3.3
+  - 5.3
+  - 5.4
+  - 5.5
+script: rake test

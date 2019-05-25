@@ -1,0 +1,40 @@
+{
+    "name": "yiisoft/yii2-authclient",
+    "description": "External authentication via OAuth and OpenID for the Yii framework",
+    "keywords": ["yii2", "OAuth", "OpenID", "OpenID Connect", "auth", "api"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2-authclient/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2-authclient"
+    },
+    "authors": [
+        {
+            "name": "Paul Klimov",
+            "email": "klimov.paul@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2-httpclient": "~2.0.5"
+    },
+    "suggest": {
+        "spomky-labs/jose": "required for JWS,JWT or JWK related flows like OpenIDConnect"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "yii\\authclient\\": "src" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

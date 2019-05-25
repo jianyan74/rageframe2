@@ -1,0 +1,27 @@
+class_name: AbsolutelyOtherGuy
+modules:
+    enabled: [PhpBrowser, Filesystem, OtherHelper]
+    config:
+        PhpBrowser:
+            url: http://127.0.0.1:8000
+
+env:
+    default:
+
+    webdriver:
+        modules:
+            enabled: [WebDriver, Filesystem, OtherHelper]
+            config:
+                WebDriver:
+                    url: http://127.0.0.1:8000
+                    browser: firefox
+    work:
+        coverage:
+            remote: false
+            work_dir: /tmp/test
+
+coverage:
+    enabled: true
+    remote: true
+    include:
+        - '/../app/*'

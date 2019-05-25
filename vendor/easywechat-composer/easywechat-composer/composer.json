@@ -1,0 +1,35 @@
+{
+    "name": "easywechat-composer/easywechat-composer",
+    "description": "The composer plugin for EasyWeChat",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "张铭阳",
+            "email": "mingyoungcheung@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "composer-plugin-api": "^1.0"
+    },
+    "require-dev": {
+        "composer/composer": "^1.0",
+        "phpunit/phpunit": "^6.5 || ^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EasyWeChatComposer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EasyWeChatComposer\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "class": "EasyWeChatComposer\\Plugin"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,31 @@
+{
+    "name": "jpush/jpush",
+    "type": "library",
+    "description": "JPush API PHP Client",
+    "homepage": "https://github.com/jpush/jpush-api-php-client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JPush",
+            "email": "support@jpush.cn",
+            "homepage": "https://www.jpush.cn/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload" : {
+        "psr-4": {"JPush\\": "src/JPush/"}
+    },
+    "autoload-dev": {
+        "psr-4": { "JPush\\Tests\\": "tests/" }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}

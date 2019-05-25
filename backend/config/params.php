@@ -39,6 +39,7 @@ return [
     'noAuthRoute' => [
         '/main/index',// 系统主页
         '/main/system',// 系统首页
+
         '/ueditor/index',// 百度编辑器配置及上传
         '/menu-provinces/index',// 微信个性化菜单省市区
         '/wechat/common/select-news',// 微信自动回复获取图文

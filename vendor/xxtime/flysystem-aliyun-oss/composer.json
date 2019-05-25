@@ -1,0 +1,34 @@
+{
+  "name": "xxtime/flysystem-aliyun-oss",
+  "type": "library",
+  "description": "AliYun OSS adapter for flysystem. AliYun OSS v2.2.4",
+  "keywords": [
+    "flysystem-aliyun-oss",
+    "aliyun-oss",
+    "flysystem"
+  ],
+  "homepage": "https://github.com/xxtime/flysystem-aliyun-oss",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joe Chu",
+      "email": "joe@xxtime.com",
+      "homepage": "https://github.com/xxtime",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "joe@xxtime.com",
+    "wiki": "https://github.com/xxtime"
+  },
+  "require": {
+    "php": ">=5.5.0",
+    "league/flysystem": "^1.0.40",
+    "aliyuncs/oss-sdk-php": "~2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Xxtime\\Flysystem\\Aliyun\\": "src/"
+    }
+  }
+}

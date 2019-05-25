@@ -43,6 +43,9 @@ class AuthRoleController extends SController
     public function actionEdit()
     {
         $request = Yii::$app->request;
+
+
+
         $name = $request->get('name');
         $model = $this->findModel($name);
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="false"
+    syntaxCheck="true"
+    bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="JPush PHP SDK Test Suite">
+            <directory>tests/JPush</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

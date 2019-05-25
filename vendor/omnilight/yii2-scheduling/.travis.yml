@@ -1,0 +1,20 @@
+language: php
+
+php:
+  - 5.4
+
+env:
+  global:
+    - DEFAULT_COMPOSER_FLAGS="--prefer-dist --no-interaction --no-progress --optimize-autoloader"
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+before_install:
+  - phpenv config-rm xdebug.ini || true
+  - travis_retry composer self-update
+  - composer install $DEFAULT_COMPOSER_FLAGS
+
+script: vendor/bin/phpunit --verbose

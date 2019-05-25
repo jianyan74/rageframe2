@@ -1,0 +1,38 @@
+{
+    "name": "unclead/yii2-multiple-input",
+    "description": "Widget for handle multiple inputs for an attribute of Yii2 framework model",
+    "keywords": [
+        "yii2",
+        "yii2 multiple input",
+        "yii2 array input",
+        "yii2 multiple field",
+        "yii2 tabular input"
+    ],
+    "type": "yii2-extension",
+    "version": "2.20.5",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/unclead/yii2-multiple-input/issues?state=open",
+        "source": "https://github.com/unclead/yii2-multiple-input"
+    },
+    "authors": [
+        {
+            "name": "Eugene Tupikov",
+            "email": "unclead.nsk@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": ">=2.0.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.7.*"
+    },
+    "autoload": {
+        "psr-4": {
+          "unclead\\multipleinput\\examples\\": "examples/",
+          "unclead\\multipleinput\\": "src/",
+          "unclead\\multipleinput\\tests\\": "tests/"
+        }
+    }
+}

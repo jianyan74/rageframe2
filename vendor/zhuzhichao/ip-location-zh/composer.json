@@ -1,0 +1,29 @@
+{
+    "name": "zhuzhichao/ip-location-zh",
+    "description": "get the ip's location info with Chinese",
+	"keywords": ["ip", "location", "chinese"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zhuzhichao",
+            "email": "me@zhuzhichao.com"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Zhuzhichao\\IpLocationZh\\": "src/"
+		}
+	},
+    "extra": {
+      "laravel": {
+        "aliases": {
+          "Ip": "Zhuzhichao\\IpLocationZh\\Ip"
+        }
+      }
+    },
+    "minimum-stability": "stable",
+    "require": {},
+    "require-dev": {
+      "phpunit/phpunit": "^4.0"
+    }
+  }

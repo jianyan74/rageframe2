@@ -1,0 +1,57 @@
+{
+    "name": "2amigos/qrcode-library",
+    "description": "QrCode Generator",
+    "type": "yii2-extension",
+    "keywords": [
+        "2amigos",
+        "yii",
+        "yii2",
+        "yii 2",
+        "extension",
+        "component",
+        "qrcode",
+        "qr"
+    ],
+    "homepage": "http://www.2amigos.us/open-source/details/qrcode-library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "2amigOS! Consulting Group",
+            "email": "hola@2amigos.us",
+            "homepage": "http://2amigos.us",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/2amigos/qrcode-library/issues",
+        "source": "https://github.com/2amigos/qrcode-library"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=5.6",
+        "ext-gd": "*",
+        "bacon/bacon-qr-code": "^1.0",
+        "khanamiryan/qrcode-detector-decoder": "^1.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2": "*",
+        "friendsofphp/php-cs-fixer": "^2.3",
+        "scrutinizer/ocular": "~1.1",
+        "squizlabs/php_codesniffer": "*",
+        "phpmd/phpmd": "@stable",
+        "codeception/specify": "^0.4.3",
+        "codeception/verify": "^0.3.1",
+        "codeception/codeception": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Da\\QrCode\\": "./src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

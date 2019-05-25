@@ -1,0 +1,41 @@
+{
+  "name": "aliyunapi/php-aliyun-open-api-live",
+  "description": "aliyunsdk",
+  "keywords": [
+    "live",
+    "aliyun sdk",
+    "aliyun"
+  ],
+  "type": "library",
+  "license": "Apache",
+  "support": {
+    "issues": "https://github.com/aliyunapi/php-aliyun-open-api-live/issues",
+    "source": "https://github.com/aliyunapi/php-aliyun-open-api-live"
+  },
+  "authors": [
+    {
+      "name": "Xu TL",
+      "email": "xutongle@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "aliyunapi/guzzle-subscriber": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "aliyun\\live\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "aliyun\\test\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}

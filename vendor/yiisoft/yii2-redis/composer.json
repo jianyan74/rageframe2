@@ -1,0 +1,43 @@
+{
+    "name": "yiisoft/yii2-redis",
+    "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
+    "keywords": ["yii2", "redis", "active-record", "cache", "session"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2-redis/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2-redis"
+    },
+    "authors": [
+        {
+            "name": "Carsten Brandt",
+            "email": "mail@cebe.cc"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.14"
+    },
+    "autoload": {
+        "psr-4": { "yii\\redis\\": "src" }
+    },
+    "autoload-dev": {
+        "psr-4": { "yiiunit\\extensions\\redis\\": "tests/"}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "require-dev": {
+        "yiisoft/yii2-dev": "~2.0.14"
+    }
+}

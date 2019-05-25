@@ -1,0 +1,40 @@
+{
+  "name": "lokielse/omnipay-unionpay",
+  "type": "library",
+  "description": "UnionPay gateway for Omnipay payment processing library",
+  "keywords": [
+    "union",
+    "unionpay",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment",
+    "purchase",
+    "银联",
+    "sdk",
+    "无跳转支付",
+    "laravel"
+  ],
+  "homepage": "https://github.com/lokielse/omnipay-unionpay",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Loki Else",
+      "email": "lokielse@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\UnionPay\\": "src/"
+    }
+  },
+  "require": {
+    "omnipay/common": "^3.0",
+    "php-http/guzzle6-adapter": "*"
+  },
+  "require-dev": {
+    "omnipay/tests": "^3.0",
+    "squizlabs/php_codesniffer": "3.*"
+  }
+}

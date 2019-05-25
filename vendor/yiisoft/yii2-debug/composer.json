@@ -1,0 +1,41 @@
+{
+    "name": "yiisoft/yii2-debug",
+    "description": "The debugger extension for the Yii framework",
+    "keywords": ["yii2", "debug", "debugger"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2-debug/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2-debug"
+    },
+    "authors": [
+        {
+            "name": "Qiang Xue",
+            "email": "qiang.xue@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "~2.0.13",
+        "yiisoft/yii2-bootstrap": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "yii\\debug\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}

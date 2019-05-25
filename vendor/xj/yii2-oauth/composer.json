@@ -1,0 +1,20 @@
+{
+    "name": "xj/yii2-oauth",
+    "description": "yii2-oauth",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "xjflyttp",
+            "email": "xjflyttp@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "yiisoft/yii2-authclient": "~2.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "xj\\oauth\\": ""
+        }
+    }
+}

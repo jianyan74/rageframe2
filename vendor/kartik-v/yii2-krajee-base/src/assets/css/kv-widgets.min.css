@@ -1,0 +1,12 @@
+/*!
+ * @package    yii2-krajee-base
+ * @subpackage yii2-widget-activeform
+ * @author     Kartik Visweswaran <kartikv2@gmail.com>
+ * @copyright  Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
+ * @version    2.0.5
+ *
+ * Common CSS file for all kartik\widgets.
+ *
+ * For more JQuery/Bootstrap plugins and demos visit http://plugins.krajee.com
+ * For more Yii related demos visit http://demos.krajee.com
+ */.kv-plugin-loading{width:25px;height:25px;background:url(../img/loading-plugin.gif) center left no-repeat}.kv-hide{display:none}.kv-input-group-hide .input-group-addon,.kv-input-group-hide .input-group-append,.kv-input-group-hide .input-group-btn,.kv-input-group-hide .input-group-prepend{visibility:hidden}

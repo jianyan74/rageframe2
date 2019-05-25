@@ -1,0 +1,16 @@
+language: php
+php:
+  - '7.1.3'
+branches:
+  only:
+  - master
+  - develop
+install:
+  - composer install
+script:
+  - vendor/bin/codecept run --coverage-xml ./../../build/logs/clover.xml
+addons:
+  code_climate:
+    repo_token: 24b886eb6df6abd48cb812de2c20b9311d0444f30043bdf4d254116e5225ed84
+after_success:
+  - vendor/bin/test-reporter

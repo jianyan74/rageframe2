@@ -1,0 +1,13 @@
+/*!
+ * @package    yii2-krajee-base
+ * @subpackage yii2-widget-activeform
+ * @author     Kartik Visweswaran <kartikv2@gmail.com>
+ * @copyright  Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
+ * @version    2.0.5
+ *
+ * HTML 5 input styling for [Bootstrap 3.x](http://getbootstrap.com)
+ * Covers color and range inputs with embedded input group addons.
+ *
+ * Built for Yii Framework 2.0
+ * For more Yii related demos visit http://demos.krajee.com
+ */.input-group-html5 input[type=color],.input-group-html5 input[type=range]{padding:0;margin:0;border:none;box-shadow:none;background:0 0}.input-group-html5.is-bs3 input[type=color]{max-height:20px}.input-group-lg input[type=color]{height:24px!important}.input-group-sm input[type=color]{height:14px!important}.input-group-html5 .input-group-addon+.form-control,.input-group-html5 .input-group-addon+.input-group-addon{border-left:0!important}.input-group-html5 .input-group-addon:first-child{border-right:1px solid #ccc!important}.input-group-html5 input[disabled]{opacity:.65;cursor:not-allowed}.input-group-sp.input-group-addon{min-width:65px}.input-group-lg .input-group-sp.input-group-addon{padding:0}.kv-type-range.kv-range-vertical{float:left;height:200px;max-width:80px;margin-right:.5rem;padding:0 2px}.kv-type-range.kv-range-vertical input.form-control{height:100%;line-height:0;text-align:center;padding:0 3px}.kv-type-range.kv-range-vertical input[type=range]{height:100%;-ms-writing-mode:bt-lr;-webkit-appearance:slider-vertical;padding:0 3px}.kv-type-range.kv-range-vertical.is-bs3 input.form-control,.kv-type-range.kv-range-vertical.is-bs3 input[type=range]{min-width:10px}.kv-type-range.kv-range-vertical.is-bs4 input.form-control,.kv-type-range.kv-range-vertical.is-bs4 input[type=range]{width:10px}.kv-center-loading{background:url(../img/loading-plugin.gif) center center no-repeat}

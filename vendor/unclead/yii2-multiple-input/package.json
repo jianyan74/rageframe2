@@ -1,0 +1,30 @@
+{
+  "name": "jquery.multipleInput",
+  "version": "2.20.5",
+  "description": "jQuery multipleInput",
+  "scripts": {
+    "build": "npm install && (gulp || node node_modules/gulp/bin/gulp.js)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unclead/yii2-multiple-input.git"
+  },
+  "author": {
+    "name": "Eugene Tupikov",
+    "email": "unclead.nsk@gmail.com"
+  },
+  "keywords": [
+    "jquery"
+  ],
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/unclead/yii2-multiple-input/issues"
+  },
+  "homepage": "https://github.com/unclead/yii2-multiple-input",
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-uglify": "^1.0.1",
+    "gulp-concat": "^2.4.1",
+    "gulp-rename": "^1.2.0"
+  }
+}

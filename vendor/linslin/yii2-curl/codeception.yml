@@ -1,0 +1,32 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+coverage:
+    enabled: true
+    include:
+        - Curl.php
+settings:
+    bootstrap: _bootstrap.php
+    colors: false
+    memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+        - Codeception\Extension\Phiremock
+    config:
+        Codeception\Extension\Phiremock:
+            listen: 127.0.0.1:18080 # defaults to 0.0.0.0:8086
+            bin_path: vendor/bin # defaults to codeception_dir/../vendor/bin
+            debug: true # defaults to false
+            startDelay: 1 # default to 0
+modules:
+    config:
+        Db:
+            dsn: ''
+            user: ''
+            password: ''
+            dump: tests/_data/dump.sql

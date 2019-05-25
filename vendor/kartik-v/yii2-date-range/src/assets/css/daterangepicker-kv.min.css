@@ -1,0 +1,10 @@
+/*!
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2015 - 2018
+ * @version 1.7.0
+ *
+ * Custom styling for DateRangePicker
+ * 
+ * Author: Kartik Visweswaran
+ * For more JQuery plugins visit http://plugins.krajee.com
+ * For more Yii related demos visit http://demos.krajee.com
+ */.kv-drp-container .kv-drp-dropdown{position:relative}.kv-drp-dropdown .range-value{background:0 0;padding-left:32px;padding-right:32px;opacity:.9}.kv-drp-dropdown .left-ind,.kv-drp-dropdown .right-ind{position:absolute;top:8px}.kv-drp-dropdown .left-ind{left:12px}.kv-drp-dropdown .right-ind{right:12px}.kv-drp-dropdown .caret{display:inline-block;width:0;height:0;vertical-align:.255em;content:"";border-top:.3em solid;border-right:.3em solid transparent;border-bottom:0;border-left:.3em solid transparent}

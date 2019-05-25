@@ -53,10 +53,10 @@ class Auth
     {
         if (Yii::$app->params['inAddon'])
         {
-            return self::getSysAuth();
+            return self::getAddonAuth();
         }
 
-        return self::getAddonAuth();
+        return self::getSysAuth();
     }
 
     /**

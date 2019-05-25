@@ -1,0 +1,35 @@
+{
+    "name": "moontoast/math",
+    "description": "A mathematics library, providing functionality for large numbers",
+    "type": "library",
+    "keywords": ["math", "bcmath"],
+    "homepage": "https://github.com/ramsey/moontoast-math",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Ben Ramsey",
+            "email": "ben@benramsey.com",
+            "homepage": "https://benramsey.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ramsey/moontoast-math/issues",
+        "source": "https://github.com/ramsey/moontoast-math"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+        "jakub-onderka/php-parallel-lint": "^0.9.0",
+        "phpunit/phpunit": "^4.7|>=5.0 <5.4",
+        "satooshi/php-coveralls": "^0.6.1",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {"Moontoast\\Math\\": "src/Moontoast/Math/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Moontoast\\Math\\": "tests/Moontoast/Math/"}
+    }
+}
