@@ -51,7 +51,8 @@
         "omnilight/yii2-scheduling": "*",
         "league/flysystem": "^1.0",
         "xxtime/flysystem-aliyun-oss": "^1.2",
-        "hashids/hashids": "^3.0"
+        "hashids/hashids": "^3.0",
+        "samdark/yii2-webshell": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
