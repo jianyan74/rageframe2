@@ -232,7 +232,7 @@ class Html extends BaseHtml
             return true;
         }
 
-        if (Yii::$app->params['isAddon'] === false)
+        if (Yii::$app->params['inAddon'] === false)
         {
             return self::sysVerify($route[0]);
         }
