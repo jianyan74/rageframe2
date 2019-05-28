@@ -68,6 +68,8 @@ class AddonsController extends \common\controllers\AddonsController
             return true;
         }
 
+        Yii::$app->params['inAddon'] = true;
+
         // 当前菜单路由
         $route = $this->route;
         in_array($action->id, ['cover']) && $route = AddonsAuthItemChild::AUTH_COVER;

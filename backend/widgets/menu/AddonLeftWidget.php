@@ -28,14 +28,10 @@ class AddonLeftWidget extends Widget
         $addon['is_cover'] = !empty(Yii::$app->params['addonBinding']['cover']);
         if (!Yii::$app->services->sys->isAuperAdmin())
         {
-            $addon['is_setting'] = false;
-            $addon['is_rule'] = false;
-            $addon['is_cover'] = false;
-
             $auth = Auth::getAuth();
-            in_array(AddonsAuthItemChild::AUTH_RULE, $auth) && $addon['is_rule'] = true;
-            in_array(AddonsAuthItemChild::AUTH_COVER, $auth) && $addon['is_cover'] = true;
-            in_array(AddonsAuthItemChild::AUTH_SETTING, $auth) && $addon['is_setting'] = true;
+            $addon['is_rule'] = ($addon['is_rule'] == true && in_array(AddonsAuthItemChild::AUTH_RULE, $auth));
+            $addon['is_cover'] = ($addon['is_cover'] == true && in_array(AddonsAuthItemChild::AUTH_COVER, $auth));
+            $addon['is_setting'] = ($addon['is_setting'] == true && in_array(AddonsAuthItemChild::AUTH_SETTING, $auth));
 
             foreach ($menus as $kye => $menu)
             {

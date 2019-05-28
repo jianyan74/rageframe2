@@ -166,6 +166,11 @@ class Url extends BaseUrl
      */
     public static function regroupRoute($url)
     {
+        if (empty($url))
+        {
+            return '';
+        }
+
         $oldRoute = Yii::$app->params['addonInfo']['oldRoute'];
 
         $route = $url[0];
