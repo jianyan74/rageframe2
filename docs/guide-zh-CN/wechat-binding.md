@@ -15,7 +15,7 @@
 
 第二步
 
-> 微信公众号绑定的服务器地址为 当前域名`/wechat/api/index.html`，完整例子 : `www.rageframe.com/wechat/api/index.html`
+> 微信公众号绑定的服务器地址为 当前域名`/wechat/api/index`，完整例子 : `www.rageframe.com/wechat/api/index`
 
 ### 配置信息修改
 
