@@ -34,12 +34,12 @@ class PasswordController extends Controller
             $model->password_hash = Yii::$app->security->generatePasswordHash($password_hash);
             if ($model->save())
             {
-                echo '账号; ' . $model->username . PHP_EOL;
-                echo '密码; ' . $password_hash;
+                Console::output('username; ' . $model->username);
+                Console::output('password; ' . $password_hash);
                 exit();
             }
 
-            Console::stdout('密码初始化失败');
+            Console::stdout('Password initialization failed');
             exit();
         }
 
