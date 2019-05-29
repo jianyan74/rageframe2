@@ -35,7 +35,7 @@ class PasswordController extends Controller
             if ($model->save())
             {
                 Console::output('账号; ' . $model->username);
-                Console::stdout('密码; ' . $password_hash);
+                Console::output('密码; ' . $password_hash);
                 exit();
             }
 
