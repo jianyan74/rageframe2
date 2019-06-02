@@ -89,19 +89,25 @@ AppAsset::register($this);
 
     <script>
         // 小模拟框清除
-        $('#ajaxModal').on('hide.bs.modal', function () {
-            $(this).removeData("bs.modal");
-            $('#ajaxModal').find('.modal-content').html($('#rfModalBody').html());
+        $('#ajaxModal').on('hide.bs.modal', function (e) {
+            if (e.target == this) {
+                $(this).removeData("bs.modal");
+                $('#ajaxModal').find('.modal-content').html($('#rfModalBody').html());
+            }
         });
         // 大模拟框清除
-        $('#ajaxModalLg').on('hide.bs.modal', function () {
-            $(this).removeData("bs.modal");
-            $('#ajaxModalLg').find('.modal-content').html($('#rfModalBody').html());
+        $('#ajaxModalLg').on('hide.bs.modal', function (e) {
+            if (e.target == this) {
+                $(this).removeData("bs.modal");
+                $('#ajaxModalLg').find('.modal-content').html($('#rfModalBody').html());
+            }
         });
         // 最大模拟框清除
-        $('#ajaxModalMax').on('hide.bs.modal', function () {
-            $(this).removeData("bs.modal");
-            $('#ajaxModalMax').find('.modal-content').html($('#rfModalBody').html());
+        $('#ajaxModalMax').on('hide.bs.modal', function (e) {
+            if (e.target == this) {
+                $(this).removeData("bs.modal");
+                $('#ajaxModalMax').find('.modal-content').html($('#rfModalBody').html());
+            }
         });
 
         // 配置

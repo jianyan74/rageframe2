@@ -28,15 +28,8 @@
 
 ### 如何页面块/按钮自由控制显示权限
 
-按钮快捷方式：
-
-- 系统下如果是按钮可以使用 [Html](helper-html.md) 辅助类
-- 插件下如果是按钮可以使用 [Html](helper-addon-html.md) 辅助类
-
-自定义验证如下：
-
-- 系统下可以使用 [Auth](helper-auth.md) 辅助类
-- 插件下可以使用 [Auth](helper-addon-auth.md) 辅助类
+- 按钮快捷方式: [Html](helper-html.md) 辅助类
+- 自定义验证: [Auth](helper-auth.md) 辅助类
 
 ### 不进行权限认证的路由
 
