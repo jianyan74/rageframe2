@@ -234,7 +234,7 @@ class Html extends BaseHtml
 
         if (Yii::$app->params['inAddon'] === false)
         {
-            return self::sysVerify($route[0]);
+            return self::sysVerify($route);
         }
 
         return self::addonVerify($route);
