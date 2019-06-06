@@ -220,7 +220,7 @@ class Html extends BaseHtml
             'height' => $height,
         ]);
 
-        return self::a($image, $imgSrc, [
+        return parent::a($image, $imgSrc, [
             'data-fancybox' => 'gallery'
         ]);
     }

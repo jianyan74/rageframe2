@@ -1,6 +1,7 @@
 <?php
 namespace common\models\validators;
 
+use common\enums\StatusEnum;
 use common\models\common\SmsLog;
 use yii\validators\Validator;
 
@@ -49,7 +50,9 @@ class SmscodeValidator extends Validator
 
         $smsLog = SmsLog::find()->where([
             'mobile' => $cellPhone,
-            'usage' => $this->usage
+            'error_code' => 200,
+            'used' => StatusEnum::DISABLED,
+            'usage' => $this->usage,
         ])->orderBy('id desc')->one();
 
         /** @var $smsLog SmsLog */
@@ -64,7 +67,7 @@ class SmscodeValidator extends Validator
         }
         else
         {
-            $smsLog->used = true;
+            $smsLog->used = StatusEnum::ENABLED;
             $smsLog->use_time = $time;
             $smsLog->save();
         }

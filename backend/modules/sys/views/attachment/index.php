@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return Html::imageFancyBox($model->base_url);
                                 }
 
-                                return \common\helpers\Html::a('在线预览', $model->base_url, [
+                                return \yii\helpers\Html::a('在线预览', $model->base_url, [
                                     'target' => '_blank'
                                 ]);
                             },
