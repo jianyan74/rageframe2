@@ -12,7 +12,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1.0",
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
@@ -51,13 +51,16 @@
         "omnilight/yii2-scheduling": "*",
         "league/flysystem": "^1.0",
         "xxtime/flysystem-aliyun-oss": "^1.2",
-        "hashids/hashids": "^3.0"
+        "hashids/hashids": "^3.0",
+        "league/oauth2-server": "^7.4",
+        "overtrue/flysystem-cos": "dev-master",
+        "leandrogehlen/yii2-treegrid": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
         "yiisoft/yii2-gii": "~2.0.0",
         "yiisoft/yii2-faker": "~2.0.0",
-        "codeception/base": "^2.2.3",
+        "codeception/base": "^2.4.0",
         "phpunit/phpunit": "~6.5.5",
         "codeception/verify": "~1.0.0"
     },

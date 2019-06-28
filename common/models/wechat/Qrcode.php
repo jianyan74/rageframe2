@@ -2,6 +2,7 @@
 namespace common\models\wechat;
 
 use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_qrcode}}".
@@ -25,6 +26,8 @@ use Yii;
  */
 class Qrcode extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * 临时
      */
@@ -50,7 +53,7 @@ class Qrcode extends \common\models\common\BaseModel
     {
         return [
             [['name','keyword', 'model'], 'required'],
-            [['scene_id', 'model', 'expire_seconds', 'subnum', 'extra', 'end_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'scene_id', 'model', 'expire_seconds', 'subnum', 'extra', 'end_time', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['keyword'], 'string', 'max' => 100],
             [['scene_str'], 'string', 'max' => 64],
@@ -93,46 +96,18 @@ class Qrcode extends \common\models\common\BaseModel
      */
     public function verifyModel()
     {
-        if ($this->isNewRecord)
-        {
+        if ($this->isNewRecord) {
             // 临时
-            if ($this->model == self::MODEL_TEM)
-            {
+            if ($this->model == self::MODEL_TEM) {
                 empty($this->expire_seconds) && $this->addError('expire_seconds', '临时二维码过期时间必填');
-            }
-            else
-            {
+            } else {
                 !$this->scene_str && $this->addError('scene_str', '永久二维码场景字符串必填');
-                if (self::find()->where(['scene_str' => $this->scene_str])->one())
-                {
+
+                if (self::find()->where(['scene_str' => $this->scene_str, 'merchant_id' => Yii::$app->services->merchant->getId()])->one()) {
                     $this->addError('scene_str', '场景值已经存在');
                 }
             }
         }
-    }
-
-    /**
-     * 返回场景ID
-     *
-     * @return int|mixed
-     */
-    public static function getSceneId()
-    {
-        $qrCode = self::find()
-            ->where(['model' => self::MODEL_TEM])
-            ->orderBy('created_at desc')
-            ->one();
-
-        return $qrCode ? $qrCode->scene_id + 1 : 10001;
-    }
-
-    /**
-     * @param $where
-     * @return array|null|\yii\db\ActiveRecord
-     */
-    public static function getFindWhereFirst($where)
-    {
-       return Qrcode::find()->where($where)->asArray()->one();
     }
 
     /**
@@ -141,9 +116,8 @@ class Qrcode extends \common\models\common\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->isNewRecord)
-        {
-            $this->end_time = time() + $this->expire_seconds;
+        if ($this->isNewRecord) {
+            $this->end_time = time() + (int) $this->expire_seconds;
         }
 
         return parent::beforeSave($insert);

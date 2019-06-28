@@ -1,19 +1,20 @@
 <?php
 namespace common\models\member;
 
-use common\enums\StatusEnum;
+use Yii;
+use common\behaviors\MerchantBehavior;
 use common\helpers\RegularHelper;
-use common\models\common\Provinces;
-use common\models\common\BaseModel;
+use common\enums\StatusEnum;
 
 /**
  * This is the model class for table "{{%member_address}}".
  *
  * @property int $id 主键
+ * @property string $merchant_id 商户id
  * @property string $member_id 用户id
- * @property string $provinces 省id
- * @property string $city 市id
- * @property string $area 区id
+ * @property string $province_id 省id
+ * @property string $city_id 市id
+ * @property string $area_id 区id
  * @property string $address_name 地址
  * @property string $address_details 详细地址
  * @property int $is_default 默认地址
@@ -25,8 +26,10 @@ use common\models\common\BaseModel;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Address extends BaseModel
+class Address extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -41,9 +44,9 @@ class Address extends BaseModel
     public function rules()
     {
         return [
-            [['member_id', 'provinces', 'city', 'area', 'realname', 'mobile'], 'required'],
+            [['province_id', 'city_id', 'area_id', 'address_details', 'realname', 'mobile'], 'required'],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '不是一个有效的手机号码'],
-            [['member_id', 'provinces', 'city', 'area', 'is_default', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'province_id', 'city_id', 'area_id', 'is_default', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
             [['address_name', 'address_details'], 'string', 'max' => 200],
             [['realname'], 'string', 'max' => 100],
             [['home_phone', 'mobile'], 'string', 'max' => 20],
@@ -57,10 +60,11 @@ class Address extends BaseModel
     {
         return [
             'id' => 'ID',
-            'member_id' => '会员id',
-            'provinces' => '省',
-            'city' => '市',
-            'area' => '区',
+            'merchant_id' => '商户',
+            'member_id' => '用户',
+            'province_id' => '省',
+            'city_id' => '市',
+            'area_id' => '区',
             'address_name' => '地址',
             'address_details' => '详细地址',
             'is_default' => '默认地址',
@@ -90,11 +94,9 @@ class Address extends BaseModel
      */
     public function beforeSave($insert)
     {
-        $this->address_name = Provinces::getCityListName([$this->provinces, $this->city, $this->area]);
-
-        if ($this->is_default == StatusEnum::ENABLED)
-        {
-            self::updateAll(['is_default' => StatusEnum::DISABLED], ['is_default' => StatusEnum::ENABLED, 'member_id' => $this->member_id]);
+        $this->address_name = Yii::$app->services->provinces->getCityListName([$this->province_id, $this->city_id, $this->area_id]);
+        if ($this->is_default == StatusEnum::ENABLED) {
+            self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
         }
 
         return parent::beforeSave($insert);

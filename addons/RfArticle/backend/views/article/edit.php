@@ -1,9 +1,10 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
-use common\widgets\webuploader\Images;
+use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;
 use kartik\select2\Select2;
+use common\enums\StatusEnum;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '文章管理', 'url' => ['index']];
@@ -33,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]);?>
 
-                <?= $form->field($model, 'cover')->widget(Images::class, [
+                <?= $form->field($model, 'cover')->widget(Files::class, [
                     'config' => [
                         // 可设置自己的上传地址, 不设置则默认地址
                         // 'server' => '',
@@ -71,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
                 <?= $form->field($model, 'link')->textInput(); ?>
-                <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit">保存</button>

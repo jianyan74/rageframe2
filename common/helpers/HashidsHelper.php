@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
@@ -52,8 +53,7 @@ class HashidsHelper
      */
     private static function getHashids()
     {
-        if (!self::$hashids instanceof Hashids)
-        {
+        if (!self::$hashids instanceof Hashids) {
             self::$hashids = new Hashids(Yii::$app->request->cookieValidationKey, self::$lenght); // all lowercase
         }
 

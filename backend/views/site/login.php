@@ -14,15 +14,16 @@ use yii\captcha\Captcha;
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">欢迎登陆</p>
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <?php $form = ActiveForm::begin([
+                'id' => 'login-form'
+        ]); ?>
         <?= $form->field($model, 'username', [
             'template' => '<div class="form-group has-feedback">{input}<span class="glyphicon glyphicon-user form-control-feedback"></span></div>{hint}{error}'
-        ])->textInput(['placeholder' => '用户名'])->label(false) ?>
-
+        ])->textInput(['placeholder' => '用户名'])->label(false); ?>
         <?= $form->field($model, 'password', [
             'template' => '<div class="form-group has-feedback">{input}<span class="glyphicon glyphicon-lock form-control-feedback"></span></div>{hint}{error}'
-        ])->passwordInput(['placeholder' => '密码'])->label(false) ?>
-        <?php if ($model->scenario == 'captchaRequired'){ ?>
+        ])->passwordInput(['placeholder' => '密码'])->label(false); ?>
+        <?php if ($model->scenario == 'captchaRequired') { ?>
             <?= $form->field($model,'verifyCode')->widget(Captcha::class,[
                 'template' => '<div class="row"><div class="col-sm-7">{input}</div><div class="col-sm-5">{image}</div></div>',
                 'imageOptions' => [
@@ -34,7 +35,7 @@ use yii\captcha\Captcha;
                     'class' => 'form-control',
                     'placeholder' => '验证码',
                 ],
-            ])->label(false)?>
+            ])->label(false); ?>
         <?php } ?>
         <?= $form->field($model, 'rememberMe')->checkbox() ?>
         <div class="form-group">

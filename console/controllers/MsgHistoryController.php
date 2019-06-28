@@ -3,7 +3,7 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
-use common\models\wechat\Setting;
+use yii\helpers\Json;
 use common\models\wechat\MsgHistory;
 
 /**
@@ -19,17 +19,16 @@ class MsgHistoryController extends Controller
      */
     public function actionIndex()
     {
-        // 获取参数配置并判断是否开启了清理历史记录
-        if(($history = Setting::getData('history')) && $history['msg_history_date']['value'] > 0)
-        {
-            $oneDay = 60 * 60 * 24;
-            $time = time() - $oneDay * $history['msg_history_date']['value'];
-            MsgHistory::deleteAll(['<=', 'append', $time]);
-            $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '清理成功;' . PHP_EOL);
-            exit();
+        $models = Yii::$app->services->wechatSetting->getList();
+        foreach ($models as $record) {
+            if ($history = Json::decode($record['history'])) {
+                if ($history && $history['msg_history_date'] > 0) {
+                    $oneDay = 60 * 60 * 24;
+                    $time = time() - $oneDay * $history['msg_history_date'];
+                    MsgHistory::deleteAll(['and', ['merchant_id' => $record->merchant_id], ['<=', 'created_at', $time]]);
+                    $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '清理成功, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
+                }
+            }
         }
-
-        $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '数据设置未清除;' . PHP_EOL);
-        exit();
     }
 }

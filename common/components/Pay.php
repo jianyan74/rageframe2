@@ -96,18 +96,12 @@ class Pay extends Component
      */
     public function __get($name)
     {
-        try
-        {
+        try {
             return parent::__get($name);
-        }
-        catch (\Exception $e)
-        {
-            if($this->$name())
-            {
+        } catch (\Exception $e) {
+            if ($this->$name()) {
                 return $this->$name([]);
-            }
-            else
-            {
+            } else {
                 throw $e->getPrevious();
             }
         }

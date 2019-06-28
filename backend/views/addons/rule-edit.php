@@ -1,14 +1,19 @@
 <?php
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 use common\models\wechat\RuleKeyword;
-use common\helpers\Html;
+use common\enums\StatusEnum;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
-$this->params['breadcrumbs'][] = ['label' => '规则管理', 'url' => ['rule', 'addon' => Yii::$app->params['addon']['name']]];
+$this->params['breadcrumbs'][] = ['label' => '规则回复', 'url' => ['/addons/rule', 'addon' => $model['data']]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php $form = ActiveForm::begin([]); ?>
+<?php $form = ActiveForm::begin([
+    'id' => 'ruleForm',
+    'enableAjaxValidation' => true,
+    'validationUrl' => Url::to(['/addons/rule-edit', 'id' => $model['id'], 'addon' => $model['data']]),
+]); ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
@@ -24,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= $form->field($model, 'sort')->textInput()->hint('规则优先级，越大则越靠前，最大不得超过255') ?>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-2">
-                            <div class="checkbox m-2 m-r-xs m-t-lg">
+                        <div class="col-sm-3 col-md-2 m-t-md">
+                            <div class="checkbox m-2 m-r-xs">
                                 <label><input type="checkbox" id="setting" class="adv"> 高级设置</label>
                             </div>
                         </div>
@@ -41,12 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <div class="tabs-container">
                                         <div class="tabs-top">
                                             <ul class="nav nav-tabs">
-                                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 包含关键字</a></li>
-                                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false"> 正则表达式模式匹配</a></li>
-                                                <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false"> 直接接管</a></li>
+                                                <li class="active"><a data-toggle="tab" href="#tab-11" aria-expanded="true"> 包含关键字</a></li>
+                                                <li class=""><a data-toggle="tab" href="#tab-12" aria-expanded="false"> 正则表达式模式匹配</a></li>
+                                                <li class=""><a data-toggle="tab" href="#tab-13" aria-expanded="false"> 直接接管</a></li>
                                             </ul>
                                             <div class="tab-content ">
-                                                <div id="tab-1" class="tab-pane active">
+                                                <div id="tab-11" class="tab-pane active">
                                                     <div class="panel-body">
                                                         <table class="table table-hover">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_INCLUDE?>">
@@ -71,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         <span class="help-block ng-binding">用户进行交谈时，对话中包含上述关键字就执行这条规则。</span>
                                                     </div>
                                                 </div>
-                                                <div id="tab-2" class="tab-pane">
+                                                <div id="tab-12" class="tab-pane">
                                                     <div class="panel-body">
                                                         <table class="table table-hover">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_REGULAR?>">
@@ -98,20 +103,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                 <strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br>
                                                                 <strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br>
                                                                 <strong>示例: </strong><br>
-                                                                <em>^微信</em>&nbsp;&nbsp;匹配以“微信”开头的语句<br>
-                                                                <em>微信$</em>&nbsp;&nbsp;匹配以“微信”结尾的语句<br>
-                                                                <em>^微信$</em>&nbsp;&nbsp;匹配等同“微信”的语句<br>
-                                                                <em>微信</em>&nbsp;&nbsp;匹配包含“微信”的语句<br>
-                                                                <em>[0-9.-]</em>&nbsp;&nbsp;匹配所有的数字，句号和减号<br>
-                                                                <em>^[a-zA-Z_]$</em>&nbsp;&nbsp;所有的字母和下划线<br>
-                                                                <em>^[[:alpha:]]{3}$</em>&nbsp;&nbsp;所有的3个字母的单词<br>
-                                                                <em>^a{4}$</em>&nbsp;&nbsp;aaaa<br>
-                                                                <em>^a{2,4}$</em>&nbsp;&nbsp;aa，aaa或aaaa<br>
-                                                                <em>^a{2,}$</em>&nbsp;&nbsp;匹配多于两个a的字符串
+                                                                <em>^微信</em>;;匹配以“微信”开头的语句<br>
+                                                                <em>微信$</em>;;匹配以“微信”结尾的语句<br>
+                                                                <em>^微信$</em>;;匹配等同“微信”的语句<br>
+                                                                <em>微信</em>;;匹配包含“微信”的语句<br>
+                                                                <em>[0-9.-]</em>;;匹配所有的数字，句号和减号<br>
+                                                                <em>^[a-zA-Z_]$</em>;;所有的字母和下划线<br>
+                                                                <em>^[[:alpha:]]{3}$</em>;;所有的3个字母的单词<br>
+                                                                <em>^a{4}$</em>;;aaaa<br>
+                                                                <em>^a{2,4}$</em>;;aa，aaa或aaaa<br>
+                                                                <em>^a{2,}$</em>;;匹配多于两个a的字符串
                                                             </span>
                                                     </div>
                                                 </div>
-                                                <div id="tab-3" class="tab-pane">
+                                                <div id="tab-13" class="tab-pane">
                                                     <div class="panel-body">
                                                         <table class="table">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_TAKE?>">
@@ -143,15 +148,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-2">
-                            <div class="checkbox m-2 m-r-xs m-t-lg">
+                        <div class="col-sm-3 col-md-2 m-t-md">
+                            <div class="checkbox m-2 m-r-xs">
                                 <label><input type="checkbox" id="trigger" class="adv"> 高级触发</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
-                            <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用'])->hint('您可以临时禁用这条回复') ?>
+                            <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain)->hint('您可以临时禁用这条回复') ?>
                         </div>
                     </div>
                     <div class="form-group">　
@@ -165,7 +170,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
-
 <?php ActiveForm::end(); ?>
 
 <!--关键字模板-->
@@ -198,6 +202,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function(){
+        // 单击展开
         $('.adv').click(function () {
             var id = $(this).attr('id');
             if($(this).is(':checked')) {
@@ -213,7 +218,7 @@ $this->params['breadcrumbs'][] = $this->title;
             $('#trigger').trigger('click');
         }
 
-        // 添加
+        // 添加关键字
         var take = "<?= RuleKeyword::TYPE_TAKE?>";
         $('.addKeyword').click(function(){
             var self = $(this);
@@ -254,5 +259,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 self.parent().parent().find('.key-input').attr('name','');
             }
         });
+
+        $("input[name='SendForm[send_type]']").click(function(){
+            var val = $(this).val();
+            if (val == 1) {
+                $('#send_time').addClass('hide');
+            } else {
+                $('#send_time').removeClass('hide');
+            }
+        })
     });
 </script>

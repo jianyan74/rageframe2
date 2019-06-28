@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
                 <li><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
                 <li class="pull-right">
-                    <?= Html::create(['add'], '创建', [
+                    <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
                     ])?>

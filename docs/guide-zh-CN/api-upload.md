@@ -13,7 +13,7 @@
 请求地址(Post)
 
 ```
-/v1/file/images?access-token=[登陆获取到access-token]
+/v1/file/images?access-token=[access-token]
 ```
 
 参数
@@ -21,7 +21,7 @@
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 thumb | array| 否 | 无 | 生成缩略图(具体看例子) | 
 
 thumb 数组例子(生成`100*100`和`200*200`的缩略图)
@@ -55,7 +55,7 @@ thumb 数组例子(生成`100*100`和`200*200`的缩略图)
 请求地址(Post)
 
 ```
-/v1/file/videos?access-token=[登陆获取到access-token]
+/v1/file/videos?access-token=[access-token]
 ```
 
 参数
@@ -63,7 +63,7 @@ thumb 数组例子(生成`100*100`和`200*200`的缩略图)
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回
 
@@ -82,7 +82,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 请求地址(Post)
 
 ```
-/v1/file/voices?access-token=[登陆获取到access-token]
+/v1/file/voices?access-token=[access-token]
 ```
 
 参数
@@ -90,7 +90,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回
 
@@ -109,7 +109,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 请求地址(Post)
 
 ```
-/v1/file/files?access-token=[登陆获取到access-token]
+/v1/file/files?access-token=[access-token]
 ```
 
 参数
@@ -117,7 +117,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 file | string| 是 | 无 | 文件 | 
-drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回
 
@@ -136,7 +136,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 请求地址(Post)
 
 ```
-/v1/file/base64?access-token=[登陆获取到access-token]
+/v1/file/base64?access-token=[access-token]
 ```
 
 参数
@@ -144,7 +144,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 image | string| 是 | 无 | 文件 | 
-drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛
+drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 extend | string| 否 | jpg | 文件后缀 | 
 
 返回

@@ -28,7 +28,7 @@ YYYYmmddHHiiss
 #### 公共入参说明
 
 > 注意是通过Url传递
-> 例如 `http://www.example.com/api/v1/member/info?access-token=[登陆获取到access-token]`
+> 例如 `http://www.example.com/api/v1/member/info?access-token=[access-token]`
 
 入参说明
 
@@ -82,15 +82,21 @@ X-Pagination-Page-Count | int | 总页数 |
 X-Pagination-Current-Page | int | 当前页数 |
 X-Pagination-Per-Page | int | 每页数量 |
 
+> 注意：如果自行修改了系统默认的首页查询，需要自行设置header头
+
 #### 公用请求方法
 
 针对不同操作，服务器向用户返回的结果应该符合以下规范。
 
-- GET /article  获取文章列表
-- GET /article/1  获取文章详情(id为1)
-- POST /article  创建一篇文章
-- PUT /article/1  获取文章(id为1)
-- DELETE /article/1  删除文章(id为1)
+方法 | 说明 | 对应控制器方法(路由)
+---|---|---
+GET /article | 获取文章列表 | /article/index
+GET /article/1 | 获取文章详情(id为1) | /article/view?id=1
+POST /article | 创建一篇文章 | /article/create
+PUT /article/1 | 更新文章(id为1) | /article/update?id=1
+DELETE /article/1 | 删除文章(id为1) | /article/delete?id=1
+
+> 如果想自定义控制器内的方法(不包含：index/view/create/update/delete)，需要自行在`rule`里面配置`extraPatterns`
 
 #### 公共状态码说明
 
@@ -120,16 +126,26 @@ X-Pagination-Per-Page | int | 每页数量 |
 
 示例
 
+默认参数
+
 ```
 appId: doormen // 授权公钥
-nonceStr: z7cl7WR9 // 随机字符串
+nonceStr: z7cl7WR9 // 随机字符串 默认8位
 time: 1539846942 // 时间戳，注意和当前校验时间不能大于60秒
 
 // 最后直接拼接加密
 appSecret: e3de3825cfbf // 授权秘钥
 ```
 
-测试拼接字符串为：
+附加参数
+
+```
+mobile: 15888888888 // 手机号码
+```
+
+##### 请求时候测试拼接字符串为：
+
+如果是Get请求 mobile加入计算，如果是Post/Put请求不用加入计算
 
 ```
 // 这里加了个手机号的参数
@@ -149,6 +165,8 @@ $sign = strtolower(md5('上面的字符串'));
 ```
 appId=doormen&mobile=15888888888&nonceStr=z7cl7WR9&time=1539846942&sign=94c897114201d7f9b4adf03b5e3afc8f
 ```
+
+
 
 项目Url测试访问地址
 

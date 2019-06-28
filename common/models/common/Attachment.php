@@ -2,11 +2,13 @@
 namespace common\models\common;
 
 use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%common_attachment}}".
  *
  * @property int $id
+ * @property string $merchant_id 商户id
  * @property string $drive 驱动
  * @property string $upload_type 上传类型
  * @property string $specific_type 类别
@@ -21,10 +23,12 @@ use Yii;
  * @property string $upload_ip 上传者ip
  * @property int $status 状态[-1:删除;0:禁用;1启用]
  * @property string $created_at 创建时间
- * @property int $updated_at 修改时间
+ * @property string $updated_at 修改时间
  */
 class Attachment extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     const UPLOAD_TYPE_IMAGES = 'images';
     const UPLOAD_TYPE_FILES = 'files';
     const UPLOAD_TYPE_VIDEOS = 'videos';
@@ -33,6 +37,7 @@ class Attachment extends \common\models\common\BaseModel
     const DRIVE_LOCAL = 'local';
     const DRIVE_QINIU = 'qiniu';
     const DRIVE_OSS = 'oss';
+    const DRIVE_COS = 'cos';
 
     /**
      * @var array
@@ -41,6 +46,17 @@ class Attachment extends \common\models\common\BaseModel
         self::DRIVE_LOCAL => '本地',
         self::DRIVE_QINIU => '七牛',
         self::DRIVE_OSS => 'OSS',
+        self::DRIVE_COS => 'COS',
+    ];
+
+    /**
+     * @var array
+     */
+    public static $uploadTypeExplain = [
+        self::UPLOAD_TYPE_IMAGES => '图片',
+        self::UPLOAD_TYPE_FILES => '文件',
+        self::UPLOAD_TYPE_VIDEOS => '视频',
+        self::UPLOAD_TYPE_VOICES => '音频',
     ];
 
     /**
@@ -57,10 +73,10 @@ class Attachment extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['size', 'year', 'month', 'day', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'size', 'year', 'month', 'day', 'status', 'created_at', 'updated_at'], 'integer'],
             [['drive', 'extension'], 'string', 'max' => 50],
             [['upload_type'], 'string', 'max' => 10],
-            [['base_url', 'path', 'name', 'specific_type'], 'string', 'max' => 100],
+            [['specific_type', 'base_url', 'path', 'name'], 'string', 'max' => 100],
             [['upload_ip'], 'string', 'max' => 16],
         ];
     }
@@ -72,6 +88,7 @@ class Attachment extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
+            'merchant_id' => '商户id',
             'drive' => '驱动',
             'upload_type' => '上传类别',
             'specific_type' => '文件类别',
@@ -86,15 +103,18 @@ class Attachment extends \common\models\common\BaseModel
             'upload_ip' => '上传者ip',
             'status' => '状态',
             'created_at' => '创建时间',
-            'updated_at' => 'Updated At',
+            'updated_at' => '修改时间',
         ];
     }
 
+    /**
+     * @param bool $insert
+     * @return bool
+     */
     public function beforeSave($insert)
     {
-        if ($this->isNewRecord)
-        {
-            $this->upload_ip = Yii::$app->request->userIP;
+        if ($this->isNewRecord) {
+            $this->upload_ip = ip2long(Yii::$app->request->userIP);
             $this->year = date('Y');
             $this->month = date('m');
             $this->day = date('d');

@@ -25,9 +25,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'readonly' => 'readonly'
                 ]) ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Images', [
+                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Files', [
+                    'type' => 'images',
+                    'theme' => 'default',
+                    'themeConfig' => [],
                     'config' => [
-                        // 可设置自己的上传地址, 不设置则默认地址
                         'pick' => [
                             'multiple' => false,
                         ],
@@ -47,7 +49,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     ],
                     'options'=>[
                         'class' => 'form-control no_bor',
-                        'readonly' => 'readonly',// 禁止输入
                     ]
                 ]); ?>
                 <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>

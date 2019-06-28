@@ -4,15 +4,16 @@ namespace services\sys;
 use Yii;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
-use common\models\sys\Notify as NotifyModel;
+use common\components\Service;
+use common\models\sys\Notify;
 use common\models\sys\NotifyManager;
 
 /**
- * Class Notify
+ * Class NotifyService
  * @package services\sys
  * @author jianyan74 <751393839@qq.com>
  */
-class NotifyService extends \common\components\Service
+class NotifyService extends Service
 {
     /**
      * 创建公告
@@ -22,10 +23,10 @@ class NotifyService extends \common\components\Service
      */
     public function createAnnounce($content, $sender_id)
     {
-        $model = new NotifyModel();
+        $model = new Notify();
         $model->content = $content;
         $model->sender_id = $sender_id;
-        $model->type = NotifyModel::TYPE_ANNOUNCE;
+        $model->type = Notify::TYPE_ANNOUNCE;
         return $model->save();
     }
 
@@ -38,18 +39,19 @@ class NotifyService extends \common\components\Service
      */
     public function createMessage($content, $sender_id, $receiver)
     {
-        $model = new NotifyModel();
+        $model = new Notify();
         $model->content = $content;
         $model->sender_id = $sender_id;
-        $model->type = NotifyModel::TYPE_MESSAGE;
-        if ($model->save())
-        {
+        $model->type = Notify::TYPE_MESSAGE;
+        if ($model->save()) {
             $notifyManager = new NotifyManager();
             $notifyManager->notify_id = $model->id;
             $notifyManager->manager_id = $receiver;
-            $notifyManager->type = NotifyModel::TYPE_MESSAGE;
+            $notifyManager->type = Notify::TYPE_MESSAGE;
             return $notifyManager->save();
         }
+
+        return false;
     }
 
     /**
@@ -58,19 +60,19 @@ class NotifyService extends \common\components\Service
      * @param int $manager_id 用户id
      * @throws \yii\db\Exception
      */
-    public function pullAnnounce($manager_id)
+    public function pullAnnounce($manager_id, $created_at)
     {
         // 从UserNotify中获取最近的一条公告信息的创建时间: lastTime
         $model = NotifyManager::find()
-            ->where(['manager_id' => $manager_id, 'type' => NotifyModel::TYPE_ANNOUNCE])
+            ->where(['manager_id' => $manager_id, 'type' => Notify::TYPE_ANNOUNCE])
             ->orderBy('id desc')
             ->asArray()
             ->one();
 
         // 用lastTime作为过滤条件，查询Notify的公告信息
-        $lastTime = $model ? $model['created_at'] : 0;
-        $notifys = NotifyModel::find()
-            ->where(['type' => NotifyModel::TYPE_ANNOUNCE, 'status' => StatusEnum::ENABLED])
+        $lastTime = $model ? $model['created_at'] : $created_at;
+        $notifys = Notify::find()
+            ->where(['type' => Notify::TYPE_ANNOUNCE, 'status' => StatusEnum::ENABLED])
             ->andWhere(['>', 'created_at', $lastTime])
             ->asArray()
             ->all();
@@ -78,9 +80,8 @@ class NotifyService extends \common\components\Service
         // 新建UserNotify并关联查询出来的公告信息
         $rows = [];
         $fields = ['notify_id', 'manager_id', 'type', 'created_at', 'updated_at'];
-        foreach ($notifys as $notify)
-        {
-            $rows[] = [$notify['id'], $manager_id, NotifyModel::TYPE_ANNOUNCE, $notify['created_at'], time()];
+        foreach ($notifys as $notify) {
+            $rows[] = [$notify['id'], $manager_id, Notify::TYPE_ANNOUNCE, $notify['created_at'], time()];
         }
 
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(NotifyManager::tableName(), $fields, $rows)->execute();
@@ -104,9 +105,8 @@ class NotifyService extends \common\components\Service
             ->asArray()
             ->all();
 
-        foreach ($models as &$model)
-        {
-            $model['type'] = NotifyModel::$typeExplain[$model['type']];
+        foreach ($models as &$model) {
+            $model['type'] = Notify::$typeExplain[$model['type']];
         }
 
         return [$models, $pages];

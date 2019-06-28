@@ -1,7 +1,7 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_attachment}}".
@@ -22,6 +22,8 @@ use Yii;
  */
 class Attachment extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     const TYPE_NEWS = 'news';
     const TYPE_TEXT = 'text';
     const TYPE_VOICE = 'voice';
@@ -29,6 +31,9 @@ class Attachment extends \common\models\common\BaseModel
     const TYPE_CARD = 'card';
     const TYPE_VIDEO = 'video';
 
+    /**
+     * @var array
+     */
     public static $typeExplain = [
         self::TYPE_NEWS => '图文素材',
         self::TYPE_IMAGE => '图片素材',
@@ -41,6 +46,9 @@ class Attachment extends \common\models\common\BaseModel
     const MODEL_PERM = 'perm';
     const MODEL_TMEP = 'tmep';
 
+    /**
+     * @var array
+     */
     public static $modeExplain = [
         self::MODEL_PERM => '永久素材',
         self::MODEL_TMEP => '临时素材',
@@ -73,11 +81,12 @@ class Attachment extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['width', 'height', 'link_type', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'width', 'height', 'link_type', 'status', 'created_at', 'updated_at'], 'integer'],
             [['file_name', 'local_url', 'media_id'], 'string', 'max' => 150],
             [['media_id'], 'string', 'max' => 50],
             [['media_type'], 'string', 'max' => 15],
             [['media_url'], 'string', 'max' => 5000],
+            [['description'], 'string', 'max' => 200],
             [['is_temporary'], 'string', 'max' => 10],
         ];
     }
@@ -94,6 +103,7 @@ class Attachment extends \common\models\common\BaseModel
             'media_type' => '资源类型',
             'media_id' => '资源id',
             'media_url' => '资源Url',
+            'description' => '视频详情',
             'width' => '宽度',
             'height' => '高度',
             'is_temporary' => '是否临时',
@@ -102,49 +112,6 @@ class Attachment extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * @param $local_url
-     * @param $media_type
-     * @param $media_url
-     * @param $media_id
-     * @return bool
-     */
-    public static function add($local_url, $media_type, $media_url, $media_id, $file_name = '')
-    {
-        $model = new Attachment();
-        $model->media_id = $media_id;
-        $model->media_type = $media_type;
-        $model->media_url = $media_url;
-        $model->file_name = !empty($file_name) ? $file_name : array_slice(explode('/', $local_url), -1, 1)[0];
-        $model->local_url = $local_url;
-
-        return $model->save();
-    }
-
-    /**
-     * @param $id
-     * @return Attachment|null
-     */
-    public static function findById($id)
-    {
-        return self::findOne($id);
-    }
-
-    /**
-     * 返回素材列表
-     *
-     * @param $type
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getList($type)
-    {
-        return self::find()->where(['media_type' => $type])
-            ->with('news')
-            ->orderBy('id desc')
-            ->asArray()
-            ->all();
     }
 
     /**
@@ -163,50 +130,14 @@ class Attachment extends \common\models\common\BaseModel
      */
     public function afterDelete()
     {
-        switch ($this->media_type)
-        {
-            case self::TYPE_NEWS :
-                AttachmentNews::deleteAll(['attachment_id' => $this->id]);
+        AttachmentNews::deleteAll(['attachment_id' => $this->id]);
 
-                if ($model = ReplyNews::find()->where(['attachment_id' => $this->id])->one())
-                {
-                    $rule_id = $model->rule_id;
-                }
-
-                break;
-
-            case self::TYPE_IMAGE :
-
-                if ($model = ReplyImages::find()->where(['media_id' => $this->media_id])->one())
-                {
-                    $rule_id = $model->rule_id;
-                }
-
-                break;
-
-            case self::TYPE_VIDEO :
-
-                if ($model = ReplyVideo::find()->where(['media_id' => $this->media_id])->one())
-                {
-                    $rule_id = $model->rule_id;
-                }
-
-                break;
-
-            case self::TYPE_VOICE :
-
-                if ($model = ReplyVoice::find()->where(['media_id' => $this->media_id])->one())
-                {
-                    $rule_id = $model->rule_id;
-                }
-
-                break;
-        }
-
-        // 删除规则
-        if (!empty($rule_id) && ($ruleModel = Rule::findOne($rule_id)))
-        {
-            $ruleModel->delete();
+        if ($this->media_type == self::TYPE_NEWS) {
+            Rule::deleteAll(['module' => $this->media_type, 'data' => $this->id]);
+            MassRecord::deleteAll(['module' => $this->media_type, 'data' => $this->id]);
+        } else {
+            Rule::deleteAll(['module' => $this->media_type, 'data' => $this->media_type]);
+            MassRecord::deleteAll(['module' => $this->media_type, 'data' => $this->media_type]);
         }
 
         parent::afterDelete();

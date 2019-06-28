@@ -1,9 +1,7 @@
 <?php
-
 namespace common\models\sys;
 
 use common\enums\StatusEnum;
-use Yii;
 
 /**
  * This is the model class for table "{{%sys_notify}}".
@@ -29,38 +27,13 @@ class Notify extends \common\models\common\BaseModel
     // 消息类型
     const TYPE_ANNOUNCE = 1; //公告
     const TYPE_REMIND = 2; // 提醒
-    const TYPE_MESSAGE = 3; // 消息
+    const TYPE_MESSAGE = 3; // 私信
 
     // 消息类型说明
     public static $typeExplain = [
         self::TYPE_ANNOUNCE => '公告',
         self::TYPE_REMIND => '提醒',
         self::TYPE_MESSAGE => '私信',
-    ];
-
-    // 提醒关联的目标类型
-    public static $targetType = [
-        'PRODUCT' => 'product', // 产品
-        'POST' => 'post' // 文章
-    ];
-
-    // 提醒关联的动作
-    public static $action = [
-        'COMMENT' => 'comment', // 评论
-        'LIKE' => 'like' // 喜欢
-    ];
-
-    // 订阅原因对应订阅事件
-    public static $reasonAction = [
-        'create_product' => ['comment', 'like'], // 创建产品
-        'like_product' => ['comment'], // 喜欢产品
-        'like_post' => ['comment'], // 喜欢文章
-    ];
-
-    // 默认订阅配置
-    public static $defaultSubscriptionConfig = [
-        'comment' => true, // 评论
-        'like' => true, // 喜欢
     ];
 
     /**
@@ -140,8 +113,7 @@ class Notify extends \common\models\common\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->status <= StatusEnum::DISABLED)
-        {
+        if ($this->status <= StatusEnum::DISABLED) {
             NotifyManager::updateAll(['status' => $this->status], ['notify_id' => $this->id]);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use yii\helpers\BaseArrayHelper;
@@ -22,10 +23,8 @@ class ArrayHelper extends BaseArrayHelper
     public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid', $child = '-')
     {
         $arr = [];
-        foreach($items as $v)
-        {
-            if ($v[$pidField] == $pid)
-            {
+        foreach ($items as $v) {
+            if ($v[$pidField] == $pid) {
                 $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
                 $arr[] = $v;
             }
@@ -44,10 +43,8 @@ class ArrayHelper extends BaseArrayHelper
     public static function getParents(array $items, $id)
     {
         $arr = [];
-        foreach ($items as $v)
-        {
-            if ($v['id'] == $id)
-            {
+        foreach ($items as $v) {
+            if ($v['id'] == $id) {
                 $arr[] = $v;
                 $arr = array_merge(self::getParents($items, $v['pid']), $arr);
             }
@@ -66,10 +63,8 @@ class ArrayHelper extends BaseArrayHelper
     public static function getChilds($cate, $pid)
     {
         $arr = [];
-        foreach ($cate as $v)
-        {
-            if ($v['pid'] == $pid)
-            {
+        foreach ($cate as $v) {
+            if ($v['pid'] == $pid) {
                 $arr[] = $v;
                 $arr = array_merge($arr, self::getChilds($cate, $v['id']));
             }
@@ -90,10 +85,8 @@ class ArrayHelper extends BaseArrayHelper
     public static function getChildIds($cate, $pid, $idField = "id", $pidField = 'pid')
     {
         $arr = [];
-        foreach ($cate as $v)
-        {
-            if ($v[$pidField] == $pid)
-            {
+        foreach ($cate as $v) {
+            if ($v[$pidField] == $pid) {
                 $arr[] = $v[$idField];
                 $arr = array_merge($arr, self::getChildIds($cate, $v[$idField], $idField, $pidField));
             }
@@ -112,29 +105,24 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function arraySort($arr, $keys, $type = 'asc')
     {
-        $count = count($arr);
-        if ($count <= 1)
-        {
+        if (count($arr) <= 1) {
             return $arr;
         }
 
-        $keysvalue = [];
-        $new_array = [];
+        $keysValue = [];
+        $newArray = [];
 
-        foreach ($arr as $k => $v)
-        {
-            $keysvalue[$k] = $v[$keys];
+        foreach ($arr as $k => $v) {
+            $keysValue[$k] = $v[$keys];
         }
 
-        $type == 'asc' ? asort($keysvalue) : arsort($keysvalue);
-        reset($keysvalue);
-
-        foreach ($keysvalue as $k => $v)
-        {
-            $new_array[$k] = $arr[$k];
+        $type == 'asc' ? asort($keysValue) : arsort($keysValue);
+        reset($keysValue);
+        foreach ($keysValue as $k => $v) {
+            $newArray[$k] = $arr[$k];
         }
 
-        return $new_array;
+        return $newArray;
     }
 
     /**
@@ -146,13 +134,29 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function arrayKey(array $arr, $field)
     {
-        $new_array = [];
-        foreach ($arr as $value)
-        {
-            $new_array[$value[$field]] = $value;
+        $newArray = [];
+        foreach ($arr as $value) {
+            isset($value[$field]) && $newArray[$value[$field]] = $value;
         }
 
-        return $new_array;
+        return $newArray;
+    }
+
+    /**
+     * 获取数字区间
+     *
+     * @param int $start
+     * @param int $end
+     * @return array
+     */
+    public static function numBetween($start = 0, $end = 1, $key = true)
+    {
+        $arr = [];
+        for ($i = $start; $i <= $end; $i++) {
+            $key == true ? $arr[$i] = $i : $arr[] = $i;
+        }
+
+        return $arr;
     }
 
     /**
@@ -167,13 +171,11 @@ class ArrayHelper extends BaseArrayHelper
     public static function itemsLevel($level, array $models, $k, $treeStat = 1)
     {
         $str = '';
-        for ($i = 1; $i < $level; $i++)
-        {
+        for ($i = 1; $i < $level; $i++) {
             $str .= '　　';
-            if ($i == $level - $treeStat)
-            {
-                if (isset($models[$k + 1]))
-                {
+
+            if ($i == $level - $treeStat) {
+                if (isset($models[$k + 1])) {
                     return $str . "├──";
                 }
 
@@ -196,16 +198,15 @@ class ArrayHelper extends BaseArrayHelper
     public static function itemsMergeDropDown($models, $idField = 'id', $titleField = 'title', $treeStat = 1)
     {
         $arr = [];
-        foreach ($models as $k => $model)
-        {
+        foreach ($models as $k => $model) {
             $arr[] = [
                 $idField => $model[$idField],
                 $titleField => self::itemsLevel($model['level'], $models, $k, $treeStat) . " " . $model[$titleField],
             ];
 
-            if (!empty($model['-']))
-            {
-                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-'], $idField, $titleField));
+            if (!empty($model['-'])) {
+                $arr = ArrayHelper::merge($arr,
+                    self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
             }
         }
 
@@ -223,20 +224,15 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function toXml($arr)
     {
-        if (!is_array($arr) || count($arr) <= 0)
-        {
+        if (!is_array($arr) || count($arr) <= 0) {
             return false;
         }
 
         $xml = "<xml>";
-        foreach ($arr as $key => $val)
-        {
-            if (is_numeric($val))
-            {
+        foreach ($arr as $key => $val) {
+            if (is_numeric($val)) {
                 $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
-            }
-            else
-            {
+            } else {
                 $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
             }
         }

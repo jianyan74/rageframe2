@@ -3,25 +3,27 @@ namespace backend\modules\wechat\controllers;
 
 use Yii;
 use yii\data\Pagination;
+use yii\helpers\Json;
 use common\enums\StatusEnum;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
 use common\components\Curd;
-use backend\modules\wechat\models\RuleForm;
+use backend\modules\wechat\forms\RuleForm;
+use backend\controllers\BaseController;
 
 /**
  * Class RuleController
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class RuleController extends WController
+class RuleController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var Rule
      */
-    public $modelClass = 'common\models\wechat\Rule';
+    public $modelClass = Rule::class;
 
     /**
      * @return string
@@ -36,6 +38,7 @@ class RuleController extends WController
             ->where(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['in', 'module', array_keys(Rule::$moduleExplain)])
             ->andFilterWhere(['module' => $module])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['like', 'name', $keyword]);
 
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
@@ -55,52 +58,35 @@ class RuleController extends WController
     }
 
     /**
-     * 编辑更新
-     *
      * @return mixed|string|\yii\web\Response
-     * @throws \yii\db\Exception
+     * @throws \yii\base\ExitException
      */
     public function actionEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id');
-
         $model = $this->findModel($id);
-        $model->module = $request->get('module');// 回复规则
-        $defaultRuleKeywords = RuleKeyword::getRuleKeywordsType($model->ruleKeyword);
-        $moduleModel = Rule::getModuleModel($id, $model->module);// 基础
-
+        $defaultRuleKeywords = Yii::$app->services->wechatRuleKeyword->getType($model->ruleKeyword);
         $postData = Yii::$app->request->post();
-        if ($model->load($postData) && $moduleModel->load($postData))
-        {
+
+        $this->activeFormValidate($model);
+        if ($model->load($postData)) {
             $transaction = Yii::$app->db->beginTransaction();
-            try
-            {
-                if (!$model->save())
-                {
-                   throw new \Exception($this->analyErr($model->getFirstErrors()));
+
+            try {
+                if (!$model->save()) {
+                   throw new \Exception($this->getError($model));
                 }
 
-                 // 获取规则ID
-                $moduleModel->rule_id = $model->id;
                 // 全部关键字
-                $ruleKey = isset($postData['ruleKey']) ? $postData['ruleKey'] : [];
+                $ruleKey = $postData['ruleKey'] ?? [];
                 $ruleKey[RuleKeyword::TYPE_MATCH] = explode(',', $model->keyword);
-
                 // 更新关键字
-                RuleKeyword::updateKeywords($model, $ruleKey, $defaultRuleKeywords);
+                Yii::$app->services->wechatRuleKeyword->update($model, $ruleKey, $defaultRuleKeywords);
+                $transaction->commit();
 
-                // 插入模块数据
-                if ($moduleModel->save())
-                {
-                    $transaction->commit();
-                    return $this->redirect(['index', 'module' => $model->module]);
-                }
-
-                throw new \Exception('插入失败');
-            }
-            catch (\Exception $e)
-            {
+                return $this->redirect(['index', 'module' => $model->module]);
+            } catch (\Exception $e) {
                 $transaction->rollBack();
                 return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }
@@ -108,9 +94,9 @@ class RuleController extends WController
 
         return $this->render($this->action->id, [
             'model' => $model,
-            'moduleModel' => $moduleModel,
-            'title' => Rule::$moduleExplain[$model->module],
             'ruleKeywords' => $defaultRuleKeywords,
+            'modules' => Json::encode(Rule::$moduleExplain),
+            'apiList' =>  Yii::$app->services->wechatRule->getApiList(),
         ]);
     }
 
@@ -122,8 +108,7 @@ class RuleController extends WController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = RuleForm::findOne($id))))
-        {
+        if (empty($id) || empty(($model = RuleForm::find()->where(['id' => $id])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
             $model = new RuleForm();
             return $model->loadDefaultValues();
         }

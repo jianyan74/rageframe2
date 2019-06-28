@@ -5,16 +5,56 @@ use common\components\Service;
 
 /**
  * Class Application
- * @package services
  *
- * @property \services\sys\SysService $sys 系统
- * @property \services\member\MemberService $member 用户
- * @property \services\common\SmsService $sms 发送短信
- * @property \services\common\ErrorLogService $errorLog 报错日志记录
- * @property \services\common\MailerService $mailer 发送邮件
- * @property \services\common\PushService $push app推送
- * @property \services\common\ProvincesService $provinces 省市区
+ * @package services
  * @property \services\merchant\MerchantService $merchant 商户
+ * @property \services\sys\SysService $sys 系统
+ * @property \services\sys\ManagerService $sysManager 管理员
+ * @property \services\sys\ActionLogService $sysActionLog 系统行为日志
+ * @property \services\sys\MenuService $sysMenu 菜单
+ * @property \services\sys\MenuCateService $sysMenuCate 菜单分类
+ * @property \services\sys\NotifyService $sysNotify 消息
+ * @property \services\api\AccessTokenService $apiAccessToken Api授权key
+ * @property \services\wechat\SettingService $wechatSetting 参数设置
+ * @property \services\wechat\FansService $wechatFans 粉丝
+ * @property \services\wechat\FansTagsService $wechatFansTags 粉丝标签
+ * @property \services\wechat\FansTagMapService $wechatFansTagMap 粉丝标签关联
+ * @property \services\wechat\FansStatService $wechatFansStat 粉丝统计
+ * @property \services\wechat\AttachmentService $wechatAttachment 资源
+ * @property \services\wechat\AttachmentNewsService $wechatAttachmentNews 资源图文
+ * @property \services\wechat\MenuService $wechatMenu 菜单
+ * @property \services\wechat\MenuProvincesService $wechatMenuProvinces 个性菜单地区
+ * @property \services\wechat\MessageService $wechatMessage 微信消息
+ * @property \services\wechat\MsgHistoryService $wechatMsgHistory 历史消息
+ * @property \services\wechat\QrcodeService $wechatQrcode 二维码
+ * @property \services\wechat\QrcodeStatService $wechatQrcodeStat 二维码统计
+ * @property \services\wechat\RuleService $wechatRule 规则
+ * @property \services\wechat\RuleStatService $wechatRuleStat 规则统计
+ * @property \services\wechat\RuleKeywordService $wechatRuleKeyword 规则关键字
+ * @property \services\wechat\RuleKeywordStatService $wechatRuleKeywordStat 规则关键字统计
+ * @property \services\wechat\ReplyDefaultService $wechatReplyDefault 默认回复
+ * @property \services\member\MemberService $member 会员
+ * @property \services\member\AuthService $memberAuth 会员第三方授权
+ * @property \services\member\AddressService $memberAddress 会员收货地址
+ * @property \services\common\AttachmentService $attachment 公用资源
+ * @property \services\common\LogService $log 公用日志
+ * @property \services\common\PayService $pay 公用支付
+ * @property \services\common\MailerService $mailer 公用邮件
+ * @property \services\common\SmsService $sms 公用短信
+ * @property \services\common\AddonsService $addons 插件
+ * @property \services\common\AddonsBindingService $addonsBinding 插件菜单入口
+ * @property \services\common\AuthItemService $authItem 权限
+ * @property \services\common\AuthRoleService $authRole 角色
+ * @property \services\common\AuthService $auth 权限验证
+ * @property \services\common\ConfigService $config 基础配置
+ * @property \services\common\ConfigCateService $configCate 基础配置分类
+ * @property \services\common\ProvincesService $provinces 省市区
+ * @property \services\oauth2\ServerService $oauth2Server oauth2服务
+ * @property \services\oauth2\ClientService $oauth2Client oauth2客户端
+ * @property \services\oauth2\AccessTokenService $oauth2AccessToken oauth2授权token
+ * @property \services\oauth2\RefreshTokenService $oauth2RefreshToken oauth2刷新token
+ * @property \services\oauth2\AuthorizationCodeService $oauth2AuthorizationCode oauth临时code
+ *
  * @author jianyan74 <751393839@qq.com>
  */
 class Application extends Service
@@ -23,47 +63,74 @@ class Application extends Service
      * @var array
      */
     public $childService = [
-        'sys' => [
-            'class' => 'services\sys\SysService',
-            'childService' => [
-                'auth' => [ // 权限
-                    'class' => 'services\sys\AuthService',
-                ],
-                'addon' => [ // 插件
-                    'class' => 'services\sys\AddonService',
-                ],
-                'addonAuth' => [ // 插件权限
-                    'class' => 'services\sys\AddonAuthService',
-                ],
-                'notify' => [ // 消息
-                    'class' => 'services\sys\NotifyService',
-                ],
-            ],
-        ],
         'merchant' => [
             'class' => 'services\merchant\MerchantService',
         ],
-        'member' => [
-            'class' => 'services\member\MemberService',
+        'apiAccessToken' => [
+            'class' => 'services\api\AccessTokenService',
+            'cache' => false, // 启用缓存到缓存读取用户信息
+            'timeout' => 720, // 缓存过期时间，单位秒
         ],
+        /** ------ 系统 ------ **/
+        'sys' => 'services\sys\SysService',
+        'sysActionLog' => 'services\sys\ActionLogService',
+        'sysMenu' => 'services\sys\MenuService',
+        'sysMenuCate' => 'services\sys\MenuCateService',
+        'sysNotify' => 'services\sys\NotifyService',
+        'sysManager' => 'services\sys\ManagerService',
+        /** ------ 微信 ------ **/
+        'wechatSetting' => 'services\wechat\SettingService',
+        'wechatFans' => 'services\wechat\FansService',
+        'wechatFansTags' => 'services\wechat\FansTagsService',
+        'wechatFansTagMap' => 'services\wechat\FansTagMapService',
+        'wechatFansStat' => 'services\wechat\FansStatService',
+        'wechatAttachment' => 'services\wechat\AttachmentService',
+        'wechatAttachmentNews' => 'services\wechat\AttachmentNewsService',
+        'wechatMenu' => 'services\wechat\MenuService',
+        'wechatMenuProvinces' => 'services\wechat\MenuProvincesService',
+        'wechatQrcode' => 'services\wechat\QrcodeService',
+        'wechatQrcodeStat' => 'services\wechat\QrcodeStatService',
+        'wechatMessage' => 'services\wechat\MessageService',
+        'wechatMsgHistory' => 'services\wechat\MsgHistoryService',
+        'wechatRule' => 'services\wechat\RuleService',
+        'wechatRuleStat' => 'services\wechat\RuleStatService',
+        'wechatRuleKeyword' => 'services\wechat\RuleKeywordService',
+        'wechatRuleKeywordStat' => 'services\wechat\RuleKeywordStatService',
+        'wechatReplyDefault' => 'services\wechat\ReplyDefaultService',
+        /** ------ 用户 ------ **/
+        'member' => 'services\member\MemberService',
+        'memberAuth' => 'services\member\AuthService',
+        'memberAddress' => 'services\member\AddressService',
+        /** ------ 公用部分 ------ **/
+        'config' => 'services\common\ConfigService',
+        'configCate' => 'services\common\ConfigCateService',
+        'provinces' => 'services\common\ProvincesService',
+        'attachment' => 'services\common\AttachmentService',
+        'addons' => 'services\common\AddonsService',
+        'addonsBinding' => 'services\common\AddonsBindingService',
+        'auth' => 'services\common\AuthService',
+        'authItem' => 'services\common\AuthItemService',
+        'authRole' => 'services\common\AuthRoleService',
+        'log' => [
+            'class' => 'services\common\LogService',
+            'queueSwitch' => false, // 是否丢进队列
+            'exceptCode' => [403] // 除了数组内的状态码不记录，其他按照配置记录
+        ],
+        'pay' => 'services\common\PayService',
+        'jPush' => 'services\common\JPushService',
         'sms' => [
             'class' => 'services\common\SmsService',
-            'queueSwitch' => false, // 是否丢进队列 注意如果需要请先开启执行队列
+            'queueSwitch' => false, // 是否丢进队列
         ],
         'mailer' => [
             'class' => 'services\common\MailerService',
-            'queueSwitch' => false, // 是否丢进队列 注意如果需要请先开启执行队列
+            'queueSwitch' => false, // 是否丢进队列
         ],
-        'errorLog' => [
-            'class' => 'services\common\ErrorLogService',
-            'queueSwitch' => false, // 是否丢进队列 注意如果需要请先开启执行队列
-            'exceptCode' => [403] // 除了数组内的状态码不记录，其他按照配置记录
-        ],
-        'provinces' => [
-            'class' => 'services\common\ProvincesService',
-        ],
-        'push' => [
-            'class' => 'services\common\PushService',
-        ],
+        /** ------ oauth2 ------ **/
+        'oauth2Server' => 'services\oauth2\ServerService',
+        'oauth2Client' => 'services\oauth2\ClientService',
+        'oauth2AccessToken' => 'services\oauth2\AccessTokenService',
+        'oauth2RefreshToken' => 'services\oauth2\RefreshTokenService',
+        'oauth2AuthorizationCode' => 'services\oauth2\AuthorizationCodeService',
     ];
 }

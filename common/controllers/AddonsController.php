@@ -3,12 +3,14 @@ namespace common\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
+use common\helpers\Url;
+use common\enums\AuthEnum;
+use common\components\BaseAction;
 
 /**
- * 模块插件渲染
+ * 模块基类控制器
  *
  * Class AddonsController
  * @package common\controllers
@@ -16,97 +18,122 @@ use common\helpers\StringHelper;
  */
 class AddonsController extends Controller
 {
+    use BaseAction;
+
     /**
+     * 视图自动加载文件路径
+     *
      * @var string
      */
-    public $layout = "@backend/views/layouts/addon";
+    public $layout = null;
 
     /**
-     * 当前路由
+     * 是否钩子
      *
-     * @var
+     * @var bool
      */
-    public $route;
+    public $isHook = false;
 
     /**
-     * 模块名称
-     *
-     * @var
+     * @throws \yii\base\InvalidConfigException
      */
-    public $addonName;
-
     public function init()
     {
         parent::init();
 
-        $this->route = Yii::$app->request->get('route', Yii::$app->request->post('route', ''));
-        $this->addonName = Yii::$app->request->get('addon', Yii::$app->request->post('addon', ''));
-        $this->addonName = StringHelper::strUcwords($this->addonName);
+        // 后台视图默认载入模块视图
+        if (!$this->layout) {
+            $this->layout = '@' . Yii::$app->id . '/views/layouts/main';
+
+            if (Yii::$app->id == AuthEnum::TYPE_BACKEND) {
+                $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
+            }
+        }
     }
 
     /**
-     * @param $action
-     * @return bool
-     * @throws \yii\web\BadRequestHttpException
+     * @param string $view
+     * @param array $params
+     * @return string
      */
-    public function beforeAction($action)
+    public function render($view, $params = [])
     {
-        // 关闭csrf
-        $action->id == 'execute' && $this->enableCsrfValidation = false;
-        return parent::beforeAction($action);
+        $content = $this->getView()->render($this->analyView($view), $params, $this);
+        return $this->renderContent($content);
     }
 
     /**
-     * 跳转插件详情页面
+     * @param string $view
+     * @param array $params
+     * @return string
+     */
+    public function renderPartial($view, $params = [])
+    {
+        return $this->getView()->render($this->analyView($view), $params, $this);
+    }
+
+    /**
+     * @param string $view
+     * @param array $params
+     * @return string
+     */
+    public function renderAjax($view, $params = [])
+    {
+        return $this->getView()->renderAjax($this->analyView($view), $params, $this);
+    }
+
+    /**
+     * 跳转
      *
-     * @return mixed
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\InvalidRouteException
+     * @param array|string $url
+     * @param int $statusCode
+     * @return \yii\console\Response|\yii\web\Response
      */
-    public function actionExecute()
+    public function redirect($url, $statusCode = 302)
     {
-        // 初始化模块
-        AddonHelper::initAddon($this->addonName, $this->route);
-        // 解析路由
-        AddonHelper::analysisRoute($this->route, AddonHelper::getAppName());
-
-        // 替换
-        Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
-        Yii::$classMap['yii\data\Sort'] = '@backend/components/Sort.php';// 排序
-        Yii::$classMap['yii\widgets\Breadcrumbs'] = '@backend/components/Breadcrumbs.php';// 面包屑
-
-        // 实例化解获取数据
-        return $this->rendering();
+        return Yii::$app->getResponse()->redirect(Url::to($url), $statusCode);
     }
 
     /**
-     * 渲染
+     * 匹配对应的渲染的视图
      *
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\InvalidRouteException
+     * @param $view
      */
-    protected function rendering()
+    protected function analyView($view)
     {
-        $oldAction = Yii::$app->params['addonInfo']['oldAction'];
-        $id = Yii::$app->params['addonInfo']['controller'];
-        $controllersPath = Yii::$app->params['addonInfo']['controllersPath'];
-        $parts = Yii::createObject($controllersPath, [$id, $this]);
-
-        $params = Yii::$app->request->get();
-        /* @var $controller \yii\base\Controller */
-        list($controller, $actionID) = [$parts, $oldAction];
-        $oldController = Yii::$app->controller;
-        Yii::$app->controller = $controller;
-        $result = $controller->runAction($actionID, $params);
-
-        if ($oldController !== null)
-        {
-            Yii::$app->controller = $oldController;
+        // 判断是否有自定义的路径
+        if (strncmp($view, '@', 1) === 0) {
+            return $view;
         }
 
-        unset($parts, $controller);
-        return $result;
+        // 判断路由是否写全
+        $controller = '';
+        if (count(explode('/', $view)) == 1) {
+            $controller = StringHelper::toUnderScore(Yii::$app->params['addonInfo']['controller']) . '/';
+        }
+
+        $appId = $this->isHook == true ? 'backend' : Yii::$app->id;
+        return "@addons" . '/'. Yii::$app->params['addonInfo']['name'] . '/' . $appId . '/views/' . $controller . $view;
+    }
+
+    /**
+     * 获取配置信息
+     *
+     * @return mixed
+     */
+    protected function getConfig()
+    {
+        return AddonHelper::getConfig();
+    }
+
+    /**
+     * 写入配置信息
+     *
+     * @param $config
+     * @return bool
+     */
+    protected function setConfig($config)
+    {
+        return AddonHelper::setConfig($config);
     }
 }

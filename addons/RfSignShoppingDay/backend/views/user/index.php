@@ -1,5 +1,4 @@
 <?php
-
 use yii\widgets\LinkPager;
 use common\helpers\Url;
 
@@ -28,7 +27,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?php foreach($models as $model){ ?>
                         <tr id = <?= $model->id; ?>>
                             <td><?= $model->id; ?></td>
-                            <td><img src="<?= $model->avatar; ?>" alt="" width="45" height="45"></td>
+                            <td><img src="<?= \common\helpers\ImageHelper::defaultHeaderPortrait($model->avatar) ?>" alt="" width="45" height="45"></td>
                             <td><?= $model->nickname; ?></td>
                             <td><?= $model->openid; ?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>

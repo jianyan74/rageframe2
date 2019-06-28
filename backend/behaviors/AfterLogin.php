@@ -37,7 +37,7 @@ class AfterLogin extends Behavior
      */
     public function afterLogin($event)
     {
-        /* @var $model \yii\db\ActiveRecord */
+        /* @var $model \common\models\sys\Manager */
         $model = $event->identity;
         $model->visit_count += 1;;
         $model->last_time = time();

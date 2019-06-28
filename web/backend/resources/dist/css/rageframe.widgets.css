@@ -1,0 +1,182 @@
+/* ---------------------------------------------- 省市区 ---------------------------------------------- */
+
+.shopProvinces {
+    padding: 10px;
+    float: left;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.shopProvinces label {
+    font-weight: 500;
+}
+
+.shopProvinces.open {
+    background: #f5f5f5;
+    border: 1px solid #62a8ea;
+    border-bottom:#f5f5f5;
+    position: relative;
+}
+
+.shopCitys {
+    background-color: #f5f5f5;
+    border: 1px solid #62a8ea;
+    padding: 10px;
+    display: none;
+    float: right;
+    left: -1px;
+    position: absolute;
+    top: 35px;
+    width: 410px;
+    z-index: 20000;
+    overflow: overlay;
+    height: 200px;
+}
+
+.shopCitys > div {
+    float: left;
+    margin: 0;
+    width: 33.3%;
+    line-height: 14px;
+}
+
+.shopCitys > div > label {
+    width: 90px;
+    margin: 0;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.shopAreas {
+    background-color: #E7F5FF;
+    border: 1px solid #B5DCFF;
+    padding: 7px;
+    display: none;
+    float: right;
+    left: 0;
+    position: absolute;
+    top: 30px;
+    width: 300px;
+    z-index: 20001;
+}
+
+.shopAreas span {
+    float: left;
+    margin: 0;
+    width: 50%;
+}
+
+.shopAreas span label{
+    margin: 0;
+    width: 124px;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* ---------------------------------------------- 图片裁剪上传 ---------------------------------------------- */
+
+.avatar-view {
+    display: block;
+    width: 220px;
+    height: 220px;
+    border: 3px solid #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,.15);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.avatar-view img {
+    width: 100%;
+}
+
+.avatar-body {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.avatar-upload {
+    overflow: hidden;
+}
+
+.avatar-upload label {
+    display: block;
+    float: left;
+    clear: left;
+    width: 100px;
+}
+
+.avatar-upload input {
+    display: block;
+    margin-left: 110px;
+}
+
+.avater-alert {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.avatar-wrapper {
+    height: 364px;
+    width: 100%;
+    margin-top: 15px;
+    background-color: #fcfcfc;
+    background: url(../img/add-img.png) no-repeat center;
+    border:1px dashed #cccccc;
+    overflow: hidden;
+}
+
+.avatar-wrapper img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.avatar-preview {
+    float: left;
+    margin-top: 15px;
+    margin-right: 15px;
+    border: 1px dashed #cccccc;
+    border-radius: 4px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.avatar-preview img {
+    width: 100%;
+}
+
+.preview-lg {
+    height: 184px;
+    width: 184px;
+    margin-top: 15px;
+}
+
+.preview-md {
+    height: 100px;
+    width: 100px;
+}
+
+.preview-sm {
+    height: 50px;
+    width: 50px;
+}
+
+@media (min-width: 992px) {
+    .avatar-preview {
+        float: none;
+    }
+}
+
+.avatar-btns {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.avatar-btns .btn-group {
+    margin-right: 5px;
+}

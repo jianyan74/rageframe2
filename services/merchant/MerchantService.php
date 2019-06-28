@@ -4,50 +4,53 @@ namespace services\merchant;
 use common\components\Service;
 
 /**
- * Class Merchant
+ * 商户
+ *
+ * Class MerchantService
  * @package services\merchant
  * @author jianyan74 <751393839@qq.com>
  */
 class MerchantService extends Service
 {
     /**
-     * 商户id
-     *
-     * @var int
+     * @var array
      */
-    protected $id;
+    protected $info = [];
+
+    protected $merchant_id = 1;
 
     /**
-     * 获取商户id
-     *
      * @return int
      */
     public function getId()
     {
-        if (!$this->id)
-        {
-            $this->setId();
-        }
-
-        return $this->id;
+        return $this->merchant_id;
     }
 
     /**
-     * 写入商户id
+     * @param $merchant_id
      */
-    public function setId()
+    public function setId($merchant_id)
     {
-        $this->id = 0;
+        $this->merchant_id = $merchant_id;
+        $this->setInfo($merchant_id);
     }
 
     /**
-     * 获取商户信息
-     *
-     * @param $id
      * @return array
      */
-    public function getInfo($id)
+    public function getInfo()
     {
-        return [];
+        return $this->info;
+    }
+
+    /**
+     * @param $merchant_id
+     */
+    public function setInfo($merchant_id)
+    {
+        // TODO 查询商户是否存在
+
+        $this->info = [];
     }
 }

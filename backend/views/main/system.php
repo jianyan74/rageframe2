@@ -1,6 +1,6 @@
 <?php
 $this->title = '首页';
-$this->params['breadcrumbs'][] = ['label' =>  $this->title];
+$this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
 <div class="row">

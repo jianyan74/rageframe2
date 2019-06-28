@@ -1,10 +1,12 @@
 <?php
+
 namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
+use common\models\common\Attachment;
 use api\controllers\OnAuthController;
 
 /**
@@ -29,7 +31,7 @@ class FileController extends OnAuthController
      */
     public function actionImages()
     {
-        $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+        $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_IMAGES);
         $upload->verifyFile();
         $upload->save();
 
@@ -46,7 +48,7 @@ class FileController extends OnAuthController
      */
     public function actionVideos()
     {
-        $upload = new UploadHelper(Yii::$app->request->post(), 'videos');
+        $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VIDEOS);
         $upload->verifyFile();
         $upload->save();
 
@@ -63,7 +65,7 @@ class FileController extends OnAuthController
      */
     public function actionVoices()
     {
-        $upload = new UploadHelper(Yii::$app->request->post(), 'voices');
+        $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VOICES);
         $upload->verifyFile();
         $upload->save();
 
@@ -80,7 +82,7 @@ class FileController extends OnAuthController
      */
     public function actionFiles()
     {
-        $upload = new UploadHelper(Yii::$app->request->post(), 'files');
+        $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_FILES);
         $upload->verifyFile();
         $upload->save();
 
@@ -101,11 +103,11 @@ class FileController extends OnAuthController
         !in_array($extend, Yii::$app->params['uploadConfig']['images']['extensions']) && $extend = 'jpg';
         $data = Yii::$app->request->post('image', '');
 
-        $upload = new UploadHelper(Yii::$app->request->post(), 'images');
+        $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_IMAGES);
         $upload->verifyBase64($data, $extend);
         $upload->save(base64_decode($data));
 
-        return  $upload->getBaseInfo();
+        return $upload->getBaseInfo();
     }
 
     /**
@@ -120,9 +122,7 @@ class FileController extends OnAuthController
     {
         $guid = Yii::$app->request->post('guid');
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
-
-        if (!$mergeInfo)
-        {
+        if (!$mergeInfo) {
             return ResultDataHelper::api(404, '找不到文件信息, 合并文件失败');
         }
 
@@ -147,8 +147,7 @@ class FileController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
-        {
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

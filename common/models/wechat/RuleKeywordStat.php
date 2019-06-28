@@ -2,6 +2,8 @@
 namespace common\models\wechat;
 
 use Yii;
+use common\behaviors\MerchantBehavior;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -21,6 +23,8 @@ use yii\db\ActiveRecord;
  */
 class RuleKeywordStat extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +39,7 @@ class RuleKeywordStat extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['rule_id', 'keyword_id', 'keyword_type', 'hit', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'rule_id', 'keyword_id', 'keyword_type', 'hit', 'status', 'created_at', 'updated_at'], 'integer'],
             [['rule_name'], 'string', 'max' => 50],
             [['keyword_content'], 'string', 'max' => 255],
         ];
@@ -48,46 +52,16 @@ class RuleKeywordStat extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'rule_id' => 'Rule ID',
-            'keyword_id' => 'Keyword ID',
-            'rule_name' => 'Rule Name',
-            'keyword_type' => 'Keyword Type',
-            'keyword_content' => 'Keyword Content',
-            'hit' => 'Hit',
-            'status' => 'Status',
+            'rule_id' => '规则ID',
+            'keyword_id' => '关键字id',
+            'rule_name' => '规则名称',
+            'keyword_type' => '关键字类型',
+            'keyword_content' => '关键字内容',
+            'hit' => '触发次数',
+            'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * 插入关键字统计
-     *
-     * @param $rule_id
-     * @param $keyword_id
-     */
-    public static function setStat($rule_id, $keyword_id)
-    {
-        $ruleKeywordStat = RuleKeywordStat::find()
-            ->where([
-                'rule_id'=> $rule_id,
-                'keyword_id' => $keyword_id,
-                'created_at' => strtotime(date('Y-m-d'))
-            ])
-            ->one();
-
-        if($ruleKeywordStat)
-        {
-            $ruleKeywordStat->hit += 1;
-        }
-        else
-        {
-            $ruleKeywordStat = new RuleKeywordStat();
-            $ruleKeywordStat->rule_id = $rule_id;
-            $ruleKeywordStat->keyword_id = $keyword_id;
-        }
-
-        $ruleKeywordStat->save();
     }
 
     /**
@@ -116,8 +90,7 @@ class RuleKeywordStat extends \common\models\common\BaseModel
      */
     public function beforeSave($insert)
     {
-        if($this->isNewRecord)
-        {
+        if($this->isNewRecord) {
             $this->created_at = strtotime(date('Y-m-d'));
         }
 
@@ -137,6 +110,13 @@ class RuleKeywordStat extends \common\models\common\BaseModel
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
             ],
+            [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
+                ],
+                'value' => Yii::$app->services->merchant->getId(),
+            ]
         ];
     }
 }

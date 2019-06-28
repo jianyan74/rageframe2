@@ -11,5 +11,8 @@ use common\models\member\Auth;
  */
 class AuthController extends UserAuthController
 {
+    /**
+     * @var Auth
+     */
     public $modelClass = Auth::class;
 }

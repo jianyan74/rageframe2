@@ -33,10 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'cate_id',
                             'value' => 'cate.title',
-                            'filter' => Html::activeDropDownList($searchModel,
-                                'cate_id',
-                                $cates,
-                                [
+                            'filter' => Html::activeDropDownList($searchModel, 'cate_id', $cates, [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -52,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
-                            'label'=> '创建日期',
+                            'label'=> '创建时间',
                             'attribute' => 'created_at',
                             'filter' => false, //不显示搜索框
                             'format' => ['date', 'php:Y-m-d H:i:s'],

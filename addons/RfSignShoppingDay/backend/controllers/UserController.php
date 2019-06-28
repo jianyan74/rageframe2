@@ -1,20 +1,20 @@
 <?php
 namespace addons\RfSignShoppingDay\backend\controllers;
 
+use addons\RfSignShoppingDay\common\models\User;
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
 
 /**
  * Class UserController
  * @package addons\RfSignShoppingDay\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class UserController extends AddonsBaseController
+class UserController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var User
      */
-    public $modelClass = '\addons\RfSignShoppingDay\common\models\User';
+    public $modelClass = User::class;
 }

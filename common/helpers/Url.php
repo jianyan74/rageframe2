@@ -1,8 +1,10 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
 use yii\helpers\BaseUrl;
+use common\enums\AuthEnum;
 
 /**
  * Class Url
@@ -20,8 +22,11 @@ class Url extends BaseUrl
      */
     public static function to($url = '', $scheme = false)
     {
-        if (Yii::$app->params['inAddon'])
-        {
+        if (is_array($url) && Yii::$app->id != AuthEnum::TYPE_BACKEND) {
+            $url = static::isMerchant($url);
+        }
+
+        if (Yii::$app->params['inAddon']) {
             return urldecode(parent::to(self::regroupUrl($url), $scheme));
         }
 
@@ -38,11 +43,12 @@ class Url extends BaseUrl
      */
     public static function toFront(array $url, $scheme = false)
     {
+        $url = static::isMerchant($url);
         Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
 
-        if (!Yii::$app->has('urlManagerFront'))
-        {
+        if (!Yii::$app->has('urlManagerFront')) {
             $domainName = Yii::getAlias('@frontendUrl');
+
             Yii::$app->set('urlManagerFront', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo,
@@ -68,11 +74,12 @@ class Url extends BaseUrl
      */
     public static function toWechat(array $url, $scheme = false)
     {
+        $url = static::isMerchant($url);
         Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
 
-        if (!Yii::$app->has('urlManagerWechat'))
-        {
+        if (!Yii::$app->has('urlManagerWechat')) {
             $domainName = Yii::getAlias('@wechatUrl');
+
             Yii::$app->set('urlManagerWechat', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/wechat',
@@ -98,11 +105,12 @@ class Url extends BaseUrl
      */
     public static function toApi(array $url, $scheme = false)
     {
+        $url = static::isMerchant($url);
         Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
 
-        if (!Yii::$app->has('urlManagerApi'))
-        {
+        if (!Yii::$app->has('urlManagerApi')) {
             $domainName = Yii::getAlias('@apiUrl');
+
             Yii::$app->set('urlManagerApi', [
                 'class' => 'yii\web\urlManager',
                 'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/api',
@@ -130,6 +138,21 @@ class Url extends BaseUrl
     }
 
     /**
+     * @param array $url
+     * @return array
+     */
+    protected static function isMerchant(array $url)
+    {
+        if (true === Yii::$app->params['merchantOpen']) {
+            $url = ArrayHelper::merge([
+                'merchant_id' => Yii::$app->services->merchant->getId()
+            ], $url);
+        }
+
+        return $url;
+    }
+
+    /**
      * 重组url
      *
      * @param array $url 重组地址
@@ -138,20 +161,16 @@ class Url extends BaseUrl
      */
     protected static function regroupUrl($url)
     {
-        if (!is_array($url))
-        {
+        if (!is_array($url)) {
             return $url;
         }
 
         $addonsUrl = [];
-        $addonsUrl[0] = '/addons/execute';
-        $addonsUrl['route'] = self::regroupRoute($url);
-        $addonsUrl['addon'] = StringHelper::toUnderScore(Yii::$app->params['addonInfo']['name']);
+        $addonsUrl[0] = '/addons/' . StringHelper::toUnderScore(Yii::$app->params['addonInfo']['name']) . '/' . self::regroupRoute($url);
 
         // 删除默认跳转url
         unset($url[0]);
-        foreach ($url as $key => $vo)
-        {
+        foreach ($url as $key => $vo) {
             $addonsUrl[$key] = $vo;
         }
 
@@ -166,17 +185,10 @@ class Url extends BaseUrl
      */
     public static function regroupRoute($url)
     {
-        if (empty($url))
-        {
-            return '';
-        }
-
         $oldRoute = Yii::$app->params['addonInfo']['oldRoute'];
-
         $route = $url[0];
         // 如果只填写了方法转为控制器方法
-        if (count(explode('/', $route)) < 2)
-        {
+        if (count(explode('/', $route)) < 2) {
             $oldRoute = explode('/', $oldRoute);
             $oldRoute[count($oldRoute) - 1] = $url[0];
             $route = implode('/', $oldRoute);

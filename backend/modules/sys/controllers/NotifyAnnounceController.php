@@ -6,23 +6,22 @@ use common\enums\StatusEnum;
 use common\components\Curd;
 use common\models\common\SearchModel;
 use common\models\sys\Notify;
-use backend\modules\sys\models\NotifyAnnounceForm;
+use backend\modules\sys\forms\NotifyAnnounceForm;
+use backend\controllers\BaseController;
 
 /**
- * 公告
- *
- * Class NotifyAnnounce
+ * Class NotifyAnnounceController
  * @package backend\modules\sys\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class NotifyAnnounceController extends SController
+class NotifyAnnounceController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var \yii\db\ActiveRecord
      */
-    public $modelClass = "common\models\sys\Notify";
+    public $modelClass = Notify::class;
 
     /**
      * @return string
@@ -31,7 +30,7 @@ class NotifyAnnounceController extends SController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Notify::class,
+            'model' => $this->modelClass,
             'scenario' => 'default',
             'partialMatchAttributes' => ['title'], // 模糊查询
             'defaultOrder' => [
@@ -64,9 +63,7 @@ class NotifyAnnounceController extends SController
         $model = $this->findModel($id);
         $model->type = Notify::TYPE_ANNOUNCE;
         $model->sender_id = Yii::$app->user->id;
-
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
@@ -84,9 +81,8 @@ class NotifyAnnounceController extends SController
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = NotifyAnnounceForm::findOne($id))))
-        {
-            $model = new $this->modelClass;
+        if (empty($id) || empty(($model = NotifyAnnounceForm::findOne($id)))) {
+            $model = new NotifyAnnounceForm();
             return $model->loadDefaultValues();
         }
 

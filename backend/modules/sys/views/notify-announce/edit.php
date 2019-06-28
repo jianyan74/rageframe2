@@ -1,8 +1,5 @@
 <?php
-use common\helpers\Url;
 use yii\widgets\ActiveForm;
-use common\enums\GenderEnum;
-use common\enums\StatusEnum;
 
 $this->title = '编辑';
 $this->params['breadcrumbs'][] = ['label' => '公告管理', 'url' => ['index']];

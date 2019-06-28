@@ -1,4 +1,5 @@
 <?php
+
 namespace api\controllers;
 
 use Yii;
@@ -10,6 +11,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
+use common\components\BaseAction;
 use api\behaviors\HttpSignAuth;
 
 /**
@@ -19,6 +21,8 @@ use api\behaviors\HttpSignAuth;
  */
 class ActiveController extends \yii\rest\ActiveController
 {
+    use BaseAction;
+
     /**
      * 不用进行登录验证的方法
      * 例如： ['index', 'update', 'create', 'view', 'delete']
@@ -27,13 +31,6 @@ class ActiveController extends \yii\rest\ActiveController
      * @var array
      */
     protected $optional = [];
-
-    /**
-     * 默认每页数量
-     *
-     * @var int
-     */
-    protected $pageSize = 10;
 
     /**
      * 启始位移
@@ -58,7 +55,16 @@ class ActiveController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
         // 跨域支持
-        $behaviors['class'] = Cors::class;
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+        ];
+
+        // 进行签名验证
+        $behaviors['signTokenValidate'] = [
+            'class' => HttpSignAuth::class,
+            'switch' => Yii::$app->params['user.httpSignValidity'] // 验证开启状态
+        ];
+
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::class,
             'authMethods' => [
@@ -89,11 +95,6 @@ class ActiveController extends \yii\rest\ActiveController
             ],
             // 不进行认证判断方法
             'optional' => $this->optional,
-        ];
-
-        // 进行签名验证，前提开启了签名验证
-        $behaviors['signTokenValidate'] = [
-            'class' => HttpSignAuth::class,
         ];
 
         /**
@@ -127,40 +128,15 @@ class ActiveController extends \yii\rest\ActiveController
     {
         parent::beforeAction($action);
 
-        // 判断验证token有效性是否开启
-        if (Yii::$app->params['user.accessTokenValidity'] == true)
-        {
-            $token = Yii::$app->request->get('access-token');
-            $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-            $expire = Yii::$app->params['user.accessTokenExpire'];
-
-            // 验证有效期
-            if ($timestamp + $expire <= time() && !in_array($action->id, $this->optional))
-            {
-                throw new BadRequestHttpException('您的登录验证已经过期，请重新登陆');
-            }
-        }
-
         // 权限方法检查，如果用了rbac，请注释掉
         $this->checkAccess($action->id, $this->modelClass, Yii::$app->request->get());
 
         // 分页
         $page = Yii::$app->request->get('page', 1);
         $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
-        $this->limit > 100 && $this->limit = 100;
+        $this->limit > 50 && $this->limit = 50;
         $this->offset = ($page - 1) * $this->pageSize;
 
         return true;
-    }
-
-    /**
-     * 解析错误
-     *
-     * @param $fistErrors
-     * @return string
-     */
-    public function analyErr($firstErrors)
-    {
-        return Yii::$app->debris->analyErr($firstErrors);
     }
 }

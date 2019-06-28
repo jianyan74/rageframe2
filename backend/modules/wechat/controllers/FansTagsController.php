@@ -1,8 +1,9 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
-use yii;
-use common\models\wechat\FansTags;
+use Yii;
+use common\models\wechat\FansTagMap;
+use backend\controllers\BaseController;
 
 /**
  * 粉丝标签
@@ -11,50 +12,56 @@ use common\models\wechat\FansTags;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class FansTagsController extends WController
+class FansTagsController extends BaseController
 {
     /**
-     * 标签首页
-     *
      * @return mixed|string
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionIndex()
     {
-        $request = Yii::$app->request;
-        if ($request->isPost)
-        {
-            $tag_add = $request->post('tag_add', []);
-            $tag_update = $request->post('tag_update', []);
+        if (Yii::$app->request->isPost) {
+            try {
+                $createData = Yii::$app->request->post('createData', []);
+                $updateData = Yii::$app->request->post('updateData', []);
+                Yii::$app->services->wechatFansTags->syncSave($createData, $updateData);
 
-            // 更新标签
-            foreach ($tag_update as $key => $value)
-            {
-                if (empty($value))
-                {
-                    return $this->message("标签名称不能为空", $this->redirect(['index']), 'error');
-                }
-
-                Yii::$app->wechat->app->user_tag->update($key, $value);
+                return $this->message("保存成功", $this->redirect(['index']));
+            } catch (\Exception $e) {
+                return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }
-
-            // 插入标签
-            foreach ($tag_add as $value)
-            {
-                Yii::$app->wechat->app->user_tag->create($value);
-            }
-
-            FansTags::updateList();
-            return $this->message("保存成功", $this->redirect(['index']));
         }
 
         return $this->render('index',[
-            'tags' => FansTags::getList()
+            'tags' => Yii::$app->services->wechatFansTags->getList()
         ]);
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws yii\web\UnprocessableEntityHttpException
+     */
+    public function actionDelete($id)
+    {
+        $res = Yii::$app->wechat->app->user_tag->delete($id);
+        if ($error = Yii::$app->debris->getWechatError($res, false)) {
+            FansTagMap::deleteAll(['tag_id' => $id]);
+            return $this->message($error, $this->redirect(['index']), 'error');
+        }
+
+        Yii::$app->services->wechatFansTags->getList(true);
+        return $this->message('删除成功', $this->redirect(['index']));
     }
 
     /**
@@ -64,12 +71,13 @@ class FansTagsController extends WController
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws yii\web\UnprocessableEntityHttpException
      */
     public function actionSynchro()
     {
-        FansTags::updateList();
+        Yii::$app->services->wechatFansTags->getList(true);
         return $this->message("粉丝同步成功", $this->redirect(['index']));
     }
 }

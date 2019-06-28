@@ -1,8 +1,9 @@
 <?php
 use common\helpers\AddonHelper;
 use common\helpers\Url;
+use common\helpers\Hook;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = '我的博客';
 ?>
 
@@ -10,7 +11,7 @@ $this->title = '我的博客';
     <div class="container">
         <div class="row w_main_row">
             <div class="col-lg-9 col-md-9 w_main_left">
-                <?= \common\helpers\AddonHook::to('RfArticle', [], 'adv'); ?>
+                <?= Hook::to('RfArticle', [], 'adv'); ?>
                 <div class="panel panel-default contenttop">
                     <a href="javascript:void (0)">
                         <strong>置顶</strong>
@@ -60,7 +61,7 @@ $this->title = '我的博客';
                 </div>
             </div>
             <!--获取左侧首页推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 1]); ?>
+            <?= Hook::to('RfArticle', ['position' => 1]); ?>
         </div>
     </div>
 </div>

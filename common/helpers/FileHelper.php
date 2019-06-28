@@ -1,14 +1,15 @@
 <?php
+
 namespace common\helpers;
 
+use yii\helpers\BaseFileHelper;
+
 /**
- * 文件辅助类
- *
  * Class FileHelper
  * @package common\helpers
  * @author jianyan74 <751393839@qq.com>
  */
-class FileHelper
+class FileHelper extends BaseFileHelper
 {
     /**
      * 检测目录并循环创建目录
@@ -17,8 +18,7 @@ class FileHelper
      */
     public static function mkdirs($catalogue)
     {
-        if (!file_exists($catalogue))
-        {
+        if (!file_exists($catalogue)) {
             self::mkdirs(dirname($catalogue));
             mkdir($catalogue, 0777);
         }
@@ -33,11 +33,11 @@ class FileHelper
      * @param $content
      * @return bool|int
      */
-     public static function writeLog($path, $content)
-     {
-         self::mkdirs(dirname($path));
-         return file_put_contents($path, "\r\n" . $content, FILE_APPEND);
-     }
+    public static function writeLog($path, $content)
+    {
+        self::mkdirs(dirname($path));
+        return file_put_contents($path, "\r\n" . $content, FILE_APPEND);
+    }
 
     /**
      * 获取文件夹大小
@@ -49,16 +49,11 @@ class FileHelper
     {
         $handle = opendir($dir);
         $sizeResult = 0;
-        while (false !== ($FolderOrFile = readdir($handle)))
-        {
-            if ($FolderOrFile != "." && $FolderOrFile != "..")
-            {
-                if (is_dir("$dir/$FolderOrFile"))
-                {
+        while (false !== ($FolderOrFile = readdir($handle))) {
+            if ($FolderOrFile != "." && $FolderOrFile != "..") {
+                if (is_dir("$dir/$FolderOrFile")) {
                     $sizeResult += self::getDirSize("$dir/$FolderOrFile");
-                }
-                else
-                {
+                } else {
                     $sizeResult += filesize("$dir/$FolderOrFile");
                 }
             }
@@ -75,14 +70,10 @@ class FileHelper
      */
     public static function createDirOrFiles($files)
     {
-        foreach ($files as $key => $value)
-        {
-            if (substr($value, -1) == '/')
-            {
+        foreach ($files as $key => $value) {
+            if (substr($value, -1) == '/') {
                 mkdir($value);
-            }
-            else
-            {
+            } else {
                 file_put_contents($value, '');
             }
         }

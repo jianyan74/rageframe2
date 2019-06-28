@@ -1,9 +1,9 @@
 <?php
 namespace addons\RfExample\common\models;
 
-use common\models\member\Member;
-use common\models\sys\Manager;
 use Yii;
+use common\behaviors\MerchantBehavior;
+use common\models\sys\Manager;
 use common\helpers\StringHelper;
 
 /**
@@ -39,6 +39,12 @@ use common\helpers\StringHelper;
  */
 class Curd extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
+    public $province_ids;
+    public $city_ids;
+    public $area_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -53,17 +59,19 @@ class Curd extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
-            [['content', 'files'], 'string'],
+            [['content'], 'string'],
             [['price'], 'number'],
-            [['start_time', 'end_time'], 'safe'],
+            [['start_time', 'end_time', 'files', 'covers', 'address'], 'safe'],
             [['title'], 'string', 'max' => 50],
             [['cover', 'attachfile', 'keywords', 'tag'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 200],
             [['email'], 'string', 'max' => 60],
             [['provinces', 'city', 'area'], 'integer'],
             [['ip'], 'string', 'max' => 16],
+            [['color'], 'string', 'max' => 7],
+            [['date', 'time'], 'string', 'max' => 20],
         ];
     }
 
@@ -91,6 +99,8 @@ class Curd extends \common\models\common\BaseModel
             'description' => '简单介绍',
             'price' => '价格',
             'views' => '浏览量',
+            'date' => '日期',
+            'time' => '时间',
             'start_time' => '开始时间',
             'end_time' => '结束时间',
             'status' => '状态',
@@ -99,6 +109,8 @@ class Curd extends \common\models\common\BaseModel
             'city' => '市',
             'area' => '区',
             'ip' => 'ip',
+            'color' => '颜色',
+            'address' => '经纬度选择',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
@@ -121,8 +133,7 @@ class Curd extends \common\models\common\BaseModel
     public function beforeSave($insert)
     {
         //创建时候插入
-        if ($this->isNewRecord)
-        {
+        if ($this->isNewRecord) {
             $this->ip = Yii::$app->request->userIP;
             $this->manager_id = Yii::$app->user->id;
         }

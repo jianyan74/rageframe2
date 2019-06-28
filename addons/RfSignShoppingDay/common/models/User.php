@@ -2,6 +2,7 @@
 
 namespace addons\RfSignShoppingDay\common\models;
 
+use common\behaviors\MerchantBehavior;
 use Yii;
 
 /**
@@ -22,6 +23,8 @@ use Yii;
  */
 class User extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +40,7 @@ class User extends \common\models\common\BaseModel
     {
         return [
             [['openid', 'nickname', 'avatar', 'ip'], 'required'],
-            [['integral', 'sign_num', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'integral', 'sign_num', 'status', 'created_at', 'updated_at'], 'integer'],
             [['openid', 'nickname', 'realname'], 'string', 'max' => 50],
             [['avatar'], 'string', 'max' => 150],
             [['mobile'], 'string', 'max' => 11],

@@ -14,7 +14,10 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">图片创建</h4>
     </div>
     <div class="modal-body">
-        <?= $form->field($model, 'local_url')->widget('common\widgets\webuploader\Images', [
+        <?= $form->field($model, 'local_url')->widget('common\widgets\webuploader\Files', [
+            'themeConfig' => [
+                'select' => false,// 选择在线图片
+            ],
             'config' => [
                 'pick' => [
                     'multiple' => false,
@@ -22,9 +25,11 @@ $form = ActiveForm::begin([
                 'accept' => [
                     'extensions' => ['bmp', 'png', 'jpeg', 'jpg', 'gif'],
                 ],
+                'formData' => [
+                    'drive' => 'local',
+                ],
                 'fileSingleSizeLimit' => 2048 * 1024,// 图片大小限制
                 'independentUrl' => true,
-                'select' => false,// 选择在线图片
             ]
         ])->label('永久图片')->hint('永久图片只支持 bmp/png/jpeg/jpg/gif 格式,大小不超过为2M, 上限 5000 张');?>
     </div>

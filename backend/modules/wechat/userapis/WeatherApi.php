@@ -2,7 +2,7 @@
 namespace backend\modules\wechat\userapis;
 
 use Yii;
-use backend\interfaces\WechatMessageInterface;
+use backend\interfaces\AddonWidget;
 
 /**
  * 系统默认天气Api Demo
@@ -11,7 +11,7 @@ use backend\interfaces\WechatMessageInterface;
  * @package backend\modules\wechat\userapis
  * @author jianyan74 <751393839@qq.com>
  */
-class WeatherApi implements WechatMessageInterface
+class WeatherApi implements AddonWidget
 {
     /**
      * 接口案例
@@ -23,14 +23,12 @@ class WeatherApi implements WechatMessageInterface
      */
     public function run($message)
     {
-        if (!isset($message['Content']))
-        {
+        if (!isset($message['Content'])) {
             return '小伙子你过分了，给点内容好不好';
         }
 
         $ret = preg_match('/(.+)天气/i', $message['Content'], $matchs);
-        if(!$ret)
-        {
+        if(!$ret) {
             return '请输入合适的格式, 城市+天气, 例如: 北京天气';
         }
 

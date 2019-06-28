@@ -1,4 +1,5 @@
 <?php
+
 namespace common\enums;
 
 /**
@@ -18,8 +19,8 @@ class GenderEnum
      * @var array
      */
     public static $listExplain = [
-        self::UNKNOWN => '未知',
         self::MAN => '男',
         self::WOMAN => '女',
+        self::UNKNOWN => '未知',
     ];
 }

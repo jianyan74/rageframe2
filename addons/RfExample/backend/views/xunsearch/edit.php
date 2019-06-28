@@ -1,6 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
+use common\enums\StatusEnum;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => 'Xunsearch', 'url' => ['index']];
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'title')->textInput(); ?>
                 <?= $form->field($model, 'author')->textInput(); ?>
                 <?= $form->field($model, 'content')->textarea(); ?>
-                <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit">保存</button>

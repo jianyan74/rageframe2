@@ -1,9 +1,15 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use common\models\sys\Addons;
+use yii\helpers\Json;
+use common\models\common\Addons;
+use common\enums\CacheKeyEnum;
+use common\models\common\AddonsConfig;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 
 /**
  * Class AddonHelper
@@ -12,11 +18,6 @@ use common\models\sys\Addons;
  */
 class AddonHelper
 {
-    /**
-     * @var
-     */
-    private static $resourcesUrl;
-
     /**
      * @var array
      */
@@ -30,7 +31,7 @@ class AddonHelper
      */
     public static function getAddonConfig($name)
     {
-        return "addons" . "\\" . $name . "\\" . "AddonConfig";
+        return static::getAddonRoot($name) . "AddonConfig";
     }
 
     /**
@@ -41,7 +42,18 @@ class AddonHelper
      */
     public static function getAddonMessage($name)
     {
-        return "addons" . "\\" . $name . "\\" . "AddonMessage";
+        return static::getAddonRoot($name) . "AddonMessage";
+    }
+
+    /**
+     * 获取插件的命名空间
+     *
+     * @param $name
+     * @return string
+     */
+    public static function getAddonRoot($name)
+    {
+        return "addons" . "\\" . $name . "\\";
     }
 
     /**
@@ -56,27 +68,71 @@ class AddonHelper
     }
 
     /**
+     * 验证插件目录是否存在
+     *
+     * @param $name
+     * @return bool
+     */
+    public static function has($name)
+    {
+        if (!is_dir(static::getAddonRootPath($name))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param $name
      * @return string
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public static function getAddonIcon($name)
     {
+        $adapter = new Local(Yii::getAlias('@root'));
+        $filesystem = new Filesystem($adapter);
+
+        $localIconPath = static::getAddonRoot($name) . 'icon.jpg';
+        if ($filesystem->has($localIconPath)) {
+            $md5 = md5(Json::encode($filesystem->getMetadata($localIconPath)));
+            $newPath = '/assets/tmp/' . $md5 . '.jpg';
+            $newLocalIconPath = 'web/backend' . $newPath;
+
+            if (!$filesystem->has($newLocalIconPath)) {
+                $filesystem->copy($localIconPath, $newLocalIconPath);
+            }
+
+            return '/backend' . $newPath;
+        }
+
         return Yii::getAlias('@web') . '/resources/dist/img/icon.jpg';
     }
 
     /**
      * 获取生成asset的资源文件目录
      *
+     * @param string $assets
      * @return string
      */
-    public static function getResourcesUrl()
+    public static function filePath($assets = '')
     {
-        if (!self::$resourcesUrl)
-        {
-             self::$resourcesUrl = Yii::$app->view->assetBundles[Yii::$app->params['addonInfo']['assetBundlesName']]->baseUrl . '/';
+        if (!$assets) {
+            $assets = [];
+            $assets[] = 'addons';
+            $assets[] = Yii::$app->params['addonInfo']['name'];
+            $assets[] = Yii::$app->id;
+            $assets[] = 'assets';
+            $assets[] = 'AppAsset';
+            $assets = implode('\\', $assets);
         }
 
-        return self::$resourcesUrl;
+        if (!isset(Yii::$app->view->assetBundles[$assets])) {
+            /* @var $assets \yii\web\AssetBundle */
+            $assets::register(Yii::$app->view);
+        }
+
+        return Yii::$app->view->assetBundles[$assets]->baseUrl . '/';
     }
 
     /**
@@ -84,20 +140,35 @@ class AddonHelper
      *
      * @return string
      */
-    public static function getResourcesFile($path)
+    public static function file($path, $assets = '')
     {
-        return self::getResourcesUrl() . $path;
+        return self::filePath($assets) . $path;
     }
 
     /**
      * 获取配置信息
      *
-     * @return mixed
+     * @return array|mixed
      */
     public static function getConfig()
     {
         $model = Yii::$app->params['addon'];
-        return unserialize($model->config);
+        $merchant_id = Yii::$app->services->merchant->getId();
+        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'] . ':' . $merchant_id;
+        if (!($configModel = Yii::$app->cache->get($key))) {
+            if (empty($configModel = AddonsConfig::find()->where([
+                'addons_name' => $model['name'],
+                'merchant_id' => $merchant_id
+            ])->one())) {
+                return [];
+            }
+
+            Yii::$app->cache->set($key, $configModel, 7200);
+        }
+
+        unset($model);
+
+        return Json::decode($configModel->data);
     }
 
     /**
@@ -108,66 +179,51 @@ class AddonHelper
      */
     public static function setConfig($config)
     {
-        /* @var $model \common\models\sys\Addons */
+        /* @var $model \common\models\common\Addons */
         $model = Yii::$app->params['addon'];
-        $model->config = serialize($config);
-        return $model->save();
-    }
-
-    /**
-     * 获取模块的App路径名称
-     *
-     * @return mixed|string
-     */
-    public static function getAppName()
-    {
-        $appId = [
-            "app-backend" => 'backend',
-            "app-frontend" => 'frontend',
-            "app-wechat" => 'wechat',
-            "app-api" => 'api',
-        ];
-
-        $moduleId = Yii::$app->controller->module->id;
-
-        // 判断如果是模块进入之前返回模块所在的应用id
-        if ($moduleId == 'addons')
-        {
-            return !empty(Yii::$app->params['addonInfo']['moduleId']) ? Yii::$app->params['addonInfo']['moduleId'] : 'backend';
+        $merchant_id = Yii::$app->services->merchant->getId();
+        if (empty($configModel = AddonsConfig::find()->where([
+            'addons_name' => $model['name'],
+            'merchant_id' => $merchant_id
+        ])->one())) {
+            $configModel = new AddonsConfig();
         }
 
-        Yii::$app->params['addonInfo']['moduleId'] = $appId[$moduleId];
-        return isset($appId[$moduleId]) ? $appId[$moduleId] : 'backend';
+        $data = empty($configModel->data) ? [] : Json::decode($configModel->data);
+        $data = ArrayHelper::merge($data, $config);
+
+        $configModel->merchant_id = $merchant_id;
+        $configModel->data = Json::encode($data);
+        $configModel->addons_name = $model['name'];
+
+        // 清理缓存
+        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'] . ':' . $configModel->merchant_id;
+        Yii::$app->cache->delete($key);
+        return $configModel->save();
     }
 
     /**
      * 初始化模块信息
      *
-     * @param string $addonName 模块名称
+     * @param string $name 模块名称
      * @param string $route 路由
      * @return bool
      * @throws NotFoundHttpException
      */
-    public static function initAddon($addonName, $route)
+    public static function initAddon($name, $route)
     {
-        if (!$addonName)
-        {
-            throw new NotFoundHttpException("模块不能为空");
+        if (!$name) {
+            throw new NotFoundHttpException("插件不能为空");
         }
 
         // 减少模块内多次调用hook的查询
-        if (isset(self::$addonModels[$addonName]))
-        {
-            $addonModel = self::$addonModels[$addonName];
-        }
-        else
-        {
+        if (isset(self::$addonModels[$name])) {
+            $addon = self::$addonModels[$name];
+        } else {
             // 获取缓存
-            if (!($addonModel = Yii::$app->cache->get('sys-addons:' . $addonName)))
-            {
-                if (!($addonModel = Addons::findByName($addonName)))
-                {
-                    throw new NotFoundHttpException("模块不存在");
+            if (!($addon = Yii::$app->cache->get(CacheKeyEnum::COMMON_ADDONS . $name))) {
+                if (!($addon = Yii::$app->services->addons->findByNameWithBinding($name))) {
+                    throw new NotFoundHttpException("插件不存在");
                 }
 
                 // 数据库依赖缓存
@@ -175,36 +231,35 @@ class AddonHelper
                     'sql' => Addons::find()
                         ->select('updated_at')
                         ->orderBy('updated_at desc')
-                        ->where(['name' => $addonName])
+                        ->where(['name' => $name])
                         ->createCommand()
                         ->getRawSql(),
                 ]);
 
-                Yii::$app->cache->set('sys-addons:' . $addonName, $addonModel, 360, $dependency);
+                Yii::$app->cache->set(CacheKeyEnum::COMMON_ADDONS . $name, $addon, 360, $dependency);
             }
 
-            self::$addonModels[$addonName] = $addonModel;
+            self::$addonModels[$name] = $addon;
         }
 
         // 当前模块实例
-        Yii::$app->params['addon'] = $addonModel;
+        Yii::$app->params['addon'] = $addon;
         // 菜单
         Yii::$app->params['addonBinding']['menu'] = [];
         // 导航
         Yii::$app->params['addonBinding']['cover'] = [];
         // 模块路由及配置信息
         Yii::$app->params['addonInfo'] = [
-            'name' => $addonName,
+            'name' => $name,
             'oldRoute' => $route,
         ];
-       Yii::$app->params['inAddon'] = true;
+        Yii::$app->params['inAddon'] = true;
 
         // 获取关联的菜单和导航
-        if (!empty($addonModel->binding))
-        {
-            $binding = ArrayHelper::toArray($addonModel->binding);
-            foreach ($binding as $item)
-            {
+        if (!empty($addon->binding)) {
+            $binding = ArrayHelper::toArray($addon->binding);
+
+            foreach ($binding as $item) {
                 Yii::$app->params['addonBinding'][$item['entry']][] = $item;
             }
 
@@ -224,15 +279,13 @@ class AddonHelper
      */
     public static function analysisRoute($route, $module)
     {
-        if (!$route)
-        {
-            throw new NotFoundHttpException("模块路由不能为空");
+        if (!$route) {
+            throw new NotFoundHttpException("插件路由不能为空");
         }
 
         $route = explode('/', $route);
-        if (($countRoute = count($route)) < 2)
-        {
-            throw new NotFoundHttpException('路由解析错误,请检查路由地址');
+        if (($countRoute = count($route)) < 2) {
+            throw new NotFoundHttpException('路由解析错误, 请检查路由地址');
         }
 
         $oldController = $route[$countRoute - 2];
@@ -255,12 +308,11 @@ class AddonHelper
             'controllerName' => $controllerName,
             'actionName' => "action" . $action,
             'rootPath' => $addonRootPath,
-            'rootAbsolutePath' => Yii::getAlias('@addons') . '/' .Yii::$app->params['addonInfo']['name'],
-            'controllersPath' => $addonRootPath . "\\" . $module . '\\'. "controllers". '\\' . $controllerPath . $controllerName
+            'rootAbsolutePath' => Yii::getAlias('@addons') . '/' . Yii::$app->params['addonInfo']['name'],
+            'controllersPath' => $addonRootPath . "\\" . $module . '\\' . "controllers" . '\\' . $controllerPath . $controllerName
         ];
 
-        if (!class_exists($tmpInfo['controllersPath']))
-        {
+        if (!class_exists($tmpInfo['controllersPath'])) {
             throw new NotFoundHttpException('页面未找到。');
         }
 

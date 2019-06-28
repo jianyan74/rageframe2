@@ -1,7 +1,7 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 use common\enums\StatusEnum;
 
 /**
@@ -25,6 +25,8 @@ use common\enums\StatusEnum;
  */
 class Menu extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     const TYPE_CUSTOM = 1;
     const TYPE_INDIVIDUATION = 2;
 
@@ -107,7 +109,7 @@ class Menu extends \common\models\common\BaseModel
     {
         return [
             [['title'], 'required'],
-            [['menu_id', 'type', 'sex', 'tag_id', 'client_platform_type', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'menu_id', 'type', 'sex', 'tag_id', 'client_platform_type', 'status', 'created_at', 'updated_at'], 'integer'],
             [['menu_data'], 'string'],
             [['title'], 'string', 'max' => 30],
             [['province', 'country'], 'string', 'max' => 100],
@@ -146,37 +148,9 @@ class Menu extends \common\models\common\BaseModel
      */
     public function verifyEmpty()
     {
-        if($this->type == self::TYPE_INDIVIDUATION && empty($this->sex) && empty($this->tag_id) && empty($this->client_platform_type) && empty($this->city) && empty($this->province) && empty($this->language))
-        {
+        if($this->type == self::TYPE_INDIVIDUATION && empty($this->sex) && empty($this->tag_id) && empty($this->client_platform_type) && empty($this->city) && empty($this->province) && empty($this->language)) {
             $this->addError('sex', '菜单显示对象至少要有一个匹配信息是不为空的');
         }
-    }
-
-    /**
-     * 合并前端过来的数据
-     *
-     * @param array $button
-     * @return array
-     */
-    public static function mergeButton(array $button)
-    {
-        $arr = [];
-        if($button['type'] == 'click' || $button['type'] == 'view')
-        {
-            $arr[self::$menuTypes[$button['type']]['meta']] = $button['content'];
-        }
-        else if($button['type'] == 'miniprogram')
-        {
-            $arr['appid'] = $button['appid'];
-            $arr['pagepath'] = $button['pagepath'];
-            $arr['url'] = $button['url'];
-        }
-        else
-        {
-            $arr[self::$menuTypes[$button['type']]['meta']] = self::$menuTypes[$button['type']]['value'];
-        }
-
-        return $arr;
     }
 
     /**
@@ -199,9 +173,14 @@ class Menu extends \common\models\common\BaseModel
      */
     public function afterSave($insert, $changedAttributes)
     {
-        if ($this->type == self::TYPE_CUSTOM)
-        {
-            self::updateAll(['status' => StatusEnum::DISABLED],['and', ['not in', 'id', [$this->id]], ['type' => self::TYPE_CUSTOM]]);
+        if ($this->type == self::TYPE_CUSTOM) {
+            self::updateAll(['status' => StatusEnum::DISABLED],
+                [
+                    'and',
+                    ['not in', 'id', [$this->id]],
+                    ['type' => self::TYPE_CUSTOM],
+                    ['merchant_id' => \Yii::$app->services->merchant->getId()]
+                ]);
         }
 
         parent::afterSave($insert, $changedAttributes);

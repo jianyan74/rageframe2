@@ -2,17 +2,16 @@
 namespace console\controllers;
 
 use Yii;
+use yii\helpers\Console;
 use yii\console\Controller;
 use common\models\sys\Manager;
 use common\helpers\StringHelper;
-use yii\helpers\Console;
 
 /**
  * 密码初始化
  *
  * Class PasswordController
  * @package console\controllers
- * @author jianyan74 <751393839@qq.com>
  */
 class PasswordController extends Controller
 {
@@ -27,13 +26,11 @@ class PasswordController extends Controller
             'class' => 'common\models\sys\Manager',
         ]);
 
-        if ($model = Manager::findOne(['username' => 'admin']))
-        {
+        if ($model = Manager::findOne(['username' => 'admin'])) {
             $password_hash = StringHelper::random(10);
             $model->username = StringHelper::random(5);
             $model->password_hash = Yii::$app->security->generatePasswordHash($password_hash);
-            if ($model->save())
-            {
+            if ($model->save()) {
                 Console::output('username; ' . $model->username);
                 Console::output('password; ' . $password_hash);
                 exit();

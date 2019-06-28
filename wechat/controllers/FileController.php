@@ -42,8 +42,7 @@ class FileController extends FileBaseController
         $stream = Yii::$app->wechat->app->media->get($mediaId);
 
         // 验证接口是否报错
-        if ($error = Yii::$app->debris->getWechatError($stream, false))
-        {
+        if ($error = Yii::$app->debris->getWechatError($stream, false)) {
             return ResultDataHelper::json(422, $error);
         }
 
@@ -55,14 +54,11 @@ class FileController extends FileBaseController
         $absolutePath = Yii::getAlias("@attachment/") . $filePath; // 绝对路径
         $fileFullName  = $fileName . $fileExc; // 完整文件名
 
-        if (!FileHelper::mkdirs($absolutePath))
-        {
+        if (!FileHelper::mkdirs($absolutePath)) {
             return ResultDataHelper::json(422, '文件夹创建失败，请确认是否开启attachment文件夹写入权限');
         }
-
         // 移动文件
-        if (!$stream->save($absolutePath, $fileFullName))
-        {
+        if (!$stream->save($absolutePath, $fileFullName)) {
             return ResultDataHelper::json(422, '文件移动失败');
         }
 

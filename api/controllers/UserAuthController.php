@@ -1,14 +1,14 @@
 <?php
+
 namespace api\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
-use common\helpers\ResultDataHelper;
 
 /**
- * 需要授权登录访问基类
+ * 个人信息访问基类
  *
  * 注意：适用于个人中心
  *
@@ -17,61 +17,8 @@ use common\helpers\ResultDataHelper;
  * @property yii\db\ActiveRecord|yii\base\Model $modelClass
  * @author jianyan74 <751393839@qq.com>
  */
-class UserAuthController extends ActiveController
+class UserAuthController extends OnAuthController
 {
-    /**
-     * @return array
-     */
-    public function actions()
-    {
-        $actions = parent::actions();
-        // 注销系统自带的实现方法
-        unset($actions['index'], $actions['update'], $actions['create'], $actions['view'], $actions['delete']);
-        // 自定义数据indexDataProvider覆盖IndexAction中的prepareDataProvider()方法
-        // $actions['index']['prepareDataProvider'] = [$this, 'indexDataProvider'];
-        return $actions;
-    }
-
-    /**
-     * @return array
-     */
-    protected function verbs()
-    {
-        // 判断是否插件模块进入
-        if (isset(Yii::$app->params['addon']))
-        {
-            return [];
-        }
-
-        return [
-            'index' => ['GET', 'HEAD'],
-            'view' => ['GET', 'HEAD'],
-            'create' => ['POST'],
-            'update' => ['PUT', 'PATCH'],
-            'delete' => ['DELETE'],
-        ];
-    }
-
-    /**
-     * 验证更新是否本人
-     *
-     * @param $action
-     * @return bool
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function beforeAction($action)
-    {
-        if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null))
-        {
-            throw new NotFoundHttpException('权限不足.');
-        }
-
-        return parent::beforeAction($action);
-    }
-
     /**
      * 首页
      *
@@ -82,6 +29,7 @@ class UserAuthController extends ActiveController
         return new ActiveDataProvider([
             'query' => $this->modelClass::find()
                 ->where(['status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->identity->member_id])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->orderBy('id desc')
                 ->asArray(),
             'pagination' => [
@@ -92,70 +40,6 @@ class UserAuthController extends ActiveController
     }
 
     /**
-     * 创建
-     *
-     * @return mixed|\yii\db\ActiveRecord
-     */
-    public function actionCreate()
-    {
-        /* @var $model \yii\db\ActiveRecord */
-        $model = new $this->modelClass();
-        $model->attributes = Yii::$app->request->post();
-        $model->member_id = Yii::$app->user->identity->member_id;
-        if (!$model->save())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
-        }
-
-        return $model;
-    }
-
-    /**
-     * 更新
-     *
-     * @param $id
-     * @return mixed|\yii\db\ActiveRecord
-     * @throws NotFoundHttpException
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        $model->attributes = Yii::$app->request->post();
-        if (!$model->save())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
-        }
-
-        return $model;
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return bool
-     * @throws NotFoundHttpException
-     */
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $model->status = StatusEnum::DELETE;
-        return $model->save();
-    }
-
-    /**
-     * 单个显示
-     *
-     * @param $id
-     * @return \yii\db\ActiveRecord
-     * @throws NotFoundHttpException
-     */
-    public function actionView($id)
-    {
-        return $this->findModel($id);
-    }
-
-    /**
      * @param $id
      * @return \yii\db\ActiveRecord
      * @throws NotFoundHttpException
@@ -163,8 +47,11 @@ class UserAuthController extends ActiveController
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED, 'member_id' => Yii::$app->user->identity->member_id])->one()))
-        {
+        if (empty($id) || !($model = $this->modelClass::find()->where([
+                'id' => $id,
+                'status' => StatusEnum::ENABLED,
+                'member_id' => Yii::$app->user->identity->member_id
+            ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one())) {
             throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');
         }
 

@@ -2,7 +2,6 @@
 namespace addons\RfSignShoppingDay\backend\controllers;
 
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
 use addons\RfSignShoppingDay\common\models\Award;
 use common\enums\StatusEnum;
 use yii\data\Pagination;
@@ -12,14 +11,14 @@ use yii\data\Pagination;
  * @package addons\RfSignShoppingDay\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class AwardController extends AddonsBaseController
+class AwardController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var Award
      */
-    public $modelClass = '\addons\RfSignShoppingDay\common\models\Award';
+    public $modelClass = Award::class;
 
     /**
      * 首页
@@ -28,7 +27,7 @@ class AwardController extends AddonsBaseController
      */
     public function actionIndex()
     {
-        $data = Award::find();
+        $data = Award::find()->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -36,7 +35,7 @@ class AwardController extends AddonsBaseController
             ->all();
 
         // 当前概率
-        $prob = Award::find()->where(['status' => StatusEnum::ENABLED])->sum('prob');
+        $prob = Award::find()->where(['status' => StatusEnum::ENABLED])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->sum('prob');
 
         return $this->render($this->action->id, [
             'models' => $models,

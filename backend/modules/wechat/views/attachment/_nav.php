@@ -33,22 +33,22 @@ use common\helpers\Auth;
     <div class="col-sm-2">
         <div class="pull-right" style="margin-top: 4px">
             共 <strong class="text-danger"><?= $count ?></strong> 条
-            <?php if(Auth::verify('/wechat/attachment/get-all-attachment')){ ?>
+            <?php if(Auth::verify('/wechat/attachment/sync')){ ?>
                 <a class="btn btn-primary btn-xs" id="getAllAttachment">
                     <i class="fa fa-cloud-download"></i> 同步
                 </a>
             <?php } ?>
             <?php if($mediaType == 'news'){ ?>
-                <?php if(Auth::verify('/wechat/attachment/news-create')){ ?>
+                <?php if(Auth::verify('/wechat/attachment/news-edit')){ ?>
                     <a id="createPostBtn" class="btn btn-primary btn-xs">
                         <i class="fa fa-plus"></i> 创建
                     </a>
                 <?php } ?>
             <?php }else{ ?>
-                <?= Html::create([$mediaType . '-create'], '新增', [
+                <?= Html::create(['create', 'type' => $mediaType], '新增', [
                     'data-toggle' => 'modal',
                     'data-target' => '#ajaxModal',
-                ])?>
+                ]) ?>
             <?php } ?>
         </div>
     </div>
@@ -65,7 +65,7 @@ use common\helpers\Auth;
     function sync(offset = 0,count = 20){
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['get-all-attachment','type' => $mediaType])?>",
+            url:"<?= Url::to(['sync','type' => $mediaType])?>",
             dataType: "json",
             data: {offset:offset,count:count},
             success: function(data){

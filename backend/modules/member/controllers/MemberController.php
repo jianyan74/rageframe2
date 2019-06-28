@@ -7,6 +7,8 @@ use common\components\Curd;
 use common\models\member\Member;
 use common\enums\StatusEnum;
 use backend\controllers\BaseController;
+use backend\modules\member\forms\RechargeForm;
+use yii\base\Model;
 
 /**
  * 会员管理
@@ -20,9 +22,9 @@ class MemberController extends BaseController
     use Curd;
 
     /**
-     * @var string
+     * @var \yii\db\ActiveRecord
      */
-    public $modelClass = 'common\models\member\Member';
+    public $modelClass = Member::class;
 
     /**
      * 首页
@@ -33,7 +35,7 @@ class MemberController extends BaseController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Member::class,
+            'model' => $this->modelClass,
             'scenario' => 'default',
             'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
             'defaultOrder' => [
@@ -44,7 +46,9 @@ class MemberController extends BaseController
 
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+        $dataProvider->query
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
@@ -55,40 +59,65 @@ class MemberController extends BaseController
     /**
      * 编辑/创建
      *
-     * @return array|mixed|string|\yii\web\Response
+     * @return mixed|string|\yii\web\Response
      * @throws \yii\base\Exception
+     * @throws \yii\base\ExitException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionAjaxEdit()
     {
-        $request = Yii::$app->request;
-        $id = $request->get('id');
+        $id = Yii::$app->request->get('id');
         $model = $this->findModel($id);
         $model->scenario = 'backendCreate';
         $modelInfo = clone $model;
-        if ($model->load($request->post()))
-        {
-            if ($request->isAjax)
-            {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return \yii\widgets\ActiveForm::validate($model);
-            }
 
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
             // 验证密码
-            if ($modelInfo['password_hash'] != $model->password_hash)
-            {
+            if ($modelInfo['password_hash'] != $model->password_hash) {
                 // 记录行为日志
-                Yii::$app->services->sys->log('updateMemberPwd', '创建/修改用户密码|账号:' . $model->username, false);
-
+                Yii::$app->services->sysActionLog->create('updateMemberPwd', '创建/修改用户密码|账号:' . $model->username, false);
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
             }
 
             return $model->save()
                 ? $this->redirect(['index'])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
+                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
+        ]);
+    }
+
+    /**
+     * 积分/余额变更
+     *
+     * @param $id
+     * @return mixed|string
+     * @throws \yii\base\ExitException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
+    public function actionRecharge($id)
+    {
+        $rechargeForm = new RechargeForm();
+        $member = $this->findModel($id);
+
+        // ajax 校验
+        $this->activeFormValidate($rechargeForm);
+        if ($rechargeForm->load(Yii::$app->request->post())) {
+            if (!$rechargeForm->save($member)) {
+                return $this->message($this->analyErr($rechargeForm->getFirstErrors()), $this->redirect(['index']), 'error');
+            }
+
+            return $this->message('充值成功', $this->redirect(['index']));
+        }
+
+        return $this->renderAjax($this->action->id, [
+            'model' => $member,
+            'rechargeForm' => $rechargeForm,
         ]);
     }
 }

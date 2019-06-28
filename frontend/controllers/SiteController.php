@@ -7,11 +7,11 @@ use yii\web\UnprocessableEntityHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use frontend\forms\LoginForm;
+use frontend\forms\PasswordResetRequestForm;
+use frontend\forms\ResetPasswordForm;
+use frontend\forms\SignupForm;
+use frontend\forms\ContactForm;
 
 /**
  * Class SiteController
@@ -104,14 +104,12 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest)
-        {
+        if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
@@ -141,14 +139,10 @@ class SiteController extends Controller
     public function actionContact()
     {
         $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if ($model->sendEmail(Yii::$app->params['adminEmail']))
-            {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
                 Yii::$app->session->setFlash('success', '谢谢你联系我们。我们会尽快回复你.');
-            }
-            else
-            {
+            } else {
                 Yii::$app->session->setFlash('error', '发送你的信息时出错了.');
             }
 
@@ -179,10 +173,8 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if (($user = $model->signup()) && Yii::$app->getUser()->login($user))
-            {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (($user = $model->signup()) && Yii::$app->getUser()->login($user)) {
                 return $this->goHome();
             }
         }
@@ -201,12 +193,9 @@ class SiteController extends Controller
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if ($model->sendEmail())
-            {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', '查看您的电子邮件以获得进一步的指示.');
-
                 return $this->goHome();
             }
 
@@ -228,19 +217,14 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
-        try
-        {
+        try {
             $model = new ResetPasswordForm($token);
-        }
-        catch (UnprocessableEntityHttpException $e)
-        {
+        } catch (UnprocessableEntityHttpException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
-
             return $this->goHome();
         }
 

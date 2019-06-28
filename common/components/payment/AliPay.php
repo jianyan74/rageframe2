@@ -1,7 +1,6 @@
 <?php
 namespace common\components\payment;
 
-use Omnipay\Alipay\Requests\AopTradeAppPayRequest;
 use Yii;
 use Omnipay\Omnipay;
 

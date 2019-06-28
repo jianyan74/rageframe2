@@ -12,7 +12,8 @@
 ```
  * @property \jianyan\easywechat\Wechat $wechat
  * @property \common\components\Debris $debris
- * @property \common\services\Application $services
+ * @property \services\Application $services
+ * @property \addons\RfTinyShop\services\Application $shopServices
  * @property \Da\QrCode\Component\QrCodeComponent $qr
  * @property \common\components\Pay $pay
  ```

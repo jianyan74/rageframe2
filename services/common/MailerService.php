@@ -39,8 +39,7 @@ class MailerService extends Service
      */
     public function send($user, $email, $subject, $template)
     {
-        if ($this->queueSwitch == true)
-        {
+        if ($this->queueSwitch == true) {
             $messageId = Yii::$app->queue->push(new MailerJob([
                 'user' => $user,
                 'email' => $email,
@@ -66,8 +65,7 @@ class MailerService extends Service
      */
     public function realSend($user, $email, $subject, $template)
     {
-        try
-        {
+        try {
             $this->setConfig();
             $result = Yii::$app->mailer
                 ->compose($template, ['user' => $user])
@@ -79,9 +77,7 @@ class MailerService extends Service
             Yii::info($result);
 
             return $result;
-        }
-        catch (InvalidConfigException $e)
-        {
+        } catch (InvalidConfigException $e) {
             Yii::error($e->getMessage());
         }
 

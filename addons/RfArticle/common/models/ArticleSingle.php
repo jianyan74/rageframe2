@@ -1,8 +1,7 @@
 <?php
-
 namespace addons\RfArticle\common\models;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%addon_article_single}}".
@@ -26,6 +25,8 @@ use Yii;
  */
 class ArticleSingle extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -40,9 +41,9 @@ class ArticleSingle extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title', 'cover'], 'required'],
             [['content'], 'string'],
-            [['display', 'view', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'display', 'view', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'seo_key'], 'string', 'max' => 50],
             [['name', 'author'], 'string', 'max' => 40],
             [['seo_content'], 'string', 'max' => 1000],

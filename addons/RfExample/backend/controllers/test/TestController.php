@@ -1,14 +1,14 @@
 <?php
 namespace addons\RfExample\backend\controllers\test;
 
-use common\controllers\AddonsBaseController;
+use addons\RfExample\backend\controllers\BaseController;
 
 /**
  * Class TestController
  * @package addons\RfExample\backend\controllers\test
  * @author jianyan74 <751393839@qq.com>
  */
-class TestController extends AddonsBaseController
+class TestController extends BaseController
 {
     /**
      * @return string

@@ -3,7 +3,6 @@ namespace addons\RfArticle\backend\controllers;
 
 use Yii;
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\Adv;
 
 /**
@@ -13,14 +12,14 @@ use addons\RfArticle\common\models\Adv;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class AdvController extends AddonsBaseController
+class AdvController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var Adv
      */
-    public $modelClass = 'addons\RfArticle\common\models\Adv';
+    public $modelClass = Adv::class;
 
     /**
      * 编辑/创建
@@ -32,9 +31,7 @@ class AdvController extends AddonsBaseController
         $request = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 

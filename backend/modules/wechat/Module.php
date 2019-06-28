@@ -2,22 +2,22 @@
 namespace backend\modules\wechat;
 
 /**
- * Class Module
- * @package backend\modules\wechat
- * @author jianyan74 <751393839@qq.com>
+ * member module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     public $controllerNamespace = 'backend\modules\wechat\controllers';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
         parent::init();
+
+        // custom initialization code goes here
     }
 }

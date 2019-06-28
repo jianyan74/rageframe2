@@ -1,7 +1,7 @@
 <?php
 namespace backend\widgets\provinces;
 
-use yii;
+use Yii;
 use yii\base\Widget;
 
 /**
@@ -81,14 +81,13 @@ class Provinces extends Widget
      */
     public function run()
     {
-        return $this->render('index', [
+        return $this->render($this->template, [
             'form' => $this->form,
             'model' => $this->model,
             'provincesName' => $this->provincesName,
             'cityName' => $this->cityName,
             'areaName' => $this->areaName,
             'url' => $this->url,
-            'template' => $this->template,
             'level' => $this->level,
         ]);
     }

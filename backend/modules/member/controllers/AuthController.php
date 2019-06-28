@@ -18,9 +18,9 @@ class AuthController extends BaseController
     use Curd;
 
     /**
-     * @var string
+     * @var \yii\db\ActiveRecord
      */
-    public $modelClass = 'common\models\member\Auth';
+    public $modelClass = Auth::class;
 
     /**
      * 首页
@@ -31,7 +31,7 @@ class AuthController extends BaseController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Auth::class,
+            'model' => $this->modelClass,
             'scenario' => 'default',
             'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
             'defaultOrder' => [
@@ -44,7 +44,8 @@ class AuthController extends BaseController
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['>', 'member_id', 0]);
+            ->andWhere(['>', 'member_id', 0])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

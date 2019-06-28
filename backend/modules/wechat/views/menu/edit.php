@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ])->label('标签') ?>
                             </div>
                             <div class="col-sm-6">
-                                <?= $form->field($model, 'province')->dropDownList(MenuProvinces::getMenuList(1),[
+                                <?= $form->field($model, 'province')->dropDownList(Yii::$app->services->wechatMenuProvinces->getMapList(1),[
                                     'prompt' => '不限',
                                     "@change" => "province",
                                     'disabled' => $model->isNewRecord ? false : true

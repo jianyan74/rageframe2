@@ -20,9 +20,9 @@
 - [权限控制](sys-auth.md)
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
-- [服务层Server](sys-service.md)
+- [服务层](sys-service.md)
+- [公用服务](sys-common-service.md)
 - [RESTful Api](sys-restful-api.md)
-- WebSocket
 - [数据字典](sys-data-dictionary.md)
 - 单元测试
 
@@ -46,13 +46,19 @@
 - [钩子说明及调用](addon-hook.md)
 - [模块辅助说明](addon-helper.md)
 
-#### API文档
+#### Api
 
 - [接口说明](api-explain.md)
 - [登录重置](api-login.md)
 - [小程序登录注册](api-mini-program.md)
 - [文件上传](api-upload.md)
 - [个人信息](api-get-member.md)
+- [支付生成参数](api-pay.md)
+
+#### OAuth2
+
+- [授权/刷新Token](oauth2-login.md)
+- [个人信息](oauth2-get-member.md)
 
 #### 助手类
 
@@ -63,6 +69,7 @@
 - FileHelper - 文件辅助类
 - DateHelper - 日期格式辅助类
 - PayHelper - 支付辅助类
+- ImageHelper - 图片辅助类
 - [StringHelper](helper-string.md) - 字符串辅助类
 - RegularHelper - 正则验证辅助类
 - HashidsHelper - ID加密辅助类
@@ -77,4 +84,5 @@
 - [应用配置独立域名](independent-app-domain-name.md)
 - [代码提示/线上性能优化](system-optimize.md)
 - [PHP编程规范](php-standard.md)
+- [Yii2核心框架代码风格](core-code-style.md)
 - [网址收录](append-website.md)

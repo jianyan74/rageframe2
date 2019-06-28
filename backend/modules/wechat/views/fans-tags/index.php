@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    如果您的公众号类型为："认证订阅号" 或 "认证服务号",您可以使用粉丝标签功能。点击这里 <a href="<?= Url::to(['synchro'])?>">"同步粉丝标签"</a>
+                    如果您的公众号类型为："认证订阅号" 或 "认证服务号",您可以使用粉丝标签功能。点击这里 <a href="<?= Url::to(['synchro']) ?>" class="blue">"同步粉丝标签"</a>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -31,14 +31,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <tbody>
                         <?php foreach($tags as $key => $tag){ ?>
                             <tr>
-                                <td class="col-md-2"><input type="text" class="form-control" value="<?= $tag['name']?>" name="tag_update[<?= $tag['id']?>]"></td>
+                                <td class="col-md-2"><input type="text" class="form-control" value="<?= $tag['name']?>" name="updateData[<?= $tag['id']?>]"></td>
                                 <td><?= $tag['id'] ?></td>
                                 <td><?= $tag['count'] ?></td>
                                 <td><?= Html::delete(['delete','id' => $tag['id']]);?></td>
                             </tr>
                         <?php } ?>
                         <tr id="position">
-                            <td colspan="5"><a href="javascript:;" id="addgroup"><i class="fa fa-plus-circle"></i> 添加新标签</a></td>
+                            <td colspan="5"><a href="javascript:void(0);" id="addgroup"><i class="icon ion-android-add-circle"></i> 添加新标签</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -57,8 +57,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script>
     $('#addgroup').click(function(){
         var html = '<tr>';
-        html += '<td><input type="text" class="form-control" name="tag_add[]" placeholder="请填写标签名称"></td>';
-        html += '<td>  <a href="javascript:;" onclick="$(this).parent().parent().remove()"> <i class="fa fa-times-circle"></i></a></td>';
+        html += '<td><input type="text" class="form-control" name="createData[]" placeholder="请填写标签名称"></td>';
+        html += '<td>  <a href="javascript:;" onclick="$(this).parent().parent().remove()"> <i class="icon ion-android-cancel"></i></a></td>';
         html += '<td colspan="3"></td>';
         html += '</tr>';
         $('#position').before(html);

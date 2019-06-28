@@ -1,10 +1,8 @@
 <?php
-use common\helpers\Url;
-use yii\widgets\ActiveForm;
-
 $this->title = '编辑';
 $this->params['breadcrumbs'][] = ['label' => '后台用户', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <?= $this->render('_form', [

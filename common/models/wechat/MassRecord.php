@@ -1,7 +1,8 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
+use common\helpers\StringHelper;
 
 /**
  * This is the model class for table "{{%wechat_mass_record}}".
@@ -10,7 +11,7 @@ use Yii;
  * @property string $tag_name 标签名称
  * @property string $fans_num 粉丝数量
  * @property string $msg_id 微信消息id
- * @property string $msg_type 回复类别
+ * @property string $msg_data_id 图文消息数据id
  * @property string $content 内容
  * @property int $tag_id 标签id
  * @property string $attachment_id 资源id
@@ -25,27 +26,8 @@ use Yii;
  */
 class MassRecord extends \common\models\common\BaseModel
 {
-    /**
-     * 消息类别
-     */
-    const MEDIA_TEXT = 'text';
-    const MEDIA_NEWS = 'news';
-    const MEDIA_IMAGES = 'image';
-    const MEDIA_VOICE = 'voice';
-    const MEDIA_VIDEO = 'video';
+    use MerchantBehavior;
 
-    /**
-     * @var array
-     * 说明
-     */
-    public static $mediaTypeExplain = [
-        self::MEDIA_TEXT => '文字',
-        self::MEDIA_IMAGES => '图片',
-        self::MEDIA_NEWS => '图文',
-        self::MEDIA_VOICE => '语音',
-        self::MEDIA_VIDEO => '视频',
-    ];
-    
     /**
      * {@inheritdoc}
      */
@@ -60,13 +42,12 @@ class MassRecord extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['fans_num', 'msg_id', 'tag_id', 'attachment_id', 'send_status', 'final_send_time', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['tag_name'], 'string', 'max' => 50],
-            [['msg_type', 'media_type'], 'string', 'max' => 10],
-            [['content'], 'string', 'max' => 10000],
-            [['media_id'], 'string', 'max' => 100],
-            [['error_content'], 'string', 'max' => 255],
+            [['tag_id'], 'required'],
+            [['send_type', 'fans_num', 'msg_id', 'msg_data_id', 'tag_id', 'send_status', 'final_send_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['tag_name', 'module'], 'string', 'max' => 50],
+            [['error_content'], 'string'],
             [['send_time'], 'safe'],
+            [['data'], 'string'],
         ];
     }
 
@@ -79,13 +60,9 @@ class MassRecord extends \common\models\common\BaseModel
             'id' => 'ID',
             'fans_num' => '粉丝数量',
             'msg_id' => '消息ID',
-            'msg_type' => '消息类别',
-            'content' => '内容',
             'tag_id' => '粉丝标签',
             'tag_name' => '标签名称',
-            'attachment_id' => '资源id',
-            'media_id' => '微信资源id',
-            'media_type' => '资源类型',
+            'send_type' => '发送类型',
             'send_time' => '发送时间',
             'send_status' => '发送状态',
             'final_send_time' => '实际发送时间',
@@ -94,5 +71,19 @@ class MassRecord extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttachment()
+    {
+        return $this->hasOne(Attachment::class, ['id' => 'data']);
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->send_time = StringHelper::dateToInt($this->send_time);
+        return parent::beforeSave($insert);
     }
 }

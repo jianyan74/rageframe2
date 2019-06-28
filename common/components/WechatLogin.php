@@ -2,14 +2,14 @@
 namespace common\components;
 
 use Yii;
+use yii\helpers\Json;
 use common\models\member\Auth;
 
 /**
- * 微信授权登录
+ * WechatLogin
  *
  * Trait WechatLogin
  * @package common\components
- * @author jianyan74 <751393839@qq.com>
  */
 trait WechatLogin
 {
@@ -34,34 +34,29 @@ trait WechatLogin
     protected function login()
     {
         /** 检测到微信进入自动获取用户信息 **/
-        if ($this->openGetWechatUser && Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized())
-        {
+        if ($this->openGetWechatUser && Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized()) {
             return Yii::$app->wechat->authorizeRequired()->send();
         }
 
         /** 当前进入微信用户信息 **/
-        Yii::$app->params['wechatMember'] = json_decode(Yii::$app->session->get('wechatUser'), true);
+        Yii::$app->params['wechatMember'] = Json::decode(Yii::$app->session->get('wechatUser'));
 
         /** 非微信网页打开时候开启模拟数据 **/
-        if (empty(Yii::$app->params['wechatMember']) && Yii::$app->params['simulateUser']['switch'] == true)
-        {
+        if (empty(Yii::$app->params['wechatMember']) && Yii::$app->params['simulateUser']['switch'] == true) {
             Yii::$app->params['wechatMember'] = Yii::$app->params['simulateUser']['userInfo'];
         }
 
         $this->openid = Yii::$app->params['wechatMember']['id'];
 
         // 如果是静默登录则不写入数据库
-        if (in_array('snsapi_base', Yii::$app->params['wechatConfig']['oauth']['scopes']))
-        {
+        if (in_array('snsapi_base', Yii::$app->params['wechatConfig']['oauth']['scopes'])) {
             return false;
         }
 
         // 插入微信关联表
-        if (!($memberAuthInfo = Auth::findOauthClient(Auth::CLIENT_WECHAT, $this->openid)))
-        {
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_WECHAT, $this->openid))) {
             $original = Yii::$app->params['wechatMember']['original'];
-            $memberAuth = new Auth();
-            $memberAuth->add([
+            Yii::$app->services->memberAuth->create([
                 'oauth_client' => Auth::CLIENT_WECHAT,
                 'oauth_client_user_id' => $original['openid'],
                 'gender' => $original['sex'],

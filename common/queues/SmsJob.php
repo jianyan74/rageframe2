@@ -24,6 +24,11 @@ class SmsJob extends BaseObject implements \yii\queue\JobInterface
     /**
      * @var
      */
+    public $usage;
+
+    /**
+     * @var
+     */
     public $member_id;
 
     /**
@@ -33,6 +38,6 @@ class SmsJob extends BaseObject implements \yii\queue\JobInterface
      */
     public function execute($queue)
     {
-       Yii::$app->services->sms->realSend($this->mobile, $this->code, $this->member_id);
+       Yii::$app->services->sms->realSend($this->mobile, $this->code, $this->usage, $this->member_id);
     }
 }

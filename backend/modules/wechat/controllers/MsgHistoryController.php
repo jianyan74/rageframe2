@@ -1,10 +1,13 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
+use common\models\wechat\Rule;
 use Yii;
+use common\enums\StatusEnum;
+use common\models\common\SearchModel;
 use common\components\Curd;
 use common\models\wechat\MsgHistory;
-use yii\data\Pagination;
+use backend\controllers\BaseController;
 
 /**
  * 微信历史消息
@@ -13,36 +16,44 @@ use yii\data\Pagination;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MsgHistoryController extends WController
+class MsgHistoryController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var MsgHistory
      */
-    public $modelClass = 'common\models\wechat\MsgHistory';
+    public $modelClass = MsgHistory::class;
 
     /**
      * 首页
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
      */
     public function actionIndex()
     {
-        $keywords = Yii::$app->request->get('keywords', '');
+        $searchModel = new SearchModel([
+            'model' => $this->modelClass,
+            'scenario' => 'default',
+            'partialMatchAttributes' => ['message'], // 模糊查询
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
 
-        $data = MsgHistory::find()->andFilterWhere(['like', 'message', $keywords]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
-        $models = $data->offset($pages->offset)
-            ->with(['fans', 'rule'])
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->all();
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->with(['fans', 'rule']);
 
         return $this->render($this->action->id, [
-            'models' => $models,
-            'pages' => $pages,
-            'keywords' => $keywords
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'moduleExplain' => Rule::$moduleExplain,
         ]);
     }
 }

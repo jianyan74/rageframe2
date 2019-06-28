@@ -4,19 +4,17 @@ namespace addons\RfArticle\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 use common\enums\StatusEnum;
-use api\controllers\OnAuthController;
 use addons\RfArticle\common\models\Adv;
+use api\controllers\OnAuthController;
 
 /**
- * 幻灯片接口
- *
  * Class AdvController
  * @package addons\RfArticle\api\controllers
  * @author jianyan74 <751393839@qq.com>
  */
 class AdvController extends OnAuthController
 {
-    public $modelClass = 'addons\RfArticle\common\models\Adv';
+    public $modelClass = Adv::class;
 
     /**
      * 不用进行登录验证的方法
@@ -39,6 +37,7 @@ class AdvController extends OnAuthController
                 ->andWhere(['location_id' => Yii::$app->request->get('location_id', 1)])
                 ->andWhere(['<=', 'start_time', time()])
                 ->andWhere(['>=', 'end_time', time()])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->orderBy('sort asc')
                 ->asArray()
         ]);
@@ -55,10 +54,8 @@ class AdvController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['delete', 'create', 'update', 'view']))
-        {
+        if (in_array($action, ['delete', 'create', 'update', 'view'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }
 }
-            

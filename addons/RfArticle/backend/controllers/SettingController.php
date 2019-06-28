@@ -4,7 +4,6 @@ namespace addons\RfArticle\backend\controllers;
 use addons\RfArticle\common\models\Adv;
 use addons\RfArticle\common\models\Article;
 use addons\RfArticle\common\models\ArticleTag;
-use common\controllers\AddonsBaseController;
 use common\enums\StatusEnum;
 
 /**
@@ -14,7 +13,7 @@ use common\enums\StatusEnum;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class SettingController extends AddonsBaseController
+class SettingController extends BaseController
 {
     /**
      * 文章列表钩子
@@ -25,12 +24,14 @@ class SettingController extends AddonsBaseController
     {
         $tags = ArticleTag::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->asArray()
             ->all();
 
         $articles = Article::find()
             ->where(['status' => StatusEnum::ENABLED])
             ->andWhere(Article::position($params['position']))
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->orderBy('view desc')
             ->with(['tags'])
             ->limit(10)
@@ -53,13 +54,13 @@ class SettingController extends AddonsBaseController
     {
         $models = Adv::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['<=', 'start_time', time()])
             ->andWhere(['>=', 'end_time', time()])
             ->asArray()
             ->all();
 
-        if (!$models)
-        {
+        if (!$models) {
             return false;
         }
 

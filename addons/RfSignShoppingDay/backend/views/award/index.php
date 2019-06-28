@@ -12,8 +12,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
+                <span class="box-desc">当前有效的奖品概率为: <?= $prob ?>/1000</span>
                 <div class="box-tools">
-                    当前有效的奖品概率为: <?= $prob ?>/1000
                     <?= Html::create(['edit'], '创建'); ?>
                 </div>
             </div>

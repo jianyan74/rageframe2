@@ -2,25 +2,45 @@
 namespace backend\modules\wechat\controllers;
 
 use Yii;
+use yii\web\Controller;
+use yii\filters\AccessControl;
 use linslin\yii2\curl;
 
 /**
- * Curl获取微信图片(防盗链地址)
- *
  * Class AnalysisController
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class AnalysisController extends WController
+class AnalysisController extends Controller
 {
     /**
-     * 获取微信图片
+     * 行为控制
+     *
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],// 登录
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @throws \Exception
      */
     public function actionImage()
     {
-        $image = Yii::$app->request->get('attach');
+        $imgUrl = Yii::$app->request->get('attach');
         $curl = new curl\Curl();
-        $response = $curl->get($image);
+        $response = $curl->get($imgUrl);
         header('Content-Type:image/jpg');
         echo $response;
         exit();

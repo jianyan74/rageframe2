@@ -45,142 +45,16 @@ AppAsset::register($this);
         </section>
         <?= Alert::widget(); ?>
     </div>
-    <?php $this->endBody() ?>
-    <!--ajax模拟框加载-->
-    <div class="modal fade" id="ajaxModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
-                    <span>加载中... </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--ajax大模拟框加载-->
-    <div class="modal fade" id="ajaxModalLg" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
-                    <span>加载中... </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--ajax最大模拟框加载-->
-    <div class="modal fade" id="ajaxModalMax" aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="width: 70%">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
-                    <span>加载中... </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--初始化模拟框-->
-    <div id="rfModalBody" class="hide">
-        <div class="modal-body">
-            <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
-            <span>加载中... </span>
-        </div>
-    </div>
-
+    <!-- 公用底部-->
     <script>
-        // 小模拟框清除
-        $('#ajaxModal').on('hide.bs.modal', function (e) {
-            if (e.target == this) {
-                $(this).removeData("bs.modal");
-                $('#ajaxModal').find('.modal-content').html($('#rfModalBody').html());
-            }
-        });
-        // 大模拟框清除
-        $('#ajaxModalLg').on('hide.bs.modal', function (e) {
-            if (e.target == this) {
-                $(this).removeData("bs.modal");
-                $('#ajaxModalLg').find('.modal-content').html($('#rfModalBody').html());
-            }
-        });
-        // 最大模拟框清除
-        $('#ajaxModalMax').on('hide.bs.modal', function (e) {
-            if (e.target == this) {
-                $(this).removeData("bs.modal");
-                $('#ajaxModalMax').find('.modal-content').html($('#rfModalBody').html());
-            }
-        });
-
         // 配置
-        var config = {
-            tag: <?= Yii::$app->debris->config('sys_tags') ?? false; ?>,
+        let config = {
+            tag: "<?= Yii::$app->debris->config('sys_tags') ?? false; ?>",
             isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
         };
-
-        // 启用状态 status 1:启用;0禁用;
-        function rfStatus(obj){
-            var id = $(obj).parent().parent().attr('id');
-            var status = 0; self = $(obj);
-            if (self.hasClass("btn-success")){
-                status = 1;
-            }
-
-            if (!id) {
-                id = $(obj).parent().parent().attr('data-key');
-            }
-
-            $.ajax({
-                type : "get",
-                url : "<?= Url::to(['ajax-update'])?>",
-                dataType :  "json",
-                data : {
-                    id : id,
-                    status : status
-                },
-                success : function(data){
-                    if (data.code == 200) {
-                        if(self.hasClass("btn-success")){
-                            self.removeClass("btn-success").addClass("btn-default");
-                            self.text('禁用');
-                        } else {
-                            self.removeClass("btn-default").addClass("btn-success");
-                            self.text('启用');
-                        }
-                    } else {
-                        rfAffirm(data.message);
-                    }
-                }
-            });
-        }
-
-        // 排序
-        function rfSort(obj){
-            var id = $(obj).parent().parent().attr('id');
-            if (!id) {
-                id = $(obj).parent().parent().attr('data-key');
-            }
-
-            var sort = $(obj).val();
-            if (isNaN(sort)) {
-                rfAffirm('排序只能为数字');
-                return false;
-            } else {
-                $.ajax({
-                    type : "get",
-                    url : "<?= Url::to(['ajax-update'])?>",
-                    dataType : "json",
-                    data : {
-                        id : id,
-                        sort : sort
-                    },
-                    success : function(data) {
-                        if (data.code != 200) {
-                            rfAffirm(data.message);
-                        }
-                    }
-                });
-            }
-        }
     </script>
+    <?= $this->render('_footer')?>
+    <?php $this->endBody() ?>
     </body>
     </html>
 <?php $this->endPage() ?>

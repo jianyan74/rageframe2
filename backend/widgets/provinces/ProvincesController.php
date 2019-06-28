@@ -2,9 +2,8 @@
 namespace backend\widgets\provinces;
 
 use yii;
-use common\helpers\Html;
 use yii\web\Response;
-use common\models\common\Provinces;
+use common\helpers\Html;
 
 /**
  * Class ProvincesController
@@ -39,24 +38,17 @@ class ProvincesController extends yii\web\Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $str = "-- 请选择市 --";
-
-        $model = Provinces::getCityList($pid);
-        if($type_id == 1 && !$pid)
-        {
+        $model = Yii::$app->services->provinces->getCityList($pid);
+        if ($type_id == 1 && !$pid) {
             return Html::tag('option', '-- 请选择市 --', ['value' => '']) ;
-        }
-        elseif($type_id == 2 && !$pid)
-        {
+        } elseif ($type_id == 2 && !$pid) {
             return Html::tag('option', '-- 请选择区 --', ['value' => '']) ;
-        }
-        elseif($type_id == 2 && $model)
-        {
+        } elseif ($type_id == 2 && $model) {
             $str = "-- 请选择区 --";
         }
 
         $str = Html::tag('option', $str, ['value' => '']) ;
-        foreach ($model as $value => $name)
-        {
+        foreach ($model as $value => $name) {
             $str .= Html::tag('option', Html::encode($name), ['value' => $value]);
         }
 

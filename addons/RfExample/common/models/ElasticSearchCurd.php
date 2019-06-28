@@ -58,7 +58,7 @@ class ElasticSearchCurd extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'status', 'cover'], 'required'],
+            [['title', 'cover'], 'required'],
             [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'required'],
         ];
@@ -125,8 +125,7 @@ class ElasticSearchCurd extends ActiveRecord
     {
         $db = self::getDb();
         $command = $db->createCommand();
-        if (!$command->indexExists(self::index()))
-        {
+        if (!$command->indexExists(self::index())) {
             $command->createIndex(self::index());
         }
 

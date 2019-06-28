@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\sys;
 
 use Yii;
@@ -42,7 +41,7 @@ class NotifyManager extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'manager_id' => 'Manager ID',
+            'manager_id' => '管理员',
             'notify_id' => 'Notify ID',
             'is_read' => '是否已读',
             'type' => '类别',

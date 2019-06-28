@@ -1,11 +1,11 @@
 <?php
-use wechat\assets\AppAsset;
+use addons\RfArticle\frontend\assets\AppAsset;
 use common\helpers\Html;
 use common\widgets\Alert;
 use common\helpers\AddonHelper;
 use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -37,8 +37,6 @@ AppAsset::register($this);
                 <form action="<?= Url::to(['index/list'])?>" method="get">
                     <div class="w_searchbox">
                         <input type="text" placeholder="关键字查询" name="keyword" value="<?= Yii::$app->request->get('keyword', '')?>"/>
-                        <input type="hidden" name="addon" value="<?= Yii::$app->params['addonInfo']['name'];?>"/>
-                        <input type="hidden"  name="route" value="index/list"/>
                         <button>搜索</button>
                     </div>
                 </form>

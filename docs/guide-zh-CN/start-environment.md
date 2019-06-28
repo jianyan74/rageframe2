@@ -38,7 +38,9 @@ curl.cainfo = /path/to/downloaded/cacert.pem
 
 ### Linux环境
 
-在Linux环境下，可使用[宝塔面板](https://www.bt.cn/)，该面板使用起来简单，功能强大。也可以用[LNMP](https://lnmp.org/)一键安装包
+- 使用[宝塔面板](https://www.bt.cn/)，该面板使用起来简单，功能强大。
+- 使用[LNMP](https://lnmp.org/)一键安装包
+- 使用[docker安装](https://github.com/jianyan74/lnmp-dockerfiles)
 
 ### Mac环境
 

@@ -25,6 +25,8 @@ class LogJob extends BaseObject implements \yii\queue\JobInterface
      */
     public function execute($queue)
     {
-        Log::record($this->data);
+        $log = new Log();
+        $log->attributes = $this->data;
+        $log->save();
     }
 }

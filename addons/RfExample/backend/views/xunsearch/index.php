@@ -72,10 +72,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?= LinkPager::widget([
                             'pagination' => $pages,
                             'maxButtonCount' => 5,
-                            'firstPageLabel' => "首页",
-                            'lastPageLabel' => "尾页",
-                            'nextPageLabel' => "下一页",
-                            'prevPageLabel' => "上一页",
                         ]);?>
                     </div>
                 </div>

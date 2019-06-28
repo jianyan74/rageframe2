@@ -3,8 +3,6 @@ namespace backend\widgets\menu;
 
 use Yii;
 use yii\base\Widget;
-use common\enums\StatusEnum;
-use common\models\sys\Menu;
 
 /**
  * 左边菜单
@@ -21,8 +19,8 @@ class MenuLeftWidget extends Widget
     public function run()
     {
         return $this->render('menu-left', [
-            'menus'=> Menu::getList(StatusEnum::ENABLED),
-            'addonMenus' => Yii::$app->services->sys->addon->getMenus(),
+            'menus'=> Yii::$app->services->sysMenu->getList(),
+            'addonsMenus'=> Yii::$app->services->addons->getMenus(),
         ]);
     }
 }

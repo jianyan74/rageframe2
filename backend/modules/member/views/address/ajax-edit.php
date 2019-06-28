@@ -20,9 +20,9 @@ $form = ActiveForm::begin([
         <?= \backend\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,
-            'provincesName' => 'provinces',// 省字段名
-            'cityName' => 'city',// 市字段名
-            'areaName' => 'area',// 区字段名
+            'provincesName' => 'province_id',// 省字段名
+            'cityName' => 'city_id',// 市字段名
+            'areaName' => 'area_id',// 区字段名
             'template' => 'short' //合并为一行显示
         ]); ?>
         <?= $form->field($model, 'address_details')->textarea() ?>

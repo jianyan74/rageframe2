@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <a href="<?= Url::to(['export'])?>">导出Excel</a>
+                    <a href="<?= Url::to(['export'])?>" class="blue">导出Excel</a>
                     <?= Html::create(['edit']); ?>
                 </div>
             </div>

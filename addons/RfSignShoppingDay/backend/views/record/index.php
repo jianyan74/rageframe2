@@ -1,5 +1,4 @@
 <?php
-
 use yii\widgets\LinkPager;
 use common\helpers\Url;
 

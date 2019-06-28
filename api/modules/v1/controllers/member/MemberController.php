@@ -16,6 +16,9 @@ use common\models\member\Member;
  */
 class MemberController extends OnAuthController
 {
+    /**
+     * @var Member
+     */
     public $modelClass = Member::class;
 
     /**
@@ -33,8 +36,7 @@ class MemberController extends OnAuthController
             ->asArray()
             ->one();
 
-        if (!$model)
-        {
+        if (!$model) {
             throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');
         }
 
@@ -52,8 +54,7 @@ class MemberController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['delete', 'index']))
-        {
+        if (in_array($action, ['delete', 'index'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

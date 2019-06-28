@@ -1,9 +1,9 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
-use common\widgets\webuploader\Images;
 use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;
+use common\enums\StatusEnum;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '单页管理', 'url' => ['index']];
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'title')->textInput(); ?>
                 <?= $form->field($model, 'author')->textInput(); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
-                <?= $form->field($model, 'cover')->widget(Images::class, [
+                <?= $form->field($model, 'cover')->widget(Files::class, [
                     'config' => [
                         'pick' => [
                             'multiple' => false,
@@ -33,18 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]); ?>
                 <?= $form->field($model, 'description')->textarea(); ?>
-                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class, [
-                    'formData' => [
-                        'drive' => 'local', // 默认本地 支持qiniu/oss 上传
-                        'thumb' => [ // 生成缩略图
-                            [
-                                'widget' => 100,
-                                'height' => 100,
-                            ],
-                        ]
-                    ],
-                ]) ?>
-                <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
+                <?= $form->field($model, 'content')->widget(\common\widgets\ueditor\UEditor::class) ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit">保存</button>

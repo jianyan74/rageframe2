@@ -54,7 +54,7 @@ Yii::$app->debris->p();
  * @param bool $noRecordData 是否记录 post 数据 [true||false]
  * @throws \yii\base\InvalidConfigException
  */
-Yii::$app->services->sys->log($behavior, $remark, $noRecordData)
+Yii::$app->services->sysActionLog->create($behavior, $remark, $noRecordData)
 ```
 
 ##### 微信接口验证及报错

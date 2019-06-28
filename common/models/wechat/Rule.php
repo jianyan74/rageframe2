@@ -1,6 +1,9 @@
 <?php
 namespace common\models\wechat;
 
+use Yii;
+use common\behaviors\MerchantBehavior;
+
 /**
  * This is the model class for table "{{%wechat_rule}}".
  *
@@ -14,13 +17,15 @@ namespace common\models\wechat;
  */
 class Rule extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * 模块类别
      */
     const RULE_MODULE_TEXT = 'text';
     const RULE_MODULE_NEWS = 'news';
     const RULE_MODULE_MUSIC = 'music';
-    const RULE_MODULE_IMAGES = 'images';
+    const RULE_MODULE_IMAGE = 'image';
     const RULE_MODULE_VOICE = 'voice';
     const RULE_MODULE_VIDEO = 'video';
     const RULE_MODULE_ADDON = 'addon';
@@ -34,7 +39,7 @@ class Rule extends \common\models\common\BaseModel
      */
     public static $moduleExplain = [
         self::RULE_MODULE_TEXT => '文字回复',
-        self::RULE_MODULE_IMAGES => '图片回复',
+        self::RULE_MODULE_IMAGE => '图片回复',
         self::RULE_MODULE_NEWS => '图文回复',
         // self::RULE_MODULE_MUSIC => '音乐回复',
         self::RULE_MODULE_VOICE => '语音回复',
@@ -60,9 +65,13 @@ class Rule extends \common\models\common\BaseModel
     {
         return [
             ['name', 'required'],
-            ['name', 'unique','message' => '规则名称已经被占用'],
-            [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            ['name', 'unique','message' => '规则名称已经被占用',
+                'filter' => function ($query) {
+                    $query->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()]);
+                }],
+            [['merchant_id', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name', 'module'], 'string', 'max' => 50],
+            [['data'], 'string'],
         ];
     }
 
@@ -83,44 +92,44 @@ class Rule extends \common\models\common\BaseModel
     }
 
     /**
-     * 获取规则模块模型
+     * 关联关键字
      *
-     * @param $rule_id
-     * @param $module
-     * @return \yii\db\ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
-    public static function getModuleModel($rule_id, $module)
+    public function getRuleKeyword()
     {
-        $modelList = [
-            self::RULE_MODULE_TEXT => 'common\models\wechat\ReplyText',
-            self::RULE_MODULE_VIDEO => 'common\models\wechat\ReplyVideo',
-            self::RULE_MODULE_IMAGES => 'common\models\wechat\ReplyImages',
-            self::RULE_MODULE_NEWS => 'common\models\wechat\ReplyNews',
-            self::RULE_MODULE_VOICE => 'common\models\wechat\ReplyVoice',
-            self::RULE_MODULE_USER_API => 'common\models\wechat\ReplyUserApi',
-            self::RULE_MODULE_ADDON => 'common\models\wechat\ReplyAddon',
-        ];
-
-        if (!($model = $modelList[$module]::find()->where(['rule_id' => $rule_id])->one()))
-        {
-            /* @var $model \yii\db\ActiveRecord */
-            $model = new $modelList[$module]();
-            $model->loadDefaultValues();
-        }
-
-        return $model;
+        return $this->hasMany(RuleKeyword::class, ['rule_id' => 'id'])->orderBy('type asc');
     }
 
     /**
-     * 查询规则标题
+     * 关联资源
      *
-     * @param $rule_id
-     * @return string
+     * @return \yii\db\ActiveQuery
      */
-    public static function findRuleTitle($rule_id)
+    public function getAttachment()
     {
-        $rule = Rule::findOne($rule_id);
-        return $rule ? $rule->name : '规则被删除';
+        return $this->hasMany(Attachment::class, ['media_id' => 'data']);
+    }
+
+
+    /**
+     * 关联图文资源
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNews()
+    {
+        return $this->hasMany(AttachmentNews::class,['attachment_id' => 'data'])->orderBy('id asc');
+    }
+
+    /**
+     * 关联图文资源
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNewsTop()
+    {
+        return $this->hasOne(AttachmentNews::class,['attachment_id' => 'data'])->where(['sort' => 0]);
     }
 
     /**
@@ -136,67 +145,7 @@ class Rule extends \common\models\common\BaseModel
         // 关键字规则统计
         RuleKeywordStat::deleteAll(['rule_id' => $id]);
 
-        // 删除关联数据
-        switch ($this->module)
-        {
-            case  self::RULE_MODULE_TEXT :
-                ReplyText::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_NEWS :
-                ReplyNews::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_MUSIC :
-                // ReplyBasic::deleteAll(['rule_id'=>$id]);
-                break;
-
-            case  self::RULE_MODULE_IMAGES :
-                ReplyImages::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_VOICE :
-                ReplyVoice::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_VIDEO :
-                ReplyVideo::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_USER_API :
-                ReplyUserApi::deleteAll(['rule_id' => $id]);
-                break;
-
-            case  self::RULE_MODULE_WX_CARD :
-                // ::deleteAll(['rule_id'=>$id]);
-                break;
-
-            default :
-                ReplyAddon::deleteAll(['rule_id' => $id]);
-                break;
-        }
-
         parent::afterDelete();
-    }
-
-    /**
-     * 关联关键字
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRuleKeyword()
-    {
-        return $this->hasMany(RuleKeyword::class, ['rule_id' => 'id'])->orderBy('type asc');
-    }
-
-    /**
-     * 关联模块
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddon()
-    {
-        return $this->hasMany(ReplyAddon::class, ['rule_id' => 'id']);
     }
 
     /**

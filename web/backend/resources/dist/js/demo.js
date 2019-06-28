@@ -191,19 +191,11 @@ $(function () {
         '<h4 class="control-sidebar-heading">'
         + '布局设定'
         + '</h4>'
-        // Boxed layout
-        + '<div class="form-group">'
-        + '<label class="control-sidebar-subheading">'
-        + '<input type="checkbox"data-layout="layout-boxed" class="pull-right"/> '
-        + '盒子布局'
-        + '</label>'
-        + '<p>盒子布局最大宽度将被限定为1250px</p>'
-        + '</div>'
         // Control Sidebar Skin Toggle
         + '<div class="form-group">'
         + '<label class="control-sidebar-subheading">'
         + '<input type="checkbox"data-sidebarskin="toggle"class="pull-right"/> '
-        + '切换右侧操作栏背景'
+        + '切换右侧侧边栏背景'
         + '</label>'
         + '<p>将右侧操作栏背景亮色或深色切换</p>'
         + '</div>'
@@ -310,7 +302,7 @@ $(function () {
                 + '<p class="text-center no-margin" style="font-size: 12px">Yellow Light</p>')
     $skinsList.append($skinYellowLight)
 
-    $demoSettings.append('<h4 class="control-sidebar-heading">皮肤</h4>')
+    $demoSettings.append('<h4 class="control-sidebar-heading">主题</h4>')
     $demoSettings.append($skinsList)
 
     $tabPane.append($demoSettings)

@@ -2,8 +2,7 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\sys\MenuCate;
-use common\helpers\DebrisHelper;
+use backend\forms\ClearCache;
 
 /**
  * 主控制器
@@ -18,52 +17,40 @@ class MainController extends BaseController
      * 系统首页
      *
      * @return string
-     * @throws \yii\db\Exception
      */
     public function actionIndex()
     {
-        // 判断是否手机
-        Yii::$app->params['isMobile'] = DebrisHelper::isMobile();
-        // 拉取公告
-        Yii::$app->services->sys->notify->pullAnnounce(Yii::$app->user->id);
-        // 获取当前通知
-        list($notify, $notifyPage) = Yii::$app->services->sys->notify->getUserNotify(Yii::$app->user->id);
-
-        return $this->renderPartial('index', [
-            'menuCates' => MenuCate::getList(),
-            'manager' => Yii::$app->user->identity,
-            'notify' => $notify,
-            'notifyPage' => $notifyPage,
+        return $this->renderPartial($this->action->id, [
         ]);
     }
 
     /**
-     * 系统主页
+     * 子框架默认主页
      *
      * @return string
      */
     public function actionSystem()
     {
-        return $this->render('system',[
-
+        return $this->render($this->action->id, [
         ]);
     }
 
     /**
      * 清理缓存
+     *
+     * @return string
      */
     public function actionClearCache()
     {
-        // 删除后台文件缓存
-        $result = Yii::$app->cache->flush();
+        $model = new ClearCache();
+        if ($model->load(Yii::$app->request->post())) {
+            return $model->save()
+                ? $this->message('清理成功', $this->refresh())
+                : $this->message($this->getError($model), $this->refresh(), 'error');
+        }
 
-        // 删除备份缓存
-        $path = Yii::$app->params['dataBackupPath'];
-        $lock = realpath($path) . DIRECTORY_SEPARATOR . Yii::$app->params['dataBackLock'];
-        array_map("unlink", glob($lock));
-
-        return $this->render('clear-cache', [
-            'result' => $result
+        return $this->render($this->action->id, [
+            'model' => $model
         ]);
     }
 }

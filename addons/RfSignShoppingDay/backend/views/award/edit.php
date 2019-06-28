@@ -1,9 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\helpers\Url;
-use common\widgets\webuploader\Images;
-use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;
+use common\enums\StatusEnum;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '奖品管理', 'url' => ['index']];
@@ -16,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header with-border">
                 <h3 class="box-title">基本信息</h3>
             </div>
-            <?php $form = ActiveForm::begin(); ?>
+            <?php $form = ActiveForm::begin([]); ?>
             <div class="box-body">
                 <div class="col-lg-12">
                     <?= $form->field($model, 'title')->textInput(); ?>
@@ -91,12 +89,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="col-sm-6"><?= $form->field($model, 'max_day_num')->textInput(); ?></div>
                         <div class="col-sm-6"><?= $form->field($model, 'max_user_num')->textInput(); ?></div>
                     </div>
-                    <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用']); ?>
+                    <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
                 </div>
-                <div class="box-footer text-center">
-                    <button class="btn btn-primary" type="submit">保存</button>
-                    <span class="btn btn-white" onclick="history.go(-1)">返回</span>
-                </div>
+            </div>
+            <div class="box-footer text-center">
+                <span class="btn btn-primary" onclick="beforSubmit()">保存</span>
+                <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
             <?php ActiveForm::end(); ?>
         </div>

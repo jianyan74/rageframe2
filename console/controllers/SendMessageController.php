@@ -2,74 +2,36 @@
 namespace console\controllers;
 
 use Yii;
+use yii\console\Controller;
 use common\enums\StatusEnum;
 use common\models\wechat\MassRecord;
-use yii\console\Controller;
 
 /**
  * Class SendMessageController
  * @package console\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SendMessageController extends Controller
 {
     /**
-     * 群发消息
-     *
-     * @var array
-     */
-    protected $sendMethod = [
-        'text' => 'sendText',
-        'news' => 'sendNews',
-        'voice' => 'sendVoice',
-        'image' => 'sendImage',
-        'video' => 'sendVideo',
-        'card' => 'sendCard',
-    ];
-
-    /**
-     * 群发消息
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function actionIndex()
     {
-        $model = MassRecord::find()
+        $models = MassRecord::find()
             ->where(['send_status' => StatusEnum::DISABLED])
             ->andWhere(['<=', 'send_time', time()])
-            ->one();
+            ->all();
 
-        if ($model)
-        {
-            try
-            {
-                $app = Yii::$app->wechat->app;
-                $method = $this->sendMethod[$model->media_type];
-
-                $sendContent = $method == 'sendText' ? $model->content : $model->media_id;
-                $result = $app->broadcasting->$method($sendContent);
-
-                // 校验报错
-                Yii::$app->debris->getWechatError($result);
-
-                $model->final_send_time = time();
-                $model->send_status = StatusEnum::ENABLED;
-                $model->save();
-
-                $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '发送成功;' . PHP_EOL);
-                exit();
-            }
-            catch (\Exception $e)
-            {
-                $model->send_status = StatusEnum::DELETE;
-                $model->error_content = $e->getMessage();
-                $model->save();
-
-                $this->stderr(date('Y-m-d H:i:s') . ' --- ' . '发送失败 --- ' . $e->getMessage() . PHP_EOL);
-                exit();
+        /** @var MassRecord $record */
+        foreach ($models as $record) {
+            if (Yii::$app->services->wechatMessage->send($record)) {
+                $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '发送成功, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
+            } else {
+                $this->stderr(date('Y-m-d H:i:s') . ' --- ' . '发送失败, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
             }
         }
 
-        $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '未找到待发送的数据;' . PHP_EOL);
         exit();
     }
 }

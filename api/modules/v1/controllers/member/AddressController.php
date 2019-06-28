@@ -14,5 +14,8 @@ use common\models\member\Address;
  */
 class AddressController extends UserAuthController
 {
+    /**
+     * @var Address
+     */
     public $modelClass = Address::class;
 }

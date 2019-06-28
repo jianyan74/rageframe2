@@ -6,17 +6,18 @@ return [
 
     /** ------ 总管理员配置 ------ **/
     'adminAccount' => 1,// 系统管理员账号id
+    'isMobile' => false, // 手机访问
 
     /** ------ 日志记录 ------ **/
     'user.log' => true,
     'user.log.level' => ['error'], // 级别 ['info', 'warning', 'error']
     'user.log.noPostData' => [ // 安全考虑,不接收Post存储到日志的路由
-        'app-backend/site/login',
+        'backend/site/login',
         'sys/manager/up-password',
         'sys/manager/ajax-edit',
         'member/member/ajax-edit',
     ],
-    'user.log.except.code' => [], // 不记录的code
+    'user.log.except.code' => [404], // 不记录的code
 
     /** ------ 开发者信息 ------ **/
     'exploitDeveloper' => '简言',
@@ -25,7 +26,7 @@ return [
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">https://github.com/jianyan74/rageframe2</a>',
 
     /** ------ 备份配置配置 ------ **/
-    'dataBackupPath' => Yii::getAlias('@root') . '/common/backup', // 数据库备份根路径
+    'dataBackupPath' => Yii::getAlias('@root') . '/console/backup', // 数据库备份根路径
     'dataBackPartSize' => 20971520,// 数据库备份卷大小
     'dataBackCompress' => 1,// 压缩级别
     'dataBackCompressLevel' => 9,// 数据库备份文件压缩级别
@@ -39,15 +40,8 @@ return [
     'noAuthRoute' => [
         '/main/index',// 系统主页
         '/main/system',// 系统首页
-        '/ueditor/index',// 百度编辑器配置及上传
-        '/menu-provinces/index',// 微信个性化菜单省市区
-        '/wechat/common/select-news',// 微信自动回复获取图文
-        '/wechat/common/select-attachment',// 微信自动回复获取图片/视频/
-        '/wechat/analysis/image',// 微信显示素材图片
         '/wechat/qrcode/qr',// 二维码管理的二维码
     ],
-
-    'isMobile' => false,
 
     /** ------ 配置文本类型 ------ **/
     'configTypeList' => [
@@ -59,6 +53,7 @@ return [
         'time' => "时间",
         'datetime' => "日期时间",
         'dropDownList' => "下拉文本框",
+        'multipleInput' => "Input组",
         'radioList' => "单选按钮",
         'checkboxList' => "复选框",
         'baiduUEditor' => "百度编辑器",
@@ -66,6 +61,8 @@ return [
         'images' => "多图上传",
         'file' => "文件上传",
         'files' => "多文件上传",
+        'cropper' => "图片裁剪上传",
+        'lat_lng_selection' => "经纬度选择",
     ],
 
     /** ------ 插件类型 ------ **/

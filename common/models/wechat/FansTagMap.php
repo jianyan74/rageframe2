@@ -2,6 +2,7 @@
 namespace common\models\wechat;
 
 use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_fans_tag_map}}".
@@ -12,6 +13,8 @@ use Yii;
  */
 class FansTagMap extends \yii\db\ActiveRecord
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -26,7 +29,7 @@ class FansTagMap extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fans_id', 'tag_id'], 'integer'],
+            [['merchant_id', 'fans_id', 'tag_id'], 'integer'],
             [['fans_id', 'tag_id'], 'unique', 'targetAttribute' => ['fans_id', 'tag_id']],
         ];
     }
@@ -41,20 +44,5 @@ class FansTagMap extends \yii\db\ActiveRecord
             'fans_id' => '粉丝id',
             'tag_id' => '标签id',
         ];
-    }
-
-    /**
-     * 批量添加标签
-     *
-     * @param $fan_id
-     * @param $data
-     * @throws \yii\db\Exception
-     */
-    public static function add($fans_id, $data)
-    {
-        self::deleteAll(['fans_id' => $fans_id]);
-
-        $field = ['fans_id', 'tag_id'];
-        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $field, $data)->execute();
     }
 }

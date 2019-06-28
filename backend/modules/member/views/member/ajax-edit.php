@@ -6,7 +6,7 @@ $form = ActiveForm::begin([
     'id' => $model->formName(),
     'enableAjaxValidation' => true,
     'class' => 'form-horizontal',
-    'validationUrl' => Url::to(['ajax-edit','id' => $model['id']]),
+    'validationUrl' => Url::to(['ajax-edit', 'id' => $model['id']]),
     'fieldConfig' => [
         'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
     ]
@@ -20,7 +20,9 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
-        <?= $form->field($model, 'username')->textInput() ?>
+        <?= $form->field($model, 'username')->textInput([
+            'readonly' => !empty($model->username)
+        ])->hint('创建后不可修改') ?>
         <?= $form->field($model, 'password_hash')->passwordInput() ?>
     </div>
     <div class="modal-footer">

@@ -6,6 +6,7 @@ use yii\data\Pagination;
 use common\models\wechat\QrcodeStat;
 use common\components\Curd;
 use common\helpers\ExcelHelper;
+use backend\controllers\BaseController;
 
 /**
  * 微信二维码统计
@@ -14,14 +15,14 @@ use common\helpers\ExcelHelper;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class QrcodeStatController extends WController
+class QrcodeStatController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var QrcodeStat
      */
-    public $modelClass = 'common\models\wechat\QrcodeStat';
+    public $modelClass = QrcodeStat::class;
 
     /**
      * 首页
@@ -98,7 +99,7 @@ class QrcodeStatController extends WController
             ['场景值', 'scene_str'],
             ['场景ID', 'scene_id'],
             ['关注/扫描', 'type', 'selectd', ['' => '全部', '1' => '关注', '2' => '扫描']],
-            ['创建日期', 'created_at', 'date', 'Y-m-d H:i:s'],
+            ['创建时间', 'created_at', 'date', 'Y-m-d H:i:s'],
         ];
 
         // 导出Excel

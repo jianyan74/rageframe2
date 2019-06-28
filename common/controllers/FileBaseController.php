@@ -2,12 +2,12 @@
 namespace common\controllers;
 
 use Yii;
-use yii\data\Pagination;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
-use common\enums\StatusEnum;
 use common\models\common\Attachment;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -74,16 +74,13 @@ class FileBaseController extends Controller
      */
     public function actionImages()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_IMAGES);
             $upload->verifyFile();
             $upload->save();
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -96,16 +93,13 @@ class FileBaseController extends Controller
      */
     public function actionFiles()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_FILES);
             $upload->verifyFile();
             $upload->save();
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -118,16 +112,13 @@ class FileBaseController extends Controller
      */
     public function actionVideos()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VIDEOS);
             $upload->verifyFile();
             $upload->save();
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -140,16 +131,13 @@ class FileBaseController extends Controller
      */
     public function actionVoices()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VOICES);
             $upload->verifyFile();
             $upload->save();
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -161,8 +149,7 @@ class FileBaseController extends Controller
      */
     public function actionBase64()
     {
-        try
-        {
+        try {
             // 保存扩展名称
             $extend = Yii::$app->request->post('extend', 'jpg');
             !in_array($extend, Yii::$app->params['uploadConfig']['images']['extensions']) && $extend = 'jpg';
@@ -173,9 +160,7 @@ class FileBaseController extends Controller
             $upload->save(base64_decode($data));
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -190,13 +175,11 @@ class FileBaseController extends Controller
         $guid = Yii::$app->request->post('guid');
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
 
-        if (!$mergeInfo)
-        {
+        if (!$mergeInfo) {
             return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
-        try
-        {
+        try {
             $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type']);
             $upload->setPaths($mergeInfo['paths']);
             $upload->setBaseInfo($mergeInfo['baseInfo']);
@@ -205,9 +188,7 @@ class FileBaseController extends Controller
             Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
             return ResultDataHelper::json(200, '合并完成', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
     }
@@ -223,53 +204,24 @@ class FileBaseController extends Controller
         $upload_type = Yii::$app->request->get('upload_type', Attachment::UPLOAD_TYPE_IMAGES);
         $year = Yii::$app->request->get('year', '');
         $month = Yii::$app->request->get('month', '');
-
-        $data = Attachment::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['upload_type' => $upload_type])
-            ->andFilterWhere(['year' => $year])
-            ->andFilterWhere(['month' => $month]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 10, 'validatePage' => false]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->asArray()
-            ->all();
-
-        // 如果是以文件形式上传的图片手动修改为图片类型显示
-        foreach ($models as &$model)
-        {
-            if (preg_match("/^image/", $model['specific_type']) && $model['extension'] != 'psd')
-            {
-                $model['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
-            }
-        }
+        $keyword = Yii::$app->request->get('keyword', '');
+        $drive = Yii::$app->request->get('drive', '');
+        list($models, $pages) = Yii::$app->services->attachment->getListPage($upload_type, $drive, $year, $month, $keyword);
 
         // 判断是否直接返回json格式
-        if ($json == true)
-        {
+        if ($json == true) {
             return ResultDataHelper::json(200, '获取成功', $models);
         }
 
-        $year = [];
-        for ($i = 2019; $i <= date('Y'); $i++)
-        {
-            $year[$i] = $i;
-        }
-
-        $month = [];
-        for ($i = 1; $i <= 12; $i++)
-        {
-            $month[$i] = $i;
-        }
-
         return $this->renderAjax('@common/widgets/webuploader/views/selector', [
-            'models' => $models,
+            'models' => Json::encode($models),
+            'pages' => $pages,
             'upload_type' => $upload_type,
-            'month' => $month,
-            'year' => $year,
+            'multiple' => Yii::$app->request->get('multiple', true),
+            'drives' => Attachment::$driveExplain,
+            'year' => ArrayHelper::numBetween(2019, date('Y')),
+            'month' => ArrayHelper::numBetween(1, 12),
             'boxId' => Yii::$app->request->get('boxId'),
-            'multiple' => Yii::$app->request->get('multiple'),
         ]);
     }
 
@@ -278,7 +230,7 @@ class FileBaseController extends Controller
      *
      * @return array
      */
-    protected function actionLocal()
+    private function actionLocal()
     {
         /* 获取参数 */
         $path = Yii::$app->request->get('path', 'images');
@@ -311,20 +263,15 @@ class FileBaseController extends Controller
      * @param string $prefix 前缀
      * @return array
      */
-    protected function getLocalList($path, $prefix, &$files = [])
+    private function getLocalList($path, $prefix, &$files = [])
     {
         $listFiles = $this->filesystem->listContents($path);
-        foreach ($listFiles as $key => &$listFile)
-        {
-            if ($listFile['type'] == 'dir')
-            {
+        foreach ($listFiles as $key => &$listFile) {
+            if ($listFile['type'] == 'dir') {
                 $this->getLocalList($listFile['path'], $prefix, $files);
-            }
-            else
-            {
+            } else {
                 // 获取选中列表
-                if ($this->fileNum >= $this->fileStart && $this->fileNum < $this->fileEnd)
-                {
+                if ($this->fileNum >= $this->fileStart && $this->fileNum < $this->fileEnd) {
                     $listFile['path'] = $prefix . Yii::getAlias('@attachurl') . '/' . $listFile['path'];
                     $files[] = $listFile;
                 }

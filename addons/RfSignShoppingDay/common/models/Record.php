@@ -2,6 +2,7 @@
 
 namespace addons\RfSignShoppingDay\common\models;
 
+use common\behaviors\MerchantBehavior;
 use Yii;
 
 /**
@@ -18,6 +19,8 @@ use Yii;
  */
 class Record extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -33,7 +36,7 @@ class Record extends \common\models\common\BaseModel
     {
         return [
             [['openid'], 'required'],
-            [['award_cate_id', 'is_win', 'status', 'created_at', 'updated_at', 'award_id'], 'integer'],
+            [['merchant_id', 'award_cate_id', 'is_win', 'status', 'created_at', 'updated_at', 'award_id'], 'integer'],
             [['openid'], 'string', 'max' => 50],
             ['record_date', 'date'],
             [['award_title'], 'string', 'max' => 255],

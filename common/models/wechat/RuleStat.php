@@ -1,8 +1,8 @@
 <?php
-
 namespace common\models\wechat;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -33,7 +33,7 @@ class RuleStat extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['rule_id', 'hit', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'rule_id', 'hit', 'status', 'created_at', 'updated_at'], 'integer'],
             [['rule_name'], 'string', 'max' => 50],
         ];
     }
@@ -55,30 +55,6 @@ class RuleStat extends \common\models\common\BaseModel
     }
 
     /**
-     * 插入今日规则统计
-     *
-     * @param $rule_id
-     */
-    public static function setStat($rule_id)
-    {
-        $ruleStat = RuleStat::find()
-            ->where(['rule_id'=> $rule_id, 'created_at' => strtotime(date('Y-m-d'))])
-            ->one();
-
-        if($ruleStat)
-        {
-            $ruleStat->hit += 1;
-        }
-        else
-        {
-            $ruleStat = new RuleStat();
-            $ruleStat->rule_id = $rule_id;
-        }
-
-        $ruleStat->save();
-    }
-
-    /**
      * 关联规则
      *
      * @return \yii\db\ActiveQuery
@@ -94,8 +70,7 @@ class RuleStat extends \common\models\common\BaseModel
      */
     public function beforeSave($insert)
     {
-        if($this->isNewRecord)
-        {
+        if($this->isNewRecord) {
             $this->created_at = strtotime(date('Y-m-d'));
         }
 
@@ -115,6 +90,13 @@ class RuleStat extends \common\models\common\BaseModel
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
             ],
+            [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
+                ],
+                'value' => Yii::$app->services->merchant->getId(),
+            ]
         ];
     }
 }

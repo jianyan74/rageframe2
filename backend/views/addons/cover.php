@@ -27,12 +27,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= Url::toWechat([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toWechat([$value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= Url::toWechat([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toWechat([$value['route']]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -44,12 +44,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= Url::toFront([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toFront([$value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= Url::toFront([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toFront([$value['route']]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -61,12 +61,12 @@ $addon = StringHelper::toUnderScore($addon);
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label" for="menu-title"><?= $value['title']; ?></label>
-                                <input class="form-control" type="text" value="<?= Url::toApi([$value['route'], 'addon' => $addon, 'route' => $value['route']]) ?>" readonly>
+                                <input class="form-control" type="text" value="<?= Url::toApi([$value['route']]) ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="menu-title">二维码</label><br>
                                 <div class="row m-l-none">
-                                    <div data-src="<?= Url::toApi([$value['route'], 'addon' => $addon]); ?>" class="rf-qr-p"></div>
+                                    <div data-src="<?= Url::toApi([$value['route']]); ?>" class="rf-qr-p"></div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

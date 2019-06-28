@@ -17,10 +17,12 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
-        <?= $form->field($model, 'username')->textInput() ?>
+        <?= $form->field($model, 'username')->textInput([
+            'readonly' => !empty($model->username)
+        ])->hint('账号创建后不可修改') ?>
         <?= $form->field($model, 'password')->passwordInput() ?>
         <?php if($model->id != Yii::$app->params['adminAccount']){?>
-            <?= $form->field($model, 'auth_key')->dropDownList(\common\helpers\ArrayHelper::map($roles, 'key', 'name')) ?>
+            <?= $form->field($model, 'role_id')->dropDownList($roles) ?>
         <?php } ?>
     </div>
     <div class="modal-footer">

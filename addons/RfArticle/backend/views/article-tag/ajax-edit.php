@@ -1,6 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
+use common\enums\StatusEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -19,7 +20,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'title')->textInput(); ?>
         <?= $form->field($model, 'sort')->textInput(); ?>
-        <?= $form->field($model, 'status')->radioList(['1' => '启用', '0' => '禁用']); ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

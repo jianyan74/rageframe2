@@ -5,8 +5,6 @@ use yii;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\helpers\StringHelper;
-use common\helpers\ResultDataHelper;
-use common\controllers\AddonsBaseController;
 use addons\RfExample\common\models\Xunsearch;
 
 /**
@@ -16,7 +14,7 @@ use addons\RfExample\common\models\Xunsearch;
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class XunsearchController extends AddonsBaseController
+class XunsearchController extends BaseController
 {
     /**
      * 到时候正式请配置在main里面
@@ -51,8 +49,7 @@ class XunsearchController extends AddonsBaseController
         Xunsearch::getDb()->getIndex()->flushIndex();
 
         $condition = [];
-        if ($keyword = Yii::$app->request->get('keyword', null))
-        {
+        if ($keyword = Yii::$app->request->get('keyword', null)) {
             // $condition = ['IN', 'title', [$keyword]];
             // $condition = ['title' => $keyword, 'content' => $keyword];
 
@@ -98,12 +95,10 @@ class XunsearchController extends AddonsBaseController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
@@ -122,8 +117,7 @@ class XunsearchController extends AddonsBaseController
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete())
-        {
+        if ($this->findModel($id)->delete()) {
             return $this->message("删除成功",$this->redirect(['index']));
         }
 
@@ -139,8 +133,7 @@ class XunsearchController extends AddonsBaseController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = Xunsearch::findOne($id))))
-        {
+        if (empty($id) || empty(($model = Xunsearch::findOne($id)))) {
             $model = new Xunsearch();
             $model->id = StringHelper::uuid('uniqid');
             $model->status = StatusEnum::ENABLED;

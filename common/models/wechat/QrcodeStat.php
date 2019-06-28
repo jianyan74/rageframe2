@@ -1,7 +1,7 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_qrcode_stat}}".
@@ -19,6 +19,8 @@ use Yii;
  */
 class QrcodeStat extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     const TYPE_ATTENTION = 1;
     const TYPE_SCAN = 2;
 
@@ -44,7 +46,7 @@ class QrcodeStat extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['qrcord_id', 'type', 'scene_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'qrcord_id', 'type', 'scene_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['openid', 'name'], 'string', 'max' => 50],
             [['scene_str'], 'string', 'max' => 64],
         ];
@@ -67,56 +69,6 @@ class QrcodeStat extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
-    }
-
-    /**
-     * 判断二维码扫描事件
-     *
-     * @param array $message 微信消息
-     * @return bool|mixed
-     */
-    public static function scan($message)
-    {
-        // 关注事件
-        if ($message['Event'] == Account::TYPE_SUBSCRIBE && !empty($message['Ticket']))
-        {
-            if ($qrCode = Qrcode::getFindWhereFirst(['ticket' => trim($message['Ticket'])]))
-            {
-                static::add($qrCode, $message['FromUserName'], self::TYPE_ATTENTION);
-                return $qrCode['keyword'];
-            }
-        }
-
-        // 扫描事件
-        $where = ['scene_str' => $message['EventKey']];
-        if (is_numeric($message['EventKey']))
-        {
-            $where = ['scene_id' => $message['EventKey']];
-        }
-
-        if ($qrCode = Qrcode::getFindWhereFirst($where))
-        {
-            static::add($qrCode, $message['FromUserName'], self::TYPE_SCAN);
-            return $qrCode['keyword'];
-        }
-
-        return false;
-    }
-
-    /**
-     * 插入扫描记录
-     *
-     * @param $qrCode
-     * @param $openid
-     * @param $type
-     */
-    public static function add($qrCode, $openid, $type)
-    {
-        $model = new self();
-        $model->attributes = $qrCode;
-        $model->openid = $openid;
-        $model->type = $type;
-        $model->save();
     }
 
     /**

@@ -19,10 +19,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <div class="row">
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-star-o"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="ion ion-stats-bars green"></i> <?= $today['new_attention']; ?></span>
                 <span class="info-box-text">今日新关注(人)</span>
-                <span class="info-box-number"><?= $today['new_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -31,10 +30,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-yellow"><i class="fa fa-level-down"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="icon ion-arrow-graph-down-right red"></i> <?= $today['cancel_attention']; ?></span>
                 <span class="info-box-text">今日取消关注(人)</span>
-                <span class="info-box-number"><?= $today['cancel_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -43,10 +41,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="fa fa-level-up"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="icon ion-arrow-graph-up-right green"></i> <?= $today['increase_attention']; ?></span>
                 <span class="info-box-text">今日净增关注(人)</span>
-                <span class="info-box-number"><?= $today['increase_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -55,10 +52,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="fa fa-user-o"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">累积关注</span>
+            <div class="info-box-content p-md">
                 <span class="info-box-number"><?= $today['cumulate_attention']; ?></span>
+                <span class="info-box-text">累积关注(人)</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -70,10 +66,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <div class="row">
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-star-o"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="ion ion-stats-bars green"></i> <?= $yesterday['new_attention']; ?></span>
                 <span class="info-box-text">昨日新关注(人)</span>
-                <span class="info-box-number"><?= $yesterday['new_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -82,10 +77,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-yellow"><i class="fa fa-level-down"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="icon ion-arrow-graph-down-right red"></i> <?= $yesterday['cancel_attention']; ?></span>
                 <span class="info-box-text">昨日取消关注(人)</span>
-                <span class="info-box-number"><?= $yesterday['cancel_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -94,10 +88,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="fa fa-level-up"></i></span>
-            <div class="info-box-content">
+            <div class="info-box-content p-md">
+                <span class="info-box-number"><i class="icon ion-arrow-graph-up-right green"></i> <?= $yesterday['increase_attention']; ?></span>
                 <span class="info-box-text">昨日净增关注(人)</span>
-                <span class="info-box-number"><?= $yesterday['increase_attention']; ?></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -106,10 +99,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="fa fa-user-o"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">昨日累积关注</span>
+            <div class="info-box-content p-md">
                 <span class="info-box-number"><?= $yesterday['cumulate_attention']; ?></span>
+                <span class="info-box-text">昨日累积关注(人)</span>
             </div>
             <!-- /.info-box-content -->
         </div>

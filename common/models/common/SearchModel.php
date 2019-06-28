@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use yii\base\Model;
@@ -96,16 +97,14 @@ class SearchModel extends Model
     {
         $this->scenario = 'search';
         parent::__construct($params);
-        if ($this->model === null) 
-        {
+        if ($this->model === null) {
             throw new NotFoundHttpException('Param "model" cannot be empty');
         }
-        
+
         $this->rules = $this->model->rules();
         $this->scenarios = $this->model->scenarios();
         $this->attributeLabels = $this->model->attributeLabels();
-        foreach ($this->safeAttributes() as $attribute)
-        {
+        foreach ($this->safeAttributes() as $attribute) {
             $this->attributes[$attribute] = '';
         }
     }
@@ -117,41 +116,34 @@ class SearchModel extends Model
      */
     private function addCondition($query, $attribute, $partialMath = false)
     {
-        if (isset($this->relationAttributes[$attribute]))
-        {
+        if (isset($this->relationAttributes[$attribute])) {
             $attributeName = $this->relationAttributes[$attribute];
-        }
-        else
-        {
+        } else {
             $attributeName = call_user_func([$this->modelClassName, 'tableName']) . '.' . $attribute;
         }
 
         $value = $this->$attribute;
-        if ($value === '')
-        {
+        if ($value === '') {
             return;
         }
 
-        if ($partialMath)
-        {
+        if ($partialMath) {
             $query->andWhere(['like', $attributeName, trim($value)]);
-        }
-        else
-        {
+        } else {
             $query->andWhere($this->conditionTrans($attributeName, $value));
         }
     }
 
     /**
      * 可以查询大于小于和IN
+     *
      * @param $attributeName
      * @param $value
      * @return array
      */
     private function conditionTrans($attributeName, $value)
     {
-        switch (true)
-        {
+        switch (true) {
             case is_array($value):
                 return [$attributeName => $value];
                 break;
@@ -189,14 +181,11 @@ class SearchModel extends Model
      */
     public function setModel($value)
     {
-        if ($value instanceof Model)
-        {
+        if ($value instanceof Model) {
             $this->model = $value;
             $this->scenario = $this->model->scenario;
             $this->modelClassName = get_class($value);
-        }
-        else
-        {
+        } else {
             $this->model = new $value;
             $this->modelClassName = $value;
         }
@@ -245,33 +234,23 @@ class SearchModel extends Model
             ]
         );
 
-        if (is_array($this->relations))
-        {
-            foreach ($this->relations as $relation => $attributes)
-            {
+        if (is_array($this->relations)) {
+            foreach ($this->relations as $relation => $attributes) {
                 $pieces = explode('.', $relation);
                 $path = '';
                 $parentPath = '';
-                foreach ($pieces as $i => $piece)
-                {
-                    if ($i == 0)
-                    {
+                foreach ($pieces as $i => $piece) {
+                    if ($i == 0) {
                         $path = $piece;
-                    }
-                    else
-                    {
+                    } else {
                         $parentPath = $path;
                         $path .= '.' . $piece;
                     }
 
-                    if (!isset($this->internalRelations[$path]))
-                    {
-                        if ($i == 0)
-                        {
+                    if (!isset($this->internalRelations[$path])) {
+                        if ($i == 0) {
                             $relationClass = call_user_func([$this->model, 'get' . $piece]);
-                        }
-                        else
-                        {
+                        } else {
                             $className = $this->internalRelations[$parentPath]['className'];
                             $relationClass = call_user_func([new $className, 'get' . $piece]);
                         }
@@ -283,8 +262,7 @@ class SearchModel extends Model
                     }
                 }
 
-                foreach ((array)$attributes as $attribute)
-                {
+                foreach ((array)$attributes as $attribute) {
                     $attributeName = str_replace('.', '_', $relation) . '_' . $attribute;
                     $tableAttribute = $this->internalRelations[$relation]['tableName'] . '.' . $attribute;
                     $this->rules[] = [$attributeName, 'safe'];
@@ -301,19 +279,16 @@ class SearchModel extends Model
             $query->joinWith(array_keys($this->relations));
         }
 
-        if (is_array($this->defaultOrder))
-        {
+        if (is_array($this->defaultOrder)) {
             $dataProvider->sort->defaultOrder = $this->defaultOrder;
         }
 
-        if (is_array($this->groupBy))
-        {
+        if (is_array($this->groupBy)) {
             $query->addGroupBy($this->groupBy);
         }
 
         $this->load($params);
-        foreach ($this->attributes as $name => $value)
-        {
+        foreach ($this->attributes as $name => $value) {
             $this->addCondition($query, $name, in_array($name, $this->partialMatchAttributes));
         }
 
@@ -327,8 +302,7 @@ class SearchModel extends Model
      */
     public function __get($name)
     {
-        if (isset($this->attributes[$name]))
-        {
+        if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
 
@@ -342,12 +316,9 @@ class SearchModel extends Model
      */
     public function __set($name, $value)
     {
-        if (isset($this->attributes[$name]))
-        {
+        if (isset($this->attributes[$name])) {
             $this->attributes[$name] = $value;
-        }
-        else
-        {
+        } else {
             parent::__set($name, $value);
         }
     }

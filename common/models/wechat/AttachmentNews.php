@@ -1,7 +1,7 @@
 <?php
 namespace common\models\wechat;
 
-use yii\helpers\Url;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_attachment_news}}".
@@ -24,6 +24,8 @@ use yii\helpers\Url;
  */
 class AttachmentNews extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +40,7 @@ class AttachmentNews extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['attachment_id', 'show_cover_pic', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'attachment_id', 'show_cover_pic', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['title', 'thumb_media_id'], 'string', 'max' => 50],
             [['thumb_url', 'digest', 'content_source_url', 'media_url'], 'string', 'max' => 200],
@@ -68,70 +70,6 @@ class AttachmentNews extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * 返回素材列表
-     *
-     * @param int $sort
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getList($sort = 0)
-    {
-       return self::find()->where(['sort' => $sort])
-            ->orderBy('id asc')
-            ->asArray()
-            ->all();
-    }
-
-    /**
-     * 返回素材列表
-     *
-     * @param $attachment_id
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getEditList($attachment_id)
-    {
-        $list = self::find()->where(['attachment_id' => $attachment_id])
-            ->orderBy('sort asc')
-            ->asArray()
-            ->all();
-
-        foreach ($list as &$item)
-        {
-            $item['thumb_url'] = urldecode(Url::to(['analysis/image', 'attach' => $item['thumb_url']]));
-            preg_match_all('/<img[^>]*src\s*=\s*([\'"]?)([^\'" >]*)\1/isu', $item['content'], $match);
-
-            $match_arr = [];
-            foreach ($match[2] as $vo)
-            {
-                $match_arr[$vo] = $vo;
-            }
-
-            foreach ($match_arr as $src)
-            {
-                $url = Url::to(['analysis/image', 'attach' => $src]);
-                $url = urldecode($url);
-                $item['content'] =  str_replace($src,$url,$item['content']);
-            }
-        }
-
-        return $list;
-    }
-
-    /**
-     * @param $attachment_id
-     * @return AttachmentNews|null
-     */
-    public static function findModel($attachment_id)
-    {
-        if (empty($attachment_id) || empty(($model = self::findOne($attachment_id))))
-        {
-            $model = new self();
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
     }
 
     /**

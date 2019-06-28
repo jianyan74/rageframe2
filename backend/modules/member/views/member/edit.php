@@ -1,5 +1,4 @@
 <?php
-use common\helpers\Url;
 use yii\widgets\ActiveForm;
 use common\enums\GenderEnum;
 use common\enums\StatusEnum;
@@ -25,7 +24,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'nickname')->textInput() ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Images', [
+                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Files', [
+                    'type' => 'images',
+                    'theme' => 'default',
+                    'themeConfig' => [],
                     'config' => [
                         'pick' => [
                             'multiple' => false,

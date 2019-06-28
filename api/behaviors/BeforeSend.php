@@ -1,4 +1,5 @@
 <?php
+
 namespace api\behaviors;
 
 use Yii;
@@ -37,17 +38,15 @@ class BeforeSend extends Behavior
         ];
 
         // 记录日志
-        $errData = Yii::$app->services->errorLog->record($response, true);
+        $errData = Yii::$app->services->log->record($response, true);
 
         // 格式化报错输入格式
-        if ($response->statusCode >= 500)
-        {
+        if ($response->statusCode >= 500) {
             $response->data['data'] = YII_DEBUG ? $errData : '内部服务器错误,请联系管理员';
         }
 
         // 提取系统的报错信息
-        if ($response->statusCode >= 300 && isset($response->data['data']['message']) && isset($response->data['data']['status']))
-        {
+        if ($response->statusCode >= 300 && isset($response->data['data']['message']) && isset($response->data['data']['status'])) {
             $response->data['message'] = $response->data['data']['message'];
         }
 

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 
 <div class="row" style="margin-top: 25px">
     <div class="col-sm-12">
-        <div class="box">
+        <div class="box" style="background: #ecf0f5">
             <div class="inlineBlockContainer col5 vAlignTop separateChildren">
                 <?php foreach ($models as $item){ ?>
                     <div class="normalPaddingRight" style="position:absolute">
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <?php } ?>
                             <div class="flex-row hAlignCenter normalPadding postToolbar">
                                 <?php if($item['link_type'] == 1){ ?>
-                                    <div class="flex-col"><a href="<?= Url::to(['send','attach_id'=> $item['id'], 'mediaType' => $mediaType])?>"  title="群发" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-send"></i></a></div>
+                                    <div class="flex-col"><a href="<?= Url::to(['send', 'data'=> $item['id'], 'mediaType' => $mediaType])?>"  title="群发" data-toggle='modal' data-target='#ajaxModal'><i class="fa fa-send"></i></a></div>
                                     <div class="flex-col"><a href="<?= Url::to(['news-edit','attach_id'=> $item['id'], 'link_type' => $item['link_type']])?>" title="编辑"><i class="fa fa-pencil"></i></a></div>
                                 <?php }else{ ?>
                                     <div class="flex-col"><a href="<?= Url::to(['news-edit','attach_id'=> $item['id'], 'link_type' => $item['link_type']])?>" title="编辑"><i class="fa fa-edit"></i></a></div>

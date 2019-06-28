@@ -13,7 +13,7 @@ use addons\RfSignShoppingDay\common\models\Award;
  * @package addons\RfSignShoppingDay\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class IndexController extends IController
+class IndexController extends BaseController
 {
     /**
      * 首页
@@ -31,11 +31,11 @@ class IndexController extends IController
 
         return $this->render('index',[
             'config' => $config,
-            'user' => $this->_user,
+            'user' => $this->user,
             'app' => Yii::$app->wechat->app,
             'isStart' => $isStart,
             'isEnd' => $isEnd,
-            'isSign' => Record::find()->where(['record_date' => date('Y-m-d'), 'openid' => Yii::$app->params['wechatMember']['id']])->count()
+            'isSign' => Record::find()->where(['record_date' => date('Y-m-d'), 'openid' => Yii::$app->params['wechatMember']['id']])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->count()
         ]);
     }
 
@@ -48,11 +48,10 @@ class IndexController extends IController
     public function actionDraw()
     {
         $config = $this->getConfig();
-
         // 记录抽奖次数
         $model = new Record();
         $model = $model->loadDefaultValues();
-        $model->openid = Yii::$app->params['wechatMember']['id'];
+        $model->openid = $this->openid;
         $model->record_date = date('Y-m-d');
 
         // 判断活动是否开启
@@ -62,32 +61,28 @@ class IndexController extends IController
         $isStart = time() < $start_time ? false : true;
         $isEnd = time() < $end_time ? false : true;
 
-        if ($isStart == false || $isEnd == true)
-        {
+        if ($isStart == false || $isEnd == true) {
             return ResultDataHelper::json(404, '活动未开始或者已结束');
         }
 
         // 判断今日是否已抽奖
-        if (Record::find()->where(['record_date' => date('Y-m-d'), 'openid' => Yii::$app->params['wechatMember']['id']])->count())
-        {
+        if (Record::find()->where(['record_date' => date('Y-m-d'), 'openid' => Yii::$app->params['wechatMember']['id']])->count()) {
             return ResultDataHelper::json(404, '今日已抽奖');
         }
 
         // 记录今日抽奖步数和插入抽奖记录
-        $user = $this->_user;
+        $user = $this->user;
         $user->sign_num += 1;
         $user->save();
         $model->save();
 
         // 开始获取抽奖奖品
-        if (!($awards = Award::find()->where(['status' => StatusEnum::ENABLED])->andWhere(['>', 'surplus_num', 0])->andWhere(['>', 'prob', 0])->all()))
-        {
+        if (!($awards = Award::find()->where(['status' => StatusEnum::ENABLED])->andWhere(['>', 'surplus_num', 0])->andWhere(['>', 'prob', 0])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->all())) {
             return ResultDataHelper::json(404, '奖品不足');
         }
 
         // 开始随机抽奖
-        if (!($awardId = ArithmeticHelper::drawRandom($awards)))
-        {
+        if (!($awardId = ArithmeticHelper::drawRandom($awards))) {
             return ResultDataHelper::json(404, '未中奖');
         }
 
@@ -101,27 +96,26 @@ class IndexController extends IController
         // 单日最多
         $dayMaxRecord = Record::find()
             ->where(['record_date' => date('Y-m-d'), 'is_win' => 1, 'award_id' => $award['id']])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->count();
 
-        if ($dayMaxRecord >= $max_day_num)
-        {
+        if ($dayMaxRecord >= $max_day_num) {
             return ResultDataHelper::json(404, '未中奖');
         }
 
         // 查询用户最多
         $dayMaxUserRecord = Record::find()
             ->where(['record_date' => date('Y-m-d'), 'is_win' => 1, 'award_id' => $award['id'], 'openid' => Yii::$app->params['wechatMember']['id']])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->count();
 
-        if ($dayMaxUserRecord >= $max_user_num)
-        {
+        if ($dayMaxUserRecord >= $max_user_num) {
             return ResultDataHelper::json(404, '未中奖');
         }
 
         /********** 插入记录 start ********/
         $transaction = Yii::$app->db->beginTransaction();
-        try
-        {
+        try {
             $model->is_win = 1;
             $model->award_id = $award['id'];
             $model->award_title = $award['title'];
@@ -133,9 +127,7 @@ class IndexController extends IController
 
             $transaction->commit();
             return ResultDataHelper::json(200, '抽奖成功', $model);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $transaction->rollBack();
             return ResultDataHelper::json(404, '未中奖');
         }
@@ -150,11 +142,11 @@ class IndexController extends IController
     {
         $models = Record::find()
             ->where(['openid' => Yii::$app->params['wechatMember']['id'], 'is_win' => 1])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->asArray()
             ->all();
 
-        foreach ($models as &$model)
-        {
+        foreach ($models as &$model) {
             $model['created_at'] = Yii::$app->formatter->asDate($model['created_at']);
         }
 

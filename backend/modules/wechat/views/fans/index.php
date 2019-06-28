@@ -27,17 +27,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <div class="panel-body">
-                            <div class="col-sm-6 m-l-n-sm">
-                                <!-- 权限校验判断 -->
-                                <?php if(Auth::verify('/wechat/fans/sync')){ ?>
-                                    <span class="btn btn-white" id="sync"> 同步选中粉丝信息</span>
-                                <?php } ?>
-                                <!-- 权限校验判断 -->
-                                <?php if(Auth::verify('/wechat/fans/get-all-fans')){ ?>
-                                    <span class="btn btn-white" onclick="getAllFans()"> 同步全部粉丝信息</span>
-                                <?php } ?>
-                            </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 m-l-n-md">
                                 <?php $form = ActiveForm::begin([
                                     'action' => Url::to(['index']),
                                     'method' => 'get'
@@ -53,6 +43,18 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
                                 </div>
                                 <?php ActiveForm::end(); ?>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="pull-right">
+                                    <!-- 权限校验判断 -->
+                                    <?php if(Auth::verify('/wechat/fans/sync')){ ?>
+                                        <span class="btn btn-white btn-sm" id="sync"><i class="fa fa-cloud-download"></i> 同步选中粉丝信息</span>
+                                    <?php } ?>
+                                    <!-- 权限校验判断 -->
+                                    <?php if(Auth::verify('/wechat/fans/get-all-fans')){ ?>
+                                        <span class="btn btn-white btn-sm" onclick="getAllFans()"><i class="fa fa-cloud-download"></i>  同步全部粉丝信息</span>
+                                    <?php } ?>
+                                </div>
                             </div>
                             <table class="table table-hover">
                                 <thead>
@@ -101,7 +103,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                             <?php } ?>
                                             <!-- 权限校验判断 -->
                                             <?php if (Auth::verify('/wechat/fans/move-tag')){ ?>
-                                                <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #0f0f0f"><i class="fa fa-sort-down"></i></a>
+                                                <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #76838f"><i class="icon ion-arrow-down-b "></i></a>
                                             <?php } ?>
                                         </td>
                                         <td><?= $model->openid ?></td>
@@ -142,7 +144,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['get-all-fans'])?>",
+            url:"<?= Url::to(['sync-all-openid'])?>",
             dataType: "json",
             data: {},
             success: function(data){
@@ -152,8 +154,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     }
 
     // 同步粉丝资料
-    function sync(type,page = 0,openids = null){
-
+    function sync(type, page = 0, openids = null){
         $.ajax({
             type:"post",
             url:"<?= Url::to(['sync'])?>",
@@ -180,7 +181,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             }
         });
 
-        sync('check',0,openids);
+        sync('check', 0, openids);
     });
 
     // 多选框选择

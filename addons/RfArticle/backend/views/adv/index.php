@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 开始时间：<?= Yii::$app->formatter->asDatetime($model->start_time); ?><br>
                                 结束时间：<?= Yii::$app->formatter->asDatetime($model->end_time); ?>
                             </td>
-                            <td><?= \addons\RfArticle\common\models\Adv::getTimeStatus($model->start_time,$model->end_time)?></td>
+                            <td><?= Html::timeStatus($model->start_time, $model->end_time)?></td>
                             <td>
                                 <?= Html::edit(['edit','id' => $model->id]); ?>
                                 <?= Html::status($model['status']); ?>

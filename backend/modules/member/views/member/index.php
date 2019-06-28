@@ -1,7 +1,7 @@
 <?php
-use common\helpers\Url;
 use yii\grid\GridView;
 use common\helpers\Html;
+use common\helpers\ImageHelper;
 
 $this->title = '会员信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -28,16 +28,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'visible' => false, // 不显示#
-                        ],
-                        [
-                            'attribute' => 'id',
-                            'filter' => false, //不显示搜索框
                         ],
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return Html::img(Html::headPortrait(Html::encode($model->head_portrait)), [
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
                                         'class' => 'img-circle rf-img-md img-bordered-sm',
                                 ]);
                             },
@@ -55,9 +50,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
                                 return "余额：" . $model->user_money . '<br>'.
+                                    "累积金额：" . $model->accumulate_money . '<br>'.
                                     "积分：" . $model->user_integral . '<br>'.
-                                    "累计消费：" . $model->accumulate_money . '<br>'.
-                                    "累积金额：" . $model->frozen_money . '<br>';
+                                    "累计积分：" . $model->accumulate_integral;
                             },
                             'format' => 'raw',
                         ],
@@ -72,11 +67,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                         ],
-                        // 'updated_at',
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{ajax-edit} {address} {edit} {status} {destroy}',
+                            'template'=> '{ajax-edit} {address}  {recharge} {edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
@@ -86,6 +80,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 },
                                 'address' => function ($url, $model, $key) {
                                     return Html::linkButton(['address/index', 'member_id' => $model->id], '收货地址');
+                                },
+                                'recharge' => function ($url, $model, $key) {
+                                    return Html::linkButton(['recharge', 'id' => $model->id], '充值', [
+                                        'data-toggle' => 'modal',
+                                        'data-target' => '#ajaxModal',
+                                    ]);
                                 },
                                 'edit' => function ($url, $model, $key) {
                                     return Html::edit(['edit', 'id' => $model->id]);

@@ -2,22 +2,22 @@
 namespace backend\modules\member;
 
 /**
- * Class Module
- * @package backend\modules\member
- * @author jianyan74 <751393839@qq.com>
+ * member module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     public $controllerNamespace = 'backend\modules\member\controllers';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
         parent::init();
+
+        // custom initialization code goes here
     }
 }

@@ -26,7 +26,6 @@ class AddressController extends BaseController
     public function init()
     {
         $this->member_id = Yii::$app->request->get('member_id');
-
         parent::init();
     }
 
@@ -39,7 +38,8 @@ class AddressController extends BaseController
     {
         $data = Address::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['member_id' => $this->member_id]);
+            ->andWhere(['member_id' => $this->member_id])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -60,11 +60,10 @@ class AddressController extends BaseController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index', 'member_id' => $this->member_id]);
         }
 
@@ -82,14 +81,12 @@ class AddressController extends BaseController
      */
     public function actionDestroy($id)
     {
-        if (!($model = Address::findOne($id)))
-        {
+        if (!($model = Address::findOne($id))) {
             return $this->message("找不到数据", $this->redirect(['index']), 'error');
         }
 
         $model->status = StatusEnum::DELETE;
-        if ($model->save())
-        {
+        if ($model->save()) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 
@@ -104,15 +101,13 @@ class AddressController extends BaseController
      */
     public function actionAjaxUpdate($id)
     {
-        if (!($model = Address::findOne($id)))
-        {
+        if (!($model = Address::findOne($id))) {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
-        if (!$model->save())
-        {
-            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->save()) {
+            return ResultDataHelper::json(422, $this->getError($model));
         }
 
         return ResultDataHelper::json(200, '修改成功');
@@ -121,24 +116,19 @@ class AddressController extends BaseController
     /**
      * 编辑/创建
      *
-     * @return array|mixed|string|yii\web\Response
+     * @return mixed|string|\yii\web\Response
+     * @throws \yii\base\ExitException
      */
     public function actionAjaxEdit()
     {
-        $request  = Yii::$app->request;
-        $id = $request->get('id');
+        $id = Yii::$app->request->get('id');
         $model = $this->findModel($id);
-        if ($model->load($request->post()))
-        {
-            if ($request->isAjax)
-            {
-                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return \yii\widgets\ActiveForm::validate($model);
-            }
-
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
             return $model->save()
                 ? $this->redirect(['index', 'member_id' => $model->member_id])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index', 'member_id' => $model->member_id]), 'error');
+                : $this->message($this->getError($model), $this->redirect(['index', 'member_id' => $model->member_id]), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
@@ -154,8 +144,7 @@ class AddressController extends BaseController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = Address::findOne($id))))
-        {
+        if (empty($id) || empty(($model = Address::findOne($id)))) {
             $model = new Address;
             $model = $model->loadDefaultValues();
             $model->member_id = $this->member_id;

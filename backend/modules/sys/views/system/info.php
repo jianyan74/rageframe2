@@ -37,10 +37,6 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <td><?= Yii::$app->formatter->asShortSize($attachment_size, 2); ?></td>
                     </tr>
                     <tr>
-                        <td>文件上传限制</td>
-                        <td><?= ini_get('upload_max_filesize'); ?></td>
-                    </tr>
-                    <tr>
                         <td>超时时间</td>
                         <td><?= ini_get('max_execution_time'); ?>秒</td>
                     </tr>
@@ -73,7 +69,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td width="150px">Yii2版本</td>
-                        <td><?= Yii::getVersion(); ?></td>
+                        <td><?= Yii::getVersion(); ?><?php if (YII_DEBUG) echo ' (开发模式)'; ?></td>
                     </tr>
                     <tr>
                         <td>官网</td>
@@ -145,6 +141,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <?= extension_loaded('mongodb')
                                 ? '<span class="label label-primary">mongodb支持</span>'
                                 : '<span class="label label-default">mongodb不支持</span>'; ?>
+                            <?= extension_loaded('amqp')
+                                ? '<span class="label label-primary">amqp支持</span>'
+                                : '<span class="label label-default">amqp不支持</span>'; ?>
                         </td>
                     </tr>
                     <tr>
@@ -162,6 +161,10 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <tr>
                         <td>脚本内存限制</td>
                         <td><?= ini_get('memory_limit'); ?></td>
+                    </tr>
+                    <tr>
+                        <td>文件上传限制</td>
+                        <td><?= ini_get('upload_max_filesize'); ?></td>
                     </tr>
                     <tr>
                         <td>Post数据最大尺寸</td>

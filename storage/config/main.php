@@ -12,7 +12,6 @@ return [
             'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
             'showScriptName' => false,
             'rules' =>[
-
             ],
         ],
         'glide' => [

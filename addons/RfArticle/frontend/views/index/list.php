@@ -2,7 +2,7 @@
 use common\helpers\AddonHelper;
 use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = '文章列表';
 ?>
 
@@ -53,17 +53,13 @@ $this->title = '文章列表';
                             <?= \yii\widgets\LinkPager::widget([
                                 'pagination' => $pages,
                                 'maxButtonCount' => 5,
-                                'firstPageLabel' => "首页",
-                                'lastPageLabel' => "尾页",
-                                'nextPageLabel' => "下一页",
-                                'prevPageLabel'=> "上一页",
                             ]);?>
                         </div>
                     </div>
                 </div>
             </div>
             <!--获取左侧列表推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 2]); ?>
+            <?= \common\helpers\Hook::to('RfArticle', ['position' => 2]); ?>
         </div>
     </div>
 </div>

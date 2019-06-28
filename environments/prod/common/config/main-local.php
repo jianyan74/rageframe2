@@ -14,7 +14,8 @@ return [
         ],
         /**
         // redis缓存
-        'cache' => [
+        // 注意：系统默认开启了file缓存的保存路径，如果开启redis或者其他缓存请去main里面删除
+         * 'cache' => [
             'class' => 'yii\redis\Cache',
         ],
         // session写入缓存配置

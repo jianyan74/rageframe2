@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\widgets\webuploader\Images;
+use common\widgets\webuploader\Files;
 use common\helpers\Url;
 use kartik\datetime\DateTimePicker;
 
@@ -59,7 +59,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             </div>
             <div class="box-body">
                 <?= $form->field($model, 'share_title')->textInput(); ?>
-                <?= $form->field($model, 'share_cover')->widget(Images::class, [
+                <?= $form->field($model, 'share_desc')->textarea(); ?>
+                <?= $form->field($model, 'share_cover')->widget(Files::class, [
                     'config' => [
                         'pick' => [
                             'multiple' => false,

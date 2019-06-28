@@ -1,6 +1,7 @@
 <?php
 namespace addons\RfSignShoppingDay\common\models;
 
+use common\behaviors\MerchantBehavior;
 use common\helpers\StringHelper;
 use Yii;
 
@@ -25,6 +26,8 @@ use Yii;
  */
 class Award extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -40,7 +43,7 @@ class Award extends \common\models\common\BaseModel
     {
         return [
             [['title', 'prob'], 'required'],
-            [['cate_id', 'sort', 'prob', 'all_num', 'surplus_num', 'max_day_num', 'max_user_num',  'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'cate_id', 'sort', 'prob', 'all_num', 'surplus_num', 'max_day_num', 'max_user_num',  'status', 'created_at', 'updated_at'], 'integer'],
             [['start_time', 'end_time', 'draw_start_time', 'draw_end_time'], 'safe'],
             [['title'], 'string', 'max' => 50],
         ];

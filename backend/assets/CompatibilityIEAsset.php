@@ -11,7 +11,6 @@ use yii\web\AssetBundle;
 class CompatibilityIEAsset extends AssetBundle
 {
     public $basePath = '@webroot';
-
     public $baseUrl = '@web/resources';
 
     public $js = [

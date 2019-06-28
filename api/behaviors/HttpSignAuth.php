@@ -1,4 +1,5 @@
 <?php
+
 namespace api\behaviors;
 
 use Yii;
@@ -6,6 +7,7 @@ use yii\base\Behavior;
 use yii\web\Controller;
 use yii\web\UnprocessableEntityHttpException;
 use common\helpers\EncryptionHelper;
+use api\forms\SignAuthForm;
 
 /**
  * http 签名验证
@@ -17,6 +19,11 @@ use common\helpers\EncryptionHelper;
 class HttpSignAuth extends Behavior
 {
     /**
+     * @var bool
+     */
+    public $switch = false;
+
+    /**
      * @return array
      */
     public function events()
@@ -27,27 +34,21 @@ class HttpSignAuth extends Behavior
     /**
      * @param $event
      * @return bool
-     * @throws \yii\web\UnprocessableEntityHttpException
+     * @throws UnprocessableEntityHttpException
      */
     public function beforeAction($event)
     {
-        if (false === Yii::$app->params['user.httpSignValidity'])
-        {
+        if (false === $this->switch) {
             return true;
         }
 
-        $appId = Yii::$app->request->get('appId', null);
-
-        if (!$appId)
-        {
-            throw new UnprocessableEntityHttpException('缺少 appId 参数');
+        $data = Yii::$app->request->get();
+        $model = new SignAuthForm();
+        $model->attributes = $data;
+        if (!$model->validate()) {
+            throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
         }
 
-        if (!isset(Yii::$app->params['user.httpSignAccount'][$appId]))
-        {
-            throw new UnprocessableEntityHttpException('appId 无效');
-        }
-
-        return EncryptionHelper::decodeUrlParam(Yii::$app->request->get(), Yii::$app->params['user.httpSignAccount'][$appId]);
+        return EncryptionHelper::decodeUrlParam($data, $model->appSecret);
     }
 }

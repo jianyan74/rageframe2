@@ -4,14 +4,13 @@ namespace addons\RfExample\backend\controllers;
 use Yii;
 use common\helpers\StringHelper;
 use addons\RfExample\common\models\CutImageForm;
-use common\controllers\AddonsBaseController;
 
 /**
  * Class VideoController
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class VideoController extends AddonsBaseController
+class VideoController extends BaseController
 {
     /**
      * @return string
@@ -19,8 +18,7 @@ class VideoController extends AddonsBaseController
     public function actionCutImage()
     {
         $model = new CutImageForm();
-        if ($model->load(Yii::$app->request->post()))
-        {
+        if ($model->load(Yii::$app->request->post())) {
             $filePath = StringHelper::getLocalFilePath($model->video);
             $img = Yii::getAlias("@attachment/") . "test1.jpg";
 

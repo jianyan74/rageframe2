@@ -3,21 +3,15 @@ namespace common\components;
 
 use Yii;
 use yii\data\Pagination;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
 use yii\base\InvalidConfigException;
 use common\helpers\ResultDataHelper;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
 /**
- * CURD基类特性
- *
- * 注意：会覆盖父类的继承方法，注意使用
  * Trait Curd
- * @package backend\components
- * @property yii\db\ActiveRecord|yii\base\Model $modelClass
- * @author jianyan74 <751393839@qq.com>
+ * @property \yii\db\ActiveRecord|\yii\base\Model $modelClass
+ * @package common\components
  */
 trait Curd
 {
@@ -26,12 +20,11 @@ trait Curd
      */
     public function init()
     {
-        if ($this->modelClass === null)
-        {
+        parent::init();
+
+        if ($this->modelClass === null) {
             throw new InvalidConfigException('"modelClass" 属性必须设置.');
         }
-
-        parent::init();
     }
 
     /**
@@ -42,7 +35,8 @@ trait Curd
     public function actionIndex()
     {
         $data = $this->modelClass::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED]);
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -62,11 +56,9 @@ trait Curd
      */
     public function actionEdit()
     {
-        $request = Yii::$app->request;
-        $id = $request->get('id', null);
+        $id = Yii::$app->request->get('id', null);
         $model = $this->findModel($id);
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
@@ -83,14 +75,12 @@ trait Curd
      */
     public function actionDestroy($id)
     {
-        if (!($model = $this->modelClass::findOne($id)))
-        {
+        if (!($model = $this->modelClass::findOne($id))) {
             return $this->message("找不到数据", $this->redirect(['index']), 'error');
         }
 
         $model->status = StatusEnum::DELETE;
-        if ($model->save())
-        {
+        if ($model->save()) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 
@@ -107,8 +97,7 @@ trait Curd
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete())
-        {
+        if ($this->findModel($id)->delete()) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 
@@ -123,16 +112,13 @@ trait Curd
      */
     public function actionAjaxUpdate($id)
     {
-        if (!($model = $this->modelClass::findOne($id)))
-        {
+        if (!($model = $this->modelClass::findOne($id))) {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
-        $data = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
-        $model->attributes = $data;
-        if (!$model->save())
-        {
-            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
+        $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
+        if (!$model->save()) {
+            return ResultDataHelper::json(422, $this->getError($model));
         }
 
         return ResultDataHelper::json(200, '修改成功');
@@ -141,24 +127,20 @@ trait Curd
     /**
      * ajax编辑/创建
      *
-     * @return array
+     * @return mixed|string|\yii\web\Response
+     * @throws \yii\base\ExitException
      */
     public function actionAjaxEdit()
     {
-        $request = Yii::$app->request;
-        $id = $request->get('id');
+        $id = Yii::$app->request->get('id');
         $model = $this->findModel($id);
-        if ($model->load($request->post()))
-        {
-            if ($request->isAjax)
-            {
-                Yii::$app->response->format = Response::FORMAT_JSON;
-                return ActiveForm::validate($model);
-            }
 
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
             return $model->save()
                 ? $this->redirect(['index'])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
+                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
@@ -175,8 +157,7 @@ trait Curd
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::findOne($id))))
-        {
+        if (empty($id) || empty(($model = $this->modelClass::find()->where(['id' => $id])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
             $model = new $this->modelClass;
             return $model->loadDefaultValues();
         }

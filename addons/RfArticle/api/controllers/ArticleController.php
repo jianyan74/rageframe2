@@ -1,10 +1,10 @@
 <?php
 namespace addons\RfArticle\api\controllers;
 
-use Yii;
-use api\controllers\OnAuthController;
-use common\enums\StatusEnum;
 use yii\data\ActiveDataProvider;
+use common\enums\StatusEnum;
+use addons\RfArticle\common\models\Article;
+use api\controllers\OnAuthController;
 
 /**
  * 文章接口
@@ -16,7 +16,7 @@ use yii\data\ActiveDataProvider;
  */
 class ArticleController extends OnAuthController
 {
-    public $modelClass = 'addons\RfArticle\common\models\Article';
+    public $modelClass = Article::class;
 
     /**
      * 不用进行登录验证的方法
@@ -37,6 +37,7 @@ class ArticleController extends OnAuthController
         return new ActiveDataProvider([
             'query' => $this->modelClass::find()
                 ->where(['status' => StatusEnum::ENABLED])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->select(['id', 'title', 'cover', 'description', 'view'])
                 ->orderBy('sort asc, id desc')
                 ->asArray(),
@@ -58,8 +59,7 @@ class ArticleController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['delete', 'create', 'update']))
-        {
+        if (in_array($action, ['delete', 'create', 'update'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

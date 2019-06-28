@@ -62,7 +62,7 @@ $this->title = '文章列表';
                 },
                 clearEmptyId: "list",
                 toTop:{
-                    src : "<?= AddonHelper::getResourcesFile('img/mescroll-totop.png'); ?>"
+                    src : "<?= AddonHelper::file('img/mescroll-totop.png'); ?>"
                 }
             }
         });

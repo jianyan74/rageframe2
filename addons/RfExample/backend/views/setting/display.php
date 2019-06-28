@@ -1,7 +1,6 @@
 <?php
-
 use yii\widgets\ActiveForm;
-use common\widgets\webuploader\Images;
+use common\widgets\webuploader\Files;
 use common\helpers\Url;
 
 $this->title = '参数设置';
@@ -18,13 +17,17 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-body">
                 <div class="col-lg-12">
                     <?= $form->field($model, 'share_title')->textInput(); ?>
-                    <?= $form->field($model, 'share_cover')->widget(Images::class, [
+                    <?= $form->field($model, 'share_cover')->widget(Files::class, [
+                        'type' => 'images',
+                        'theme' => 'default',
+                        'themeConfig' => [],
                         'config' => [
                             'pick' => [
                                 'multiple' => false,
                             ],
                         ]
                     ]); ?>
+                    <?= $form->field($model, 'share_desc')->textarea(); ?>
                     <?= $form->field($model, 'share_link')->textInput(); ?>
                 </div>
             </div>

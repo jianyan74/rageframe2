@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 /**
@@ -19,7 +20,7 @@ class RegularHelper
      */
     public static function verify($type, $value)
     {
-        return preg_match(self::$type() , $value);
+        return preg_match(self::$type(), $value);
     }
 
     /**

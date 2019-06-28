@@ -9,9 +9,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-sm-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li><a href="<?= Url::to(['index'])?>"> 二维码管理</a></li>
-                <li><a href="<?= Url::to(['/wechat/qrcode-stat/index'])?>"> 扫描统计</a></li>
-                <li class="active"><a href="<?= Url::to(['long-url'])?>"> 长链接转二维码</a></li>
+                <li><a href="<?= Url::to(['index']) ?>"> 二维码管理</a></li>
+                <li><a href="<?= Url::to(['/wechat/qrcode-stat/index']) ?>"> 扫描统计</a></li>
+                <li class="active"><a href="<?= Url::to(['long-url']) ?>"> 长链接转二维码</a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane rf-auto">
@@ -58,19 +58,19 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             return;
         }
         var change = $(this);
-        var img_url = "<?= Url::to(['qr'])?>";
+        var img_url = "<?= Url::to(['qr']) ?>";
         change.html('<i class="fa fa-spinner"></i> 转换中');
         $.ajax({
             type : "post",
-            url : "<?= Url::to(['long-url'])?>",
+            url : "<?= Url::to(['long-url']) ?>",
             dataType : "json",
             data : {shortUrl:longurl},
             success: function(data){
-                if(data.code == 404) {
+                if (data.code == 404) {
                     rfAffirm(data.message);
-                }else{
+                } else {
                     $('#url').val(data.data.short_url);
-                    $('#longUrl').text("当前显示 "+longurl+" 的二维码");
+                    $('#longUrl').text("当前显示 " + longurl + " 的二维码");
                     $('#qrsrc').attr('src', img_url + '?shortUrl=' + data.data.short_url);
                     change.html('立即转换');
                 }

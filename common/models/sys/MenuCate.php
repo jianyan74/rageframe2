@@ -1,6 +1,7 @@
 <?php
 namespace common\models\sys;
 
+use common\helpers\TreeHelper;
 use common\enums\StatusEnum;
 
 /**
@@ -8,8 +9,12 @@ use common\enums\StatusEnum;
  *
  * @property int $id 主键
  * @property string $title 标题
+ * @property string $pid 上级id
+ * @property int $level 级别
  * @property string $icon icon
+ * @property string $tree 树
  * @property int $is_default_show 默认显示
+ * @property int $is_addon 应用顶级分类
  * @property int $sort 排序
  * @property int $status 状态[-1:删除;0:禁用;1启用]
  * @property string $created_at 添加时间
@@ -32,9 +37,12 @@ class MenuCate extends \common\models\common\BaseModel
     {
         return [
             [['title'], 'required'],
-            [['is_default_show', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['level', 'pid', 'is_default_show', 'is_addon', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
             [['icon'], 'string', 'max' => 20],
+            [['tree'], 'string', 'max' => 300],
+            [['level'], 'default', 'value' => 1],
+            [['title', 'icon'], 'trim'],
         ];
     }
 
@@ -46,38 +54,17 @@ class MenuCate extends \common\models\common\BaseModel
         return [
             'id' => 'ID',
             'title' => '标题',
-            'icon' => '图标css',
-            'is_default_show' => '默认显示',
+            'icon' => '图标',
+            'is_default_show' => '是否默认显示',
+            'is_addon' => '应用中心',
             'sort' => '排序',
+            'level' => '级别',
+            'pid' => '上级id',
+            'tree' => '树',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
-    }
-
-    /**
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getList()
-    {
-        return self::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->orderBy('sort asc')
-            ->all();
-    }
-
-    /**
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function getFirstDataID()
-    {
-        $model = self::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->select('id, status')
-            ->orderBy('sort asc')
-            ->one();
-
-        return $model ? $model->id : null;
     }
 
     /**
@@ -86,9 +73,12 @@ class MenuCate extends \common\models\common\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->is_default_show == StatusEnum::ENABLED)
-        {
+        if ($this->is_default_show == StatusEnum::ENABLED) {
             self::updateAll(['is_default_show' => StatusEnum::DISABLED], ['is_default_show' => StatusEnum::ENABLED]);
+        }
+
+        if ($this->isNewRecord && $this->pid == 0) {
+            $this->tree = TreeHelper::defaultTreeKey();
         }
 
         return parent::beforeSave($insert);

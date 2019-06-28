@@ -15,8 +15,8 @@ class AddonConfig
     public $info = [
         'name' => 'RfSignShoppingDay',
         'title' => '购物节',
-        'brief_introduction' => '购物节签到抽奖',
-        'description' => '购物节签到活动，每日可签到抽奖一次, 随机获取奖品',
+        'brief_introduction' => '购物节签到抽奖 ',
+        'description' => '购物节签到活动，每日可签到抽奖一次, 随机获取奖品 ',
         'author' => '简言',
         'version' => '1.0.0',
     ];
@@ -24,21 +24,30 @@ class AddonConfig
     /**
      * 可授权权限
      *
-     * 例子：
-     *  array(
-     *      'index/index' => '首页',
-     *      'index/edit' => '首页编辑',
-     *  )
+     * 注意：采用Yii2的路由命名方式
+     * 例子：array(
+     *          'index/index' => '首页',
+     *          'cate-index/index' => '分类首页',
+     *          'cate-index/first-data' => '分类数据',
+     *        )
      * @var array
      */
     public $authItem = [
-        'award/index' => '奖品管理',
-        'award/edit' => '奖品编辑',
-        'award/ajax-update' => '奖品状态修改',
-        'award/delete' => '奖品删除',
-        'record/index' => '中奖记录',
-        'record/export' => '中奖导出',
-        'user/index' => '用户管理',
+        'backend' => [
+            'award/index' => '奖品管理',
+            'award/edit' => '奖品编辑',
+            'award/ajax-update' => '奖品状态修改',
+            'award/delete' => '奖品删除',
+            'record/index' => '中奖记录',
+            'record/export' => '中奖导出',
+            'user/index' => '用户管理',
+        ],
+        'frontend' => [
+        ],
+        'wechat' => [
+        ],
+        'api' => [
+        ],
     ];
 
     /**
@@ -54,13 +63,6 @@ class AddonConfig
      * @var bool
      */
     public $isHook = false;
-
-    /**
-     * 小程序
-     *
-     * @var bool
-     */
-    public $isMiniProgram = false;
 
     /**
      * 规则管理
@@ -141,24 +143,24 @@ class AddonConfig
     /**
      * 保存在当前模块的根目录下面
      *
-     * 例如 public $install = 'install.php';
+     * 例如 public $install = 'Install';
      * 安装SQL,只支持php文件
      * @var string
      */
-    public $install = 'install.php';
+    public $install = 'Install';
     
     /**
      * 卸载SQL
      *
      * @var string
      */
-    public $uninstall = 'uninstall.php';
+    public $uninstall = 'UnInstall';
     
     /**
      * 更新SQL
      *
      * @var string
      */
-    public $upgrade = 'upgrade.php';
+    public $upgrade = 'Upgrade';
 }
             

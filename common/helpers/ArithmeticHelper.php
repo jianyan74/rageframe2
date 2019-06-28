@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 /**
@@ -24,19 +25,16 @@ class ArithmeticHelper
         $data = [];
 
         // 判断最小红包乘数量是否大于总金额
-        if ($min * $num > $money)
-        {
+        if ($min * $num > $money) {
             return $data;
         }
 
         // 判断最大红包乘数量是否小于总金额
-        if ($max * $num < $money)
-        {
+        if ($max * $num < $money) {
             return $data;
         }
 
-        while ($num >= 1)
-        {
+        while ($num >= 1) {
             $num--;
             $kmix = max($min, $money - $num * $max);
             $kmax = min($max, $money - $num * $min);
@@ -64,22 +62,19 @@ class ArithmeticHelper
      * @param string $key 返回的数组键值
      * @return bool
      */
-    public static function drawRandom($awards = [],$prob = 'prob', $key = 'id')
+    public static function drawRandom($awards = [], $prob = 'prob', $key = 'id')
     {
-        $rand = mt_rand(1,1000);
+        $rand = mt_rand(1, 1000);
         $proArr = [];
         $pro = 0;
         // 按概率抽奖
-        foreach($awards as $award)
-        {
+        foreach ($awards as $award) {
             $pro += $award[$prob];
             $proArr[] = $pro;
         }
 
-        foreach($proArr as $k => $v)
-        {
-            if ($rand < $v)
-            {
+        foreach ($proArr as $k => $v) {
+            if ($rand < $v) {
                 return $awards[$k][$key];
                 break;
             }
@@ -98,10 +93,8 @@ class ArithmeticHelper
     public static function drawBitslap($awards = [], $prob = 'prob')
     {
         $proArr = [];
-        if ($awards)
-        {
-            foreach ($awards as $key => $value)
-            {
+        if ($awards) {
+            foreach ($awards as $key => $value) {
                 $proArr[$key] = $value[$prob];
             }
 
@@ -113,7 +106,8 @@ class ArithmeticHelper
     }
 
     /**
-     * 经典的概率算法，
+     * 经典的概率算法
+     *
      * $proArr是一个预先设置的数组，
      * 假设数组为：array(100,200,300，400)，
      * 开始是从1,1000 这个概率范围内筛选第一个数是否在他的出现概率范围之内，
@@ -131,16 +125,13 @@ class ArithmeticHelper
         // 概率数组的总概率精度
         $proSum = array_sum($proArr);
         // 概率数组循环
-        foreach ($proArr as $key => $proCur)
-        {
+        foreach ($proArr as $key => $proCur) {
             $randNum = mt_rand(1, $proSum);
-            if ($randNum <= $proCur)
-            {
+
+            if ($randNum <= $proCur) {
                 $result = $key;
                 break;
-            }
-            else
-            {
+            } else {
                 $proSum -= $proCur;
             }
         }

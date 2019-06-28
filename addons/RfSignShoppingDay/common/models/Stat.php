@@ -2,6 +2,7 @@
 
 namespace addons\RfSignShoppingDay\common\models;
 
+use common\behaviors\MerchantBehavior;
 use Yii;
 
 /**
@@ -19,6 +20,8 @@ use Yii;
  */
 class Stat extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -33,7 +36,7 @@ class Stat extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['openid'], 'string', 'max' => 50],
             [['source_page', 'page'], 'string', 'max' => 200],
             [['device', 'ip'], 'string', 'max' => 20],

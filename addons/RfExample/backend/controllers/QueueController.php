@@ -2,7 +2,7 @@
 namespace addons\RfExample\backend\controllers;
 
 use Yii;
-use common\controllers\AddonsBaseController;
+use common\controllers\AddonsController;
 use addons\RfExample\common\components\Job;
 
 /**
@@ -12,7 +12,7 @@ use addons\RfExample\common\components\Job;
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class QueueController extends AddonsBaseController
+class QueueController extends AddonsController
 {
     /**
      * 队列推送demo
@@ -23,8 +23,7 @@ class QueueController extends AddonsBaseController
      */
     public function actionIndex()
     {
-        if (Yii::$app->request->post())
-        {
+        if (Yii::$app->request->post()) {
             // 直接推入队列
             // 功能把内容写入文件
             $id = Yii::$app->queue->push(new Job([

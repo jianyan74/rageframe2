@@ -1,13 +1,20 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\models\wechat\RuleKeyword;
+use common\enums\StatusEnum;
+use common\helpers\Url;
+use backend\widgets\selector\Select;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '自动回复', 'url' => ['rule/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php $form = ActiveForm::begin([]); ?>
+<?php $form = ActiveForm::begin([
+    'id' => 'ruleForm',
+    'enableAjaxValidation' => true,
+    'validationUrl' => Url::to(['edit', 'id' => $model['id']]),
+]); ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
@@ -40,12 +47,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <div class="tabs-container">
                                         <div class="tabs-top">
                                             <ul class="nav nav-tabs">
-                                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 包含关键字</a></li>
-                                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false"> 正则表达式模式匹配</a></li>
-                                                <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false"> 直接接管</a></li>
+                                                <li class="active"><a data-toggle="tab" href="#tab-11" aria-expanded="true"> 包含关键字</a></li>
+                                                <li class=""><a data-toggle="tab" href="#tab-12" aria-expanded="false"> 正则表达式模式匹配</a></li>
+                                                <li class=""><a data-toggle="tab" href="#tab-13" aria-expanded="false"> 直接接管</a></li>
                                             </ul>
                                             <div class="tab-content ">
-                                                <div id="tab-1" class="tab-pane active">
+                                                <div id="tab-11" class="tab-pane active">
                                                     <div class="panel-body">
                                                         <table class="table table-hover">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_INCLUDE?>">
@@ -70,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         <span class="help-block ng-binding">用户进行交谈时，对话中包含上述关键字就执行这条规则。</span>
                                                     </div>
                                                 </div>
-                                                <div id="tab-2" class="tab-pane">
+                                                <div id="tab-12" class="tab-pane">
                                                     <div class="panel-body">
                                                         <table class="table table-hover">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_REGULAR?>">
@@ -110,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                             </span>
                                                     </div>
                                                 </div>
-                                                <div id="tab-3" class="tab-pane">
+                                                <div id="tab-13" class="tab-pane">
                                                     <div class="panel-body">
                                                         <table class="table">
                                                             <tbody id="list-key-<?= RuleKeyword::TYPE_TAKE?>">
@@ -150,19 +157,79 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
-                            <?= $form->field($model, 'status')->radioList(['1' => '启用','0' => '禁用'])->hint('您可以临时禁用这条回复') ?>
+                            <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain)->hint('您可以临时禁用这条回复') ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-12">
-        <?= $this->render($model->module, [
-            'moduleModel' => $moduleModel,
-            'form' => $form,
-        ])?>
+</div>
+
+<div class="col-sm-12">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true" class="text" onclick="setType('text')">内容</a></li>
+            <li><a data-toggle="tab" href="#tab-2" aria-expanded="false" class="image" onclick="setType('image')">图片</a></li>
+            <li><a data-toggle="tab" href="#tab-3" aria-expanded="false" class="news" onclick="setType('news')">图文</a></li>
+            <li><a data-toggle="tab" href="#tab-4" aria-expanded="false" class="video" onclick="setType('video')">视频</a></li>
+            <li><a data-toggle="tab" href="#tab-5" aria-expanded="false" class="voice" onclick="setType('voice')">语音</a></li>
+            <li><a data-toggle="tab" href="#tab-6" aria-expanded="false" class="user-api" onclick="setType('user-api')">自定义接口</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                    <?= $form->field($model, 'text')->textarea([
+                        'id' => 'content'
+                    ])->label(false) ?>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class="panel-body">
+                    <?= $form->field($model, 'image')->widget(Select::class, [
+                        'type' => 'image',
+                    ])->label(false) ?>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane">
+                <div class="panel-body">
+                    <?= $form->field($model, 'news')->widget(Select::class, [
+                        'type' => 'news',
+                        'block' => '由于微信限制，自动回复只能回复一条图文信息，如果有多条图文，默认选择第一条图文',
+                    ])->label(false) ?>
+                </div>
+            </div>
+            <div id="tab-4" class="tab-pane">
+                <div class="panel-body">
+                    <?= $form->field($model, 'video')->widget(Select::class, [
+                        'type' => 'video',
+                    ])->label(false) ?>
+                </div>
+            </div>
+            <div id="tab-5" class="tab-pane">
+                <div class="panel-body">
+                    <?= $form->field($model, 'voice')->widget(Select::class, [
+                        'type' => 'voice',
+                    ])->label(false) ?>
+                </div>
+            </div>
+            <div id="tab-6" class="tab-pane">
+                <div class="panel-body">
+                    <?= $form->field($model, 'api_url')->dropDownList($apiList)->hint('1、添加此模块的规则后，只针对于单个规则定义有效，如果需要全部路由给接口处理，则修改该模块的优先级顺序<br>2、本地文件存放在公共文件夹内(/backend/modules/wechat/userapis)下<br>3、文件名格式为*Api.php，例如：TestApi.php') ?>
+                    <?= $form->field($model, 'default')->textInput()->hint('当接口无回复时，则返回用户此处设置的文字信息，优先级高于“默认关键字”') ?>
+                    <?= $form->field($model, 'cache_time')->textInput()->hint('接口返回数据将缓存在系统中的时限，默认为0不缓存') ?>
+                    <?= $form->field($model, 'description')->textarea()->hint('仅作为后台备注接口的用途') ?>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<div class="hidden">
+    <?= $form->field($model, 'module')->textInput(['id' => 'module']) ?>
+</div>
+<div class="box-footer text-center">
+    <span class="btn btn-primary" onclick="beforSubmit()">保存</span>
+    <span class="btn btn-white" onclick="history.go(-1)">返回</span>
 </div>
 <?php ActiveForm::end(); ?>
 
@@ -195,7 +262,27 @@ $this->params['breadcrumbs'][] = $this->title;
 </script>
 
 <script>
+    var type = 'text';// 1:文字;2:图片;3:图文;4:视频;5:音频;6:自定义接口
+    var module = '<?= $model->module; ?>';
+    var modules = '<?= $modules; ?>';
+    modules = JSON.parse(modules)
+    // 设置类型
+    function setType(num) {
+        type = num;
+    }
+
+    function beforSubmit() {
+        var val = description = title = '';
+        var id = "<?= $model['id']; ?>";
+        $('#module').val(type);
+        $('#ruleForm').submit();
+    }
+
     $(document).ready(function(){
+        if (module) {
+            $('.' + module).trigger('click')
+        }
+
         // 单击展开
         $('.adv').click(function () {
             var id = $(this).attr('id');
@@ -253,5 +340,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 self.parent().parent().find('.key-input').attr('name','');
             }
         });
+
+        $("input[name='SendForm[send_type]']").click(function(){
+            var val = $(this).val();
+            if (val == 1) {
+                $('#send_time').addClass('hide');
+            } else {
+                $('#send_time').removeClass('hide');
+            }
+        })
     });
 </script>

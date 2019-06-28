@@ -2,18 +2,18 @@
 namespace addons\RfArticle\wechat\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use common\helpers\Url;
 use common\enums\StatusEnum;
 use common\helpers\ResultDataHelper;
 use addons\RfArticle\common\models\ArticleSingle;
-use yii\data\Pagination;
 
 /**
  * Class IndexController
  * @package addons\RfArticle\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class IndexController extends WController
+class IndexController extends BaseController
 {
     /**
      * 首页
@@ -26,7 +26,8 @@ class IndexController extends WController
         {
             $data = ArticleSingle::find()
                 ->select(['id', 'title', 'cover', 'created_at'])
-                ->where(['status' => StatusEnum::ENABLED]);
+                ->where(['status' => StatusEnum::ENABLED])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
             $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize, 'validatePage' => false]);
             $models = $data->offset($pages->offset)
@@ -57,6 +58,7 @@ class IndexController extends WController
     {
         $model = ArticleSingle::find()
             ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
 
         $model->view += 1;

@@ -5,7 +5,7 @@ use Yii;
 use yii\data\Pagination;
 use common\models\wechat\Menu;
 use common\helpers\ResultDataHelper;
-use common\models\wechat\FansTags;
+use backend\controllers\BaseController;
 
 /**
  * 自定义菜单
@@ -14,7 +14,7 @@ use common\models\wechat\FansTags;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MenuController extends WController
+class MenuController extends BaseController
 {
     /**
      * 自定义菜单首页
@@ -30,7 +30,9 @@ class MenuController extends WController
     public function actionIndex()
     {
         $type = Yii::$app->request->get('type', Menu::TYPE_CUSTOM);
-        $data = Menu::find()->where(['type' => $type]);
+        $data = Menu::find()
+            ->where(['type' => $type])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('status desc, id desc')
@@ -66,96 +68,28 @@ class MenuController extends WController
         $type = $request->get('type');
         $model = $this->findModel($id);
 
-        if (Yii::$app->request->isPost)
-        {
+        if (Yii::$app->request->isPost) {
             $postInfo = Yii::$app->request->post();
             $model = $this->findModel($postInfo['id']);
             $model->attributes = $postInfo;
 
-            if (!isset($postInfo['list']))
-            {
+            if (!isset($postInfo['list'])) {
                 return ResultDataHelper::json(422, '请添加菜单');
             }
 
-            $buttons = [];
-            foreach ($postInfo['list'] as &$button)
-            {
-                $arr = [];
-                // 判断是否有子菜单
-                if (isset($button['sub_button']))
-                {
-                    $arr['name'] = $button['name'];
-                    foreach ($button['sub_button'] as &$sub)
-                    {
-                        $sub_button = Menu::mergeButton($sub);
-                        $sub_button['name'] = $sub['name'];
-                        $sub_button['type'] = $sub['type'];
-                        $arr['sub_button'][] = $sub_button;
-                    }
-                }
-                else
-                {
-                    $arr = Menu::mergeButton($button);
-                    $arr['name'] = $button['name'];
-                    $arr['type'] = $button['type'];
-                }
-
-                $buttons[] = $arr;
-            }
-
-            $model->menu_data = serialize($buttons);
-            // 判断写入是否成功
-            if (!$model->validate())
-            {
-                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
-            }
-
-            // 个性化菜单
-            if ($model->type == Menu::TYPE_INDIVIDUATION)
-            {
-                $matchRule = [
-                    "tag_id" => $model->tag_id,
-                    "sex" => $model->sex,
-                    "country" => "中国",
-                    "province" => trim($model->province),
-                    "client_platform_type" => $model->client_platform_type,
-                    "language" => $model->language,
-                    "city" => trim($model->city),
-                ];
-
-                // 创建自定义菜单
-                $menuResult = Yii::$app->wechat->app->menu->create($buttons, $matchRule);
-                if ($error = Yii::$app->debris->getWechatError($menuResult, false))
-                {
-                    return ResultDataHelper::json(422, $error);
-                }
-
-                $model->menu_id = $menuResult['menuid'];
-                $model->save();
-
+            try {
+                Yii::$app->services->wechatMenu->createSave($model, $postInfo['list']);
                 return ResultDataHelper::json(200, "修改成功");
+            } catch (\Exception $e) {
+                return ResultDataHelper::json(422, $e->getMessage());
             }
-
-            // 验证微信报错
-            if ($error = Yii::$app->debris->getWechatError(Yii::$app->wechat->app->menu->create($buttons), false))
-            {
-                return ResultDataHelper::json(422, $error);
-            }
-
-            // 判断写入是否成功
-            if (!$model->save())
-            {
-                return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
-            }
-
-            return ResultDataHelper::json(200, "修改成功");
         }
 
         return $this->render('edit', [
             'model' => $model,
             'menuTypes' => Menu::$menuTypes,
             'type' => $type,
-            'fansTags' => FansTags::getList()
+            'fansTags' => Yii::$app->services->wechatFansTags->getList()
         ]);
     }
 
@@ -171,8 +105,7 @@ class MenuController extends WController
     public function actionDelete($id, $type)
     {
         $model = $this->findModel($id);
-        if ($model->delete())
-        {
+        if ($model->delete()) {
             // 个性化菜单删除
             !empty($model['menu_id']) && Yii::$app->wechat->app->menu->delete($model['menu_id']);
             return $this->message("删除成功", $this->redirect(['index', 'type' => $type]));
@@ -195,16 +128,14 @@ class MenuController extends WController
      */
     public function actionSave($id)
     {
-        if ($id)
-        {
+        if ($id) {
             $model = $this->findModel($id);
             $model->save();
 
             // 创建微信菜单
             $createReturn = Yii::$app->wechat->app->menu->create(unserialize($model->menu_data));
             // 解析微信接口是否报错
-            if ($error = Yii::$app->debris->getWechatError($createReturn, false))
-            {
+            if ($error = Yii::$app->debris->getWechatError($createReturn, false)) {
                 return $this->message($error, $this->redirect(['index']), 'error');
             }
         }
@@ -216,68 +147,27 @@ class MenuController extends WController
      * 同步菜单
      *
      * @return array
-     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionSync()
     {
-        // 获取菜单列表
-        $list = Yii::$app->wechat->app->menu->list();
-        // 解析微信接口是否报错
-        if ($error = Yii::$app->debris->getWechatError($list, false))
-        {
-            return ResultDataHelper::json(404, $error);
+        try {
+            Yii::$app->services->wechatMenu->sync();
+            return ResultDataHelper::json(200, '同步菜单成功');
+        } catch (\Exception $e) {
+            return ResultDataHelper::json(422, $e->getMessage());
         }
-
-        // 开始获取自定义菜单同步
-        if (!empty($list['menu']))
-        {
-            $model = new Menu;
-            $model->title = "默认菜单";
-            $model = $model->loadDefaultValues();
-            $model->menu_data = serialize($list['menu']['button']);
-            $model->menu_id = isset($list['menu']['menuid']) ? $list['menu']['menuid'] : '';
-            $model->save();
-        }
-
-        // 个性化菜单
-        if (!empty($list['conditionalmenu']))
-        {
-            foreach ($list['conditionalmenu'] as $menu)
-            {
-                if (!($model = Menu::findOne(['menu_id' => $menu['menuid']])))
-                {
-                    $model = new Menu;
-                    $model = $model->loadDefaultValues();
-                }
-
-                $model->title = "个性化菜单";
-                $model->attributes = $menu['matchrule'];
-                $model->type = Menu::TYPE_INDIVIDUATION;
-                $model->tag_id = isset($menu['group_id']) ? $menu['group_id'] : '';
-                $model->menu_data = serialize($menu['button']);
-                $model->menu_id = $menu['menuid'];
-                $model->save();
-            }
-        }
-
-        return ResultDataHelper::json(200, '同步菜单成功');
     }
 
     /**
      * 返回模型
      *
      * @param $id
-     * @return $this|Menu|static
+     * @return array|Menu|null|\yii\db\ActiveRecord
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = Menu::findOne($id))))
-        {
+        if (empty($id) || empty(($model = Menu::find()->where(['id' => $id])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
             $model = new Menu;
             return $model->loadDefaultValues();
         }

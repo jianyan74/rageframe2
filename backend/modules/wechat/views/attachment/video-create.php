@@ -17,6 +17,10 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'file_name')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
         <?= $form->field($model, 'local_url')->widget('common\widgets\webuploader\Files', [
+            'type' => 'videos',
+            'themeConfig' => [
+                'select' => false,// 选择在线图片
+            ],
             'config' => [
                 'pick' => [
                     'multiple' => false,
@@ -27,11 +31,11 @@ $form = ActiveForm::begin([
                 ],
                 'formData' => [
                     // 保留原名称
-                    'originalName' => true
+                    'originalName' => true,
+                    'drive' => 'local',
                 ],
                 'fileSingleSizeLimit' => 10240 * 1024 * 2,// 大小限制
                 'independentUrl' => true, // 不受接管上传Url
-                'select' => false,// 选择在线图片
             ]
         ])->label('永久视频')->hint('永久视频只支持 rm/rmvb/wmv/avi/mpg/mpeg/mp4 格式,大小不超过为20M, 上限 1000 个');?>
     </div>

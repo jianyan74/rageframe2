@@ -2,9 +2,9 @@
 namespace common\models\common;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -63,7 +63,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::find()
+            ->where([
+                'id' => $id,
+                'status' => self::STATUS_ACTIVE,
+            ])
+            ->one();
     }
 
     /**
@@ -80,12 +85,15 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * 通过用户名查找用户
      *
-     * @param string $username
-     * @return static|null
+     * @param $username
+     * @return array|null|ActiveRecord
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::find()->where([
+            'username' => $username,
+            'status' => self::STATUS_ACTIVE,
+        ])->one();
     }
 
     /**
@@ -198,5 +206,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * 关联授权角色
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAssignment()
+    {
+        return $this->hasOne(AuthAssignment::class, ['user_id' => 'id'])
+            ->where(['type' => Yii::$app->id]);
     }
 }

@@ -1,18 +1,20 @@
 <?php
 namespace addons\RfExample\backend\controllers;
 
+use common\helpers\ResultDataHelper;
 use Yii;
 use addons\RfExample\common\models\Curd as CurdModel;
 use common\models\common\SearchModel;
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
+use common\enums\StatusEnum;
+use common\controllers\AddonsController;
 
 /**
  * Class GridCurdController
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class GridCurdController extends AddonsBaseController
+class GridCurdController extends AddonsController
 {
     use Curd;
 
@@ -38,7 +40,11 @@ class GridCurdController extends AddonsBaseController
             'pageSize' => $this->pageSize
         ]);
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -49,28 +55,24 @@ class GridCurdController extends AddonsBaseController
     /**
      * 编辑/创建
      *
-     * @return string|yii\console\Response|yii\web\Response
+     * @return mixed
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
-        $id = $request->get('id', null);
-        $model = $this->findModel($id);
-        $model->covers = unserialize($model->covers);
-        $model->files = json_decode($model->files, true);
-        if ($model->load($request->post()))
-        {
-            $model->covers = serialize($model->covers);
-            $model->files = json_encode($model->files);
+        $this->layout = '@backend/views/layouts/default';
 
-            if ($model->save())
-            {
-                return $this->redirect(['index']);
+        $id = Yii::$app->request->get('id', null);
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                return ResultDataHelper::json(200, '保存成功');
             }
+
+            return ResultDataHelper::json(422, $this->getError($model));
         }
 
-        return $this->render('edit',[
-            'model' => $model
+        return $this->render($this->action->id, [
+            'model' => $model,
         ]);
     }
 }

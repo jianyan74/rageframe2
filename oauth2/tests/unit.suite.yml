@@ -1,0 +1,2 @@
+suite_namespace: oauth2\tests\unit
+actor: UnitTester

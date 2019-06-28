@@ -2,6 +2,7 @@
 use common\helpers\Url;
 use common\helpers\Html;
 use yii\widgets\ActiveForm;
+use backend\widgets\selector\Select;
 ?>
 
 <?php $form = ActiveForm::begin([
@@ -33,86 +34,63 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <div class="nav-tabs-custom">
+            <div class="nav-tabs-custom" style="box-shadow: 0 1px 1px rgba(0,0,0,0);">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true" onclick="setType(1)">内容</a></li>
-                    <li><a data-toggle="tab" href="#tab-2" aria-expanded="false" onclick="setType(2)">图片</a></li>
-                    <li><a data-toggle="tab" href="#tab-3" aria-expanded="false" onclick="setType(3)">图文</a></li>
-                    <li><a data-toggle="tab" href="#tab-4" aria-expanded="false" onclick="setType(4)">视频</a></li>
-                    <li><a data-toggle="tab" href="#tab-5" aria-expanded="false" onclick="setType(5)">音频</a></li>
+                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true" onclick="setType('text')">内容</a></li>
+                    <li><a data-toggle="tab" href="#tab-2" aria-expanded="false" onclick="setType('image')">图片</a></li>
+                    <li><a data-toggle="tab" href="#tab-3" aria-expanded="false" onclick="setType('news')">图文</a></li>
+                    <li><a data-toggle="tab" href="#tab-4" aria-expanded="false" onclick="setType('video')">视频</a></li>
+                    <li><a data-toggle="tab" href="#tab-5" aria-expanded="false" onclick="setType('voice')">音频</a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="tab-1" class="tab-pane active">
                         <div class="panel-body">
                             <?= Html::textarea('content', '', [
                                 'class' => 'form-control',
-                                'id' => 'content',
+                                'id' => 'text',
                             ])?>
                         </div>
                     </div>
                     <div id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\selector\Select::widget([
-                                'name' => 'images',
-                                'value' => '',
+                            <?= Select::widget([
+                                'name' => 'image',
                                 'type' => 'image',
-                                'label' => '图片',
                             ])?>
                         </div>
                     </div>
                     <div id="tab-3" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\selector\Select::widget([
+                            <?= Select::widget([
                                 'name' => 'news',
-                                'value' => '',
                                 'type' => 'news',
-                                'label' => '图文',
                             ])?>
                         </div>
                     </div>
                     <div id="tab-4" class="tab-pane">
                         <div class="panel-body">
-                            <div class="form-group required">
-                                <label class="control-label" for="manager-mobile">标题</label>
-                                <?= Html::input('text', 'title', '', [
-                                    'class' => 'form-control',
-                                    'id' => 'title',
-                                ])?>
-                            </div>
-                            <div class="form-group required">
-                                <label class="control-label" for="manager-mobile">视频说明</label>
-                                <?= Html::input('text', 'description', '', [
-                                    'class' => 'form-control',
-                                    'id' => 'description',
-                                ])?>
-                            </div>
-                            <?= \backend\widgets\selector\Select::widget([
+                            <?= Select::widget([
                                 'name' => 'video',
-                                'value' => '',
                                 'type' => 'video',
-                                'label' => '视频',
                             ])?>
                         </div>
                     </div>
                     <div id="tab-5" class="tab-pane">
                         <div class="panel-body">
-                            <?= \backend\widgets\selector\Select::widget([
+                            <?= Select::widget([
                                 'name' => 'voice',
-                                'value' => '',
                                 'type' => 'voice',
-                                'label' => '语音',
                             ])?>
                         </div>
                     </div>
+                    <div class="col-sm-12">注意：三天内有互动的才可发送消息</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<?= Html::hiddenInput('type', '1', [
-        'id' => 'type'
-])?>
+<?= Html::hiddenInput('type', 'text', ['id' => 'type'])?>
 
 <div class="modal-footer">
     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
@@ -121,51 +99,37 @@ use yii\widgets\ActiveForm;
 <?php ActiveForm::end(); ?>
 
 <script>
-    var type = 1;// 1:文字;2:图片;3:图文;4:视频;5:音频;
-
     // 设置类型
-    function setType(num) {
-        type = num;
-        $('#type').val(num)
+    function setType(type) {
+        $('#type').val(type)
     }
 
     function beforSubmit() {
         var val = description = title = '';
         var id = "<?= $model['id']; ?>";
-        if (type == 1 && !$('#content').val()) {
+        var type = $('#type').val();
+
+        if (type == 'text' && !$('#text').val()) {
             rfWarning('请填写内容');
             return false;
         }
 
-        if (type == 2 && !$("input[name='images']").val()) {
+        if (type == 'image' && !$("input[name='image']").val()) {
             rfWarning('请选择图片');
             return false;
         }
 
-        if (type == 3 && !$("input[name='news']").val()) {
+        if (type == 'news' && !$("input[name='news']").val()) {
             rfWarning('请选择图文');
             return false;
         }
 
-        if (type == 4) {
-
-            if (!$('#title').val()){
-                rfWarning('请填写标题');
-                return false;
-            }
-
-            if (!$('#description').val()){
-                rfWarning('请填写视频说明');
-                return false;
-            }
-
-            if (!$("input[name='video']").val()) {
-                rfWarning('请选择视频');
-                return false;
-            }
+        if (type == 'video' && !$("input[name='video']").val()) {
+            rfWarning('请选择视频');
+            return false;
         }
 
-        if (type == 5 && !$("input[name='voice']").val()) {
+        if (type == 'voice' && !$("input[name='voice']").val()) {
             rfWarning('请选择语音');
             return false;
         }
@@ -184,6 +148,5 @@ use yii\widgets\ActiveForm;
                 }
             }
         });
-
     }
 </script>

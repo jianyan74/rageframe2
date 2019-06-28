@@ -4,7 +4,6 @@ namespace addons\RfSignShoppingDay\backend\controllers;
 use yii\data\Pagination;
 use common\helpers\ExcelHelper;
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
 use addons\RfSignShoppingDay\common\models\Record;
 
 /**
@@ -12,11 +11,14 @@ use addons\RfSignShoppingDay\common\models\Record;
  * @package addons\RfSignShoppingDay\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class RecordController extends AddonsBaseController
+class RecordController extends BaseController
 {
     use Curd;
 
-    public $modelClass = '\addons\RfSignShoppingDay\common\models\Record';
+    /**
+     * @var Record
+     */
+    public $modelClass = Record::class;
 
     /**
      * 首页
@@ -25,7 +27,9 @@ class RecordController extends AddonsBaseController
      */
     public function actionIndex()
     {
-        $data = Record::find()->where(['is_win' => 1]);
+        $data = Record::find()
+            ->where(['is_win' => 1])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')

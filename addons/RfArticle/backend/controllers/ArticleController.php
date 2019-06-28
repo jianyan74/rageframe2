@@ -6,7 +6,6 @@ use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\components\Curd;
 use common\models\common\SearchModel;
-use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\ArticleTag;
 use addons\RfArticle\common\models\ArticleTagMap;
@@ -19,14 +18,14 @@ use addons\RfArticle\common\models\Article;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class ArticleController extends AddonsBaseController
+class ArticleController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var Article
      */
-    public $modelClass = 'addons\RfArticle\common\models\Article';
+    public $modelClass = Article::class;
 
     /**
      * 首页
@@ -49,7 +48,9 @@ class ArticleController extends AddonsBaseController
 
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+        $dataProvider->query
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
@@ -76,20 +77,16 @@ class ArticleController extends AddonsBaseController
         // 推荐位
         $positionExplain = Article::$positionExplain;
         $keys = [];
-        foreach ($positionExplain as $key => $value)
-        {
-            if (Article::checkPosition($key, $model->position))
-            {
+        foreach ($positionExplain as $key => $value) {
+            if (Article::checkPosition($key, $model->position)) {
                 $keys[] = $key;
             }
         }
         $model->position = $keys;
 
-        if ($model->load($request->post()) && $model->save())
-        {
+        if ($model->load($request->post()) && $model->save()) {
             // 更新文章标签
             ArticleTagMap::addTags($model->id, $model->tags);
-
             return $this->redirect(['index']);
         }
 
@@ -111,8 +108,7 @@ class ArticleController extends AddonsBaseController
     {
         $model = $this->findModel($id);
         $model->status = StatusEnum::ENABLED;
-        if ($model->save())
-        {
+        if ($model->save()) {
             return $this->message("还原成功", $this->redirect(['recycle']));
         }
 
@@ -129,8 +125,7 @@ class ArticleController extends AddonsBaseController
     {
         $model = $this->findModel($id);
         $model->status = StatusEnum::DELETE;
-        if ($model->save())
-        {
+        if ($model->save()) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 
@@ -144,7 +139,9 @@ class ArticleController extends AddonsBaseController
      */
     public function actionRecycle()
     {
-        $data = Article::find()->where(['<', 'status', StatusEnum::DISABLED]);
+        $data = Article::find()
+            ->where(['<', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')

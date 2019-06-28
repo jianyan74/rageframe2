@@ -1,12 +1,14 @@
 <?php
+
 namespace common\models\common;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%common_sms_log}}".
  *
  * @property int $id
+ * @property string $merchant_id 商户id
  * @property string $member_id 用户id
  * @property string $mobile 手机号码
  * @property string $code 验证码
@@ -23,6 +25,21 @@ use Yii;
  */
 class SmsLog extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
+    const USAGE_LOGIN = 'login';
+    const USAGE_REGISTER = 'register';
+    const USAGE_UP_PWD = 'up-pwd';
+
+    /**
+     * @var array
+     */
+    public static $usageExplain = [
+        self::USAGE_LOGIN => '登录',
+        self::USAGE_REGISTER => '注册',
+        self::USAGE_UP_PWD => '重置密码',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -37,10 +54,9 @@ class SmsLog extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['member_id', 'error_code', 'used', 'use_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'error_code', 'used', 'mobile', 'code', 'use_time', 'status', 'created_at', 'updated_at'], 'integer'],
             [['error_data'], 'string'],
-            [['mobile', 'usage'], 'string', 'max' => 20],
-            [['code'], 'string', 'max' => 6],
+            [['usage'], 'string', 'max' => 20],
             [['content'], 'string', 'max' => 500],
             [['error_msg'], 'string', 'max' => 200],
         ];
@@ -53,7 +69,8 @@ class SmsLog extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'member_id' => 'Member ID',
+            'merchant_id' => '商户',
+            'member_id' => '用户',
             'mobile' => '手机号码',
             'code' => '验证码',
             'content' => '内容',
@@ -64,8 +81,8 @@ class SmsLog extends \common\models\common\BaseModel
             'used' => '是否使用',
             'use_time' => '使用时间',
             'status' => '状态',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => '创建时间',
+            'updated_at' => '修改时间',
         ];
     }
 }

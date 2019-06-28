@@ -2,17 +2,17 @@
 
 目录
 
-- 获取单个信息
-- 修改个人信息
+- 详情
+- 修改
 
 > 注意这里的ID为用户ID
 
-### 获取单个信息
+### 详情
 
 请求地址(Get)
 
 ```
-/v1/member/member/[ID]?access-token=[登陆获取到access-token]
+/v1/member/member/[ID]?access-token=[access-token]
 ```
 
 参数
@@ -42,12 +42,12 @@
 }
 ```
 
-### 修改个人信息
+### 修改
 
 请求地址(Put)
 
 ```
-/v1/member/member/[ID]?access-token=[登陆获取到access-token]
+/v1/member/member/[ID]?access-token=[access-token]
 ```
 
 参数

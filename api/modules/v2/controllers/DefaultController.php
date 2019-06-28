@@ -1,4 +1,5 @@
 <?php
+
 namespace api\modules\v2\controllers;
 
 use Yii;
@@ -14,4 +15,21 @@ use api\controllers\OnAuthController;
 class DefaultController extends OnAuthController
 {
     public $modelClass = '';
+
+    /**
+     * 不用进行登录验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
+     *
+     * @var array
+     */
+    protected $optional = ['index'];
+
+    /**
+     * @return string|\yii\data\ActiveDataProvider
+     */
+    public function actionIndex()
+    {
+        return 'v2 default index';
+    }
 }

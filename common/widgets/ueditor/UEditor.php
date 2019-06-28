@@ -1,7 +1,6 @@
 <?php
 namespace common\widgets\ueditor;
 
-use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Json;
@@ -88,10 +87,8 @@ class UEditor extends InputWidget
 
         //  由于百度上传不能传递数组，所以转码成为json
         !isset($this->formData) && $this->formData = [];
-        foreach ($this->formData as $key => &$formDatum)
-        {
-            if (!empty($formDatum) && is_array($formDatum))
-            {
+        foreach ($this->formData as $key => &$formDatum) {
+            if (!empty($formDatum) && is_array($formDatum)) {
                 $formDatum = Json::encode($formDatum);
             }
         }
@@ -116,9 +113,8 @@ UEDITOR;
 
         $this->getView()->registerJs($script);
 
-        if ($this->hasModel())
-        {
-            return Html::activeTextarea($this->model, $this->attribute);
+        if ($this->hasModel()) {
+            return Html::activeTextarea($this->model, $this->attribute, ['id' => $id]);
         }
 
         return Html::textarea(ArrayHelper::getValue($this->config, 'textarea', $this->name), $this->value, ['id' => $id]);

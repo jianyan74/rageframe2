@@ -1,12 +1,14 @@
 <?php
 namespace services\common;
 
-use common\queues\SmsJob;
 use Yii;
-use Overtrue\EasySms\EasySms;
+use yii\web\UnprocessableEntityHttpException;
+use yii\helpers\Json;
+use common\queues\SmsJob;
 use common\components\Service;
 use common\models\common\SmsLog;
-use yii\web\UnprocessableEntityHttpException;
+use common\helpers\ArrayHelper;
+use Overtrue\EasySms\EasySms;
 
 /**
  * Class SmsService
@@ -50,9 +52,9 @@ class SmsService extends Service
                     'file' => Yii::getAlias('runtime') . '/easy-sms.log',
                 ],
                 'aliyun' => [
-                    'access_key_id' => '',
-                    'access_key_secret' => '',
-                    'sign_name' => '',
+                    'access_key_id' => Yii::$app->debris->config('sms_aliyun_accesskeyid'),
+                    'access_key_secret' => Yii::$app->debris->config('sms_aliyun_accesskeysecret'),
+                    'sign_name' => Yii::$app->debris->config('sms_aliyun_sign_name'),
                 ]
             ],
         ];
@@ -70,20 +72,20 @@ class SmsService extends Service
      * @param int $member_id
      * @throws UnprocessableEntityHttpException
      */
-    public function send($mobile, $code, $member_id = 0)
+    public function send($mobile, $code, $usage, $member_id = 0)
     {
-        if ($this->queueSwitch == true)
-        {
+        if ($this->queueSwitch == true) {
             $messageId = Yii::$app->queue->push(new SmsJob([
                 'mobile' => $mobile,
                 'code' => $code,
+                'usage' => $usage,
                 'member_id' => $member_id,
             ]));
 
             return $messageId;
         }
 
-        return $this->realSend($mobile, $code, $member_id = 0);
+        return $this->realSend($mobile, $code, $usage, $member_id = 0);
     }
 
     /**
@@ -94,13 +96,21 @@ class SmsService extends Service
      * @param int $member_id
      * @throws UnprocessableEntityHttpException
      */
-    public function realSend($mobile, $code, $member_id = 0)
+    public function realSend($mobile, $code, $usage, $member_id = 0)
     {
-        try
-        {
+        $template = Yii::$app->debris->config('sms_aliyun_template');
+        !empty($template) && $template = ArrayHelper::map(unserialize($template), 'group', 'template');
+        $templateID = $template[$usage] ?? '';
+
+        try {
+            // 校验发送是否频繁
+            if (($smsLog = $this->findByMobile($mobile)) && $smsLog['created_at'] + 60 > time()) {
+                throw new UnprocessableEntityHttpException('请不要频繁发送短信');
+            }
+
             $easySms = new EasySms($this->config);
             $result = $easySms->send($mobile, [
-                'template' => '',
+                'template' => $templateID,
                 'data' => [
                     'code' => $code,
                 ],
@@ -108,19 +118,19 @@ class SmsService extends Service
 
             $this->saveLog([
                 'mobile' => $mobile,
-                'content' => $code,
+                'code' => (string) $code,
                 'member_id' => $member_id,
+                'usage' => $usage,
                 'error_code' => 200,
                 'error_msg' => 'ok',
-                'error_data' => json_encode($result),
+                'error_data' => Json::encode($result),
             ]);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->saveLog([
                 'mobile' => $mobile,
-                'content' => $code,
+                'code' => (string) $code,
                 'member_id' => $member_id,
+                'usage' => $usage,
                 'error_code' => 422,
                 'error_msg' => '发送失败',
                 'error_data' => $e->getMessage(),
@@ -128,6 +138,19 @@ class SmsService extends Service
 
             throw new UnprocessableEntityHttpException('短信发送失败');
         }
+    }
+
+    /**
+     * @param $mobile
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByMobile($mobile)
+    {
+        return SmsLog::find()
+            ->where(['mobile' => $mobile])
+            ->orderBy('id desc')
+            ->asArray()
+            ->one();
     }
 
     /**

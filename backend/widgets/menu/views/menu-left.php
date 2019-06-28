@@ -6,10 +6,10 @@
 <?php } ?>
 
 <!--扩展插件模块信息-->
-<?php foreach($addonMenus as $key => $addon){ ?>
-    <li class="treeview rfLeftMenu rfLeftMenu-addons <?php if(Yii::$app->params['isMobile'] == false) echo 'hide'; ?>">
+<?php foreach($addonsMenus as $key => $addon){ ?>
+    <li class="treeview rfLeftMenu rfLeftMenuAddon hide">
         <a href="#">
-            <i class="<?= Yii::$app->params['addonsGroup'][$key]['icon']; ?>"></i>
+            <i class="<?= Yii::$app->params['addonsGroup'][$key]['icon']; ?> rf-i"></i>
             <span><?= Yii::$app->params['addonsGroup'][$key]['title']; ?></span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
@@ -19,7 +19,7 @@
             <?php foreach($addon as $value){?>
                 <li>
                     <a class="J_menuItem" href="<?= $value['menuUrl']; ?>">
-                        <i class="fa fa-circle-o"></i>
+                        <i class="fa "></i>
                         <?= $value['title']; ?>
                     </a>
                 </li>

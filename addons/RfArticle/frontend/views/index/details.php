@@ -2,7 +2,7 @@
 use common\helpers\AddonHelper;
 use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = $article['title'];
 ?>
 
@@ -44,7 +44,7 @@ $this->title = $article['title'];
                 </div>
             </div>
             <!--获取左侧内页推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 4]); ?>
+            <?= \common\helpers\Hook::to('RfArticle', ['position' => 4]); ?>
         </div>
     </div>
 </div>

@@ -1,13 +1,13 @@
 <?php
 namespace common\models\wechat;
 
-use common\helpers\ArrayHelper;
-use common\models\sys\Addons;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%wechat_setting}}".
  *
  * @property int $id
+ * @property string $merchant_id 商户id
  * @property string $history 历史消息参数设置
  * @property string $special 特殊消息回复参数
  * @property int $status 状态[-1:删除;0:禁用;1启用]
@@ -16,6 +16,8 @@ use common\models\sys\Addons;
  */
 class Setting extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * 特殊消息回复类别 - 关键字
      */
@@ -39,8 +41,8 @@ class Setting extends \common\models\common\BaseModel
     public function rules()
     {
         return [
+            [['merchant_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['special'], 'string'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
             [['history'], 'string', 'max' => 200],
         ];
     }
@@ -52,88 +54,12 @@ class Setting extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'history' => '参数',
-            'special' => '特殊消息回复',
+            'merchant_id' => '商户',
+            'history' => '历史消息参数设置',
+            'special' => '特殊消息回复参数',
             'status' => '状态',
-            'created_at' => '创建时间',
-            'updated_at' => '修改时间',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
-    }
-
-    /**
-     * 获取特殊消息回复
-     *
-     * @return array
-     */
-    public static function specialConfig()
-    {
-        // 获取支持的模块
-        $modules = Addons::getList();
-
-        $list = Account::$typeExplanation;
-        $defaultList = [];
-        foreach ($list as $key => $value)
-        {
-            $defaultList[$key]['title'] = $value;
-            $defaultList[$key]['type'] = self::SPECIAL_TYPE_KEYWORD;
-            $defaultList[$key]['content'] = '';
-            $defaultList[$key]['module'] = [];
-
-            foreach ($modules as $module)
-            {
-                $wechat_message = !empty($module['wechat_message']) ? unserialize($module['wechat_message']) : [];
-                $wechat_message = $wechat_message ?? [];
-
-                foreach ($wechat_message as $item)
-                {
-                    if ($key == $item)
-                    {
-                        $defaultList[$key]['module'][$module['name']] = $module['title'];
-                        break;
-                    }
-                }
-            }
-        }
-
-        $model = Setting::find()->one();
-        if (isset($model['special']))
-        {
-            $defaultList = ArrayHelper::merge($defaultList, json_decode($model['special'], true));
-        }
-
-        return $defaultList;
-    }
-
-    /**
-     * 获取数据
-     *
-     * @return array|mixed
-     */
-    public static function getData($filds)
-    {
-        $setting = Setting::find()->asArray()->one();
-        if (!empty($setting[$filds]))
-        {
-            return json_decode($setting[$filds], true);
-        }
-
-        return [];
-    }
-
-    /**
-     * 写入字段数据
-     *
-     * @return array|mixed
-     */
-    public static function setData($filds, $data)
-    {
-        $setting = Setting::find()->one();
-        if (!$setting)
-        {
-            $setting = new self();
-        }
-
-        $setting->$filds = json_encode($data);
-        return $setting->save();
     }
 }

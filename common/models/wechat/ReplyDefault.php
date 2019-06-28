@@ -1,6 +1,7 @@
 <?php
 namespace common\models\wechat;
 
+use common\behaviors\MerchantBehavior;
 use common\models\common\BaseModel;
 
 /**
@@ -15,6 +16,8 @@ use common\models\common\BaseModel;
  */
 class ReplyDefault extends BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +32,7 @@ class ReplyDefault extends BaseModel
     public function rules()
     {
         return [
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['follow_content', 'default_content'], 'string', 'max' => 200],
             [['follow_content', 'default_content'], 'trim'],
         ];
@@ -48,18 +51,5 @@ class ReplyDefault extends BaseModel
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
-    }
-
-    /**
-     * @return array|ReplyDefault|null|\yii\db\ActiveRecord
-     */
-    public static function getFirstData()
-    {
-        if (!empty(($model = self::find()->one())))
-        {
-            return $model;
-        }
-
-        return new self();
     }
 }

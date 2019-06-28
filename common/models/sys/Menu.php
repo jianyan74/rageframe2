@@ -2,26 +2,25 @@
 namespace common\models\sys;
 
 use Yii;
-use common\helpers\Auth;
-use common\enums\StatusEnum;
-use common\helpers\ArrayHelper;
+use common\helpers\TreeHelper;
 
 /**
  * This is the model class for table "{{%sys_menu}}".
  *
  * @property int $id
  * @property string $title 标题
- * @property int $pid 上级id
- * @property string $url 链接地址
- * @property string $menu_css 样式
- * @property int $sort 排序
+ * @property int $cate_id 分类id
+ * @property string $pid 上级id
+ * @property string $url 路由
+ * @property string $icon 样式
  * @property int $level 级别
- * @property string $params 参数
- * @property string $cate_id menu:菜单;sys:系统菜单
  * @property int $dev 开发者[0:都可见;开发模式可见]
+ * @property int $sort 排序
+ * @property string $params 参数
+ * @property string $tree 树
  * @property int $status 状态[-1:删除;0:禁用;1启用]
- * @property int $created_at 添加时间
- * @property int $updated_at 修改时间
+ * @property string $created_at 添加时间
+ * @property string $updated_at 修改时间
  */
 class Menu extends \common\models\common\BaseModel
 {
@@ -39,13 +38,14 @@ class Menu extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title', 'cate_id'], 'required'],
-            [['cate_id', 'pid', 'sort', 'level', 'dev', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'url', 'menu_css'], 'string', 'max' => 50],
-            ['url', 'default', 'value' => "#"],
-            [['pid','sort'], 'default', 'value' => 0],
+            [['title', 'pid', 'cate_id'], 'required'],
+            [['cate_id', 'pid', 'level', 'dev', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['params'], 'string'],
+            [['title', 'url'], 'string', 'max' => 50],
+            [['icon'], 'string', 'max' => 20],
+            [['tree'], 'string', 'max' => 300],
             [['level'], 'default', 'value' => 1],
-            [['params'], 'safe'],
+            [['url', 'title', 'icon'], 'trim'],
         ];
     }
 
@@ -57,65 +57,19 @@ class Menu extends \common\models\common\BaseModel
         return [
             'id' => 'ID',
             'title' => '标题',
-            'pid' => '父级id',
-            'url' => '路由',
-            'menu_css' => '图标css',
-            'sort' => '排序',
-            'level' => '级别',
-            'params' => '参数',
             'cate_id' => '分类',
-            'dev' => '仅开发模式可见',
+            'pid' => '父级',
+            'tree' => '树',
+            'url' => '路由',
+            'icon' => '图标',
+            'level' => '级别',
+            'dev' => '开发可见',
+            'sort' => '排序',
+            'params' => '参数',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
-    }
-
-    /**
-     * 返回菜单列表
-     *
-     * @param bool $status 状态
-     * @return array
-     */
-    public static function getList($status = false)
-    {
-        $data = Menu::find()->andFilterWhere(['status' => $status]);
-        // 关闭开发模式
-        if (empty(Yii::$app->debris->config('sys_dev')))
-        {
-            $data = $data->andWhere(['dev' => StatusEnum::DISABLED]);
-        }
-
-        $models = $data->orderBy('cate_id asc, sort asc')
-            ->with(['cate'])
-            ->asArray()
-            ->all();
-
-        // 获取当前所有的权限信息
-        $auth = Yii::$app->services->sys->isAuperAdmin() ? false : Auth::getAuth();
-        foreach ($models as $key => &$model)
-        {
-            // 判断权限是否拥有且支持参数传递
-            if (false === $auth || in_array($model['url'], $auth))
-            {
-                $params = unserialize($model['params']);
-                empty($params) && $params = [];
-                $model['fullUrl'][] = $model['url'];
-                foreach ($params as $param)
-                {
-                    if (!empty($param['key']))
-                    {
-                        $model['fullUrl'][$param['key']] = $param['value'];
-                    }
-                }
-            }
-            else
-            {
-                unset($models[$key]);
-            }
-        }
-
-        return ArrayHelper::itemsMerge($models);
     }
 
     /**
@@ -129,14 +83,63 @@ class Menu extends \common\models\common\BaseModel
     }
 
     /**
-     * 删除全部子类
-     * 
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(self::class, ['id' => 'pid']);
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord) {
+            if ($this->pid == 0) {
+                $this->tree = TreeHelper::defaultTreeKey();
+            } else {
+                $parent = $this->parent;
+                $this->cate_id = $parent->cate_id;
+                $this->level = $parent->level + 1;
+                $this->tree = $parent->tree . TreeHelper::prefixTreeKey($parent->id);
+            }
+        } else {
+            // 修改父类
+            if ($this->oldAttributes['pid'] != $this->pid) {
+                $parent = $this->parent;
+                $this->cate_id = $parent->cate_id;
+                $level = $parent->level + 1;
+                $tree = $parent->tree . TreeHelper::prefixTreeKey($parent->id);
+                // 查找所有子级
+                $list = self::find()
+                    ->where(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false])
+                    ->select(['id', 'level', 'tree'])
+                    ->asArray()
+                    ->all();
+
+                /** @var Menu $item */
+                foreach ($list as $item) {
+                    $itemLevel = $item['level'] + ($level - $this->level);
+                    $itemTree = str_replace($this->tree, $tree, $item['tree']);
+                    self::updateAll(['cate_id' => $parent->cate_id, 'level' => $itemLevel, 'tree' => $itemTree], ['id' => $item['id']]);
+                }
+
+                $this->level = $level;
+                $this->tree = $tree;
+            }
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
      * @return bool
      */
     public function beforeDelete()
     {
-        $ids = ArrayHelper::getChildIds(self::find()->all(), $this->id);
-        self::deleteAll(['in', 'id', $ids]);
+        self::deleteAll(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false]);
 
         return parent::beforeDelete();
     }

@@ -1,10 +1,6 @@
 <?php
 namespace common\models\wechat;
 
-use Yii;
-use common\enums\StatusEnum;
-use common\helpers\ArrayHelper;
-
 /**
  * This is the model class for table "{{%wechat_menu_provinces}}".
  *
@@ -51,45 +47,5 @@ class MenuProvinces extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     *
-     * @param $pid
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public static function findListByPid($pid)
-    {
-        return self::find()
-            ->where(['pid' => $pid, 'status' => StatusEnum::ENABLED])
-            ->orderBy('id asc')
-            ->all();
-    }
-
-    /**
-     * 根据父级ID返回信息
-     *
-     * @param int $parentid
-     * @return array
-     */
-    public static function getMenuList($pid = 0)
-    {
-        return ArrayHelper::map(self::findListByPid($pid), 'title', 'title');
-    }
-
-    /**
-     * 根据父级标题返回信息
-     *
-     * @param int $parentid
-     * @return array
-     */
-    public static function getMenuTitle($title)
-    {
-        if($model = self::findOne(['title' => $title, 'level' => 2, 'status' => StatusEnum::ENABLED]))
-        {
-            return self::getMenuList($model->id);
-        }
-
-        return [];
     }
 }

@@ -6,7 +6,6 @@ USE yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\components\Curd;
 use common\helpers\StringHelper;
-use common\controllers\AddonsBaseController;
 use addons\RfExample\common\models\ElasticSearchCurd;
 
 /**
@@ -14,11 +13,11 @@ use addons\RfExample\common\models\ElasticSearchCurd;
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class ElasticSearchController extends AddonsBaseController
+class ElasticSearchController extends BaseController
 {
     use Curd;
 
-    public $modelClass = 'addons\RfExample\common\models\ElasticSearchCurd';
+    public $modelClass = ElasticSearchCurd::class;
 
     /**
      * 到时候正式请配置在main里面
@@ -110,15 +109,11 @@ class ElasticSearchController extends AddonsBaseController
      */
     public function actionDelete($id)
     {
-        try
-        {
-            if ($this->findModel($id)->delete())
-            {
+        try {
+            if ($this->findModel($id)->delete()) {
                 return $this->message("删除成功", $this->redirect(['index']));
             }
-        }
-        catch(\Exception $e)
-        {
+        } catch(\Exception $e) {
 
         }
 
@@ -134,8 +129,7 @@ class ElasticSearchController extends AddonsBaseController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = ElasticSearchCurd::findOne($id))))
-        {
+        if (empty($id) || empty(($model = ElasticSearchCurd::findOne($id)))) {
             $model = new ElasticSearchCurd();
             $model->primaryKey = StringHelper::uuid('uniqid');
             $model->status = StatusEnum::ENABLED;

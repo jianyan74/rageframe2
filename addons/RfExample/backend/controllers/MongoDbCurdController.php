@@ -4,7 +4,7 @@ namespace addons\RfExample\backend\controllers;
 use common\enums\StatusEnum;
 use common\helpers\StringHelper;
 use common\components\Curd;
-use common\controllers\AddonsBaseController;
+use common\controllers\AddonsController;
 use addons\RfExample\common\models\MongoDbCurd;
 
 /**
@@ -12,11 +12,11 @@ use addons\RfExample\common\models\MongoDbCurd;
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MongoDbCurdController extends AddonsBaseController
+class MongoDbCurdController extends AddonsController
 {
     use Curd;
 
-    public $modelClass = 'addons\RfExample\common\models\MongoDbCurd';
+    public $modelClass = MongoDbCurd::class;
 
     /**
      * 返回模型
@@ -27,8 +27,7 @@ class MongoDbCurdController extends AddonsBaseController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = MongoDbCurd::findOne($id))))
-        {
+        if (empty($id) || empty(($model = MongoDbCurd::findOne($id)))) {
             $model = new MongoDbCurd();
             $model->_id = StringHelper::uuid('uniqid');
             $model->status = StatusEnum::ENABLED;

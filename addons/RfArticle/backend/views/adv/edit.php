@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
-use common\widgets\webuploader\Images;
+use common\widgets\webuploader\Files;
 use kartik\datetime\DateTimePicker;
 
 $addon = <<< HTML
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'title')->textInput(); ?>
                     <?= $form->field($model, 'location_id')->dropDownList($locals); ?>
                     <?= $form->field($model, 'sort')->textInput(); ?>
-                    <?= $form->field($model, 'cover')->widget(Images::class, [
+                    <?= $form->field($model, 'cover')->widget(Files::class, [
                         'config' => [
                             'pick' => [
                                 'multiple' => false,

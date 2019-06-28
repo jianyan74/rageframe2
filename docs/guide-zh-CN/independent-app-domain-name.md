@@ -16,6 +16,7 @@ backend/web
 frontend/web
 api/web
 wechat/web
+oauth2/web
 ```
 
 ##### 4、将根目录web下各自的resources放入各自的web下例如：
@@ -24,6 +25,7 @@ wechat/web
 web/resources => frontend/web/resources
 web/backend/resources => backend/web/resources
 web/wechat/resources => wechat/web/resources
+web/oauth2/resources => oauth2/web/resources
 ```
 
 > 注意: api是没有此目录
@@ -36,6 +38,7 @@ web/wechat/resources => wechat/web/resources
 127.0.0.1       backend.rageframe.local
 127.0.0.1       wechat.rageframe.local
 127.0.0.1       api.rageframe.local
+127.0.0.1       oauth2.rageframe.local
 127.0.0.1       storage.rageframe.local
 ```
 
@@ -62,6 +65,7 @@ Yii::setAlias('@backendUrl', 'http://backend.rageframe.local');
 Yii::setAlias('@frontendUrl', 'http://frontend.rageframe.local');
 Yii::setAlias('@wechatUrl', 'http://wechat.rageframe.local');
 Yii::setAlias('@apiUrl', 'http://api.rageframe.local');
+Yii::setAlias('@oauth2Url', 'http://oauth2.rageframe.local');
 ```
 
 ##### 8、删除根目录下的`web`目录

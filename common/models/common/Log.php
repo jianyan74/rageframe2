@@ -1,14 +1,17 @@
 <?php
 namespace common\models\common;
 
-use common\models\sys\Manager;
+use common\behaviors\MerchantBehavior;
 use common\models\member\Member;
+use common\models\sys\Manager;
 
 /**
- * This is the model class for table "{{%api_log}}".
+ * This is the model class for table "{{%common_log}}".
  *
  * @property int $id
- * @property int $member_id 用户id
+ * @property string $merchant_id 商户id
+ * @property int $user_id 用户id
+ * @property int $group 组别[1:会员;2:后台管理员]
  * @property string $method 提交类型
  * @property string $module 模块
  * @property string $controller 控制器
@@ -17,10 +20,10 @@ use common\models\member\Member;
  * @property string $get_data get数据
  * @property string $post_data post数据
  * @property string $ip ip地址
- *  * @property string $req_id 对外id
  * @property int $error_code 报错code
  * @property string $error_msg 报错信息
  * @property string $error_data 报错日志
+ * @property string $req_id 对外id
  * @property int $status 状态(-1:已删除,0:禁用,1:正常)
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
@@ -41,7 +44,7 @@ class Log extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['member_id', 'error_code', 'status', 'ip', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'user_id', 'group', 'error_code', 'status', 'created_at', 'updated_at', 'ip'], 'integer'],
             [['get_data', 'post_data', 'error_data'], 'string'],
             [['method'], 'string', 'max' => 20],
             [['module', 'controller', 'action', 'req_id'], 'string', 'max' => 50],
@@ -57,7 +60,9 @@ class Log extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
-            'member_id' => 'Member ID',
+            'merchant_id' => '商户id',
+            'user_id' => '用户id',
+            'group' => '用户组别',
             'method' => '提交方法',
             'module' => '模块',
             'controller' => '控制器',
@@ -77,26 +82,11 @@ class Log extends \common\models\common\BaseModel
     }
 
     /**
-     * 记录用户访问日志
-     *
-     * @param $error_code
-     * @param $error_msg
-     * @param $error_data
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function record($data)
-    {
-        $model = new self();
-        $model->attributes = $data;
-        $model->save();
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getMember()
     {
-        return $this->hasOne(Member::class, ['id' => 'member_id']);
+        return $this->hasOne(Member::class, ['id' => 'user_id']);
     }
 
     /**
@@ -104,6 +94,6 @@ class Log extends \common\models\common\BaseModel
      */
     public function getManager()
     {
-        return $this->hasOne(Manager::class, ['id' => 'member_id']);
+        return $this->hasOne(Manager::class, ['id' => 'user_id']);
     }
 }

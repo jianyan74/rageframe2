@@ -1,8 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
-use common\enums\StatusEnum;
-use common\enums\WhetherEnum;
+use common\helpers\Html;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -30,4 +29,6 @@ $form = ActiveForm::begin([
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
         <button class="btn btn-primary" type="submit">保存</button>
     </div>
+
+<?php Html::modelBaseCss(); ?>
 <?php ActiveForm::end(); ?>

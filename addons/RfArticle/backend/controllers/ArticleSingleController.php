@@ -2,7 +2,6 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\controllers\AddonsBaseController;
 use common\components\Curd;
 use addons\RfArticle\common\models\ArticleSingle;
 
@@ -13,12 +12,12 @@ use addons\RfArticle\common\models\ArticleSingle;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class ArticleSingleController extends AddonsBaseController
+class ArticleSingleController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var ArticleSingle
      */
-    public $modelClass = 'addons\RfArticle\common\models\ArticleSingle';
+    public $modelClass = ArticleSingle::class;
 }

@@ -3,28 +3,26 @@ namespace backend\modules\sys\controllers;
 
 use Yii;
 use yii\web\Response;
-use yii\widgets\ActiveForm;
 use common\enums\StatusEnum;
 use common\components\Curd;
 use common\models\common\SearchModel;
 use common\models\sys\Notify;
-use backend\modules\sys\models\NotifyMessageForm;
+use backend\modules\sys\forms\NotifyMessageForm;
+use backend\controllers\BaseController;
 
 /**
- * 私信回复
- *
  * Class NotifyMessageController
  * @package backend\modules\sys\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class NotifyMessageController extends SController
+class NotifyMessageController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var \yii\db\ActiveRecord
      */
-    public $modelClass = "common\models\sys\Notify";
+    public $modelClass = Notify::class;
 
     /**
      * @return string
@@ -33,7 +31,7 @@ class NotifyMessageController extends SController
     public function actionIndex()
     {
         $searchModel = new SearchModel([
-            'model' => Notify::class,
+            'model' => $this->modelClass,
             'scenario' => 'default',
             'partialMatchAttributes' => ['content'], // 模糊查询
             'defaultOrder' => [
@@ -56,25 +54,22 @@ class NotifyMessageController extends SController
     }
 
     /**
-     * ajax编辑/创建
+     * 编辑/创建
      *
-     * @return array|mixed|string|Response
+     * @return mixed|string|Response
+     * @throws \yii\base\ExitException
      */
     public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
         $model = new NotifyMessageForm();
-        if ($model->load($request->post()))
-        {
-            if ($request->isAjax)
-            {
-                Yii::$app->response->format = Response::FORMAT_JSON;
-                return ActiveForm::validate($model);
-            }
 
-            return Yii::$app->services->sys->notify->createMessage($model->content, Yii::$app->user->id, $model->toManagerId)
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load($request->post())) {
+            return Yii::$app->services->sysNotify->createMessage($model->content, Yii::$app->user->id, $model->toManagerId)
                 ? $this->redirect(['index'])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
+                : $this->message('创建失败', $this->redirect(['index']), 'error');
         }
 
         return $this->renderAjax($this->action->id, [

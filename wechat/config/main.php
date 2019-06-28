@@ -7,7 +7,7 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-wechat',
+    'id' => 'wechat',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'wechat\controllers',
     'bootstrap' => ['log'],
@@ -24,8 +24,9 @@ return [
             'idParam' => '__wechat',
         ],
         'session' => [
-            // 用于登录微信的会话cookie的名称
+            // this is the name of the session cookie used for login on the wechat
             'name' => 'advanced-wechat',
+            'timeout' => 86400,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -40,24 +41,16 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /** ------ 路由配置 ------ **/
         'urlManager' => [
-            'class' => 'yii\web\UrlManager',
-            'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
+            'enablePrettyUrl' => true,
             'showScriptName' => false,
-            // 'suffix' => '.html',// 静态
-            'rules' =>[
-
+            'rules' => [
             ],
-        ],
-        /** ------ 资源替换 ------ **/
-        'assetManager' => [
-            'appendTimestamp' => true,
         ],
         'response' => [
             'class' => 'yii\web\Response',
             'on beforeSend' => function($event) {
-                Yii::$app->services->errorLog->record($event->sender);
+                Yii::$app->services->log->record($event->sender);
             },
         ],
     ],
@@ -65,11 +58,7 @@ return [
         // 微信数据处理
         'api' => [
             'class' => 'common\controllers\WechatApiController',
-        ],
-        // 插件渲染默认控制器
-        'addons' => [
-            'class' => 'common\controllers\AddonsController',
-        ],
+        ]
     ],
     'params' => $params,
 ];

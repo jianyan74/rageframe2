@@ -23,6 +23,9 @@ location /api {
 location /wechat {
     try_files $uri $uri/ /wechat/index.php$is_args$args;
 }
+location /oauth2 {
+    try_files $uri $uri/ /oauth2/index.php$is_args$args;
+}
 ```
 
 类似Apache的配置
@@ -36,6 +39,7 @@ location /
            rewrite ^/backend(.*)$ /backend/index.php?s=$1 last;
            rewrite ^/wechat(.*)$ /wechat/index.php?s=$1 last;
            rewrite ^/api(.*)$ /api/index.php?s=$1 last;
+           rewrite ^/oauth2(.*)$ /oauth2/index.php?s=$1 last;
            rewrite ^/(.*)$ /index.php?s=$1 last;
            break;
      }
@@ -89,6 +93,14 @@ RewriteRule . index.php
         <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
     </conditions>
     <action type="Rewrite" url="api/index.php/{R:1}" />
+</rule>
+<rule name="oauth2" stopProcessing="true">
+    <match url="^oauth2/(.*)" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="oauth2/index.php/{R:1}" />
 </rule>
 <rule name="frontend" stopProcessing="true">
     <match url="^(.*)$" />

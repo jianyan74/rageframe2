@@ -62,13 +62,11 @@ abstract class LoginForm extends Model
      */
     public function validatePassword($attribute)
     {
-        if (!$this->hasErrors())
-        {
+        if (!$this->hasErrors()) {
             /* @var $user \common\models\common\User */
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password))
-            {
-                $this->addError($attribute, '账号或者密码错误.');
+            if (!$user || !$user->validatePassword($this->password)) {
+                $this->addError($attribute, '账号或者密码错误');
             }
         }
     }
@@ -80,8 +78,7 @@ abstract class LoginForm extends Model
      */
     public function login()
     {
-        if ($this->validate())
-        {
+        if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
 

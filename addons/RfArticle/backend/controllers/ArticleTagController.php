@@ -2,7 +2,6 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\controllers\AddonsBaseController;
 use common\components\Curd;
 use addons\RfArticle\common\models\ArticleTag;
 
@@ -13,12 +12,12 @@ use addons\RfArticle\common\models\ArticleTag;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class ArticleTagController extends AddonsBaseController
+class ArticleTagController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var ArticleTag
      */
-    public $modelClass = 'addons\RfArticle\common\models\ArticleTag';
+    public $modelClass = ArticleTag::class;
 }

@@ -16,7 +16,6 @@ class AppAsset extends AssetBundle
     public $sourcePath = '@common/widgets/webuploader/resources/';
 
     public $css = [
-
     ];
 
     public $js = [

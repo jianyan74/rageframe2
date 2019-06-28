@@ -1,6 +1,7 @@
 <?php
 use yii\grid\GridView;
 use common\helpers\Url;
+use common\enums\GenderEnum;
 use common\helpers\Html;
 
 $this->title = 'Curd Grid';
@@ -12,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="pull-right">
-                    <?= Html::create(['edit']); ?>
+                    <?= Html::create(['edit'], '创建', [
+                            'class' => 'btn btn-primary btn-xs openIframe',
+                    ]); ?>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -37,12 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => function ($model, $key, $index, $column){
                                 return $model->sex == 1 ? '男' : '女';
                             },
-                            'filter' => Html::activeDropDownList($searchModel,
-                                'sex',[
-                                    '1' => '男',
-                                    '2' => '女'
-                                ],
-                                [
+                            'filter' => Html::activeDropDownList($searchModel, 'sex', GenderEnum::$listExplain, [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -77,7 +75,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template'=> '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return Html::edit(['edit','id' => $model->id]);
+                                    return Html::edit(['edit','id' => $model->id], '编辑', [
+                                        'class' => 'btn btn-primary btn-sm openIframe',
+                                    ]);
                                 },
                                 'status' => function ($url, $model, $key) {
                                     return Html::status($model->status);

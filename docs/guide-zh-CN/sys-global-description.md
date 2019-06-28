@@ -89,7 +89,7 @@ return [
             'originalName' => false, // 是否保留原名
             'fullPath' => true, // 是否开启返回完整的文件路径
             'takeOverUrl' => '', // 配置后，接管所有的上传地址
-            'drive' => 'local', // 默认本地 可修改 qiniu/oss 上传
+            'drive' => 'local', // 默认本地 可修改 qiniu/oss/cos 上传
             'maxSize' => 1024 * 1024 * 2,// 图片最大上传大小,默认2M
             'extensions' => ["png", "jpg", "jpeg", "gif", "bmp"],// 可上传图片后缀不填写即为不限
             'path' => 'images/', // 图片创建路径
@@ -108,7 +108,7 @@ return [
             'originalName' => true, // 是否保留原名
             'fullPath' => true, // 是否开启返回完整的文件路径
             'takeOverUrl' => '', // 配置后，接管所有的上传地址
-            'drive' => 'local', // 默认本地 可修改 qiniu/oss 上传
+            'drive' => 'local', // 默认本地 可修改 qiniu/oss/cos 上传
             'maxSize' => 1024 * 1024 * 10,// 最大上传大小,默认10M
             'extensions' => ['mp4'],// 可上传文件后缀不填写即为不限
             'path' => 'videos/',// 创建路径
@@ -120,7 +120,7 @@ return [
             'originalName' => true, // 是否保留原名
             'fullPath' => true, // 是否开启返回完整的文件路径
             'takeOverUrl' => '', // 配置后，接管所有的上传地址
-            'drive' => 'local', // 默认本地 可修改 qiniu/oss 上传
+            'drive' => 'local', // 默认本地 可修改 qiniu/oss/cos 上传
             'maxSize' => 1024 * 1024 * 50,// 最大上传大小,默认50M
             'extensions' => ['amr', 'mp3'],// 可上传文件后缀不填写即为不限
             'path' => 'voices/',// 创建路径
@@ -132,7 +132,7 @@ return [
             'originalName' => true, // 是否保留原名
             'fullPath' => true, // 是否开启返回完整的文件路径
             'takeOverUrl' => '', // 配置后，接管所有的上传地址
-            'drive' => 'local', // 默认本地 可修改 qiniu/oss 上传
+            'drive' => 'local', // 默认本地 可修改 qiniu/oss/cos 上传
             'maxSize' => 1024 * 1024 * 50,// 最大上传大小,默认50M
             'extensions' => [],// 可上传文件后缀不填写即为不限
             'path' => 'files/',// 创建路径

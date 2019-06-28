@@ -4,7 +4,8 @@ namespace backend\modules\sys\controllers;
 use Yii;
 use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
-use backend\modules\sys\models\Database;
+use backend\modules\sys\forms\Database;
+use backend\controllers\BaseController;
 
 /**
  * 数据备份还原
@@ -13,7 +14,7 @@ use backend\modules\sys\models\Database;
  * @package backend\modules\sys\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class DataBaseController extends SController
+class DataBaseController extends BaseController
 {
     /**
      * 存储路径
@@ -41,8 +42,7 @@ class DataBaseController extends SController
         ];
 
         // 判断目测是否存在，不存在则创建
-        if (!is_dir($this->path))
-        {
+        if (!is_dir($this->path)) {
             mkdir($this->path, 0755, true);
         }
     }
@@ -71,8 +71,7 @@ class DataBaseController extends SController
     public function actionExport()
     {
         $tables = Yii::$app->request->post('tables');
-        if (empty($tables))
-        {
+        if (empty($tables)) {
             return ResultDataHelper::json(404, '请选择要备份的表');
         }
 
@@ -80,9 +79,8 @@ class DataBaseController extends SController
         $config = $this->config;
 
         // 检查是否有正在执行的任务
-        $lock = "{$config['path']}" . $config['lock'];
-        if (is_file($lock))
-        {
+        $lock = $config['path'] . $config['lock'];
+        if (is_file($lock)) {
             return ResultDataHelper::json(404, '检测到有一个备份任务正在执行，请稍后或清理缓存后再试');
         }
 
@@ -90,8 +88,7 @@ class DataBaseController extends SController
         file_put_contents($lock, time());
 
         // 检查备份目录是否可写
-        if (!is_writeable($config['path']))
-        {
+        if (!is_writeable($config['path'])) {
             return ResultDataHelper::json(404, '备份目录不存在或不可写，请检查后重试！');
         }
 
@@ -103,8 +100,7 @@ class DataBaseController extends SController
 
         // 创建备份文件
         $Database = new Database($file, $config);
-        if (false !== $Database->create())
-        {
+        if (false !== $Database->create()) {
             // 缓存配置信息
             Yii::$app->session->set('backup_config', $config);
             // 缓存文件信息
@@ -141,15 +137,11 @@ class DataBaseController extends SController
         // 备份指定表
         $database = new Database($file,$config);
         $start = $database->backup($tables[$id], $start);
-        if ($start === false)
-        {
+        if ($start === false) {
             return ResultDataHelper::json(404, '备份出错！');
-        }
-        elseif ($start === 0)
-        {
+        } elseif ($start === 0) {
             // 下一表
-            if (isset($tables[++$id]))
-            {
+            if (isset($tables[++$id])) {
                 $tab = ['id' => $id, 'start' => 0];
                 return ResultDataHelper::json(200, '备份完成', [
                     'tablename' => $tables[--$id],
@@ -167,9 +159,7 @@ class DataBaseController extends SController
                 'tablename' => $tables[--$id],
                 'achieveStatus' => 1
             ]);
-        }
-        else
-        {
+        } else {
             $tab = ['id' => $id, 'start' => $start[0]];
             $rate = floor(100 * ($start[0] / $start[1]));
             // 对下一个表进行备份
@@ -191,17 +181,14 @@ class DataBaseController extends SController
     public function actionOptimize()
     {
         $tables = Yii::$app->request->post('tables', '');
-        if (!$tables)
-        {
+        if (!$tables) {
             return ResultDataHelper::json(404, '请指定要优化的表！');
         }
 
         // 判断是否是数组
-        if (is_array($tables))
-        {
+        if (is_array($tables)) {
             $tables = implode('`,`', $tables);
-            if (Yii::$app->db->createCommand("OPTIMIZE TABLE `{$tables}`")->queryAll())
-            {
+            if (Yii::$app->db->createCommand("OPTIMIZE TABLE `{$tables}`")->queryAll()) {
                 return ResultDataHelper::json(200, '数据表优化完成');
             }
 
@@ -210,8 +197,7 @@ class DataBaseController extends SController
 
         $list = Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryOne();
         // 判断是否成功
-        if ($list['Msg_text'] == "OK")
-        {
+        if ($list['Msg_text'] == "OK") {
             return ResultDataHelper::json(200, "数据表'{$tables}'优化完成！");
         }
 
@@ -228,17 +214,14 @@ class DataBaseController extends SController
     public function actionRepair()
     {
         $tables = Yii::$app->request->post('tables', '');
-        if (!$tables)
-        {
+        if (!$tables) {
             return ResultDataHelper::json(404, '请指定要修复的表！');
         }
 
         // 判断是否是数组
-        if (is_array($tables))
-        {
+        if (is_array($tables)) {
             $tables = implode('`,`', $tables);
-            if (Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryAll())
-            {
+            if (Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryAll()) {
                 return ResultDataHelper::json(200, '数据表修复化完成');
             }
 
@@ -271,25 +254,20 @@ class DataBaseController extends SController
         $glob = new \FilesystemIterator($path, $flag);
 
         $list = [];
-        foreach ($glob as $name => $file)
-        {
+        foreach ($glob as $name => $file) {
             // 正则匹配文件名
-            if (preg_match('/^\d{8,8}-\d{6,6}-\d+\.sql(?:\.gz)?$/', $name))
-            {
+            if (preg_match('/^\d{8,8}-\d{6,6}-\d+\.sql(?:\.gz)?$/', $name)) {
                 $name = sscanf($name, '%4s%2s%2s-%2s%2s%2s-%d');
 
                 $date = "{$name[0]}-{$name[1]}-{$name[2]}";
                 $time = "{$name[3]}:{$name[4]}:{$name[5]}";
                 $part = $name[6];
 
-                if (isset($list["{$date} {$time}"]))
-                {
+                if (isset($list["{$date} {$time}"])) {
                     $info = $list["{$date} {$time}"];
                     $info['part'] = max($info['part'], $part);
                     $info['size'] = $info['size'] + $file->getSize();
-                }
-                else
-                {
+                } else {
                     $info['part'] = $part;
                     $info['size'] = $file->getSize();
                 }
@@ -324,8 +302,7 @@ class DataBaseController extends SController
 
         $list = [];
         $size = 0;
-        foreach($files as $name => $file)
-        {
+        foreach($files as $name => $file) {
             $size += filesize($file);
             $basename = basename($file);
             $match = sscanf($basename, '%4s%2s%2s-%2s%2s%2s-%d');
@@ -337,8 +314,7 @@ class DataBaseController extends SController
 
         // 检测文件正确性
         $last = end($list);
-        if (count($list) === $last[0])
-        {
+        if (count($list) === $last[0]) {
             // 缓存备份列表
             Yii::$app->session->set('backup_list', $list);
             return ResultDataHelper::json(200, '初始化完成', [
@@ -373,15 +349,11 @@ class DataBaseController extends SController
         $db = new Database($list[$part],$arr);
         $start = $db->import($start);
 
-        if ($start === false)
-        {
+        if ($start === false) {
             return ResultDataHelper::json(200, "备份文件可能已经损坏，请检查！");
-        }
-        elseif ($start === 0)
-        {
+        } elseif ($start === 0) {
             // 下一卷
-            if (isset($list[++$part]))
-            {
+            if (isset($list[++$part])) {
                 return ResultDataHelper::json(200, "正在还原...#{$part}", [
                     'part' => $part,
                     'start1' => $start,
@@ -392,11 +364,8 @@ class DataBaseController extends SController
 
             Yii::$app->session->set('backup_list', null);
             return ResultDataHelper::json(200, "还原完成");
-        }
-        else
-        {
-            if ($start[1])
-            {
+        } else {
+            if ($start[1]) {
                 $rate = floor(100 * ($start[0] / $start[1]));
                 return ResultDataHelper::json(200, "正在还原...#{$part} ({$rate}%)", [
                     'part' => $part,
@@ -425,8 +394,7 @@ class DataBaseController extends SController
         $name = date('Ymd-His', $time) . '-*.sql*';
         $path = realpath($config['path']) . DIRECTORY_SEPARATOR . $name;
         array_map("unlink", glob($path));
-        if (count(glob($path)))
-        {
+        if (count(glob($path))) {
             return $this->message('文件删除失败，请检查权限!', $this->redirect(['restore']), 'error');
         }
 
@@ -450,15 +418,13 @@ class DataBaseController extends SController
         $tables = array_map('array_change_key_case', $tables);
 
         $tableSchemas = [];
-        foreach ($tableSchema as $item)
-        {
+        foreach ($tableSchema as $item) {
             $key = $item['name'];
 
             $tableSchemas[$key]['table_name'] = $key;// 表名
             $tableSchemas[$key]['item'] = [];
 
-            foreach ($item['columns'] as $column)
-            {
+            foreach ($item['columns'] as $column) {
                 $tmpArr = [];
                 $tmpArr['name'] = $column['name']; // 字段名称
                 $tmpArr['type'] = $column['dbType']; // 类型
@@ -478,16 +444,14 @@ class DataBaseController extends SController
         /*--------------- 开始生成 --------------*/
         $str = '';
         $i = 0;
-        foreach ($tableSchemas as $key => $datum)
-        {
+        foreach ($tableSchemas as $key => $datum) {
             $table_comment = $tables[$i]['comment'];
 
             $str .= "### {$table_comment} : {$key}" . "<br>";
             $str .= "字段 | 类型 | 允许为空 | 默认值 | 字段说明" . "<br>";
             $str .= "---|---|---|---|---" . "<br>";
 
-            foreach ($datum['item'] as $item)
-            {
+            foreach ($datum['item'] as $item) {
                 empty($item['comment']) && $item['comment'] = "无";
                 $item['allowNull'] = !empty($item['allowNull']) ? "是" : '否';
                 $str .= "{$item['name']} | {$item['type']} | {$item['allowNull']} | {$item['defaultValue']} | {$item['comment']}" . "<br>";

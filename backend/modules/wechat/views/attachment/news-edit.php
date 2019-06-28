@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <div><input class="appInput largeSize fullWidth borderBottomColorGray" placeholder="请输入标题" v-model="crtPost.title"></div>
                                         <div><input class="appInput fullWidth borderBottomColorGray" placeholder="请输入作者" v-model="crtPost.author"></div>
                                         <div><input class="appInput fullWidth" placeholder="请输入连接地址" v-model="crtPost.content_source_url"></div>
-                                        <?php if ($link_type == 1){ ?>
+                                        <?php if ($attachment['link_type'] == 1){ ?>
                                             <?= \common\widgets\ueditor\UEditor::widget([
                                                 'id' => 'content',
                                                 'attribute' => 'content',
@@ -158,12 +158,15 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <!-- 上传组件不需要显示出来，我只需要使用它的功能即可 -->
     <div hidden>
-        <?= \common\widgets\webuploader\Images::widget([
+        <?= \common\widgets\webuploader\Files::widget([
             'name'  =>"thumb_url",
             'value' =>  '',
             'config' => [
                 'pick' => [
                     'multiple' => false,
+                ],
+                'formData' => [
+                    'drive' => 'local',
                 ],
                 'callback' => 'setUploadedImg',
                 'independentUrl' => true,
@@ -185,7 +188,7 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 
     $(function(){
-        var link_type = "<?= $link_type ?>";
+        var link_type = "<?= $attachment['link_type'] ?>";
         var ue, thumb_urlImagePreview = $('.uploadedImg'), ueReadyHandlers = [];
         function init(){
 
@@ -240,16 +243,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             this.crtPost.content = ue.getContent();
                         }
 
-                        for(var i=0; i<this.postList.length; i++)
-                        {
+                        for(var i=0; i<this.postList.length; i++) {
                             var p = this.postList[i];
-                            if(link_type == 1 && !this.validateFileds([p.title, p.thumb_url, p.author, p.content], ["图文标题不能留空", "请设置图文封面", "请填写图文作者","请填写图文内容"]))
-                            {
+                            if(link_type == 1 && !this.validateFileds([p.title, p.thumb_url, p.author, p.content], ["图文标题不能留空", "请设置图文封面", "请填写图文作者","请填写图文内容"])) {
                                 return;
                             }
 
-                            if(link_type == 2 && !this.validateFileds([p.title, p.thumb_url], ["图文标题不能留空", "请设置图文封面"]))
-                            {
+                            if(link_type == 2 && !this.validateFileds([p.title, p.thumb_url], ["图文标题不能留空", "请设置图文封面"])) {
                                 return;
                             }
                         }
@@ -257,19 +257,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         rfAffirm('同步到微信中,请不要关闭当前页面');
 
                         var cloneAry = this.postList.concat();
-                        for(var i=0; i<cloneAry.length; i++)
-                        {
+                        for (var i=0; i<cloneAry.length; i++) {
                             cloneAry[i].show_cover_pic = cloneAry[i].show_cover_pic ? 1 : 0;
                         }
 
                         // ajax提交
                         $.ajax({
                             type:"post",
-                            url:"<?= Url::to(['news-edit'])?>",
+                            url:"<?= Url::to(['news-edit', 'attach_id' => $attachment['id'], 'link_type' => $attachment['link_type']])?>",
                             dataType: "json",
                             data: {
-                                attach_id : "<?= $attach_id ?>",
-                                link_type : "<?= $link_type ?>",
                                 list:JSON.stringify(cloneAry) // 图文列表数据
                             },
                             success: function(data){
@@ -285,10 +282,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $('.webuploader-container input').trigger('click');// 触发上传组件的选图功能
                     },
                     validateFileds: function(valueList, errorMsgList){
-                        for(var i=0; i<valueList.length; i++)
-                        {
-                            if(!valueList[i])
-                            {
+                        for(var i=0; i<valueList.length; i++) {
+                            if(!valueList[i]) {
                                 alert(errorMsgList[i]);
                                 return false;
                             }
@@ -301,15 +296,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     var list = <?= $list ?>;
 
                     // 上传组件上传完图片后会抛送此事件，此时将图片在服务器上的地址给到我们的crtPost.thumb_url里面
-                    $(document).on('setUploadedImg', function(e, parentObj, data, config){
-                        if(config.name == 'thumb_url')
-                        {
+                    $(document).on('setUploadedImg', function(e, data, config){
+                        if(config.name == 'thumb_url') {
                             self.crtPost.thumb_url = data.url;
                         }
                     });
 
-                    if(list && list.length > 0)
-                    {
+                    if(list && list.length > 0) {
                         self.postList = list;
 
                         for (i=0;i< self.postList.length;i++){
@@ -318,10 +311,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
 
                         self.isEditMode = true;
-                    }
-                    // 新建回复规则的情况
-                    else
-                    {
+                    } else {  // 新建回复规则的情况
                         self.addPost();
                         self.isEditMode = false;
                     }

@@ -1,8 +1,9 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
-use common\models\sys\AuthItem;
+use common\enums\AuthEnum;
 
 /**
  * Class Auth
@@ -11,9 +12,7 @@ use common\models\sys\AuthItem;
  */
 class Auth
 {
-    protected static $sysAuth;
-
-    protected static $addonAuth;
+    protected static $auth = [];
 
     /**
      * 校验权限是否拥有
@@ -23,12 +22,10 @@ class Auth
      */
     public static function verify(string $route)
     {
-        if (Yii::$app->services->sys->isAuperAdmin())
-        {
+        if (Yii::$app->services->auth->isSuperAdmin()) {
             return true;
         }
 
-        // 开始校验
         return in_array($route, self::getAuth());
     }
 
@@ -40,69 +37,34 @@ class Auth
      */
     public static function verifyBatch(array $route)
     {
-        if (Yii::$app->services->sys->isAuperAdmin())
-        {
+        if (Yii::$app->services->auth->isSuperAdmin()) {
             return $route;
         }
 
-        // 开始获取权限信息校验
         return ArrayHelper::filter(self::getAuth(), $route);
     }
 
+    /**
+     * 获取权限信息
+     *
+     * @return array
+     */
     public static function getAuth()
     {
-        if (Yii::$app->params['inAddon'])
-        {
-            return self::getAddonAuth();
+        if (self::$auth) {
+            return self::$auth;
         }
 
-        return self::getSysAuth();
-    }
-
-    /**
-     * 获取系统权限
-     *
-     * @return array
-     */
-    public static function getSysAuth()
-    {
-        if (empty(self::$sysAuth))
-        {
-            $auth = Yii::$app->services->sys->auth->getAllAuthByRole();
-            self::$sysAuth = array_column($auth, 'name');
+        $role = Yii::$app->services->authRole->getRole();
+        // 获取权限数组
+        if (true === Yii::$app->params['inAddon']) {
+            $name = Yii::$app->params['addonInfo']['name'] ?? Yii::$app->request->get('addon');
+            $name = StringHelper::strUcwords($name);
+            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, AuthEnum::TYPE_CHILD_ADDONS, $name);
+        } else {
+            self::$auth = Yii::$app->services->authRole->getAuthByRole($role);
         }
 
-        return self::$sysAuth;
-    }
-
-    /**
-     * 获取插件模块权限
-     *
-     * @return array
-     */
-    public static function getAddonAuth()
-    {
-        if (empty(self::$addonAuth))
-        {
-            $auth = Yii::$app->services->sys->addonAuth->getAllAuthByRole();
-            self::$addonAuth = $auth;
-        }
-
-        return self::$addonAuth;
-    }
-
-    /**
-     * 更新依赖
-     *
-     * @return bool
-     */
-    public static function updateCache()
-    {
-        if ($authItem = AuthItem::find()->orderBy('updated_at desc')->one())
-        {
-            return $authItem->save();
-        }
-
-        return true;
+        return self::$auth;
     }
 }

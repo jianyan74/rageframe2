@@ -17,7 +17,7 @@ class CurdSearch extends Curd
     public function rules()
     {
         return [
-            [['cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
             [['content', 'covers', 'files'], 'string'],
             [['price'], 'number'],
             [['start_time', 'end_time'], 'safe'],

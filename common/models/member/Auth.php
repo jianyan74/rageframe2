@@ -2,12 +2,14 @@
 namespace common\models\member;
 
 use Yii;
+use common\behaviors\MerchantBehavior;
 use common\enums\StatusEnum;
 
 /**
  * This is the model class for table "{{%member_auth}}".
  *
  * @property string $id 主键
+ * @property string $merchant_id 商户id
  * @property string $member_id 用户id
  * @property string $unionid 唯一ID
  * @property string $oauth_client 授权组别
@@ -25,6 +27,8 @@ use common\enums\StatusEnum;
  */
 class Auth extends \common\models\common\BaseModel
 {
+    use MerchantBehavior;
+
     const CLIENT_MINI_PROGRAM = 'miniProgram';
     const CLIENT_WECHAT = 'wechat';
     const CLIENT_QQ = 'qq';
@@ -45,7 +49,7 @@ class Auth extends \common\models\common\BaseModel
     {
         return [
             [['oauth_client', 'oauth_client_user_id'], 'required'],
-            [['member_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['unionid'], 'string', 'max' => 64],
             [['oauth_client'], 'string', 'max' => 20],
@@ -62,6 +66,7 @@ class Auth extends \common\models\common\BaseModel
     {
         return [
             'id' => 'ID',
+            'merchant_id' => '商户',
             'member_id' => '用户id',
             'unionid' => '第三方用户唯一id',
             'oauth_client' => '类型',
@@ -88,57 +93,16 @@ class Auth extends \common\models\common\BaseModel
     {
         $model = self::find()
             ->where([
-                'status' => StatusEnum::ENABLED,
                 'member_id' => $this->member_id,
                 'oauth_client_user_id' => $this->oauth_client_user_id,
+                'status' => StatusEnum::ENABLED,
+                'merchant_id' => Yii::$app->services->merchant->getId()
             ])
             ->one();
 
-        if ($model && $model->id != $this->id)
-        {
+        if ($model && $model->id != $this->id) {
             $this->addError($attribute, '用户已绑定请不要重复绑定');
         }
-    }
-
-    /**
-     * @param $oauthClient
-     * @param $oauthClientId
-     * @return Auth|null
-     */
-    public static function findOauthClient($oauthClient, $oauthClientUserId)
-    {
-        return self::findOne(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId]);
-    }
-
-    /**
-     * @param $oauthClient
-     * @param $oauthClientId
-     * @return array|null|\yii\db\ActiveRecord
-     */
-    public static function findOauthClientMapMember($oauthClient, $oauthClientUserId)
-    {
-        return self::find()
-            ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
-            ->with('member')
-            ->one();
-    }
-
-    /**
-     * @param $data
-     * @return Auth
-     * @throws \Exception
-     */
-    public function add($data)
-    {
-        $model = new self();
-        $model->attributes = $data;
-        if (!$model->save())
-        {
-            $error = Yii::$app->debris->analyErr($model->getFirstErrors());
-            throw new \Exception($error);
-        }
-
-        return $model;
     }
 
     /**

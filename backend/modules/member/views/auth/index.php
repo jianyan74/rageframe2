@@ -2,9 +2,10 @@
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\GenderEnum;
+use common\helpers\ImageHelper;
 
 $this->title = '第三方用户';
-$this->params['breadcrumbs'][] = ['label' => $this->title];
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
 ?>
 
 <div class="row">
@@ -22,16 +23,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'visible' => false, // 不显示#
-                        ],
-                        [
-                            'attribute' => 'id',
-                            'filter' => false, //不显示搜索框
                         ],
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return Html::img(Html::headPortrait(Html::encode($model->head_portrait)), [
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
                                     'class' => 'img-circle rf-img-md img-bordered-sm',
                                 ]);
                             },
@@ -44,10 +40,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'value' => function ($model, $key, $index, $column){
                                 return GenderEnum::$listExplain[$model->gender];
                             },
-                            'filter' => Html::activeDropDownList($searchModel,
-                                'gender',
-                                GenderEnum::$listExplain,
-                                [
+                            'filter' => Html::activeDropDownList($searchModel, 'gender', GenderEnum::$listExplain, [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -78,17 +71,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'filter' => false, //不显示搜索框
                             'format' => ['date', 'php:Y-m-d H:i:s'],
                         ],
-                        // 'updated_at',
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{ajax-edit} {address} {edit} {status} {destroy}',
+                            'template'=> '{edit} {destroy}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
                                     return Html::edit(['edit', 'id' => $model->id]);
-                                },
-                                'status' => function ($url, $model, $key) {
-                                    return Html::status($model->status);
                                 },
                                 'destroy' => function ($url, $model, $key) {
                                     return Html::delete(['destroy','id' => $model->id]);

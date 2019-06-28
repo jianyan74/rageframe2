@@ -4,8 +4,10 @@ namespace backend\modules\wechat\controllers;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Response;
+use common\components\Curd;
 use common\models\wechat\Qrcode;
 use common\helpers\ResultDataHelper;
+use backend\controllers\BaseController;
 
 /**
  * 微信二维码管理
@@ -14,14 +16,22 @@ use common\helpers\ResultDataHelper;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class QrcodeController extends WController
+class QrcodeController extends BaseController
 {
+    use Curd;
+
+    /**
+     * @var Qrcode
+     */
+    public $modelClass = Qrcode::class;
+
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $data = Qrcode::find();
+        $data = Qrcode::find()
+            ->filterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -35,81 +45,27 @@ class QrcodeController extends WController
     }
 
     /**
-     * 创建
-     *
      * @return mixed|string|Response
-     */
-    public function actionAdd()
-    {
-        $model = new Qrcode();
-        $model->loadDefaultValues();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            $qrcode = Yii::$app->wechat->app->qrcode;
-            try
-            {
-                if ($model->model == Qrcode::MODEL_TEM)
-                {
-                    $scene_id = Qrcode::getSceneId();
-                    $result = $qrcode->temporary($scene_id, $model->expire_seconds);
-                    $model->scene_id = $scene_id;
-                    $model->expire_seconds = $result['expire_seconds']; // 有效秒数
-                }
-                else
-                {
-                    $result = $qrcode->forever($model->scene_str);// 或者 $qrcode->forever("foo");
-                }
-
-                $model->ticket = $result['ticket'];
-                $model->type = 'scene';
-                $model->url = $result['url']; // 二维码图片解析后的地址，开发者可根据该地址自行生成需要的二维码图片
-                $model->save();
-            }
-            catch (\Exception $e)
-            {
-                return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
-            }
-
-            return $this->redirect(['index']);
-        }
-
-        return $this->renderAjax('add', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * ajax编辑
-     *
-     * @return string|yii\web\Response
+     * @throws \yii\base\ExitException
      */
     public function actionAjaxEdit()
     {
         $id = Yii::$app->request->get('id');
-        $model = Qrcode::findOne($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
-            return $this->redirect(['index']);
+        /** @var Qrcode $model */
+        $model = $this->findModel($id);
+
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->isNewRecord && $model = Yii::$app->services->wechatQrcode->syncCreate($model);
+            return $model->save()
+                ? $this->redirect(['index'])
+                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * 验证表单
-     *
-     * @return array
-     */
-    public function actionValidateForm()
-    {
-        $model = new Qrcode();
-        $model->load(Yii::$app->request->post());
-
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \yii\widgets\ActiveForm::validate($model);
     }
 
     /**
@@ -119,26 +75,7 @@ class QrcodeController extends WController
      */
     public function actionDeleteAll()
     {
-        if (Qrcode::deleteAll(['and', ['model' => Qrcode::MODEL_TEM], ['<', 'end_time', time()]]))
-        {
-            return $this->message("删除成功", $this->redirect(['index']));
-        }
-
-        return $this->message("删除失败", $this->redirect(['index']), 'error');
-    }
-
-    /**
-     * 删除二维码
-     *
-     * @param $id
-     * @return mixed
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDelete($id)
-    {
-        if (Qrcode::findOne($id)->delete())
-        {
+        if (Qrcode::deleteAll(['and', ['model' => Qrcode::MODEL_TEM], ['<', 'end_time', time()], ['merchant_id' => $this->getMerchantId()]])) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 
@@ -173,14 +110,11 @@ class QrcodeController extends WController
      */
     public function actionLongUrl()
     {
-        if (Yii::$app->request->isAjax)
-        {
+        if (Yii::$app->request->isAjax) {
             $postUrl = Yii::$app->request->post('shortUrl', '');
-
-            // 长链接转短链接
             $shortUrl = Yii::$app->wechat->app->url->shorten($postUrl);
-            if ($error = Yii::$app->debris->getWechatError($shortUrl, false))
-            {
+
+            if ($error = Yii::$app->debris->getWechatError($shortUrl, false)) {
                 return ResultDataHelper::json(422, $error);
             }
 
@@ -189,8 +123,7 @@ class QrcodeController extends WController
             ]);
         }
 
-        return $this->render('long-url', [
-        ]);
+        return $this->render('long-url');
     }
 
     /**

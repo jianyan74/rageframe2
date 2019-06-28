@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
+use common\helpers\ArrayHelper;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -13,7 +14,7 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">消息群发</h4>
     </div>
     <div class="modal-body">
-        <?= $form->field($model, 'tag_id')->dropDownList(\common\helpers\ArrayHelper::map($tags, 'id', 'name'), ['prompt' => '全部粉丝']) ?>
+        <?= $form->field($model, 'tag_id')->dropDownList(ArrayHelper::merge([-1 => '全部粉丝'], ArrayHelper::map($tags, 'id', 'name'))) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

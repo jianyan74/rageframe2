@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'content',
                         [
-                            'label'=> '创建日期',
+                            'label'=> '创建时间',
                             'attribute' => 'created_at',
                             'filter' => false, //不显示搜索框
                             'format' => ['date', 'php:Y-m-d H:i:s'],

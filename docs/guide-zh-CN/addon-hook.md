@@ -25,16 +25,16 @@
 * @return bool
 * @throws NotFoundHttpException
 */
-<?= \common\helpers\AddonHook::to($addonsName, $params, $action, $debug); ?>
+<?= \common\helpers\Hook::to($addonsName, $params, $action, $debug); ?>
 
 // 实际案例
-<?= \common\helpers\AddonHook::to('RfExample', []); ?>
+<?= \common\helpers\Hook::to('RfExample', []); ?>
 ```
 
 实际例子
 
 ```
-<?= \common\helpers\AddonHook::to('RfExample', ['test' => 1]); ?>
+<?= \common\helpers\Hook::to('RfExample', ['test' => 1]); ?>
 ```
 
 ### 运行过程

@@ -16,22 +16,22 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="tab-content">
                 <div class="active tab-pane">
                     <div class="col-sm-12 normalPaddingJustV">
-                        <div class="btn-group">
+                        <div class="btn-group m-l-n-sm">
                             <!-- 权限校验 -->
                             <?php if(Auth::verify('/sys/data-base/export')){ ?>
-                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="1">立即备份</a>
+                                <a class="btn btn-white table-list-database" href="javascript:void(0);" data-type="1">立即备份</a>
                             <?php } ?>
                             <!-- 权限校验 -->
                             <?php if(Auth::verify('/sys/data-base/repair')){ ?>
-                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="2">修复表</a>
+                                <a class="btn btn-white table-list-database" href="javascript:void(0);" data-type="2">修复表</a>
                             <?php } ?>
                             <!-- 权限校验 -->
                             <?php if(Auth::verify('/sys/data-base/optimize')){ ?>
-                                <a class="btn btn-white table-list-database" href="javascript:;" data-type="3">优化表</a>
+                                <a class="btn btn-white table-list-database" href="javascript:void(0);" data-type="3">优化表</a>
                             <?php } ?>
                             <!-- 权限校验 -->
                             <?php if(Auth::verify('/sys/data-base/data-dictionary')){ ?>
-                                <a class="btn btn-white dictionary" href="javascript:;">Markdown数据字典</a>
+                                <a class="btn btn-white dictionary" href="javascript:void(0);">Markdown数据字典</a>
                             <?php } ?>
                         </div>
                     </div>
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         </thead>
                         <tbody id="list">
                         <?php foreach($models as $model){ ?>
-                            <tr name = "<?= $model['name']?>">
+                            <tr name="<?= $model['name']?>">
                                 <td><input type="checkbox" name="table[]" checked="checked" value="<?= $model['name']?>"></td>
                                 <td><?= $model['comment']?></td>
                                 <td><?= $model['name']?></td>
@@ -65,11 +65,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <td>
                                     <!-- 权限校验 -->
                                     <?php if(Auth::verify('/sys/data-base/optimize')){ ?>
-                                        <a href="#" class="table-list-optimize">优化表</a>
+                                        <a href="#" class="btn btn-white table-list-optimize">优化表</a>
                                     <?php } ?>
                                     <!-- 权限校验 -->
                                     <?php if(Auth::verify('/sys/data-base/repair')){ ?>
-                                        <a href="#" class="table-list-repair">修复表</a>
+                                        <a href="#" class="btn btn-white table-list-repair">修复表</a>
                                     <?php } ?>
                                 </td>
                             </tr>

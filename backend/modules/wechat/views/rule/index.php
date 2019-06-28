@@ -1,8 +1,7 @@
 <?php
-use common\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
-use common\helpers\Auth;
+use common\helpers\Url;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
 use common\helpers\Html;
@@ -18,14 +17,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <li class="active"><a href="<?= Url::to(['rule/index']); ?>"> 关键字自动回复</a></li>
                 <li><a href="<?= Url::to(['setting/special-message']); ?>"> 非文字自动回复</a></li>
                 <li><a href="<?= Url::to(['reply-default/index']); ?>"> 关注/默认回复</a></li>
-                <!-- 权限校验判断 -->
-                <?php if (Auth::verify('/wechat/rule/edit')) {?>
-                    <li class="pull-right">
-                        <a class="btn btn-primary btn-xs" onclick="openEdit()">
-                            <i class="fa fa-plus"></i> 创建
-                        </a>
-                    </li>
-                <?php } ?>
+                <li class="pull-right">
+                    <?= Html::a('<i class="fa fa-plus"></i> 创建', ['edit'], [
+                        'class' => 'btn btn-primary btn-xs'
+                    ])?>
+                </li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane">
@@ -34,7 +30,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="btn-group">
                                 <a class="btn <?= !$module ? 'btn-primary': 'btn-white'; ?>" href="<?= Url::to(['index']); ?>">全部</a>
                                 <?php foreach ($modules as $key => $mo){ ?>
-                                    <a class="btn <?= $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module'=>$key])?>"><?= $mo?></a>
+                                    <a class="btn <?= $module == $key ? 'btn-primary': 'btn-white' ;?>" href="<?= Url::to(['index','module' => $key])?>"><?= $mo?></a>
                                 <?php } ?>
                             </div>
                         </div>
@@ -60,7 +56,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
                                     <span class="label label-info">优先级：<?= $model->sort; ?></span>
-                                    <?php if(RuleKeyword::verifyTake($model->ruleKeyword)){ ?>
+                                    <?php if(Yii::$app->services->wechatRuleKeyword->verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
                                     <?php if($model->status == StatusEnum::ENABLED){ ?>
@@ -107,32 +103,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     </div>
 </div>
 
-<script type="text/html"  id="editModel">
-    <?php foreach($modules as $key => $module){ ?>
-        <div class="col-lg-12 text-center p-xs">
-            <a href="<?= Url::to(['edit', 'module' => $key]); ?>" class="btn btn-w-m btn-info"><?= $module; ?></a>
-        </div>
-    <?php } ?>
-</script>
 <script>
-    function openEdit(){
-        var html = template('editModel', []);
-        //自定页
-        layer.open({
-            type: 1,
-            title: '创建规则类型',
-            skin: 'layui-layer-demo', //样式类名
-            closeBtn: false, //不显示关闭按钮
-            shift: 2,
-            area: ['250px', '380px'],
-            shadeClose: true, //开启遮罩关闭
-            content: html
-        });
-    }
-
     // status => 1:启用;-1禁用;
     function statusRule(obj){
-
         var id = $(obj).parent().attr('id');
         var self = $(obj);
         var status = self.hasClass("label-danger") ? 1 : 0;

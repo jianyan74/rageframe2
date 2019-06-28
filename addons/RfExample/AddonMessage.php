@@ -2,15 +2,14 @@
 namespace addons\RfExample;
 
 use Yii;
-use backend\interfaces\WechatMessageInterface;
+use backend\interfaces\AddonWidget;
 
 /**
  * AddonMessage
  *
  * Class AddonMessage
- * @package addons\RfExample
- */
-class AddonMessage implements WechatMessageInterface
+ * @package addons\RfExample */
+class AddonMessage implements AddonWidget
 {
     /**
      * @param $message

@@ -16,11 +16,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
                     <!-- 权限校验判断 -->
-                    <?php if(Auth::verify('/wechat/mass-record/edit')){ ?>
-                        <a class="btn btn-primary btn-xs" onclick="openEdit()">
-                            <i class="fa fa-plus"></i> 创建
-                        </a>
-                    <?php } ?>
+                    <?= Html::create(['edit']);?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -42,7 +38,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <tr>
                             <td><?= $model->id; ?></td>
                             <td><?= $model->tag_name ?></td>
-                            <td><span class="label label-info"><?= \common\models\wechat\MassRecord::$mediaTypeExplain[$model->media_type] ?></span></td>
+                            <td><span class="label label-info"><?= $model->module ?></span></td>
                             <td><?= $model->fans_num?></td>
                             <td>
                                 预计：<?= Yii::$app->formatter->asDatetime($model->send_time) ?><br>
@@ -59,11 +55,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             </td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                             <td>
-                                <?php if($model->send_status == StatusEnum::DISABLED){ ?>
-                                    <?= Html::edit(['edit','id' => $model->id, 'media_type' => $model->media_type]);?>
-                                <?php }else{ ?>
-                                    <?= Html::linkButton(['view','id' => $model->id, 'media_type' => $model->media_type], '查看');?>
-                                <?php }?>
+                                <?= Html::edit(['edit','id' => $model->id]);?>
                                 <?= Html::delete(['delete','id' => $model->id]);?>
                             </td>
                         </tr>
@@ -79,28 +71,3 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         </div>
     </div>
 </div>
-
-<script type="text/html"  id="editModel">
-    <?php foreach($mediaType as $key => $item){ ?>
-        <div class="col-lg-12 text-center p-xs">
-            <a href="<?= Url::to(['edit', 'media_type' => $key]); ?>" class="btn btn-w-m btn-info"><?= $item; ?></a>
-        </div>
-    <?php } ?>
-</script>
-
-<script>
-    function openEdit(){
-        var html = template('editModel', []);
-        //自定页
-        layer.open({
-            type: 1,
-            title: '创建群发类型',
-            skin: 'layui-layer-demo', //样式类名
-            closeBtn: false, //不显示关闭按钮
-            shift: 2,
-            area: ['250px', '330px'],
-            shadeClose: true, //开启遮罩关闭
-            content: html
-        });
-    }
-</script>

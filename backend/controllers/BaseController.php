@@ -3,8 +3,9 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\web\UnauthorizedHttpException;
 use yii\filters\AccessControl;
+use yii\web\UnauthorizedHttpException;
+use common\components\BaseAction;
 use common\helpers\Auth;
 
 /**
@@ -14,12 +15,7 @@ use common\helpers\Auth;
  */
 class BaseController extends Controller
 {
-    /**
-     * 默认分页
-     *
-     * @var int
-     */
-    protected $pageSize = 10;
+    use BaseAction;
 
     /**
      * @return array
@@ -40,8 +36,6 @@ class BaseController extends Controller
     }
 
     /**
-     * RBAC验证
-     *
      * @param $action
      * @return bool
      * @throws UnauthorizedHttpException
@@ -51,11 +45,6 @@ class BaseController extends Controller
     {
         if (!parent::beforeAction($action)) {
             return false;
-        }
-
-        // 验证是否登录且验证是否超级管理员
-        if (!Yii::$app->user->isGuest && Yii::$app->services->sys->isAuperAdmin()) {
-            return true;
         }
 
         // 判断当前模块的是否为主模块, 模块+控制器+方法
@@ -75,34 +64,5 @@ class BaseController extends Controller
         }
 
         return true;
-    }
-
-    /**
-     * 解析错误
-     *
-     * @param $fistErrors
-     * @return string
-     */
-    protected function analyErr($firstErrors)
-    {
-        return Yii::$app->debris->analyErr($firstErrors);
-    }
-
-    /**
-     * 错误提示信息
-     *
-     * @param string $msgText 错误内容
-     * @param string $skipUrl 跳转链接
-     * @param string $msgType 提示类型 [success/error/info/warning]
-     * @return mixed
-     */
-    public function message($msgText, $skipUrl, $msgType = null)
-    {
-        if (!$msgType || !in_array($msgType, ['success', 'error', 'info', 'warning'])) {
-            $msgType = 'success';
-        }
-
-        Yii::$app->getSession()->setFlash($msgType, $msgText);
-        return $skipUrl;
     }
 }

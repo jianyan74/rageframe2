@@ -20,7 +20,7 @@ $envNames = array_keys($envs);
 echo "Yii Application Initialization Tool v1.0\n\n";
 
 $envName = null;
-if (empty($params['env']) || $params['env'] === '1') {
+if (empty($params['env']) || $params['env'] === true) {
     echo "Which environment do you want the application to be initialized in?\n\n";
     foreach ($envNames as $i => $name) {
         echo "  [$i] $name\n";
@@ -40,7 +40,7 @@ if (empty($params['env']) || $params['env'] === '1') {
     $envName = $params['env'];
 }
 
-if (!in_array($envName, $envNames)) {
+if (!in_array($envName, $envNames, true)) {
     $envsList = implode(', ', $envNames);
     echo "\n  $envName is not a valid environment. Try one of the following: $envsList. \n";
     exit(2);
@@ -57,8 +57,15 @@ if (empty($params['env'])) {
     }
 }
 
+$rootPath = "$root/environments/{$env['path']}";
+if (!is_dir($rootPath)) {
+    printError("$rootPath directory does not exist. Check path in $envName environment.");
+    exit(3);
+}
+
 echo "\n  Start initialization ...\n\n";
-$files = getFileList("$root/environments/{$env['path']}");
+
+$files = getFileList($rootPath);
 if (isset($env['skipFiles'])) {
     $skipFiles = $env['skipFiles'];
     array_walk($skipFiles, function(&$value) use($env, $root) { $value = "$root/$value"; });
@@ -154,7 +161,7 @@ function getParams()
 
     $params = [];
     foreach ($rawParams as $param) {
-        if (preg_match('/^--(\w+)(=(.*))?$/', $param, $matches)) {
+        if (preg_match('/^--([\w-]*\w)(=(.*))?$/', $param, $matches)) {
             $name = $matches[1];
             $params[$name] = isset($matches[3]) ? $matches[3] : true;
         } else {

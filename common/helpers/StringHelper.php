@@ -1,9 +1,10 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
-use Ramsey\Uuid\Uuid;
 use yii\helpers\BaseStringHelper;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class StringHelper
@@ -22,8 +23,7 @@ class StringHelper extends BaseStringHelper
      */
     public static function uuid($type = 'time', $name = 'php.net')
     {
-        switch ($type)
-        {
+        switch ($type) {
             // 生成版本1（基于时间的）UUID对象
             case  'time' :
                 $uuid = Uuid::uuid1();
@@ -62,13 +62,11 @@ class StringHelper extends BaseStringHelper
      */
     public static function dateToInt($value)
     {
-        if (empty($value))
-        {
+        if (empty($value)) {
             return $value;
         }
 
-        if (!is_numeric($value))
-        {
+        if (!is_numeric($value)) {
             return strtotime($value);
         }
 
@@ -129,9 +127,8 @@ class StringHelper extends BaseStringHelper
      */
     public static function getLocalFilePath($url, $type = 'images')
     {
-        $prefix =  Yii::getAlias("@root/") . 'web';
-        if (Yii::$app->params['uploadConfig'][$type]['fullPath'] == true)
-        {
+        $prefix = Yii::getAlias("@root/") . 'web';
+        if (Yii::$app->params['uploadConfig'][$type]['fullPath'] == true) {
             $url = str_replace(Yii::$app->request->hostInfo, '', $url);
         }
 
@@ -149,17 +146,13 @@ class StringHelper extends BaseStringHelper
     public static function parseAttr($string)
     {
         $array = preg_split('/[,;\r\n]+/', trim($string, ",;\r\n"));
-        if (strpos($string,':'))
-        {
+        if (strpos($string, ':')) {
             $value = [];
-            foreach ($array as $val)
-            {
+            foreach ($array as $val) {
                 list($k, $v) = explode(':', $val);
                 $value[$k] = $v;
             }
-        }
-        else
-        {
+        } else {
             $value = $array;
         }
 
@@ -189,11 +182,15 @@ class StringHelper extends BaseStringHelper
      * @param bool $is_prefix
      * @return bool|\SimpleXMLElement
      */
-    public static function simplexmlLoadString($string, $class_name = 'SimpleXMLElement', $options = 0, $ns = '', $is_prefix = false)
-    {
+    public static function simplexmlLoadString(
+        $string,
+        $class_name = 'SimpleXMLElement',
+        $options = 0,
+        $ns = '',
+        $is_prefix = false
+    ) {
         libxml_disable_entity_loader(true);
-        if (preg_match('/(\<\!DOCTYPE|\<\!ENTITY)/i', $string))
-        {
+        if (preg_match('/(\<\!DOCTYPE|\<\!ENTITY)/i', $string)) {
             return false;
         }
 
@@ -233,23 +230,19 @@ class StringHelper extends BaseStringHelper
     public static function toUnderScore($str)
     {
         $array = [];
-        for ($i = 0; $i < strlen($str); $i++)
-        {
-            if ($str[$i] == strtolower($str[$i]))
-            {
+        for ($i = 0; $i < strlen($str); $i++) {
+            if ($str[$i] == strtolower($str[$i])) {
                 $array[] = $str[$i];
-            }
-            else
-            {
-                if ($i > 0)
-                {
+            } else {
+                if ($i > 0) {
                     $array[] = '-';
                 }
+
                 $array[] = strtolower($str[$i]);
             }
         }
 
-        return implode('',$array);
+        return implode('', $array);
     }
 
     /**
@@ -278,15 +271,13 @@ class StringHelper extends BaseStringHelper
         $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
 
         $hash = '';
-        if (!$numeric)
-        {
+        if (!$numeric) {
             $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
             $length--;
         }
 
         $max = strlen($seed) - 1;
-        for ($i = 0; $i < $length; $i++)
-        {
+        for ($i = 0; $i < $length; $i++) {
             $hash .= $seed{mt_rand(0, $max)};
         }
 
@@ -303,7 +294,21 @@ class StringHelper extends BaseStringHelper
     public static function randomNum($prefix = false, $length = 8)
     {
         $str = $prefix ?? '';
-        return $str . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, $length);
+        return $str . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, $length);
+    }
+
+    /**
+     * 字符串匹配替换
+     *
+     * @param $search
+     * @param $replace
+     * @param $subject
+     * @param null $count
+     * @return mixed
+     */
+    public static function replace($search, $replace, $subject, &$count = null)
+    {
+        return str_replace($search, $replace, $subject, $count);
     }
 
     /**
@@ -328,72 +333,64 @@ class StringHelper extends BaseStringHelper
      */
     public static function hideStr($string, $bengin = 0, $len = 4, $type = 0, $glue = "@")
     {
-        if (empty($string))
-        {
+        if (empty($string)) {
             return false;
         }
 
         $array = [];
-        if ($type == 0 || $type == 1 || $type == 4)
-        {
+        if ($type == 0 || $type == 1 || $type == 4) {
             $strlen = $length = mb_strlen($string);
-            while ($strlen)
-            {
+
+            while ($strlen) {
                 $array[] = mb_substr($string, 0, 1, "utf8");
                 $string = mb_substr($string, 1, $strlen, "utf8");
                 $strlen = mb_strlen($string);
             }
         }
 
-        if ($type == 0)
-        {
-            for ($i = $bengin; $i < ($bengin + $len); $i++)
-            {
-                isset($array[$i]) && $array[$i] = "*";
-            }
+        switch ($type) {
+            case 0 :
+                for ($i = $bengin; $i < ($bengin + $len); $i++) {
+                    isset($array[$i]) && $array[$i] = "*";
+                }
 
-            $string = implode("", $array);
-        }
-        else if ($type == 1)
-        {
-            $array = array_reverse($array);
-            for ($i = $bengin; $i < ($bengin + $len); $i++)
-            {
-                isset($array[$i]) && $array[$i] = "*";
-            }
+                $string = implode("", $array);
+                break;
+            case 1 :
+                $array = array_reverse($array);
+                for ($i = $bengin; $i < ($bengin + $len); $i++) {
+                    isset($array[$i]) && $array[$i] = "*";
+                }
 
-            $string = implode("", array_reverse($array));
-        }
-        else if ($type == 2)
-        {
-            $array = explode($glue, $string);
-            $array[0] = self::hideStr($array[0], $bengin, $len, 1);
-            $string = implode($glue, $array);
-        }
-        else if ($type == 3)
-        {
-            $array = explode($glue, $string);
-            $array[1] = self::hideStr($array[1], $bengin, $len, 0);
-            $string = implode($glue, $array);
-        }
-        else if ($type == 4)
-        {
-            $left = $bengin;
-            $right = $len;
-            $tem = array();
-            for ($i = 0; $i < ($length - $right); $i++)
-            {
-                if (isset($array[$i]))
-                    $tem[] = $i >= $left ? "*" : $array[$i];
-            }
+                $string = implode("", array_reverse($array));
+                break;
+            case 2 :
+                $array = explode($glue, $string);
+                $array[0] = self::hideStr($array[0], $bengin, $len, 1);
+                $string = implode($glue, $array);
+                break;
+            case 3 :
+                $array = explode($glue, $string);
+                $array[1] = self::hideStr($array[1], $bengin, $len, 0);
+                $string = implode($glue, $array);
+                break;
+            case 4 :
+                $left = $bengin;
+                $right = $len;
+                $tem = array();
+                for ($i = 0; $i < ($length - $right); $i++) {
+                    if (isset($array[$i])) {
+                        $tem[] = $i >= $left ? "*" : $array[$i];
+                    }
+                }
 
-            $array = array_chunk(array_reverse($array), $right);
-            $array = array_reverse($array[0]);
-            for ($i = 0; $i < $right; $i++)
-            {
-                $tem[] = $array[$i];
-            }
-            $string = implode("", $tem);
+                $array = array_chunk(array_reverse($array), $right);
+                $array = array_reverse($array[0]);
+                for ($i = 0; $i < $right; $i++) {
+                    $tem[] = $array[$i];
+                }
+                $string = implode("", $tem);
+                break;
         }
 
         return $string;

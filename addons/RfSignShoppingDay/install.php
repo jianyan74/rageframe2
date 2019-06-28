@@ -1,9 +1,29 @@
 <?php
+namespace addons\RfSignShoppingDay;
 
-$sql = "
-DROP TABLE IF EXISTS `rf_addon_sign_shopping_street_award`;
+use Yii;
+use backend\interfaces\AddonWidget;
+
+/**
+ * 安装
+ *
+ * Class Install
+ * @package addons\RfSignShoppingDay
+ */
+class Install implements AddonWidget
+{
+    /**
+     * @param $addon
+     * @return mixed|void
+     * @throws \yii\db\Exception
+     */
+    public function run($addon)
+    {
+        $sql = "
+        DROP TABLE IF EXISTS `rf_addon_sign_shopping_street_award`;
 CREATE TABLE `rf_addon_sign_shopping_street_award` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `merchant_id` int(10) unsigned DEFAULT '0' COMMENT '商户id',
   `title` varchar(50) NOT NULL COMMENT '奖品名称',
   `cate_id` tinyint(4) DEFAULT '1' COMMENT '分类',
   `sort` int(10) DEFAULT '0' COMMENT '排序',
@@ -28,6 +48,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_award` (
 DROP TABLE IF EXISTS `rf_addon_sign_shopping_street_record`;
 CREATE TABLE `rf_addon_sign_shopping_street_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `merchant_id` int(10) unsigned DEFAULT '0' COMMENT '商户id',
   `openid` varchar(50) NOT NULL,
   `is_win` int(2) NOT NULL DEFAULT '2',
   `award_id` varchar(50) DEFAULT NULL,
@@ -47,6 +68,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_record` (
 DROP TABLE IF EXISTS `rf_addon_sign_shopping_street_stat`;
 CREATE TABLE `rf_addon_sign_shopping_street_stat` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自动编号',
+  `merchant_id` int(10) unsigned DEFAULT '0' COMMENT '商户id',
   `openid` varchar(50) NOT NULL DEFAULT '' COMMENT '用户openid',
   `source_page` varchar(200) NOT NULL DEFAULT '' COMMENT '来源 url',
   `page` varchar(200) NOT NULL DEFAULT '' COMMENT '当前页面 url',
@@ -64,6 +86,7 @@ CREATE TABLE `rf_addon_sign_shopping_street_stat` (
 DROP TABLE IF EXISTS `rf_addon_sign_shopping_street_user`;
 CREATE TABLE `rf_addon_sign_shopping_street_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `merchant_id` int(10) unsigned DEFAULT '0' COMMENT '商户id',
   `openid` varchar(50) NOT NULL,
   `nickname` varchar(50) NOT NULL COMMENT '昵称',
   `realname` varchar(50) DEFAULT NULL,
@@ -78,7 +101,9 @@ CREATE TABLE `rf_addon_sign_shopping_street_user` (
   PRIMARY KEY (`id`),
   KEY `openid` (`openid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='扩展_购物节_用户表';
-";
+        ";
 
-// 执行sql
- Yii::$app->getDb()->createCommand($sql)->execute();
+        // 执行sql
+        Yii::$app->getDb()->createCommand($sql)->execute();
+    }
+}

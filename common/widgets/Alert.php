@@ -45,7 +45,8 @@ class Alert extends \yii\bootstrap\Widget
 
 
     /**
-     * {@inheritdoc}
+     * @return string|void
+     * @throws \Exception
      */
     public function run()
     {
@@ -58,27 +59,16 @@ class Alert extends \yii\bootstrap\Widget
                 continue;
             }
 
-            $data = (array) $flash;
-            foreach ($data as $i => $message) {
-                /* initialize css class for each alert box */
-                $this->options['class'] = $this->alertTypes[$type] . $appendClass;
-
-                /* assign unique id to each alert box */
-                $this->options['id'] = $this->getId() . '-' . $type . '-' . $i;
-
-                echo <<<HTML
-                        <div class="alert {$this->options['class']} alert-dismissable">
-                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                            {$message}</a>.
-                        </div>
-HTML;
+            foreach ((array) $flash as $i => $message) {
+                echo \yii\bootstrap\Alert::widget([
+                    'body' => $message,
+                    'closeButton' => $this->closeButton,
+                    'options' => array_merge($this->options, [
+                        'id' => $this->getId() . '-' . $type . '-' . $i,
+                        'class' => $this->alertTypes[$type] . $appendClass,
+                    ]),
+                ]);
             }
-
-            // 调用函数
-            $this->view->registerJs(<<<Js
-closeInterval();
-Js
-            );
 
             $session->removeFlash($type);
         }

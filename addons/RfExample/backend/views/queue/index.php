@@ -1,9 +1,5 @@
 <?php
 use yii\widgets\ActiveForm;
-use common\helpers\Url;
-use common\widgets\webuploader\Images;
-use common\widgets\webuploader\Files;
-use kartik\datetime\DateTimePicker;
 
 $this->title = '消息队列';
 $this->params['breadcrumbs'][] = $this->title;

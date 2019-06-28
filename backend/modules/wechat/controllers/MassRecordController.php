@@ -1,14 +1,14 @@
 <?php
 namespace backend\modules\wechat\controllers;
 
-use common\enums\StatusEnum;
-use common\models\wechat\Attachment;
 use Yii;
 use yii\data\Pagination;
 use common\components\Curd;
-use common\models\wechat\FansTags;
 use common\models\wechat\MassRecord;
-use backend\modules\wechat\models\SendForm;
+use common\enums\StatusEnum;
+use backend\modules\wechat\forms\SendForm;
+use backend\controllers\BaseController;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * 群发消息控制器
@@ -17,14 +17,14 @@ use backend\modules\wechat\models\SendForm;
  * @package backend\modules\wechat\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MassRecordController extends WController
+class MassRecordController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var MassRecord
      */
-    public $modelClass = 'common\models\wechat\MassRecord';
+    public $modelClass = MassRecord::class;
 
     /**
      * 首页
@@ -33,7 +33,7 @@ class MassRecordController extends WController
      */
     public function actionIndex()
     {
-        $data = MassRecord::find();
+        $data = MassRecord::find()->filterWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -43,107 +43,54 @@ class MassRecordController extends WController
         return $this->render($this->action->id, [
             'models' => $models,
             'pages' => $pages,
-            'mediaType' => MassRecord::$mediaTypeExplain
         ]);
     }
 
     /**
      * 编辑/创建
      *
-     * @param $media_type
      * @return mixed|string|\yii\web\Response
+     * @throws UnprocessableEntityHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \yii\web\UnprocessableEntityHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\base\ExitException
      */
     public function actionEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id', null);
-        $media_type = Yii::$app->request->get('media_type');
         $model = $this->findModel($id);
-        $model->media_type = $media_type;
         $model->send_status == StatusEnum::DISABLED && $model->send_type = 2;
 
-        if ($model->load($request->post()))
-        {
-            // 获取图文资源文件
-            if ($model->media_type == Attachment::TYPE_NEWS)
-            {
-                $attachment = Attachment::findById($model->attachment_id);
-                $model->media_id = $attachment['media_id'];
-            }
-
-            $model->send_time = strtotime($model->send_time);
-            $immediately = $model->send_type == 1 ? true : false;
-
-            try
-            {
-                if ($model->send($immediately))
-                {
-                    return $this->redirect(['index']);
+        $this->activeFormValidate($model);
+        if ($model->load($request->post())) {
+            try {
+                if (!$model->save()) {
+                    throw new UnprocessableEntityHttpException($this->getError($model));
                 }
-            }
-            catch (\Exception $e)
-            {
+
+                return $this->redirect(['index']);
+            } catch (\Exception $e) {
                 return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }
         }
 
         return $this->render($this->action->id, [
             'model' => $model,
-            'media_type' => $media_type,
-            'tags' => FansTags::getList(),
-            'submit' => true,
+            'tags' => Yii::$app->services->wechatFansTags->getList(),
         ]);
     }
 
     /**
      * @param $id
-     * @return string
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \yii\web\UnprocessableEntityHttpException
-     */
-    public function actionView()
-    {
-        $request = Yii::$app->request;
-        $id = $request->get('id', null);
-        $media_type = Yii::$app->request->get('media_type');
-        $model = $this->findModel($id);
-        $model->media_type = $media_type;
-        $model->send_status == StatusEnum::DISABLED && $model->send_type = 2;
-
-        return $this->render('edit', [
-            'model' => $model,
-            'media_type' => $media_type,
-            'tags' => FansTags::getList(),
-            'submit' => false,
-        ]);
-    }
-
-    /**
-     * 获取粉丝分组 - 群发
-     *
-     * @return string
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \yii\web\UnprocessableEntityHttpException
-     */
-    public function actionSend()
-    {
-        return $this->renderAjax('send-fans',[
-            'tags' => FansTags::getList(),
-        ]);
-    }
-
-    /**
-     * 返回模型
-     *
-     * @param $id
-     * @return mixed
+     * @return SendForm|null
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = SendForm::findOne($id))))
-        {
+        if (empty($id) || empty(($model = SendForm::findOne($id)))) {
             $model = new SendForm();
             return $model->loadDefaultValues();
         }

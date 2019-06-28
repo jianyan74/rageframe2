@@ -19,7 +19,7 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <script src="<?= AddonHelper::getResourcesFile('js/jquery.min.js'); ?>"></script>
+    <script src="<?= AddonHelper::file('js/jquery.min.js'); ?>"></script>
 </head>
 <body>
 <?php $this->beginBody() ?>

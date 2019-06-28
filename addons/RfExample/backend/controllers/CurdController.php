@@ -4,7 +4,7 @@ namespace addons\RfExample\backend\controllers;
 use yii;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
-use common\controllers\AddonsBaseController;
+use common\enums\StatusEnum;
 use common\helpers\ResultDataHelper;
 use common\helpers\ExcelHelper;
 use addons\RfExample\common\models\Curd;
@@ -14,7 +14,7 @@ use addons\RfExample\common\models\Curd;
  * @package addons\RfExample\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class CurdController extends AddonsBaseController
+class CurdController extends BaseController
 {
     /**
      * 首页
@@ -28,13 +28,10 @@ class CurdController extends AddonsBaseController
         $end_time = Yii::$app->request->get('end_time', date('Y-m-d', strtotime("+1 day")));
         
         $data = Curd::find()
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['like', 'title', $title])
             ->andFilterWhere(['between','created_at', strtotime($start_time), strtotime($end_time)]);
-        $pages = new Pagination([
-            'totalCount' => $data->count(),
-            'pageSize' => $this->pageSize
-        ]);
-
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -55,20 +52,11 @@ class CurdController extends AddonsBaseController
      */
     public function actionEdit()
     {
-        $request  = Yii::$app->request;
+        $request = Yii::$app->request;
         $id = $request->get('id', null);
         $model = $this->findModel($id);
-        !empty($model->covers) && $model->covers = unserialize($model->covers);
-        !empty($model->covers) && $model->files = json_decode($model->files, true);
-        if ($model->load($request->post()))
-        {
-            !empty($model->covers) && $model->covers = serialize($model->covers);
-            !empty($model->files) && $model->files = json_encode($model->files);
-
-            if ($model->save())
-            {
-                return $this->redirect(['index']);
-            }
+        if ($model->load($request->post()) && $model->save()) {
+            return $this->redirect(['index']);
         }
 
         return $this->render('edit',[
@@ -86,8 +74,7 @@ class CurdController extends AddonsBaseController
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete())
-        {
+        if ($this->findModel($id)->delete()) {
             return $this->message("删除成功",$this->redirect(['index']));
         }
 
@@ -102,15 +89,13 @@ class CurdController extends AddonsBaseController
      */
     public function actionAjaxUpdate($id)
     {
-        if (!($model = Curd::findOne($id)))
-        {
+        if (!($model = Curd::findOne($id))) {
             return ResultDataHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
-        if (!$model->save())
-        {
-            return ResultDataHelper::json(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->save()) {
+            return ResultDataHelper::json(422, $this->getError($model));
         }
 
         return ResultDataHelper::json(200, '修改成功');
@@ -138,6 +123,7 @@ class CurdController extends AddonsBaseController
         ];
 
         $list = Curd::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED])
             ->with(['manager'])
             ->asArray()
             ->all();
@@ -153,8 +139,7 @@ class CurdController extends AddonsBaseController
      */
     protected function findModel($id)
     {
-        if (empty($id) || empty(($model = Curd::findOne($id))))
-        {
+        if (empty($id) || empty(($model = Curd::findOne($id)))) {
             $model = new Curd;
             return $model->loadDefaultValues();
         }

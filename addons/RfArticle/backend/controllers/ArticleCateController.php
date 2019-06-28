@@ -3,9 +3,8 @@ namespace addons\RfArticle\backend\controllers;
 
 use Yii;
 use common\components\Curd;
-use common\helpers\ArrayHelper;
-use common\controllers\AddonsBaseController;
 use addons\RfArticle\common\models\ArticleCate;
+use yii\data\ActiveDataProvider;
 
 /**
  * 文章分类
@@ -14,61 +13,56 @@ use addons\RfArticle\common\models\ArticleCate;
  * @package addons\RfArticle\backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class ArticleCateController extends AddonsBaseController
+class ArticleCateController extends BaseController
 {
     use Curd;
 
     /**
-     * @var string
+     * @var ArticleCate
      */
-    public $modelClass = 'addons\RfArticle\common\models\ArticleCate';
+    public $modelClass = ArticleCate::class;
 
     /**
-     * 首页
-     *
-     * @return string
+     * Lists all Tree models.
+     * @return mixed
      */
     public function actionIndex()
     {
-        $models = ArticleCate::find()
-            ->orderBy('sort Asc,created_at Asc')
-            ->asArray()
-            ->all();
+        $query = ArticleCate::find()
+            ->orderBy('sort asc, created_at asc')
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false
+        ]);
 
         return $this->render('index', [
-            'models' => ArrayHelper::itemsMerge($models),
+            'dataProvider' => $dataProvider
         ]);
     }
 
     /**
-     * 编辑/创建
-     *
-     * @return array|mixed|string|yii\web\Response
+     * @return mixed|string|\yii\console\Response|\yii\web\Response
+     * @throws \yii\base\ExitException
      */
     public function actionAjaxEdit()
     {
         $request = Yii::$app->request;
         $id = $request->get('id');
         $model = $this->findModel($id);
-        $model->level = $request->get('level', null) ?? $model->level; // 级别
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
 
-        if ($model->load(Yii::$app->request->post()))
-        {
-            if ($request->isAjax)
-            {
-                Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
-                return \yii\widgets\ActiveForm::validate($model);
-            }
-
+        // ajax 验证
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
             return $model->save()
                 ? $this->redirect(['index'])
-                : $this->message($this->analyErr($model->getFirstErrors()), $this->redirect(['index']), 'error');
+                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
         }
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'parent_title' => $request->get('parent_title', '无'),
+            'cateDropDownList' => ArticleCate::getEditDropDownList($id),
         ]);
     }
 }

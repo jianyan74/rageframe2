@@ -10,13 +10,13 @@ use yii\validators\Validator;
  *
  * 在rule使用：
  *
- * ['verifyCode', '\common\models\validators\SmscodeValidator', 'usage' => 'userRegister'],
+ * ['verifyCode', '\common\models\validators\SmsCodeValidator', 'usage' => 'userRegister'],
  *
- * Class SmscodeValidator
+ * Class SmsCodeValidator
  * @package common\models\common
  * @author jianyan74 <751393839@qq.com>
  */
-class SmscodeValidator extends Validator
+class SmsCodeValidator extends Validator
 {
     /**
      * 对应Smslog表中的usage字段，用来匹配不同用途的验证码
@@ -37,7 +37,7 @@ class SmscodeValidator extends Validator
      *
      * @var int
      */
-    public $expireTime = 10800;
+    public $expireTime = 60 * 15;
 
     /**
      * @param \yii\base\Model $model
@@ -57,16 +57,13 @@ class SmscodeValidator extends Validator
 
         /** @var $smsLog SmsLog */
         $time = time();
-        if(
+        if (
             is_null($smsLog) ||
             ($smsLog->code != $model->$attribute) ||
             ($smsLog->created_at > $time || $time > ($smsLog->created_at + $this->expireTime) )
-        )
-        {
-            $this->addError($model, $attribute, '验证码有误');
-        }
-        else
-        {
+        ) {
+            $this->addError($model, $attribute, '验证码错误');
+        } else {
             $smsLog->used = StatusEnum::ENABLED;
             $smsLog->use_time = $time;
             $smsLog->save();

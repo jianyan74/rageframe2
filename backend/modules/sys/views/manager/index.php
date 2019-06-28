@@ -1,12 +1,15 @@
 <?php
 use common\helpers\Url;
+use common\helpers\Html;
+use common\helpers\ImageHelper;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
-use common\helpers\Html;
+use yii\grid\GridView;
 
 $this->title = '后台用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
+
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
@@ -20,80 +23,82 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 </div>
             </div>
             <div class="box-body table-responsive">
-                <div class="row normalPaddingJustV">
-                    <div class="col-sm-3">
-                        <?php $form = ActiveForm::begin([
-                            'action' => Url::to(['index']),
-                            'method' => 'get'
-                        ]); ?>
-                        <div class="input-group m-b">
-                            <?= Html::textInput('keyword', $keyword, [
-                                'placeholder' => '请输入账号/姓名/手机号码',
-                                'class' => 'form-control'
-                            ])?>
-                            <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
-                        </div>
-                        <?php ActiveForm::end(); ?>
-                    </div>
-                </div>
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>头像</th>
-                        <th>登录账号</th>
-                        <th>姓名</th>
-                        <th>手机号码</th>
-                        <th>角色</th>
-                        <th>最后登陆</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($models as $model){ ?>
-                        <tr id="<?= $model->id; ?>">
-                            <td><?= $model->id; ?></td>
-                            <td class="feed-element">
-                                <img src="<?= \common\helpers\Html::headPortrait($model->head_portrait);?>" class="img-circle rf-img-md img-bordered-sm">
-                            </td>
-                            <td><?= $model->username ?></td>
-                            <td><?= $model->realname ?></td>
-                            <td><?= $model->mobile ?></td>
-                            <td>
-                                <?php if ($model->id == Yii::$app->params['adminAccount']){ ?>
-                                    <?= Html::tag('span', '超级管理员', ['class' => 'label label-success'])?>
-                                <?php }else{ ?>
-                                    <?= !empty($model->assignment->item_name)
-                                        ? Html::tag('span', $model->assignment->item_name, ['class' => 'label label-primary'])
-                                        : Html::tag('span', '未授权', ['class' => 'label label-default'])  ?>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                最后访问IP：<?= $model->last_ip ?><br>
-                                最后登录：<?= $model->last_time ? Yii::$app->formatter->asDatetime($model->last_time) : '暂无' ?><br>
-                                访问次数：<?= $model->visit_count ?>
-                            </td>
-                            <td>
-                                <?= Html::linkButton(['ajax-edit','id' => $model->id], '账号密码', [
-                                    'data-toggle' => 'modal',
-                                    'data-target' => '#ajaxModal',
-                                ]); ?>
-                                <?= Html::edit(['edit','id' => $model->id]); ?>
-                                <?php if ($model->id != Yii::$app->params['adminAccount']){ ?>
-                                    <?= Html::status($model['status']); ?>
-                                    <?= Html::delete(['delete','id' => $model->id]); ?>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="box-footer">
-                <?= LinkPager::widget([
-                    'pagination' => $pages
-                ]);?>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    //重新定义分页样式
+                    'tableOptions' => ['class' => 'table table-hover'],
+                    'columns' => [
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                        ],
+                        [
+                            'attribute' => 'head_portrait',
+                            'value' => function ($model) {
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
+                                    'class' => 'img-circle rf-img-md img-bordered-sm',
+                                ]);
+                            },
+                            'filter' => false,
+                            'format' => 'raw',
+                        ],
+                        'attribute' => 'username',
+                        'realname',
+                        'mobile',
+                        [
+                            'label'=> '角色',
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                if ($model->id == Yii::$app->params['adminAccount']) {
+                                    return Html::tag('span', '超级管理员', ['class' => 'label label-success']);
+                                }else{
+                                    if (isset($model->assignment->role->title)) {
+                                        return Html::tag('span', $model->assignment->role->title, ['class' => 'label label-primary']);
+                                    } else {
+                                        return Html::tag('span', '未授权', ['class' => 'label label-default']);
+                                    }
+                                }
+                            },
+                            'format' => 'raw',
+                        ],
+                        [
+                            'label'=> '最后登陆',
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                return "最后访问IP：" . $model->last_ip . '<br>'.
+                                    "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>'.
+                                    "访问次数：" . $model->visit_count;
+                            },
+                            'format' => 'raw',
+                        ],
+                        [
+                            'header' => "操作",
+                            'class' => 'yii\grid\ActionColumn',
+                            'template'=> '{recharge} {edit} {status} {destroy}',
+                            'buttons' => [
+                                'recharge' => function ($url, $model, $key) {
+                                    return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
+                                        'data-toggle' => 'modal',
+                                        'data-target' => '#ajaxModal',
+                                    ]);
+                                },
+                                'edit' => function ($url, $model, $key) {
+                                    return Html::edit(['edit', 'id' => $model->id]);
+                                },
+                                'status' => function ($url, $model, $key) {
+                                    if ($model->id != Yii::$app->params['adminAccount']) {
+                                        return Html::status($model->status);
+                                    }
+                                },
+                                'destroy' => function ($url, $model, $key) {
+                                    if ($model->id != Yii::$app->params['adminAccount']) {
+                                        return Html::delete(['destroy', 'id' => $model->id]);
+                                    }
+                                },
+                            ],
+                        ],
+                    ],
+                ]); ?>
             </div>
         </div>
     </div>
-</div>

@@ -4,11 +4,7 @@ namespace common\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use common\models\wechat\Fans;
 use common\helpers\WechatHelper;
-use common\models\wechat\WechatMessage;
-use common\models\wechat\MsgHistory;
-use common\models\wechat\QrcodeStat;
 
 /**
  * 接收微信消息处理控制器
@@ -44,8 +40,7 @@ class WechatApiController extends Controller
         {
             // 激活公众号
             case 'GET':
-                if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce')))
-                {
+                if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce'))) {
                     return $request->get('echostr');
                 }
 
@@ -54,36 +49,45 @@ class WechatApiController extends Controller
             // 接收数据
             case 'POST':
                 $app = Yii::$app->wechat->getApp();
-                $app->server->push(function ($message)
-                {
-                    // 微信消息
-                    Yii::$app->params['wechatMessage'] = $message;
-                    // 消息记录
-                    Yii::$app->params['msgHistory'] = [
-                        'openid' => $message['FromUserName'],
-                        'type' => $message['MsgType'],
-                        'event' => '',
-                        'rule_id' => 0, // 规则id
-                        'keyword_id' => 0, // 关键字id
-                    ];
+                $app->server->push(function ($message) {
+                    try {
+                        // 微信消息
+                        Yii::$app->services->wechatMessage->setMessage($message);// 消息记录
+                        Yii::$app->params['msgHistory'] = [
+                            'openid' => $message['FromUserName'],
+                            'type' => $message['MsgType'],
+                            'event' => '',
+                            'rule_id' => 0, // 规则id
+                            'keyword_id' => 0, // 关键字id
+                        ];
 
-                    switch ($message['MsgType'])
-                    {
-                        case 'event' : // '收到事件消息';
-                            $reply = $this->event($message);
-                            break;
-                        case 'text' : //  '收到文字消息';
-                            $reply = WechatMessage::text();
-                            break;
-                        default : // ... 其它消息(image、voice、video、location、link、file ...)
-                            $reply = WechatMessage::other();
-                            break;
+                        switch ($message['MsgType']) {
+                            case 'event' : // '收到事件消息';
+                                $reply = $this->event($message);
+                                break;
+                            case 'text' : //  '收到文字消息';
+                                $reply = Yii::$app->services->wechatMessage->text();
+                                break;
+                            default : // ... 其它消息(image、voice、video、location、link、file ...)
+                                $reply = Yii::$app->services->wechatMessage->other();
+                                break;
+                        }
+
+                        Yii::$app->services->wechatMsgHistory->save(Yii::$app->params['msgHistory'], Yii::$app->services->wechatMessage->getMessage());
+                        return $reply;
+                    } catch (\Exception $e) {
+                        // 记录行为日志
+                        Yii::$app->services->log->setStatusCode(500);
+                        Yii::$app->services->log->setStatusText('wechatApiReply');
+                        Yii::$app->services->log->setErrData($e->getMessage());
+                        Yii::$app->services->log->insertLog();
+
+                        if (YII_DEBUG) {
+                            return $e->getMessage();
+                        }
+
+                        return '系统出错，请联系管理员';
                     }
-
-                    MsgHistory::setData(Yii::$app->params['msgHistory'], $message);
-                    unset(Yii::$app->params['wechatMessage'], Yii::$app->params['msgHistory']);
-
-                    return $reply;
                 });
 
                 // 将响应输出
@@ -109,32 +113,31 @@ class WechatApiController extends Controller
     {
         Yii::$app->params['msgHistory']['event'] = $message['Event'];
 
-        switch ($message['Event'])
-        {
+        switch ($message['Event']) {
             // 关注事件
             case 'subscribe' :
-                Fans::follow($message['FromUserName']);
+                Yii::$app->services->wechatFans->follow($message['FromUserName']);
 
                 // 判断是否是二维码关注
-                if ($qrResult = QrcodeStat::scan($message))
-                {
-                    Yii::$app->params['wechatMessage']['Content'] = $qrResult;
-                    return WechatMessage::text();
+                if ($qrResult = Yii::$app->services->wechatQrcodeStat->scan($message)) {
+                    $message['Content'] = $qrResult;
+                    Yii::$app->services->wechatMessage->setMessage($message);
+                    return Yii::$app->services->wechatMessage->text();
                 }
 
-                return WechatMessage::follow();
+                return Yii::$app->services->wechatMessage->follow();
                 break;
             // 取消关注事件
             case 'unsubscribe' :
-                Fans::unFollow($message['FromUserName']);
+                Yii::$app->services->wechatFans->unFollow($message['FromUserName']);
                 return false;
                 break;
             // 二维码扫描事件
             case 'SCAN' :
-                if ($qrResult = QrcodeStat::scan($message))
-                {
-                    Yii::$app->params['wechatMessage']['Content'] = $qrResult;
-                    return WechatMessage::text();
+                if ($qrResult = Yii::$app->services->wechatQrcodeStat->scan($message)) {
+                    $message['Content'] = $qrResult;
+                    Yii::$app->services->wechatMessage->setMessage($message);
+                    return Yii::$app->services->wechatMessage->text();
                 }
                 break;
             // 上报地理位置事件
@@ -145,8 +148,9 @@ class WechatApiController extends Controller
                 break;
             // 自定义菜单(点击)事件
             case 'CLICK' :
-                Yii::$app->params['wechatMessage']['Content'] = $message['EventKey'];
-                return WechatMessage::text();
+                $message['Content'] = $message['EventKey'];
+                Yii::$app->services->wechatMessage->setMessage($message);
+                return Yii::$app->services->wechatMessage->text();
                 break;
         }
 

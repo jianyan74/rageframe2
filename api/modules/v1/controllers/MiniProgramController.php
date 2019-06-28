@@ -1,14 +1,16 @@
 <?php
+
 namespace api\modules\v1\controllers;
 
 use Yii;
 use api\controllers\OnAuthController;
-use api\modules\v1\models\MiniProgramLoginForm;
+use api\modules\v1\forms\MiniProgramLoginForm;
 use common\models\member\Member;
 use common\models\api\AccessToken;
 use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
 use common\models\member\Auth;
+use common\enums\CacheKeyEnum;
 
 /**
  * 小程序授权验证
@@ -45,8 +47,7 @@ class MiniProgramController extends OnAuthController
      */
     public function actionSessionKey($code)
     {
-        if (!$code)
-        {
+        if (!$code) {
             return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
         }
 
@@ -56,7 +57,7 @@ class MiniProgramController extends OnAuthController
 
         // 缓存数据
         $auth_key = Yii::$app->security->generateRandomString() . '_' . time();
-        Yii::$app->cache->set($auth_key, ArrayHelper::toArray($oauth), 7195);
+        Yii::$app->cache->set(CacheKeyEnum::API_MINI_PROGRAM_LOGIN . $auth_key, ArrayHelper::toArray($oauth), 7195);
 
         return [
             'auth_key' => $auth_key // 临时缓存token
@@ -75,31 +76,18 @@ class MiniProgramController extends OnAuthController
         $model = new MiniProgramLoginForm();
         $model->attributes = Yii::$app->request->post();
 
-        if (!$model->validate())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->validate()) {
+            return ResultDataHelper::api(422, $this->getError($model));
         }
 
-        if (!($oauth = Yii::$app->cache->get($model->auth_key)))
-        {
-            return ResultDataHelper::api(422, 'auth_key已过期');
-        }
-
-        $sign = sha1(htmlspecialchars_decode($model->rawData . $oauth['session_key']));
-        if ($sign !== $model->signature)
-        {
-            return ResultDataHelper::api(422, '签名错误');
-        }
-
-        $userinfo = Yii::$app->wechat->miniProgram->encryptor->decryptData($oauth['session_key'], $model->iv, $model->encryptedData);
+        $userinfo = $model->getUser();
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = Auth::findOauthClient(Auth::CLIENT_MINI_PROGRAM, $userinfo['openId'])))
-        {
-            $memberAuth = new Auth();
-            $memberAuthInfo = $memberAuth->add([
-                'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM,
+            $userinfo['openId']))) {
+            Yii::$app->services->memberAuth->create([
+                'unionid' => $userinfo['unionId'] ?? '',
                 'oauth_client' => Auth::CLIENT_MINI_PROGRAM,
                 'oauth_client_user_id' => $userinfo['openId'],
                 'gender' => $userinfo['gender'],
@@ -116,8 +104,7 @@ class MiniProgramController extends OnAuthController
         // TODO 以下代码都可以替换
 
         // 判断是否有管理信息 数据也可以后续在绑定
-        if (!($member = $memberAuthInfo->member))
-        {
+        if (!($member = $memberAuthInfo->member)) {
             $member = new Member();
             $member->attributes = [
                 'gender' => $userinfo['gender'],
@@ -131,7 +118,7 @@ class MiniProgramController extends OnAuthController
             $memberAuthInfo->save();
         }
 
-        return AccessToken::getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
     }
 
     /**
@@ -156,14 +143,12 @@ class MiniProgramController extends OnAuthController
         // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败时为数组或者你指定的 API 返回格式
 
         // 保存小程序码到文件
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
-        {
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             $filename = $response->save('/path/to/directory');
         }
 
         // 或
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
-        {
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             $filename = $response->saveAs('/path/to/directory', 'appcode.png');
         }
     }
@@ -179,8 +164,7 @@ class MiniProgramController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
-        {
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }
