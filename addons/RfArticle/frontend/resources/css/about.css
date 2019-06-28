@@ -1,0 +1,16 @@
+/* CSS Document */
+.aboutcon{background:url(../img/slider/aboutphoto.jpg) no-repeat bottom right; color:#696969}
+h1.t_nav { border-bottom: #337ab7 1px solid; font-size: 12px; font-weight: normal; line-height: 40px; height: 40px; }
+h1.t_nav a{width: 100px; display: block; text-align: center ; color: #fff; float:left}
+h1.t_nav span{float:right; color:#999}
+.n1 { background: #777; }
+.n2 { background: #9d9d9d; }
+/*.about{ width:75%;overflow: hidden; background: url(../img/slider/r_line.jpg) repeat-y right; line-height:22px; }*/
+.about h2{ font-size:22px; font-family: 'Architects Daughter', cursive; margin-bottom:20px}
+.about p{ margin-bottom:20px}
+.about_c,.about{margin:20px 0}
+.about ul{ width:90%}
+.about_c{ padding:10px 0 0 10px; color:#999; line-height:26px; }
+.about_c img{ margin:5px 0}
+.about_c span{ color:#19A566}
+a.blog_link{ color:#1CA368; margin:0 20px}
