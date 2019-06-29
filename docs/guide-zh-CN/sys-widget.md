@@ -440,7 +440,7 @@ use leandrogehlen\treegrid\TreeGrid;
                     return Html::status($model->status);
                 },
                 'delete' => function ($url, $model, $key) {
-                    return Html::delete(['edit','id' => $model->id]);
+                    return Html::delete(['d','id' => $model->id]);
                 },
             ],
         ],
