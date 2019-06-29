@@ -102,8 +102,8 @@ return [
                     'controller' => ['v1/file'],
                     'pluralize' => false,
                     'extraPatterns' => [
-                        'POST images' => 'images1', // 图片上传
-                        'POST videos' => 'videos1', // 视频上传
+                        'POST images' => 'images', // 图片上传
+                        'POST videos' => 'videos', // 视频上传
                         'POST voices' => 'voices', // 语音上传
                         'POST files' => 'files', // 文件上传
                         'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
