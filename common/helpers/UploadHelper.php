@@ -247,6 +247,13 @@ class UploadHelper
                 $this->config['extensions'])) {
             throw new NotFoundHttpException('文件类型不允许');
         }
+
+        // 存储本地进行安全校验
+        if ($this->drive == Attachment::DRIVE_LOCAL) {
+            if ($this->type == Attachment::UPLOAD_TYPE_FILES && in_array($this->baseInfo['extension'], $this->config['blacklist']))  {
+                throw new NotFoundHttpException('上传的文件类型不允许');
+            }
+        }
     }
 
     /**

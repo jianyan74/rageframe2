@@ -73,6 +73,7 @@ return [
             'subName' => 'Y/m/d',// 上传子目录规则
             'prefix' => 'file_',// 名称前缀
             'mimeTypes' => '*', // 媒体类型
+            'blacklist' => ['php', 'java', 'javac', 'py', 'pl', 'rb', 'ini'], // 文件后缀黑名单
         ],
         // 缩略图
         'thumb' => [
