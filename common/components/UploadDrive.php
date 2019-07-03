@@ -151,7 +151,7 @@ class UploadDrive
                 break;
         }
 
-        if (!preg_match('/(http:\/\/)|(https:\/\/)/i', $baseInfo['url'])) {
+        if ($this->drive != Attachment::DRIVE_LOCAL && !preg_match('/(http:\/\/)|(https:\/\/)/i', $baseInfo['url'])) {
             $baseInfo['url'] = 'http://' . $baseInfo['url'];
         }
 
