@@ -106,7 +106,7 @@ return [
                         'POST videos' => 'videos', // 视频上传
                         'POST voices' => 'voices', // 语音上传
                         'POST files' => 'files', // 文件上传
-                        'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
+                        'POST base64' => 'base64', // base64上传 其他上传权限自己添加
                         'POST merge' => 'merge', // 合并分片
                     ],
                 ],

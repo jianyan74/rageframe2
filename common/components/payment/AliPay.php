@@ -58,6 +58,7 @@ class AliPay
         $order['product_code'] = 'FAST_INSTANT_TRADE_PAY';
 
         $gateway = $this->create(self::PC);
+        $gateway->setParameter('return_url', $this->config['return_url']);
         $request = $gateway->purchase();
         $request->setBizContent($order);
 
