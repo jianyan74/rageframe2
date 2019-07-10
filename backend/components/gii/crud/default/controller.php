@@ -12,10 +12,6 @@ use yii\helpers\StringHelper;
 
 $controllerClass = StringHelper::basename($generator->controllerClass);
 $modelClass = StringHelper::basename($generator->modelClass);
-$searchModelClass = StringHelper::basename($generator->searchModelClass);
-if ($modelClass === $searchModelClass) {
-    $searchModelAlias = $searchModelClass . 'Search';
-}
 
 /* @var $class ActiveRecordInterface */
 $class = $generator->modelClass;
@@ -30,45 +26,51 @@ echo "<?php\n";
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
 use Yii;
-use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 use common\components\Curd;
+use common\models\base\SearchModel;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 
 /**
- * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
- */
+* <?= $modelClass . "\n" ?>
+*
+* Class <?= $controllerClass . "\n" ?>
+* @package <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) . "\n" ?>
+*/
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
     use Curd;
 
     /**
-    * @var
+    * @var <?= $modelClass . "\n" ?>
     */
-    public $modelClass = '<?= ltrim($generator->modelClass, '\\') ?>';
+    public $modelClass = <?= $modelClass ?>::class;
+
 
     /**
-    * Lists all <?= $modelClass ?> models.
-    * @return mixed
+    * 首页
+    *
+    * @return string
+    * @throws \yii\web\NotFoundHttpException
     */
     public function actionIndex()
     {
-<?php if (!empty($generator->searchModelClass)): ?>
-        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new SearchModel([
+            'model' => $this->modelClass,
+            'scenario' => 'default',
+            'partialMatchAttributes' => [], // 模糊查询
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
+
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
         ]);
-<?php else: ?>
-        $dataProvider = new ActiveDataProvider([
-            'query' => <?= $modelClass ?>::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-<?php endif; ?>
     }
 }
