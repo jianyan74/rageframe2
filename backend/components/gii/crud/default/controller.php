@@ -28,7 +28,7 @@ namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>
 use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 use common\components\Curd;
-use common\models\base\SearchModel;
+use common\models\common\SearchModel;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 
 /**
