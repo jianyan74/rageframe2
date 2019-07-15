@@ -78,7 +78,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packagist.laravel-china.org"
+            "url": "https://mirrors.aliyun.com/composer/"
         },
         {
             "type": "composer",
