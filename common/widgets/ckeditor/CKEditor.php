@@ -5,12 +5,13 @@ namespace common\widgets\ckeditor;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
-use yii\helpers\Url;
 use yii\widgets\InputWidget;
 use common\widgets\ckeditor\assets\AppAsset;
 
 /**
  * CKEditor 编辑器
+ * example: $form->field($model, 'content')->widget(CKEditor::class, ["server_url"=>'/api/v1/ckeditor']);
+ *
  * User: worry
  * Date: 2019/4/15
  * Time: 16:02
@@ -18,8 +19,6 @@ use common\widgets\ckeditor\assets\AppAsset;
 class CKEditor extends InputWidget
 {
     public $config = [];
-
-    public $formData = [];
 
     /**
      * CKEditor 挂件初始化
@@ -30,11 +29,11 @@ class CKEditor extends InputWidget
     {
         parent::init();
         // 注册资源文件
-        $asset = AppAsset::register($this->getView());
+        AppAsset::register($this->getView());
         $this->value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
         $this->name = $this->hasModel() ? Html::getInputName($this->model, $this->attribute) : $this->name;
 
-        $uploadUrl = '/api/v1/ckeditor';
+        $uploadUrl = ArrayHelper::getValue($this->config, 'server_url', '/api/v1/ckeditor');
         //常用配置项
         $config = [
             "defaultLanguage" => 'zh-cn',
@@ -62,9 +61,6 @@ class CKEditor extends InputWidget
             // 编辑内容不能有body等
             "fullPage" => false,
             "height" => '700px',
-            // 'filebrowserBrowseUrl' => $uploadUrl,
-            // 'filebrowserImageBrowseUrl' => $uploadUrl,
-            // 'filebrowserFlashBrowseUrl' => $uploadUrl,
             'filebrowserUploadUrl' => $uploadUrl . '/file',
             'filebrowserImageUploadUrl' => $uploadUrl . '/images',
             'filebrowserFlashUploadUrl' => $uploadUrl . '/file',
@@ -72,9 +68,6 @@ class CKEditor extends InputWidget
         ];
 
         $this->config = ArrayHelper::merge($config, $this->config);
-        $this->formData = ArrayHelper::merge([
-            'drive' => 'local',
-        ], $this->formData);
     }
 
     /**
@@ -85,26 +78,15 @@ class CKEditor extends InputWidget
         $id = $this->hasModel() ? Html::getInputId($this->model, $this->attribute) : $this->id;
         $config = Json::encode($this->config);
 
-        //  由于百度上传不能传递数组，所以转码成为json
-        !isset($this->formData) && $this->formData = [];
-        foreach ($this->formData as $key => &$formDatum) {
-            if (!empty($formDatum) && is_array($formDatum)) {
-                $formDatum = Json::encode($formDatum);
-            }
-        }
-
-        $formData = Json::encode($this->formData);
         //ready部分代码
         $script = <<<CKEDITOR
 CKEDITOR.replace( '{$id}', {$config});
 CKEDITOR;
-
         $this->getView()->registerJs($script);
 
         if ($this->hasModel()) {
             return Html::activeTextarea($this->model, $this->attribute);
         }
-
         return Html::textarea(ArrayHelper::getValue($this->config, 'textarea', $this->name), $this->value, ['id' => $id]);
     }
 }
