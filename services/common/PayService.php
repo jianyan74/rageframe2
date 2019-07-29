@@ -108,9 +108,9 @@ class PayService extends Service
     public function miniProgram(PayForm $payForm, $baseOrder)
     {
         // 设置appid
-        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
             'app_id' => Yii::$app->debris->config('miniprogram_appid'),
-        ], Yii::$app->params['wechatPaymentConfig']);
+        ]);
 
         $orderData = [
             'trade_type' => 'JSAPI',

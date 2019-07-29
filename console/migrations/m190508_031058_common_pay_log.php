@@ -13,6 +13,7 @@ class m190508_031058_common_pay_log extends Migration
         $this->createTable('{{%common_pay_log}}', [
             'id' => "int(10) NOT NULL AUTO_INCREMENT COMMENT '主键'",
             'merchant_id' => "int(10) unsigned NULL COMMENT '商户id'",
+            'member_id' => "int(11) unsigned NULL COMMENT '用户id'",
             'order_sn' => "varchar(20) NULL DEFAULT '' COMMENT '关联订单号'",
             'order_group' => "tinyint(3) NULL DEFAULT '1' COMMENT '组别[默认统一支付类型]'",
             'openid' => "varchar(50) NULL DEFAULT '' COMMENT 'openid'",
