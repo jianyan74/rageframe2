@@ -3,7 +3,7 @@ namespace backend\widgets\notify;
 
 use Yii;
 use common\enums\StatusEnum;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\sys\Notify;
 use common\models\sys\NotifyManager;
 use backend\controllers\BaseController;

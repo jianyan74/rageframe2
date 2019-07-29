@@ -1,8 +1,10 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 
-$this->params['breadcrumbs'][] = ['label' => '修改密码'];
+$this->title = '修改密码';
+$this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
 <div class="row">
@@ -23,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
                 <?= $form->field($model, 'passwd_repetition')->passwordInput() ?>
             </div>
             <div class="box-footer text-center">
-                <button class="btn btn-primary submit" type="button">保存</button>
+                <button class="btn btn-primary" type="submit">保存</button>
             </div>
             <?php ActiveForm::end(); ?>
         </div>
@@ -31,15 +33,17 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
 </div>
 
 <script>
-    $('.submit').click(function () {
-        var data = $('#pwd').serializeArray();
+    var $form = $('#pwd');
+    $form.on('beforeSubmit', function () {
+        var data = $form.serialize();
+
         $.ajax({
-            type : "post",
-            url : "<?= Url::to(['up-password']); ?>",
-            dataType : "json",
-            data : data,
-            success: function(data) {
-                if (data.code == 200) {
+            type: "post",
+            url: "<?= Url::to(['up-password']); ?>",
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (parseInt(data.code) === 200) {
                     parent.location.reload();
                     window.location.reload();
                 } else {
@@ -47,5 +51,7 @@ $this->params['breadcrumbs'][] = ['label' => '修改密码'];
                 }
             }
         });
-    })
+
+        return false; // 防止默认提交
+    });
 </script>

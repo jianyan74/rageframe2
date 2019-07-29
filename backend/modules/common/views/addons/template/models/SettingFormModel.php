@@ -2,6 +2,7 @@
 
 echo "<?php\n";
 ?>
+
 namespace addons\<?= $model->name;?>\common\models;
 
 use yii\base\Model;

@@ -14,13 +14,23 @@
 
     // 上传成功
     $(document).on('upload-success-' + boxId, function(e, data, config){
+        // 判断是否已经存在文件
+        oldData = $('#rfAttachmentList li').find('.' + data.id);
+        if (oldData.length > 0) {
+            tmpLi = oldData.parent();
+            oldData.parent().remove();
+            $('#rfAttachmentList').prepend(tmpLi);
+            return;
+        }
+
         let allData = [];
         let tmpData = [];
-        tmpData['id'] = data.attachment_id;
+        tmpData['id'] = data.id;
         tmpData['base_url'] = data.url;
         tmpData['name'] = data.name;
         tmpData['upload_type'] = data.upload_type;
         tmpData['size'] = data.formatter_size;
+        tmpData['md5'] = data.md5;
         allData.push(tmpData);
 
         let htmlData = [];

@@ -22,7 +22,7 @@ use common\enums\StatusEnum;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Notify extends \common\models\common\BaseModel
+class Notify extends \common\models\base\BaseModel
 {
     // 消息类型
     const TYPE_ANNOUNCE = 1; //公告

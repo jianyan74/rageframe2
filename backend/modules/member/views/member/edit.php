@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\enums\GenderEnum;
 use common\enums\StatusEnum;
@@ -33,19 +34,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'multiple' => false,
                         ],
                     ]
-                ]);?>
+                ]); ?>
                 <?= $form->field($model, 'qq')->textInput() ?>
                 <?= $form->field($model, 'email')->textInput() ?>
-                <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker',[
-                    'language'  => 'zh-CN',
-                    'layout'=>'{picker}{input}',
+                <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
+                    'language' => 'zh-CN',
+                    'layout' => '{picker}{input}',
                     'pluginOptions' => [
                         'format' => 'yyyy-mm-dd',
                         'todayHighlight' => true,// 今日高亮
                         'autoclose' => true,// 选择后自动关闭
                         'todayBtn' => true,// 今日按钮显示
                     ],
-                    'options'=>[
+                    'options' => [
                         'class' => 'form-control no_bor',
                     ]
                 ]); ?>

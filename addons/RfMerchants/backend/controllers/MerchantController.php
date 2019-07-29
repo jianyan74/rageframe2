@@ -4,7 +4,7 @@ namespace addons\RfMerchants\backend\controllers;
 use Yii;
 use common\enums\StatusEnum;
 use common\components\Curd;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use addons\RfMerchants\common\models\Merchant;
 
 /**

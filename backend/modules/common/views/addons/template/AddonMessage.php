@@ -2,13 +2,14 @@
 
 echo "<?php\n";
 ?>
+
 namespace addons\<?= $model->name;?>;
 
 use Yii;
 use backend\interfaces\AddonWidget;
 
 /**
- * AddonMessage
+ * 微信消息处理
  *
  * Class AddonMessage
  * @package addons\<?= $model->name . "\r";?>

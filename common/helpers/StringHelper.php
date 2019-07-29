@@ -316,7 +316,7 @@ class StringHelper extends BaseStringHelper
      *
      * @return bool
      */
-    protected static function isWindowsOS()
+    public static function isWindowsOS()
     {
         return strncmp(PHP_OS, 'WIN', 3) === 0;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfMerchants\wechat\controllers;
 
 use Yii;

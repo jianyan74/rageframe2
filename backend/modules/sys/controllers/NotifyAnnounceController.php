@@ -4,7 +4,7 @@ namespace backend\modules\sys\controllers;
 use Yii;
 use common\enums\StatusEnum;
 use common\components\Curd;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\sys\Notify;
 use backend\modules\sys\forms\NotifyAnnounceForm;
 use backend\controllers\BaseController;

@@ -15,7 +15,7 @@ use common\enums\StatusEnum;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class ArticleTag extends \common\models\common\BaseModel
+class ArticleTag extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

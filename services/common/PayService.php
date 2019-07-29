@@ -1,4 +1,5 @@
 <?php
+
 namespace services\common;
 
 use Yii;
@@ -109,7 +110,7 @@ class PayService extends Service
     {
         // 设置appid
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
-            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
+            'app_id' => Yii::$app->debris->config('miniprogram_appid')
         ]);
 
         $orderData = [
@@ -172,6 +173,9 @@ class PayService extends Service
      */
     public function notify(PayLog $log, $paymentType)
     {
+        $log->ip = ip2long(Yii::$app->request->userIP);
+        $log->save();
+
         switch ($log->order_group) {
             case PayEnum::ORDER_GROUP :
                 // TODO 处理订单

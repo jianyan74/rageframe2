@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use backend\components\Tree;
@@ -21,7 +22,7 @@ use backend\components\Tree;
  * @property int $created_at
  * @property int $updated_at
  */
-class AuthItem extends \common\models\common\BaseModel
+class AuthItem extends \common\models\base\BaseModel
 {
     use Tree;
 
@@ -78,7 +79,11 @@ class AuthItem extends \common\models\common\BaseModel
      */
     public function uniquName($attribute)
     {
-        $model = self::find()->where(['name' => $this->name, 'type' => $this->type])->andFilterWhere(['addons_name' => $this->addons_name])->one();
+        $model = self::find()
+            ->where(['name' => $this->name, 'type' => $this->type])
+            ->andFilterWhere(['addons_name' => $this->addons_name])
+            ->one();
+
         if ($model && $model->id != $this->id) {
             $this->addError($attribute, '已存在');
         }

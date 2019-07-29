@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\member;
 
 use Yii;
@@ -18,11 +19,12 @@ use common\behaviors\MerchantBehavior;
  * @property double $num 变动的数据
  * @property string $remark 备注
  * @property string $ip ip地址
+ * @property string $map_id 关联id
  * @property int $status 状态[-1:删除;0:禁用;1启用]
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class CreditsLog extends \common\models\common\BaseModel
+class CreditsLog extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -64,7 +66,7 @@ class CreditsLog extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'member_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'map_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['old_num', 'new_num', 'num'], 'number'],
             [['credit_type', 'credit_group', 'credit_group_detail', 'ip'], 'string', 'max' => 30],
             [['remark'], 'string', 'max' => 200],
@@ -80,6 +82,7 @@ class CreditsLog extends \common\models\common\BaseModel
             'id' => 'ID',
             'merchant_id' => '商户',
             'member_id' => '用户',
+            'map_id' => '关联id',
             'ip' => 'ip地址',
             'credit_type' => '变动类型',
             'credit_group' => '操作类型',

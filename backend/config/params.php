@@ -1,8 +1,10 @@
 <?php
+
 return [
     'adminEmail' => 'admin@example.com',
     'adminAcronym' => 'RF',
     'adminTitle' => 'RageFrame',
+    'adminDefaultHomePage' => ['main/system'], // 默认主页
 
     /** ------ 总管理员配置 ------ **/
     'adminAccount' => 1,// 系统管理员账号id
@@ -30,7 +32,23 @@ return [
     'dataBackPartSize' => 20971520,// 数据库备份卷大小
     'dataBackCompress' => 1,// 压缩级别
     'dataBackCompressLevel' => 9,// 数据库备份文件压缩级别
-    'dataBackLock' => 'backup.lock',// 数据库备份缓存文件名
+    'dataBackLock' => 'backup.lock',// 数据库备份锁
+
+    /** ------ 行为日志 ------ **/
+    'behaviorLog' => [
+        // 请求之前
+        'before' => [
+            'backend/site/login' => [
+                'method' => '*',
+                'alias' => '',
+                'postRecord' => true,
+            ]
+        ],
+        // 请求之后
+        'after' => [
+
+        ]
+    ],
 
     /**
      * 不需要验证的路由全称
@@ -62,7 +80,7 @@ return [
         'file' => "文件上传",
         'files' => "多文件上传",
         'cropper' => "图片裁剪上传",
-        'lat_lng_selection' => "经纬度选择",
+        'latLngSelection' => "经纬度选择",
     ],
 
     /** ------ 插件类型 ------ **/
@@ -108,7 +126,7 @@ return [
 
     // 素材类型
     'wechatMediaType' => [
-        'news'  => '微信图文',
+        'news' => '微信图文',
         'image' => '图片',
         'voice' => '语音',
         'video' => '视频',

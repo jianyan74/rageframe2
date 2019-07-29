@@ -49,6 +49,9 @@ use yii\helpers\ArrayHelper;
                     'pick' => [
                         'multiple' => true,
                     ],
+                    'formData' => [
+                        'drive' => $upload_drive, // 默认本地 可修改 qiniu/oss/cos 上传
+                    ],
                 ]
             ])?>
         </div>
@@ -67,7 +70,7 @@ use yii\helpers\ArrayHelper;
 <script type="text/html" id="rfAttachmentlistModel">
     {{each data as value i}}
     <li>
-        <div class="border-color-gray" data-id="{{value.id}}" data-name="{{value.name}}" data-url="{{value.base_url}}" data-upload_type="{{value.upload_type}}">
+        <div class="border-color-gray {{value.id}}" data-id="{{value.id}}" data-name="{{value.name}}" data-url="{{value.base_url}}" data-upload_type="{{value.upload_type}}">
             {{if value.upload_type == "images"}}
             <span class="mailbox-attachment-icon has-img">
                 <img src="{{value.base_url}}" style="height: 130px">

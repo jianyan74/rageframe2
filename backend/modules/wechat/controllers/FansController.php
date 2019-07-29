@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -46,9 +47,9 @@ class FansController extends BaseController
             ->filterWhere(['t.tag_id' => $tag_id])
             ->andFilterWhere(['f.merchant_id' => $this->getMerchantId()]);
 
-        $pages  = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
-            ->with('tags','member')
+            ->with('tags', 'member')
             ->orderBy('followtime desc, unfollowtime desc')
             ->limit($pages->limit)
             ->all();
@@ -56,7 +57,7 @@ class FansController extends BaseController
         // 全部标签
         $tags = Yii::$app->services->wechatFansTags->getList();
 
-        return $this->render('index',[
+        return $this->render('index', [
             'models' => $models,
             'pages' => $pages,
             'follow' => $follow,
@@ -76,7 +77,7 @@ class FansController extends BaseController
      */
     public function actionView($id)
     {
-        return $this->renderAjax('view',[
+        return $this->renderAjax('view', [
             'model' => Fans::findOne($id)
         ]);
     }
@@ -106,7 +107,7 @@ class FansController extends BaseController
             }
         }
 
-        return $this->renderAjax('send-message',[
+        return $this->renderAjax('send-message', [
             'model' => Yii::$app->services->wechatFans->findByOpenId($openid)
         ]);
     }
@@ -144,7 +145,7 @@ class FansController extends BaseController
 
             // 移除标签
             foreach ($fansTags as $tag_id) {
-                !in_array($tag_id, $tags) &&  Yii::$app->wechat->app->user_tag->untagUsers([$fans['openid']], $tag_id);
+                !in_array($tag_id, $tags) && Yii::$app->wechat->app->user_tag->untagUsers([$fans['openid']], $tag_id);
             }
 
             // 更新标签
@@ -169,7 +170,10 @@ class FansController extends BaseController
         $request = Yii::$app->request;
         $next_openid = $request->get('next_openid', '');
         // 设置关注全部为为关注
-        empty($next_openid) && Fans::updateAll(['follow' => Fans::FOLLOW_OFF, 'merchant_id' => Yii::$app->services->merchant->getId()]);
+        empty($next_openid) && Fans::updateAll([
+            'follow' => Fans::FOLLOW_OFF,
+            'merchant_id' => Yii::$app->services->merchant->getId()
+        ]);
 
         try {
             list($total, $count, $next_openid) = Yii::$app->services->wechatFans->syncAllOpenid();

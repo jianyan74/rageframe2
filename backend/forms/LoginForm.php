@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\forms;
 
 use Yii;
@@ -10,7 +11,7 @@ use common\models\sys\Manager;
  * @package backend\forms
  * @author jianyan74 <751393839@qq.com>
  */
-class LoginForm extends \common\models\common\LoginForm
+class LoginForm extends \common\models\forms\LoginForm
 {
     public $verifyCode;
 
@@ -65,7 +66,7 @@ class LoginForm extends \common\models\common\LoginForm
 
             if (!in_array($ip, $ipList)) {
                 // 记录行为日志
-                 Yii::$app->services->sysActionLog->create('login', '限制IP登录', false);
+                Yii::$app->services->actionLog->create('login', '限制IP登录', false);
 
                 $this->addError($attribute, '登录失败');
             }

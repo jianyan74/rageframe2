@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\api;
 
 use Yii;
@@ -11,7 +12,7 @@ use common\models\common\RateLimit;
 use common\models\common\AuthAssignment;
 
 /**
- *  如果不想速率控制请直接继承 common\models\common\BaseModel
+ *  如果不想速率控制请直接继承 \common\models\base\BaseModel
  *
  * This is the model class for table "{{%api_access_token}}".
  *
@@ -91,7 +92,7 @@ class AccessToken extends RateLimit
     {
         // 判断验证token有效性是否开启
         if (Yii::$app->params['user.accessTokenValidity'] === true) {
-            $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+            $timestamp = (int)substr($token, strrpos($token, '_') + 1);
             $expire = Yii::$app->params['user.accessTokenExpire'];
 
             // 验证有效期
@@ -107,7 +108,7 @@ class AccessToken extends RateLimit
     /**
      * @param $token
      * @param null $group
-     * @return AccessToken|\common\models\common\User|null
+     * @return AccessToken|\common\models\base\User|null
      */
     public static function findIdentityByRefreshToken($token, $group = null)
     {

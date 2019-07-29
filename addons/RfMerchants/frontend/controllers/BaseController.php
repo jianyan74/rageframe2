@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfMerchants\frontend\controllers;
 
 use Yii;

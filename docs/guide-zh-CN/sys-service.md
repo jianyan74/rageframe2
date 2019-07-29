@@ -8,20 +8,20 @@
 如果需要新服务层调用方法 请在 `services\Application` 中的 `childService` 添加，例如：
 
 ```
-    /**
-     * @var array
-     */
-    public $childService = [
-        'example' => [
-            'class' => 'services\example\Example',
-            // 子服务
-            'childService' => [
-                'rule' => [
-                    'class' => 'services\example\rule\Rule',
-                ],
+/**
+ * @var array
+ */
+public $childService = [
+    'example' => [
+        'class' => 'services\example\ExampleService',
+        // 子服务
+        'childService' => [
+            'rule' => [
+                'class' => 'services\example\rule\RuleService',
             ],
         ],
-    ];
+    ],
+];
 ```
 
 以上例子代表了添加了一个 example 服务及 example 的子服务 rule

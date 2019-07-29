@@ -1,6 +1,8 @@
 <?php
 namespace common\widgets\webuploader;
 
+use common\components\UploadDrive;
+use common\models\common\Attachment;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -54,6 +56,11 @@ class Files extends InputWidget
     protected $boxId;
 
     /**
+     * @var
+     */
+    protected $typeConfig;
+
+    /**
      * @throws InvalidConfigException
      * @throws \Exception
      */
@@ -69,7 +76,7 @@ class Files extends InputWidget
         ];
 
         // 默认配置信息
-        $typeConfig = Yii::$app->params['uploadConfig'][$this->type];
+        $this->typeConfig = Yii::$app->params['uploadConfig'][$this->type];
 
         $this->boxId = md5($this->name) . StringHelper::uuid('uniqid');
         $this->themeConfig = ArrayHelper::merge([
@@ -79,10 +86,11 @@ class Files extends InputWidget
 
         $this->config = ArrayHelper::merge([
             'compress' => false, // 压缩
-            'auto' => true, // 自动上传
+            'auto' => false, // 自动上传
             'formData' => [
                 'guid' => null,
-                'drive' => $typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
+                'md5' => null,
+                'drive' => $this->typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,
@@ -91,8 +99,8 @@ class Files extends InputWidget
             ],
             'accept' => [
                 'title' => 'Images',// 文字描述
-                'extensions' => implode(',', $typeConfig['extensions']), // 后缀
-                'mimeTypes' => $typeConfig['mimeTypes'],// 上传文件类型
+                'extensions' => implode(',', $this->typeConfig['extensions']), // 后缀
+                'mimeTypes' => $this->typeConfig['mimeTypes'],// 上传文件类型
             ],
             'swf' => null, //
             'chunked' => false,// 开启分片上传
@@ -102,21 +110,24 @@ class Files extends InputWidget
             'disableGlobalDnd' => true, // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
             'fileNumLimit' => 20, // 验证文件总数量, 超出则不允许加入队列
             'fileSizeLimit' => null, // 验证文件总大小是否超出限制, 超出则不允许加入队列 KB
-            'fileSingleSizeLimit' => $typeConfig['maxSize'], // 验证单个文件大小是否超出限制, 超出则不允许加入队列 KB
+            'fileSingleSizeLimit' => $this->typeConfig['maxSize'], // 验证单个文件大小是否超出限制, 超出则不允许加入队列 KB
             'prepareNextFile' => true,
             'duplicate' => true,
 
             /**-------------- 自定义的参数 ----------------**/
             'independentUrl' => false, // 独立上传地址,不受全局的地址上传影响
             'mergeUrl' => Url::to(['/file/merge']),
+            'getOssPathUrl' => Url::to(['/file/get-oss-path']),
+            'verifyMd5Url' => Url::to(['/file/verify-md5']),
             'callback' => null, // 上传成功回调js方法
             'callbackProgress' => null, // 上传进度回调
             'name' => $this->name,
             'boxId' => $this->boxId,
+            'type' => $this->type,
         ], $this->config);
 
-        if (!empty($typeConfig['takeOverUrl']) && $this->config['independentUrl'] == false) {
-            $this->config['server'] = $typeConfig['takeOverUrl'];
+        if (!empty($this->typeConfig['takeOverUrl']) && $this->config['independentUrl'] == false) {
+            $this->config['server'] = $this->typeConfig['takeOverUrl'];
         }
     }
 
@@ -149,6 +160,20 @@ class Files extends InputWidget
 
         //  由于百度上传不能传递数组，所以转码成为json
         !isset($this->config['formData']) && $this->config['formData'] = [];
+
+        // 阿里云js直传
+        if (Attachment::DRIVE_OSS_JS == $this->config['formData']['drive']) {
+            $path = $this->typeConfig['path'] . date($this->typeConfig['subName'], time()) . "/";
+            $oss = UploadDrive::getOssJsConfig(
+                $this->config['fileSingleSizeLimit'],
+                $path,
+                60 * 60 * 5
+            );
+
+            $this->config['server'] = $oss['host'];
+            $this->config['formData'] = ArrayHelper::merge($this->config['formData'] , $oss);
+        }
+
         foreach ($this->config['formData'] as &$datum) {
             if (!empty($datum) && is_array($datum)) {
                 $datum = Json::encode($datum);

@@ -1,4 +1,5 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -11,16 +12,17 @@ $addon = <<< HTML
 HTML;
 
 $this->title = '粉丝关注统计';
-$this->params['breadcrumbs'][] = ['label' =>  $this->title];
+$this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<?= Html::jsFile('@web/resources/plugins/echarts/echarts-all.js')?>
+<?= Html::jsFile('@web/resources/plugins/echarts/echarts-all.js') ?>
 
 <div class="row">
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="ion ion-stats-bars green"></i> <?= $today['new_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="ion ion-stats-bars green"></i> <?= $today['new_attention']; ?></span>
                 <span class="info-box-text">今日新关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -31,7 +33,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="icon ion-arrow-graph-down-right red"></i> <?= $today['cancel_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="icon ion-arrow-graph-down-right red"></i> <?= $today['cancel_attention']; ?></span>
                 <span class="info-box-text">今日取消关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -42,7 +45,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="icon ion-arrow-graph-up-right green"></i> <?= $today['increase_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="icon ion-arrow-graph-up-right green"></i> <?= $today['increase_attention']; ?></span>
                 <span class="info-box-text">今日净增关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -67,7 +71,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="ion ion-stats-bars green"></i> <?= $yesterday['new_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="ion ion-stats-bars green"></i> <?= $yesterday['new_attention']; ?></span>
                 <span class="info-box-text">昨日新关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -78,7 +83,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="icon ion-arrow-graph-down-right red"></i> <?= $yesterday['cancel_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="icon ion-arrow-graph-down-right red"></i> <?= $yesterday['cancel_attention']; ?></span>
                 <span class="info-box-text">昨日取消关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -89,7 +95,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><i class="icon ion-arrow-graph-up-right green"></i> <?= $yesterday['increase_attention']; ?></span>
+                <span class="info-box-number"><i
+                            class="icon ion-arrow-graph-up-right green"></i> <?= $yesterday['increase_attention']; ?></span>
                 <span class="info-box-text">昨日净增关注(人)</span>
             </div>
             <!-- /.info-box-content -->
@@ -119,7 +126,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="box-body table-responsive">
                 <div class="col-sm-12 normalPaddingJustV">
                     <?php $form = ActiveForm::begin([
-                        'action' => Url::to(['index']),
+                        'action' => Url::to(['fans-follow']),
                         'method' => 'get'
                     ]); ?>
                     <div class="row">
@@ -138,12 +145,14 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                     'pluginOptions' => [
                                         'locale' => ['format' => 'Y-m-d'],
                                     ]
-                                ]) . $addon;?>
+                                ]) . $addon; ?>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="input-group m-b">
-                                <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
+                                <?= Html::tag('span',
+                                    '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>',
+                                    ['class' => 'input-group-btn']) ?>
                             </div>
                         </div>
                     </div>
@@ -171,72 +180,72 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 
     function chartOption() {
         var option = {
-            title : {
+            title: {
                 subtext: '人数'
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'axis'
             },
             legend: {
-                data:['新关注','取消关注','净增关注','累积关注'],
+                data: ['新关注', '取消关注', '净增关注', '累积关注'],
                 selected: {
-                    '新关注' : true,
-                    '取消关注' : true,
-                    '净增关注' : true,
-                    '累积关注' : false
+                    '新关注': true,
+                    '取消关注': true,
+                    '净增关注': true,
+                    '累积关注': false
                 }
             },
             toolbox: {
-                show : false,
-                feature : {
-                    mark : {show: true},
-                    dataView : {show: true, readOnly: false},
-                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
+                show: false,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
                 }
             },
-            calculable : true,
-            xAxis : [
+            calculable: true,
+            xAxis: [
                 {
-                    type : 'category',
-                    boundaryGap : false,
-                    data : chartTime
+                    type: 'category',
+                    boundaryGap: false,
+                    data: chartTime
                 }
             ],
-            yAxis : [
+            yAxis: [
                 {
-                    type : 'value'
+                    type: 'value'
                 }
             ],
-            series : [
+            series: [
                 {
-                    name:'新关注',
-                    type:'line',
-                    smooth:true,
+                    name: '新关注',
+                    type: 'line',
+                    smooth: true,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:new_attention
+                    data: new_attention
                 },
                 {
-                    name:'取消关注',
-                    type:'line',
-                    smooth:true,
+                    name: '取消关注',
+                    type: 'line',
+                    smooth: true,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:cancel_attention
+                    data: cancel_attention
                 },
                 {
-                    name:'净增关注',
-                    type:'line',
-                    smooth:true,
+                    name: '净增关注',
+                    type: 'line',
+                    smooth: true,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:increase_attention
+                    data: increase_attention
                 },
                 {
-                    name:'累积关注',
-                    type:'line',
-                    smooth:true,
+                    name: '累积关注',
+                    type: 'line',
+                    smooth: true,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:cumulate_attention
+                    data: cumulate_attention
                 }
             ]
         };
@@ -245,34 +254,4 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
     }
 
     myChart.setOption(chartOption()); // 加载图表
-
-    function getServerInfo(){
-        $.ajax({
-            type : "get",
-            url  : "<?= Url::to(['server'])?>",
-            dataType : "json",
-            data: {},
-            success: function(data){
-                if(data.code == 200) {
-                    var html = template('model',data.data);
-                    $('#sys-hardware').html(html);
-
-                    var netWork = data.data.netWork;
-                    $('#netWork_allOutSpeed').text(netWork.allOutSpeed);
-                    $('#netWork_allInputSpeed').text(netWork.allInputSpeed);
-                    $('#netWork_currentOutSpeed').text(netWork.currentOutSpeed + ' KB/s');
-                    $('#netWork_currentInputSpeed').text(netWork.currentInputSpeed + ' KB/s');
-
-                    currentOutSpeed.shift();
-                    currentInputSpeed.shift();
-                    currentOutSpeed.push(netWork.currentOutSpeed);
-                    currentInputSpeed.push(netWork.currentInputSpeed);
-                    chartTime = data.data.chartTime;
-                    myChart.setOption(chartOption()); // 加载图表
-                }else{
-                    alert(data.msg);
-                }
-            }
-        });
-    }
 </script>

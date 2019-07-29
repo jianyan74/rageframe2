@@ -27,9 +27,9 @@ class UnInstall implements AddonWidget
     protected $table_name = ['article', 'article_cate', 'article_single', 'article_tag', 'article_tag_map', 'article_adv'];
 
     /**
-    * @param $addon
-    * @return mixed|void
-    */
+     * @param $addon
+     * @return mixed|void
+     */
     public function run($addon)
     {
         $sql = "";

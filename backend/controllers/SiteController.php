@@ -1,6 +1,8 @@
 <?php
+
 namespace backend\controllers;
 
+use common\behaviors\ActionLogBehavior;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -35,11 +37,14 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
+            ],
+            'actionLog' => [
+                'class' => ActionLogBehavior::class
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -75,16 +80,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
      * 登录
      *
      * @return string|\yii\web\Response
@@ -94,7 +89,7 @@ class SiteController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
             // 记录行为日志
-            Yii::$app->services->sysActionLog->create('login', '自动登录', false);
+            Yii::$app->services->actionLog->create('login', '自动登录', false);
 
             return $this->goHome();
         }
@@ -103,7 +98,7 @@ class SiteController extends Controller
         $model->loginCaptchaRequired();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             // 记录行为日志
-            Yii::$app->services->sysActionLog->create('login', '账号登录', false);
+            Yii::$app->services->actionLog->create('login', '账号登录', false);
 
             return $this->goHome();
         } else {
@@ -121,10 +116,7 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        // 记录行为日志
-        Yii::$app->services->sysActionLog->create('logout', '退出登录');
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 }

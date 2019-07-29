@@ -1,7 +1,11 @@
 <?php
+
 namespace services\common;
 
+use common\enums\StatusEnum;
+use common\helpers\EchantsHelper;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\UnprocessableEntityHttpException;
 use yii\helpers\Json;
 use common\queues\SmsJob;
@@ -105,7 +109,7 @@ class SmsService extends Service
         try {
             // 校验发送是否频繁
             if (($smsLog = $this->findByMobile($mobile)) && $smsLog['created_at'] + 60 > time()) {
-                throw new UnprocessableEntityHttpException('请不要频繁发送短信');
+                throw new NotFoundHttpException('请不要频繁发送短信');
             }
 
             $easySms = new EasySms($this->config);
@@ -118,26 +122,64 @@ class SmsService extends Service
 
             $this->saveLog([
                 'mobile' => $mobile,
-                'code' => (string) $code,
+                'code' => $code,
                 'member_id' => $member_id,
                 'usage' => $usage,
                 'error_code' => 200,
                 'error_msg' => 'ok',
                 'error_data' => Json::encode($result),
             ]);
+        } catch (NotFoundHttpException $e) {
+            throw new UnprocessableEntityHttpException($e->getMessage());
         } catch (\Exception $e) {
+            $errorMessage = '';
+            $exceptions = $e->getExceptions();
+            $gateways = $this->config['default']['gateways'];
+
+            foreach ($gateways as $gateway) {
+                if (isset($exceptions[$gateway])) {
+                    $errorMessage .= "[$gateway]=" . $exceptions[$gateway]->getMessage();
+                }
+            }
+
             $this->saveLog([
                 'mobile' => $mobile,
-                'code' => (string) $code,
+                'code' => $code,
                 'member_id' => $member_id,
                 'usage' => $usage,
                 'error_code' => 422,
                 'error_msg' => '发送失败',
-                'error_data' => $e->getMessage(),
+                'error_data' => $errorMessage,
             ]);
 
             throw new UnprocessableEntityHttpException('短信发送失败');
         }
+    }
+
+    /**
+     * @param $type
+     * @return array
+     */
+    public function stat($type)
+    {
+        $fields = [
+            'count' => '异常发送数量'
+        ];
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) {
+            return SmsLog::find()
+                ->select(["from_unixtime(created_at, '$formatting') as time", 'count(id) as count'])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->andWhere(['status' => StatusEnum::ENABLED])
+                ->andWhere(['>', 'error_code', 399])
+                ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+                ->groupBy(['time'])
+                ->asArray()
+                ->all();
+        }, $fields, $time, $format);
     }
 
     /**

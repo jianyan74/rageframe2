@@ -25,7 +25,7 @@ use common\helpers\StringHelper;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Article extends \common\models\common\BaseModel
+class Article extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -56,7 +56,7 @@ class Article extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title', 'cover'], 'required'],
+            [['title', 'cover', 'sort'], 'required'],
             [['merchant_id', 'cate_id', 'view', 'sort', 'status', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['position', 'created_at', 'tags'], 'safe'],

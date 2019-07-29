@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -45,7 +46,7 @@ class MenuProvincesController extends Controller
         $model = Yii::$app->services->wechatMenuProvinces->getListByTitle($title);
 
         $str = Html::tag('option', '不限', ['value' => '']);
-        foreach($model as $value => $name) {
+        foreach ($model as $value => $name) {
             $str .= Html::tag('option', Html::encode($name), ['value' => $value]);
         }
 

@@ -1,6 +1,7 @@
 <?php
 namespace services\common;
 
+use common\models\common\Addons;
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
@@ -28,6 +29,73 @@ class AuthItemService extends Service
         if (!$model->save()) {
             throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
         }
+    }
+
+    /**
+     * @param $allAuthItem
+     * @param $allMenu
+     * @param $name
+     * @throws \yii\web\UnprocessableEntityHttpException
+     */
+    public function createOnAddons($allAuthItem, $allMenu, $name)
+    {
+        // 卸载权限
+        Yii::$app->services->authItem->uninstallAddonsByName($name);
+
+        $defaultAuth = [
+            [
+                'name' => Addons::AUTH_COVER,
+                'title' => '应用入口',
+                'type' => AuthEnum::TYPE_BACKEND,
+                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'addons_name' => $name,
+            ],
+            [
+                'name' => Addons::AUTH_RULE,
+                'title' => '规则回复',
+                'type' => AuthEnum::TYPE_BACKEND,
+                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'addons_name' => $name,
+            ],
+            [
+                'name' => Addons::AUTH_SETTING,
+                'title' => '参数设置',
+                'type' => AuthEnum::TYPE_BACKEND,
+                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'addons_name' => $name,
+            ],
+        ];
+
+        $allAuth = [];
+        foreach ($allAuthItem as $key => $item) {
+            $menu = isset($allMenu[$key]) ? ArrayHelper::getColumn($allMenu[$key], 'route') : [];
+            foreach ($item as $k => $value) {
+                $data = [
+                    'name' => $k,
+                    'title' => $value,
+                    'type' => $key,
+                    'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                    'addons_name' => $name,
+                ];
+
+                // 判断是否是菜单
+                if ($key == AuthEnum::TYPE_BACKEND && in_array($k, $menu)) {
+                    $data['is_menu'] = 1;
+                }
+
+                $allAuth[] = $data;
+                unset($data);
+            }
+        }
+
+        $installData = ArrayHelper::merge($defaultAuth, $allAuth);
+
+        // 创建权限
+        foreach ($installData as $datum) {
+            Yii::$app->services->authItem->create($datum);
+        }
+
+        unset($data, $allAuth, $installData, $defaultAuth);
     }
 
     /**

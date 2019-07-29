@@ -4,7 +4,7 @@ namespace backend\modules\wechat\controllers;
 use common\models\wechat\Rule;
 use Yii;
 use common\enums\StatusEnum;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\wechat\MsgHistory;
 use backend\controllers\BaseController;

@@ -1,8 +1,9 @@
 <?php
+
 namespace backend\modules\common\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\enums\StatusEnum;
 use common\models\common\PayLog;
 use backend\controllers\BaseController;

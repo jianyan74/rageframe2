@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfSignShoppingDay\frontend\assets;
 
 use yii\web\AssetBundle;

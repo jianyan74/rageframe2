@@ -1,14 +1,17 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 use common\helpers\ImageHelper;
 use backend\modules\member\forms\RechargeForm;
+
 ?>
 
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span></button>
+            <span aria-hidden="true">×</span>
+        </button>
         <h4 class="modal-title">充值</h4>
     </div>
     <div class="modal-body">
@@ -22,11 +25,11 @@ use backend\modules\member\forms\RechargeForm;
             </div>
             <div class="col-sm-6 invoice-col">
                 <address>
-                    <strong><?= $model['nickname']?></strong><br>
-                    ID: <?= $model['id']?><br>
-                    昵称: <?= $model['realname']?><br>
-                    姓名: <?= $model['realname']?><br>
-                    手机号码: <?= $model['mobile']?>
+                    <strong><?= $model['nickname'] ?></strong><br>
+                    ID: <?= $model['id'] ?><br>
+                    昵称: <?= $model['realname'] ?><br>
+                    姓名: <?= $model['realname'] ?><br>
+                    手机号码: <?= $model['mobile'] ?>
                 </address>
             </div>
         </div>
@@ -48,16 +51,19 @@ use backend\modules\member\forms\RechargeForm;
                                     'fieldConfig' => [
                                         'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
                                     ]
-                                ]);?>
-                                <?= $form->field($rechargeForm, 'old_num')->textInput(['value' => $model['user_integral'], 'readonly' => 'readonly']) ?>
+                                ]); ?>
+                                <?= $form->field($rechargeForm, 'old_num')->textInput([
+                                    'value' => $model['user_integral'],
+                                    'readonly' => 'readonly'
+                                ]) ?>
                                 <?= $form->field($rechargeForm, 'change')->radioList(RechargeForm::$changeExplain) ?>
                                 <?= $form->field($rechargeForm, 'int')->textInput() ?>
                                 <?= $form->field($rechargeForm, 'remark')->textarea() ?>
-                                <?= $form->field($rechargeForm, 'type')->hiddenInput(['value' => RechargeForm::TYPE_INT])->label(false) ?>
+                                <?= $form->field($rechargeForm,
+                                    'type')->hiddenInput(['value' => RechargeForm::TYPE_INT])->label(false) ?>
                                 <div class="box-footer">
                                     <div class="col-sm-12 text-center">
-                                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                                        <button class="btn btn-primary" type="submit">确认充值积分</button>
+                                        <button class="btn btn-primary" type="submit">确认</button>
                                     </div>
                                 </div>
                                 <?php ActiveForm::end(); ?>
@@ -73,16 +79,19 @@ use backend\modules\member\forms\RechargeForm;
                                     'fieldConfig' => [
                                         'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}\n{hint}\n{error}</div>",
                                     ]
-                                ]);?>
-                                <?= $form->field($rechargeForm, 'old_num')->textInput(['value' => $model['user_money'], 'readonly' => 'readonly']) ?>
+                                ]); ?>
+                                <?= $form->field($rechargeForm, 'old_num')->textInput([
+                                    'value' => $model['user_money'],
+                                    'readonly' => 'readonly'
+                                ]) ?>
                                 <?= $form->field($rechargeForm, 'change')->radioList(RechargeForm::$changeExplain) ?>
                                 <?= $form->field($rechargeForm, 'money')->textInput() ?>
                                 <?= $form->field($rechargeForm, 'remark')->textarea() ?>
-                                <?= $form->field($rechargeForm, 'type')->hiddenInput(['value' => RechargeForm::TYPE_MONEY])->label(false) ?>
+                                <?= $form->field($rechargeForm,
+                                    'type')->hiddenInput(['value' => RechargeForm::TYPE_MONEY])->label(false) ?>
                                 <div class="box-footer">
                                     <div class="col-sm-12 text-center">
-                                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                                        <button class="btn btn-primary" type="submit">确认充值余额</button>
+                                        <button class="btn btn-primary" type="submit">确认</button>
                                     </div>
                                 </div>
                                 <?php ActiveForm::end(); ?>

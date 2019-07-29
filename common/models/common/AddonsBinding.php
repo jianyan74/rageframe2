@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 /**
@@ -30,6 +31,7 @@ class AddonsBinding extends \yii\db\ActiveRecord
             [['addons_name', 'route', 'entry', 'title'], 'required'],
             [['addons_name', 'route'], 'string', 'max' => 30],
             [['entry'], 'string', 'max' => 10],
+            [['params'], 'safe'],
             [['title', 'icon'], 'string', 'max' => 50],
         ];
     }
@@ -44,6 +46,7 @@ class AddonsBinding extends \yii\db\ActiveRecord
             'addons_name' => '模块名称',
             'entry' => '入口',
             'title' => '标题',
+            'params' => '参数',
             'route' => '路由',
             'icon' => 'Icon',
         ];

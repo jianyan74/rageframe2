@@ -119,14 +119,14 @@ class SiteController extends OnAuthController
         $model = new RegisterForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->getError($model));
         }
 
         $member = new Member();
         $member->attributes = ArrayHelper::toArray($model);
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
         if (!$member->save()) {
-            return ResultDataHelper::api(422, $this->analyErr($member->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->getError($member));
         }
 
         return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);
@@ -143,13 +143,13 @@ class SiteController extends OnAuthController
         $model = new UpPwdForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->getError($model));
         }
 
         $member = $model->getUser();
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
         if (!$member->save()) {
-            return ResultDataHelper::api(422, $this->analyErr($member->getFirstErrors()));
+            return ResultDataHelper::api(422, $this->getError($member));
         }
 
         return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);

@@ -2,7 +2,6 @@
 
 namespace common\helpers;
 
-use backend\interfaces\AddonWidget;
 use yii\web\NotFoundHttpException;
 
 /**

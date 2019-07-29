@@ -70,6 +70,7 @@ return [
             ],
         ],
         'assetManager' => [
+            // 'linkAssets' => true,
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => null,
@@ -83,6 +84,19 @@ return [
                 Yii::$app->services->log->record($event->sender);
             },
         ],
+    ],
+    'container' => [
+        'definitions' => [
+            'yii\widgets\LinkPager' => [
+                'nextPageLabel' => '<i class="icon ion-ios-arrow-right"></i>',
+                'prevPageLabel' => '<i class="icon ion-ios-arrow-left"></i>',
+                'lastPageLabel' => '<i class="icon ion-ios-arrow-right"></i><i class="icon ion-ios-arrow-right"></i>',
+                'firstPageLabel' => '<i class="icon ion-ios-arrow-left"></i><i class="icon ion-ios-arrow-left"></i>',
+            ]
+        ],
+        'singletons' => [
+            // 依赖注入容器单例配置
+        ]
     ],
     'controllerMap' => [
         'file' => 'common\controllers\FileBaseController', // 文件上传公共控制器

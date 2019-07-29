@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\enums\GenderEnum;
 use common\enums\StatusEnum;
@@ -25,7 +26,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'readonly' => 'readonly'
                 ]) ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Files', [
+                <?= $form->field($model, 'head_portrait')->widget(common\widgets\webuploader\Files::class, [
                     'type' => 'images',
                     'theme' => 'default',
                     'themeConfig' => [],
@@ -34,20 +35,20 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'multiple' => false,
                         ],
                     ]
-                ]);?>
+                ]); ?>
                 <?= $form->field($model, 'country')->textInput() ?>
                 <?= $form->field($model, 'province')->textInput() ?>
                 <?= $form->field($model, 'city')->textInput() ?>
-                <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker',[
-                    'language'  => 'zh-CN',
-                    'layout'=>'{picker}{input}',
+                <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
+                    'language' => 'zh-CN',
+                    'layout' => '{picker}{input}',
                     'pluginOptions' => [
                         'format' => 'yyyy-mm-dd',
                         'todayHighlight' => true,// 今日高亮
                         'autoclose' => true,// 选择后自动关闭
                         'todayBtn' => true,// 今日按钮显示
                     ],
-                    'options'=>[
+                    'options' => [
                         'class' => 'form-control no_bor',
                     ]
                 ]); ?>

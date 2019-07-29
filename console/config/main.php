@@ -22,7 +22,7 @@ return [
           ],
         /** ------ 数据库命令行备份 ------ **/
         'migrate' => [
-            'class' => 'e282486518\migration\ConsoleController',
+            'class' => 'console\controllers\ConsoleController',
         ],
     ],
     'components' => [

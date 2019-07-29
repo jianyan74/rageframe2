@@ -14,7 +14,7 @@ use Yii;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class NotifyManager extends \common\models\common\BaseModel
+class NotifyManager extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}

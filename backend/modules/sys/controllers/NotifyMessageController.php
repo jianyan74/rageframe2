@@ -5,7 +5,7 @@ use Yii;
 use yii\web\Response;
 use common\enums\StatusEnum;
 use common\components\Curd;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\sys\Notify;
 use backend\modules\sys\forms\NotifyMessageForm;
 use backend\controllers\BaseController;

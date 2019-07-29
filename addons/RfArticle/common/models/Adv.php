@@ -21,7 +21,7 @@ use common\helpers\StringHelper;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class Adv extends \common\models\common\BaseModel
+class Adv extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

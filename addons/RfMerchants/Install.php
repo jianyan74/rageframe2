@@ -3,6 +3,7 @@ namespace addons\RfMerchants;
 
 use Yii;
 use backend\interfaces\AddonWidget;
+use yii\db\Migration;
 
 /**
  * 安装
@@ -10,7 +11,7 @@ use backend\interfaces\AddonWidget;
  * Class Install
  * @package addons\RfMerchants
  */
-class Install implements AddonWidget
+class Install extends Migration implements AddonWidget
 {
     /**
      * @param $addon
@@ -19,24 +20,26 @@ class Install implements AddonWidget
      */
     public function run($addon)
     {
-        $sql = "
-DROP TABLE IF EXISTS `rf_addon_merchant`;
-CREATE TABLE `rf_addon_merchant` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) NOT NULL DEFAULT '' COMMENT '标题',
-  `status` tinyint(4) DEFAULT '1' COMMENT '状态[-1:删除;0:禁用;1启用]',
-  `created_at` int(10) unsigned DEFAULT '0' COMMENT '添加时间',
-  `updated_at` int(10) unsigned DEFAULT '0' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='插件_多商户';
+        /* 取消外键约束 */
+        $this->execute('SET foreign_key_checks = 0');
 
--- ----------------------------
--- Records of rf_addon_merchant
--- ----------------------------
-INSERT INTO `rf_addon_merchant` VALUES ('1', '默认商户', '1', '1557286773', '1557286773');
-        ";
+        /* 创建表 */
+        $this->createTable('{{%addon_merchant}}', [
+            'id' => "int(11) NOT NULL AUTO_INCREMENT",
+            'title' => "varchar(50) NOT NULL DEFAULT '' COMMENT '标题'",
+            'status' => "tinyint(4) NULL DEFAULT '1' COMMENT '状态[-1:删除;0:禁用;1启用]'",
+            'created_at' => "int(10) unsigned NULL DEFAULT '0' COMMENT '添加时间'",
+            'updated_at' => "int(10) unsigned NULL DEFAULT '0' COMMENT '修改时间'",
+            'PRIMARY KEY (`id`)'
+        ], "ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='插件_多商户'");
 
-        // 执行sql
-        Yii::$app->getDb()->createCommand($sql)->execute();
+        /* 索引设置 */
+
+
+        /* 表数据 */
+        $this->insert('{{%addon_merchant}}',['id'=>'1','title'=>'默认商户','status'=>'1','created_at'=>'1553908350','updated_at'=>'1553908601']);
+
+        /* 设置外键约束 */
+        $this->execute('SET foreign_key_checks = 1;');
     }
 }

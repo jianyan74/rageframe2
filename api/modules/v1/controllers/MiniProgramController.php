@@ -84,8 +84,7 @@ class MiniProgramController extends OnAuthController
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM,
-            $userinfo['openId']))) {
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM, $userinfo['openId']))) {
             Yii::$app->services->memberAuth->create([
                 'unionid' => $userinfo['unionId'] ?? '',
                 'oauth_client' => Auth::CLIENT_MINI_PROGRAM,

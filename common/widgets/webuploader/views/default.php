@@ -26,11 +26,11 @@ use common\helpers\StringHelper;
                         </div>
                     </li>
                 <?php } ?>
-                <li class="upload-box <?php if(!empty($value) && $config['pick']['multiple'] == false){?>hide<?php } ?>" style="border: 1px #d0d2d0 dashed">
+                <li class="upload-box <?php if(!empty($value) && $config['pick']['multiple'] == false){?>hide<?php } ?>">
                     <i class="fa fa-cloud-upload"></i>
                     <?php if ($themeConfig['select'] === true) {?>
                         <div class="upload-box-bg hide befor-upload">
-                            <a class="first" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'upload_type' => $type, 'multiple' => $config['pick']['multiple']])?>" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
+                            <a class="first" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'upload_type' => $type, 'multiple' => $config['pick']['multiple'], 'upload_drive' => $config['formData']['drive']])?>" data-toggle='modal' data-target='#ajaxModalMax'>选择文件</a>
                             <a class="second upload-box-immediately">立即上传</a>
                         </div>
                     <?php } ?>
@@ -72,6 +72,7 @@ use common\helpers\StringHelper;
 
 <script>
     var boxId = "<?= $boxId; ?>";
+    var closeFiles = {};
 
     // 删除图片节点
     $(document).on("click", ".delimg", function() {
@@ -138,20 +139,29 @@ use common\helpers\StringHelper;
     // 文件添加进来的时候
     $(document).on('upload-file-queued-' + boxId, function(e, file, uploader, config){
         let parentObj = getParent(config);
-
     });
 
     // 一批文件添加进来的时候
     $(document).on('upload-files-queued-' + boxId, function(e, files, uploader, config){
         let parentObj = getParent(config);
-
     });
 
     // 上传不管成功还是失败回调
-    $(document).on('upload-complete-' + boxId, function(e, file, num, config){
+    $(document).on('upload-complete-' + boxId, function(e, file, num, config, uploadProgress){
         let parentObj = getParent(config);
-        //如果队列为空，则移除进度条
-        if (num === 0) {
+        var remove = true;
+        // 如果队列为空，则移除进度条
+        jQuery.each(uploadProgress, function(i, val) {
+            var tmpVal = parseInt(val);
+            if (tmpVal >= -1 && tmpVal < 100 && closeFiles[i] === undefined) {
+                remove = false;
+            }
+        });
+
+        console.log(closeFiles);
+        console.log(uploadProgress);
+
+        if (remove === true) {
             parentObj.find(".upload-progress").parent().addClass('hide');
         }
     });
@@ -159,12 +169,13 @@ use common\helpers\StringHelper;
     // 创建进度条
     $(document).on('upload-create-progress-' + boxId, function(e, file, uploader, config){
         let parentObj = getParent(config);
-        if (parentObj.children(".upload-progress").length === 0) {
+        if (parentObj.children(".upload-progress").hasClass('hide')) {
             parentObj.children(".badge").html("0%");
             let progressCancel = parentObj.find('.cancel');
             //绑定点击事件
             progressCancel.click(function() {
                 uploader.cancelFile(file);
+                closeFiles[file.id] = true;
                 parentObj.find('.upload-progress').parent().addClass('hide');
             });
 
@@ -177,10 +188,29 @@ use common\helpers\StringHelper;
         let parentObj = getParent(config);
         let progressObj = parentObj.find(".upload-progress");
         percentage = Math.floor(percentage * 100);
+
         if (percentage > 1) {
             percentage -= 1;
         }
+
+        progressObj.find(".badge").attr('percentage', percentage);
         progressObj.find(".badge").html(percentage + "%");
+    });
+
+    // md5创建验证中
+    $(document).on('md5Verify-create-progress-' + boxId, function(e, file, uploader, config, text = "验证中..."){
+        let parentObj = getParent(config);
+        if (parentObj.children(".upload-progress").length === 0) {
+            parentObj.find(".badge").html(text);
+            let progressCancel = parentObj.find('.cancel');
+            //绑定点击事件
+            progressCancel.click(function() {
+                uploader.cancelFile(file);
+                parentObj.find('.upload-progress').parent().addClass('hide');
+            });
+
+            parentObj.find('.upload-progress').parent().removeClass('hide');
+        }
     });
 
     // 选择回调

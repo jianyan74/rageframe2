@@ -53,7 +53,8 @@ class FileHelper extends BaseFileHelper
             if ($FolderOrFile != "." && $FolderOrFile != "..") {
                 if (is_dir("$dir/$FolderOrFile")) {
                     $sizeResult += self::getDirSize("$dir/$FolderOrFile");
-                } else {
+                }
+                else {
                     $sizeResult += filesize("$dir/$FolderOrFile");
                 }
             }
@@ -73,7 +74,8 @@ class FileHelper extends BaseFileHelper
         foreach ($files as $key => $value) {
             if (substr($value, -1) == '/') {
                 mkdir($value);
-            } else {
+            }
+            else {
                 file_put_contents($value, '');
             }
         }

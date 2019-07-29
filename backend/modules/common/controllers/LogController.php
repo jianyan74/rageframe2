@@ -1,10 +1,13 @@
 <?php
+
 namespace backend\modules\common\controllers;
 
 use Yii;
+use common\helpers\EchantsHelper;
+use common\helpers\ResultDataHelper;
 use common\models\common\Log;
 use common\enums\StatusEnum;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use backend\controllers\BaseController;
 
 /**
@@ -39,6 +42,22 @@ class LogController extends BaseController
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * @param string $data
+     * @return array|string
+     */
+    public function actionStat($type = '')
+    {
+        if (!empty($type)) {
+            $data = Yii::$app->services->log->stat($type);
+            return ResultDataHelper::json(200, '获取成功', $data);
+        }
+
+        return $this->renderAjax($this->action->id, [
+
         ]);
     }
 

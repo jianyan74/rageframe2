@@ -19,7 +19,7 @@ use backend\components\Tree;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Cate extends \common\models\common\BaseModel
+class Cate extends \common\models\base\BaseModel
 {
     use Tree, MerchantBehavior;
 

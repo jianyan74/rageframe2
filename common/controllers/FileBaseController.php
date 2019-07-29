@@ -1,4 +1,5 @@
 <?php
+
 namespace common\controllers;
 
 use Yii;
@@ -9,8 +10,7 @@ use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
 use common\models\common\Attachment;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
+use common\components\UploadDrive;
 
 /**
  * Class FileBaseController
@@ -180,7 +180,7 @@ class FileBaseController extends Controller
         }
 
         try {
-            $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type']);
+            $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type'], true);
             $upload->setPaths($mergeInfo['paths']);
             $upload->setBaseInfo($mergeInfo['baseInfo']);
             $upload->merge();
@@ -191,6 +191,76 @@ class FileBaseController extends Controller
         } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }
+    }
+
+    /**
+     * 获取oss信息
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \Exception
+     */
+    public function actionGetOssPath()
+    {
+        $url = Yii::$app->request->post('url');
+        $urlArr = parse_url($url);
+        $base_url = $urlArr['path'];
+        $drive = new UploadDrive(Attachment::DRIVE_OSS);
+        $filesystem = $drive->getEntity();
+
+        if (!$filesystem->has($base_url)) {
+            return ResultDataHelper::json(404, '找不到文件');
+        }
+
+        $metadata = $filesystem->getMetadata($base_url);
+        $path = parse_url($metadata['info']['url'])['path'];
+
+        $baseUrlArr = explode('/', $base_url);
+        $fileName = end($baseUrlArr);
+        $fileName = explode('.', $fileName);
+        $extension = end($fileName);
+        unset($fileName[count($fileName) - 1]);
+        $name = implode('.', $fileName);
+
+        $baseInfo = [
+            'drive' => Attachment::DRIVE_OSS,
+            'upload_type' => Yii::$app->request->post('type'),
+            'specific_type' => $metadata['content-type'],
+            'size' => $metadata['content-length'],
+            'extension' => $extension,
+            'name' => $name,
+            'base_url' => $metadata['info']['url'],
+            'path' => $path
+        ];
+
+        // 写入数据库
+        $attachment_id = Yii::$app->services->attachment->create($baseInfo);
+
+        $baseInfo['url'] = $baseInfo['base_url'];
+        $baseInfo['id'] = $attachment_id;
+        $baseInfo['upload_type'] = UploadHelper::formattingFileType($baseInfo['specific_type'], $baseInfo['extension'], $baseInfo['upload_type']);
+        $baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($baseInfo['size'], 2);
+
+        return ResultDataHelper::json(200, '获取成功', $baseInfo);
+    }
+
+    /**
+     * 根据md5获取文件
+     *
+     * @return array
+     */
+    public function actionVerifyMd5()
+    {
+        $md5 = Yii::$app->request->post('md5');
+        if ($file = Yii::$app->services->attachment->findByMd5($md5)) {
+            $file['formatter_size'] = Yii::$app->formatter->asShortSize($file['size'], 2);
+            $file['url'] = $file['base_url'];
+            $file['upload_type'] = UploadHelper::formattingFileType($file['specific_type'], $file['extension'], $file['upload_type']);
+
+            return ResultDataHelper::json(200, '获取成功', $file);
+        }
+
+        return ResultDataHelper::json(404, '找不到文件');
     }
 
     /**
@@ -218,70 +288,11 @@ class FileBaseController extends Controller
             'pages' => $pages,
             'upload_type' => $upload_type,
             'multiple' => Yii::$app->request->get('multiple', true),
+            'upload_drive' => Yii::$app->request->get('upload_drive', Attachment::DRIVE_LOCAL),
             'drives' => Attachment::$driveExplain,
             'year' => ArrayHelper::numBetween(2019, date('Y')),
             'month' => ArrayHelper::numBetween(1, 12),
             'boxId' => Yii::$app->request->get('boxId'),
         ]);
-    }
-
-    /**
-     * 获取本地文件列表
-     *
-     * @return array
-     */
-    private function actionLocal()
-    {
-        /* 获取参数 */
-        $path = Yii::$app->request->get('path', 'images');
-        $year = Yii::$app->request->get('year', date('Y'));
-        $month = Yii::$app->request->get('month', date('m'));
-        $path = $path . '/' . $year . '/' . $month;
-        $size = Yii::$app->request->get('size', 20);
-        $this->fileStart = Yii::$app->request->get('start', 0);
-        $this->fileEnd = $this->fileStart + $size;
-        /* 设置驱动 */
-        $adapter = new Local(Yii::getAlias('@attachment'));
-        $this->filesystem = new Filesystem($adapter);
-
-        $prefix = Yii::$app->params['uploadConfig'][$path]['fullPath'] == true ? Yii::$app->request->hostInfo : '';
-        $files = $this->getLocalList($path, $prefix);
-
-        return ResultDataHelper::json(200, '获取成功', [
-            'list' => $files,
-            'start' => $this->fileStart,
-            'total' => count($files),
-        ]);
-    }
-
-    /**
-     * 根据目录获取文件列表
-     *
-     * @param string $path 文件路径
-     * @param string $allowFiles 文件后缀
-     * @param array $files 文件列表
-     * @param string $prefix 前缀
-     * @return array
-     */
-    private function getLocalList($path, $prefix, &$files = [])
-    {
-        $listFiles = $this->filesystem->listContents($path);
-        foreach ($listFiles as $key => &$listFile) {
-            if ($listFile['type'] == 'dir') {
-                $this->getLocalList($listFile['path'], $prefix, $files);
-            } else {
-                // 获取选中列表
-                if ($this->fileNum >= $this->fileStart && $this->fileNum < $this->fileEnd) {
-                    $listFile['path'] = $prefix . Yii::getAlias('@attachurl') . '/' . $listFile['path'];
-                    $files[] = $listFile;
-                }
-
-                $this->fileNum++;
-            }
-
-            unset($listFiles[$key]);
-        }
-
-        return $files;
     }
 }

@@ -14,7 +14,7 @@ use common\behaviors\MerchantBehavior;
  * @property int $created_at 创建时间
  * @property int $updated_at 修改时间
  */
-class Setting extends \common\models\common\BaseModel
+class Setting extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -42,8 +42,8 @@ class Setting extends \common\models\common\BaseModel
     {
         return [
             [['merchant_id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['special'], 'string'],
-            [['history'], 'string', 'max' => 200],
+            [['special'], 'safe'],
+            [['history'], 'safe'],
         ];
     }
 

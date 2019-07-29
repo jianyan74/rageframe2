@@ -1,4 +1,5 @@
 <?php
+
 namespace common\controllers;
 
 use Yii;
@@ -36,8 +37,7 @@ class WechatApiController extends Controller
     {
         $request = Yii::$app->request;
 
-        switch ($request->getMethod())
-        {
+        switch ($request->getMethod()) {
             // 激活公众号
             case 'GET':
                 if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce'))) {

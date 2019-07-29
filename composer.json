@@ -54,7 +54,8 @@
         "hashids/hashids": "^3.0",
         "league/oauth2-server": "^7.4",
         "overtrue/flysystem-cos": "dev-master",
-        "leandrogehlen/yii2-treegrid": "*"
+        "leandrogehlen/yii2-treegrid": "*",
+        "mobiledetect/mobiledetectlib": "^2.8"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

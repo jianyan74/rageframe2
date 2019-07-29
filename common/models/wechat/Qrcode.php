@@ -24,7 +24,7 @@ use common\behaviors\MerchantBehavior;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Qrcode extends \common\models\common\BaseModel
+class Qrcode extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

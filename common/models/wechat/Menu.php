@@ -23,7 +23,7 @@ use common\enums\StatusEnum;
  * @property string $created_at 创建时间
  * @property int $updated_at 修改时间
  */
-class Menu extends \common\models\common\BaseModel
+class Menu extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -110,7 +110,7 @@ class Menu extends \common\models\common\BaseModel
         return [
             [['title'], 'required'],
             [['merchant_id', 'menu_id', 'type', 'sex', 'tag_id', 'client_platform_type', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['menu_data'], 'string'],
+            [['menu_data'], 'safe'],
             [['title'], 'string', 'max' => 30],
             [['province', 'country'], 'string', 'max' => 100],
             [['city', 'language'], 'string', 'max' => 50],

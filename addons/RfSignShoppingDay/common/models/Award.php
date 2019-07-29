@@ -24,7 +24,7 @@ use Yii;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Award extends \common\models\common\BaseModel
+class Award extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

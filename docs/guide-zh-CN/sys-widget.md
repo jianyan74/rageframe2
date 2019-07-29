@@ -119,21 +119,21 @@ HTML;
              'pick' => [
                  'multiple' => false,
              ],
+             'formData' => [
+                 // 不配置则不生成缩略图
+                 'thumb' => [
+                     [
+                         'width' => 100,
+                         'height' => 100,
+                     ],
+                     [
+                         'width' => 200,
+                         'height' => 200,
+                     ],
+                 ],
+                 'drive' => 'local',// 默认本地 支持 qiniu/oss/cos 上传
+             ],
          ],
-        'formData' => [
-            // 不配置则不生成缩略图
-            'thumb' => [
-                [
-                    'width' => 100,
-                    'height' => 100,
-                ],
-                [
-                    'width' => 200,
-                    'height' => 200,
-                ],
-            ],
-            'drive' => 'local',// 默认本地 支持 qiniu/oss/cos 上传
-        ],
          'chunked' => false,// 开启分片上传
          'chunkSize' => 512 * 1024,// 分片大小
          'independentUrl' => false, // 独立上传地址, 如果设置了true则不受全局上传地址控制 
@@ -440,7 +440,7 @@ use leandrogehlen\treegrid\TreeGrid;
                     return Html::status($model->status);
                 },
                 'delete' => function ($url, $model, $key) {
-                    return Html::delete(['delete', 'id' => $model->id]);
+                    return Html::delete(['delete','id' => $model->id]);
                 },
             ],
         ],

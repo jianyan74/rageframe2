@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components\payment;
 
 use Yii;

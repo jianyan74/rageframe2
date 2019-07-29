@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
@@ -7,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\web\UnauthorizedHttpException;
 use common\components\BaseAction;
 use common\helpers\Auth;
+use common\behaviors\ActionLogBehavior;
 
 /**
  * Class BaseController
@@ -32,6 +34,9 @@ class BaseController extends Controller
                     ],
                 ],
             ],
+            'actionLog' => [
+                'class' => ActionLogBehavior::class
+            ]
         ];
     }
 

@@ -65,6 +65,9 @@ class UploadHelper
         'guid',
         'image',
         'compress',
+        'width',
+        'height',
+        'md5'
     ];
 
     /**
@@ -73,8 +76,9 @@ class UploadHelper
      * @var array
      */
     protected $baseInfo = [
-        'attachment_id' => '',
         'name' => '',
+        'width' => '',
+        'height' => '',
         'size' => 0,
         'extension' => 'jpg',
         'url' => '',
@@ -103,10 +107,11 @@ class UploadHelper
     /**
      * UploadHelper constructor.
      * @param array $config
-     * @param $type
+     * @param string $type 文件类型
+     * @param bool $superaddition 追加写入
      * @throws \Exception
      */
-    public function __construct(array $config, $type)
+    public function __construct(array $config, $type, $superaddition = false)
     {
         // 过滤数据
         $this->filter($config, $type);
@@ -114,14 +119,13 @@ class UploadHelper
         $this->type = $type;
         // 初始化上传地址
         $this->initPaths();
-
         // 判断是否切片上传
         if (isset($this->config['chunks']) && isset($this->config['guid'])) {
             $this->drive = 'local';
             $this->isCut = true;
         }
 
-        $this->uploadDrive = new UploadDrive($this->drive);
+        $this->uploadDrive = new UploadDrive($this->drive, $superaddition);
         $this->filesystem = $this->uploadDrive->getEntity();
     }
 
@@ -133,9 +137,8 @@ class UploadHelper
     public function verifyFile()
     {
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
-
-        if (!$file) {
-            throw new NotFoundHttpException('找不到上传文件，请检查上传类型');
+        if ($file->getHasError()) {
+            throw new NotFoundHttpException('上传失败，请检查文件');
         }
 
         $this->baseInfo['extension'] = $file->getExtension();
@@ -282,9 +285,10 @@ class UploadHelper
         if (false === $data) {
             $file = UploadedFile::getInstanceByName($this->uploadFileName);
 
-            if ($file->error === UPLOAD_ERR_OK) {
+            if (!$file->getHasError()) {
                 $stream = fopen($file->tempName, 'r+');
                 $result = $this->filesystem->writeStream($this->baseInfo['url'], $stream);
+
 
                 if (!$result) {
                     throw new NotFoundHttpException('文件写入失败');
@@ -293,6 +297,8 @@ class UploadHelper
                 if (is_resource($stream)) {
                     fclose($stream);
                 }
+            } else {
+                throw new NotFoundHttpException('上传失败，可能文件太大了');
             }
         } else {
             $result = $this->filesystem->write($this->baseInfo['url'], $data);
@@ -310,6 +316,13 @@ class UploadHelper
             $this->compress();
             // 创建缩略图
             $this->thumb();
+
+            // 获取图片信息
+            if (empty($this->baseInfo['width']) && empty($this->baseInfo['height']) && $this->filesystem->has($this->baseInfo['url'])) {
+                $imgInfo = getimagesize(Yii::getAlias('@attachment') . '/' . $this->baseInfo['url']);
+                $this->baseInfo['width'] = $imgInfo[0] ?? 0;
+                $this->baseInfo['height'] = $imgInfo[1] ?? 0;
+            }
         }
 
         return;
@@ -522,6 +535,9 @@ class UploadHelper
 
             $config = ArrayHelper::filter($config, $this->filter);
             $this->config = ArrayHelper::merge(Yii::$app->params['uploadConfig'][$type], $config);
+            // 参数
+            $this->baseInfo['width'] = $this->config['width'] ?? 0;
+            $this->baseInfo['height'] = $this->config['height'] ?? 0;
         } catch (\Exception $e) {
             $this->config = Yii::$app->params['uploadConfig'][$type];
         }
@@ -582,18 +598,33 @@ class UploadHelper
             'upload_type' => $this->type,
             'specific_type' => $this->baseInfo['type'],
             'size' => $this->baseInfo['size'],
+            'width' => $this->baseInfo['width'],
+            'height' => $this->baseInfo['height'],
             'extension' => $this->baseInfo['extension'],
             'name' => $this->baseInfo['name'],
+            'md5' => $this->config['md5'] ?? '',
             'base_url' => $this->baseInfo['url'],
             'path' => $path
         ]);
 
-        $this->baseInfo['attachment_id'] = $attachment_id;
+        $this->baseInfo['id'] = $attachment_id;
         $this->baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($this->baseInfo['size'], 2);
-        if (preg_match("/^image/", $this->baseInfo['type']) && $this->baseInfo['extension'] != 'psd') {
-            $this->baseInfo['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
-        }
+        $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'], $this->type);
 
         return $this->baseInfo;
+    }
+
+    /**
+     * @param $specific_type
+     * @param $extension
+     * @return string
+     */
+    public static function formattingFileType($specific_type, $extension, $upload_type)
+    {
+        if (preg_match("/^image/", $specific_type) && $extension != 'psd') {
+            return Attachment::UPLOAD_TYPE_IMAGES;
+        }
+
+        return $upload_type;
     }
 }

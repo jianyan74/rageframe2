@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components;
 
 use Yii;
@@ -25,7 +26,7 @@ class Service extends Component
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function getChildService($childServiceName)
+    protected function getChildService($childServiceName)
     {
         if (!isset($this->_childService[$childServiceName])) {
             $childService = $this->childService;
@@ -34,7 +35,7 @@ class Service extends Component
                 $service = $childService[$childServiceName];
                 $this->_childService[$childServiceName] = Yii::createObject($service);
             } else {
-                throw new InvalidConfigException('Child Service ['.$childServiceName.'] is not find in '.get_called_class().', you must config it! ');
+                throw new InvalidConfigException('Child Service [' . $childServiceName . '] is not find in ' . get_called_class() . ', you must config it! ');
             }
         }
 

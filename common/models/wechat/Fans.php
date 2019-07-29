@@ -30,7 +30,7 @@ use common\models\member\Member;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class Fans extends \common\models\common\BaseModel
+class Fans extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

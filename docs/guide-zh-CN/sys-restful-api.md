@@ -29,7 +29,7 @@
 
 ##### 不需要速率控制设置
 
-找到 `common\models\api\AccessToken` 让其直接继承 `common\models\common\BaseModel` 即可
+找到 `common\models\api\AccessToken` 让其直接继承 `common\models\base\BaseModel` 即可
 
 ### 签名验证
 

@@ -29,7 +29,7 @@ class UserRepository implements UserRepositoryInterface
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        /* @var $member \common\models\common\User */
+        /* @var $member \common\models\base\User */
         if (!($member = Member::findByUsername($username))) {
             throw new UnprocessableEntityHttpException('找不到用户信息');
         }

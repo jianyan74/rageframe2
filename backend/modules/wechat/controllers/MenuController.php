@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -133,7 +134,7 @@ class MenuController extends BaseController
             $model->save();
 
             // 创建微信菜单
-            $createReturn = Yii::$app->wechat->app->menu->create(unserialize($model->menu_data));
+            $createReturn = Yii::$app->wechat->app->menu->create($model->menu_data);
             // 解析微信接口是否报错
             if ($error = Yii::$app->debris->getWechatError($createReturn, false)) {
                 return $this->message($error, $this->redirect(['index']), 'error');

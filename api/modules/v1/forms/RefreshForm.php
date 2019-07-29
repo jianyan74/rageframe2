@@ -4,7 +4,7 @@ namespace api\modules\v1\forms;
 
 use Yii;
 use yii\base\Model;
-use yii\web\BadRequestHttpException;
+use yii\web\UnauthorizedHttpException;
 use common\models\api\AccessToken;
 use common\models\member\Member;
 
@@ -43,7 +43,7 @@ class RefreshForm extends Model
      * 验证过期时间
      *
      * @param $attribute
-     * @throws BadRequestHttpException
+     * @throws UnauthorizedHttpException
      */
     public function validateTime($attribute)
     {
@@ -54,12 +54,12 @@ class RefreshForm extends Model
 
             // 验证有效期
             if ($timestamp + $expire <= time()) {
-                throw new BadRequestHttpException('您的重置令牌已经过期，请重新登陆');
+                throw new UnauthorizedHttpException('您的重置令牌已经过期，请重新登陆');
             }
         }
 
         if (!$this->getUser()) {
-            throw new BadRequestHttpException('找不到用户');
+            throw new UnauthorizedHttpException('找不到用户');
         }
     }
 

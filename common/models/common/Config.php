@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
@@ -20,7 +21,7 @@ use Yii;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Config extends \common\models\common\BaseModel
+class Config extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}
@@ -36,7 +37,7 @@ class Config extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title', 'name', 'type', 'cate_id'], 'required'],
+            [['title', 'name', 'type', 'cate_id', 'sort'], 'required'],
             [['cate_id', 'is_hide_remark', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'name'], 'string', 'max' => 50],
             [['type'], 'string', 'max' => 30],
@@ -81,7 +82,8 @@ class Config extends \common\models\common\BaseModel
      */
     public function getValue()
     {
-        return $this->hasOne(ConfigValue::class, ['config_id' => 'id'])->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
+        return $this->hasOne(ConfigValue::class, ['config_id' => 'id'])
+            ->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
     }
 
     /**
@@ -92,6 +94,7 @@ class Config extends \common\models\common\BaseModel
     {
         // 重新写入缓存
         Yii::$app->debris->configAll(true);
+
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -102,7 +105,9 @@ class Config extends \common\models\common\BaseModel
     {
         // 重新写入缓存
         Yii::$app->debris->configAll(true);
+        // 移除关联内容
         ConfigValue::deleteAll(['config_id' => $this->id]);
+
         return parent::beforeDelete();
     }
 }

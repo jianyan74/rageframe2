@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
@@ -20,7 +21,7 @@ use backend\components\Tree;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class AuthRole extends \common\models\common\BaseModel
+class AuthRole extends \common\models\base\BaseModel
 {
     use Tree, MerchantBehavior;
 
@@ -71,7 +72,11 @@ class AuthRole extends \common\models\common\BaseModel
      */
     public function uniquTitle($attribute)
     {
-        $model = self::find()->where(['merchant_id' => Yii::$app->services->merchant->getId(), 'title' => $this->title])->one();
+        $model = self::find()->where([
+            'merchant_id' => Yii::$app->services->merchant->getId(),
+            'title' => $this->title
+        ])->one();
+
         if ($model && $model->id != $this->id) {
             $this->addError($attribute, '角色名称已存在');
         }

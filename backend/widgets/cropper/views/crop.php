@@ -12,10 +12,13 @@ use yii\helpers\ArrayHelper;
 <div class="modal-body">
     <div class="avatar-body">
         <div class="row">
-            <div class="col-md-3">
-                仅支持 jpeg/png 图片类型
+            <div class="col-md-9 m-t-sm">
+                当前区域(宽度：<span class="crop-width">0</span>px; 高度：<span class="crop-height"></span>px)，仅支持 jpeg/png 图片类型
             </div>
-            <div class="col-md-9">
+            <div class="col-md-2 hidden">
+                <input type="text" class="form-control manual" placeholder="输入大小">
+            </div>
+            <div class="col-md-3">
                 <div class="avatar-upload pull-right">
                     <button class="btn btn-primary"  type="button" onClick="$('input[id=avatarInput]').click();">立即选择</button>
                     <input type="file" accept="image/jpeg, image/png" name="file" id="avatarInput" class="hidden" onchange="selectImg(this)">
@@ -54,12 +57,15 @@ use yii\helpers\ArrayHelper;
 
 <script>
     var boxId = "<?= $boxId;?>";
+    var multiple = "<?= $multiple;?>";
+    var aspectRatio = "<?= $aspectRatio;?>";
+    var uploaded = false;
 
     //cropper图片裁剪
     $('#tailoringImg').cropper({
-        aspectRatio: 1/1,//默认比例
+        aspectRatio: aspectRatio,//默认比例
         preview: '.avatar-preview',//预览视图
-        guides: false,  //裁剪框的虚线(九宫格)
+        guides: true,  //裁剪框的虚线(九宫格)
         autoCropArea: 0.5,  //0-1之间的数值，定义自动剪裁区域的大小，默认0.8
         dragCrop: true,  //是否允许移除当前的剪裁框，并通过拖动来新建一个剪裁框区域
         movable: true,  //是否允许移动剪裁框
@@ -71,7 +77,19 @@ use yii\helpers\ArrayHelper;
         minContainerWidth : 600, // 容器的最小宽度
         minContainerHeight : 364, // 容器的最小高度
         crop: function(e) {
+            uploaded = true;
             // 输出结果数据裁剪图像。
+            console.log(e.detail.x);
+            console.log(e.detail.y);
+
+            $('.crop-width').text(parseInt(e.detail.width));
+            $('.crop-height').text(parseInt(e.detail.height));
+
+            console.log(e.detail.width);
+            console.log(e.detail.height);
+            console.log(e.detail.rotate);
+            console.log(e.detail.scaleX);
+            console.log(e.detail.scaleY);
         }
     });
 
@@ -83,7 +101,25 @@ use yii\helpers\ArrayHelper;
             var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
             var base64 = base64url.split(',');
 
-            $(document).trigger('cropper-upload-' + boxId, [base64[1]]);
+            $(document).trigger('cropper-upload-' + boxId, [base64[1], $('.crop-width').text(), $('.crop-height').text(), multiple, boxId]);
         }
+    });
+
+    $(".manual").on("blur", function() {
+        var val = parseInt($(this).val());
+
+        if(isNaN(val) || uploaded === false){
+            val = 0;
+        }
+
+        // 设置裁剪大小
+        if (uploaded === true) {
+            $('#tailoringImg').cropper('setCropBoxData', {
+                width: val,
+                height: val,
+            })
+        }
+
+        $(this).val('');
     });
 </script>

@@ -2,7 +2,7 @@
 namespace common\models\wechat;
 
 use common\behaviors\MerchantBehavior;
-use common\models\common\BaseModel;
+use common\models\base\BaseModel;
 
 /**
  * This is the model class for table "{{%wechat_reply_default}}".

@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
@@ -38,7 +39,7 @@ class NotifyController extends Controller
     {
         $this->payment = 'wechat';
 
-        $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail) {
+        $response = Yii::$app->wechat->payment->handlePaidNotify(function ($message, $fail) {
             // 记录写入文件日志
             $logPath = $this->getLogPath('wechat');
             FileHelper::writeLog($logPath, Json::encode(ArrayHelper::toArray($message)));
@@ -69,11 +70,11 @@ class NotifyController extends Controller
         $this->payment = 'wechat';
 
         // 微信支付参数配置
-        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
-            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
-        ]);
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'],
+            ['app_id' => Yii::$app->debris->config('miniprogram_appid')]
+        );
 
-        $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail) {
+        $response = Yii::$app->wechat->payment->handlePaidNotify(function ($message, $fail) {
             $logPath = $this->getLogPath('miniprogram');
             FileHelper::writeLog($logPath, Json::encode(ArrayHelper::toArray($message)));
 
@@ -106,7 +107,7 @@ class NotifyController extends Controller
         try {
             $response = $request->send();
 
-            if($response->isPaid()) {
+            if ($response->isPaid()) {
                 $message = Yii::$app->request->post();
                 $message['pay_fee'] = $message['total_amount'] * 100;
                 $message['transaction_id'] = $message['trade_no'];
@@ -223,6 +224,6 @@ class NotifyController extends Controller
      */
     protected function getLogPath($type)
     {
-        return Yii::getAlias('@runtime') . "/pay-logs/" . date('Y_m_d') . '/'. $type . '.txt';
+        return Yii::getAlias('@runtime') . "/pay-logs/" . date('Y_m_d') . '/' . $type . '.txt';
     }
 }

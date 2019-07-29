@@ -25,6 +25,6 @@ use common\helpers\Url;
     </div>
     <div class="J_mainContent" id="content-main">
         <!--默认主页需在对应的页面显示iframe元素上添加name="iframe0"和data-id="默认主页的url"-->
-        <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="<?= Url::to(['main/system']); ?>" frameborder="0" data-id="<?= Url::to(['main/system']); ?>" seamless></iframe>
+        <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="<?= Url::to(Yii::$app->params['adminDefaultHomePage']); ?>" frameborder="0" data-id="<?= Url::to(Yii::$app->params['adminDefaultHomePage']); ?>" seamless></iframe>
     </div>
 </div>

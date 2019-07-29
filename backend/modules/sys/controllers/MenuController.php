@@ -58,12 +58,10 @@ class MenuController extends BaseController
         $model = $this->findModel($id);
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
         $model->cate_id = $request->get('cate_id', null) ?? $model->cate_id; // 分类id
-        $model->params = unserialize($model->params);
 
         // ajax 校验
         $this->activeFormValidate($model);
         if ($model->load($request->post())) {
-            $model->params = serialize($model->params);
             return $model->save()
                 ? $this->redirect(['index', 'cate_id' => $model->cate_id])
                 : $this->message($this->getError($model), $this->redirect(['index', 'cate_id' => $model->cate_id]), 'error');

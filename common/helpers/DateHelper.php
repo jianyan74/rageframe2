@@ -44,9 +44,15 @@ class DateHelper
      */
     public static function thisWeek()
     {
+        $length = 0;
+        // 星期天直接返回上星期，因为计算周围 星期一到星期天，如果不想直接去掉
+        if (date('w') == 0) {
+            $length = 7;
+        }
+
         return [
-            'start' => mktime(0, 0, 0, date('m'), date('d') - date('w') + 1, date('Y')),
-            'end' => mktime(23, 59, 59, date('m'), date('d') - date('w') + 7, date('Y')),
+            'start' => mktime(0, 0, 0, date('m'), date('d') - date('w') + 1 - $length, date('Y')),
+            'end' => mktime(23, 59, 59, date('m'), date('d') - date('w') + 7 - $length, date('Y')),
         ];
     }
 
@@ -57,9 +63,15 @@ class DateHelper
      */
     public static function lastWeek()
     {
+        $length = 7;
+        // 星期天直接返回上星期，因为计算周围 星期一到星期天，如果不想直接去掉
+        if (date('w') == 0) {
+            $length = 14;
+        }
+
         return [
-            'start' => mktime(0, 0, 0, date('m'), date('d') - date('w') + 1 - 7, date('Y')),
-            'end' => mktime(23, 59, 59, date('m'), date('d') - date('w') + 7 - 7, date('Y')),
+            'start' => mktime(0, 0, 0, date('m'), date('d') - date('w') + 1 - $length, date('Y')),
+            'end' => mktime(23, 59, 59, date('m'), date('d') - date('w') + 7 - $length, date('Y')),
         ];
     }
 
@@ -151,6 +163,22 @@ class DateHelper
     }
 
     /**
+     * @param int $time
+     * @param string $format
+     * @return mixed
+     */
+    public static function getWeekName(int $time, $format = "周")
+    {
+        $week = date('w', $time);
+        $weekname = ['日', '一', '二', '三', '四', '五', '六'];
+        foreach ($weekname as &$item) {
+            $item = $format . $item;
+        }
+
+        return $weekname[$week];
+    }
+
+    /**
      * 格式化时间戳
      *
      * @param $time
@@ -170,14 +198,14 @@ class DateHelper
     /**
      * 时间戳
      *
-     * @param  integer $accuracy 精度 默认微妙
+     * @param integer $accuracy 精度 默认微妙
      * @return int
      */
-    public static function microtime($accuracy = 1000000)
+    public static function microtime($accuracy = 1000)
     {
-        $microtime = explode(' ', microtime());
-        $time = (int)round(($microtime[1] + $microtime[0]) * $accuracy, 0);
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * $accuracy);
 
-        return $time;
+        return $msectime;
     }
 }

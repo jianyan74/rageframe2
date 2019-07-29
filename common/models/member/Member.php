@@ -6,7 +6,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\enums\StatusEnum;
-use common\models\common\User;
+use common\models\base\User;
 use common\helpers\RegularHelper;
 
 /**

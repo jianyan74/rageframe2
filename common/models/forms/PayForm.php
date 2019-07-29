@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\forms;
 
 use Yii;
@@ -125,7 +126,8 @@ class PayForm extends Model
                 break;
         }
 
-        $order['out_trade_no'] = Yii::$app->services->pay->getOutTradeNo($totalFee, $orderSn, $this->payType, $this->tradeType, $this->orderGroup);
+        $order['out_trade_no'] = Yii::$app->services->pay->getOutTradeNo($totalFee, $orderSn, $this->payType,
+            $this->tradeType, $this->orderGroup);
 
         // 必须返回 body、total_fee、out_trade_no
         return $order;

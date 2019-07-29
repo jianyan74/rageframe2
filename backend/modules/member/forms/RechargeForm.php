@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use common\enums\AuthEnum;
 use common\models\member\CreditsLog;
+use common\models\forms\CreditsLogForm;
 
 /**
  * Class RechargeForm
@@ -93,9 +94,15 @@ class RechargeForm extends Model
         $transaction = Yii::$app->db->beginTransaction();
         try {
             Yii::$app->services->member->set($member);
-            Yii::$app->services->member->$action($num, AuthEnum::TYPE_BACKEND, CreditsLog::CREDIT_GROUP_MANAGER, !empty($this->remark) ? $this->remark : '【后台】管理员操作');
-            // 记录行为
-            Yii::$app->services->sysActionLog->create('recharge', '充值/减少积分余额');
+
+            // 变动积分/余额
+            Yii::$app->services->memberCreditsLog->$action(new CreditsLogForm([
+                'member' => Yii::$app->services->member->get($member->id),
+                'num' => $num,
+                'credit_group' => AuthEnum::TYPE_BACKEND,
+                'credit_group_detail' => CreditsLog::CREDIT_GROUP_MANAGER,
+                'remark' => !empty($this->remark) ? $this->remark : '【后台】管理员操作',
+            ]));
 
             $transaction->commit();
         } catch (NotFoundHttpException $e) {

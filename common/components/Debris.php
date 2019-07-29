@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components;
 
 use Yii;
@@ -63,14 +64,45 @@ class Debris
     }
 
     /**
+     * 获取设备客户端信息
+     *
+     * @return mixed|string
+     */
+    public function detectVersion()
+    {
+        /** @var \Detection\MobileDetect $detect */
+        $detect = Yii::$app->mobileDetect;
+        if ($detect->isMobile()) {
+            $devices = $detect->getOperatingSystems();
+            $device = '';
+
+            foreach ($devices as $key => $valaue) {
+                if ($detect->is($key)) {
+                    $device = $key . $detect->version($key);
+                    break;
+                }
+            }
+
+            return $device;
+        }
+
+        return $detect->getUserAgent();
+    }
+
+    /**
      * 打印
      *
-     * @param $array
+     * @param mixed ...$array
      */
-    public function p($array)
+    public function p(...$array)
     {
         echo "<pre>";
-        print_r($array);
+
+        if (count($array) == 1) {
+            print_r($array[0]);
+        } else {
+            print_r($array);
+        }
     }
 
     /**

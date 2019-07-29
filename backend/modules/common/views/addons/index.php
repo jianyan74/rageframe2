@@ -1,7 +1,8 @@
 <?php
+
+use yii\grid\GridView;
 use common\helpers\Url;
 use common\helpers\Html;
-use yii\grid\GridView;
 use common\helpers\AddonHelper;
 
 $this->title = '已安装的插件';
@@ -12,9 +13,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-sm-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="<?= Url::to(['index'])?>">已安装的插件</a></li>
-                <li><a href="<?= Url::to(['install'])?>">安装插件</a></li>
-                <li><a href="<?= Url::to(['create'])?>">设计新插件</a></li>
+                <li class="active"><a href="<?= Url::to(['index']) ?>">已安装的插件</a></li>
+                <li><a href="<?= Url::to(['local']) ?>">安装插件</a></li>
+                <li><a href="<?= Url::to(['create']) ?>">设计新插件</a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane">
@@ -31,7 +32,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'attribute' => 'icon',
                                 'filter' => false, //不显示搜索框
                                 'headerOptions' => ['class' => 'col-md-1'],
-                                'value' => function($model) {
+                                'value' => function ($model) {
                                     return Html::img(AddonHelper::getAddonIcon($model['name']), [
                                         'class' => 'img-rounded m-t-xs img-responsive',
                                         'width' => '64',
@@ -43,7 +44,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             [
                                 'attribute' => 'title',
                                 // 'filter' => false, //不显示搜索框
-                                'value' => function($model){
+                                'value' => function ($model) {
                                     $str = '<h5> ' . $model['title'] . '</h5>';
                                     $str .= "<small>标识 : " . $model['name'] . "</small>";
                                     return $str;
@@ -59,9 +60,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'filter' => false, //不显示搜索框
                             ],
                             [
-                                'label'=> '功能支持',
+                                'label' => '功能支持',
                                 'filter' => false, //不显示搜索框
-                                'value' => function($model) {
+                                'value' => function ($model) {
                                     $str = '';
                                     $model['is_setting'] == true && $str .= '<span class="label label-info">全局设置</span> ';
                                     $model['is_rule'] == true && $str .= '<span class="label label-info">嵌入规则</span> ';
@@ -71,10 +72,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'format' => 'raw'
                             ],
                             [
-                                'label'=> '组别',
+                                'label' => '组别',
                                 'attribute' => 'group',
                                 'filter' => false, //不显示搜索框
-                                'value' => function($model) use ($addonsGroup) {
+                                'value' => function ($model) use ($addonsGroup) {
                                     return '<span class="label label-info">' . $addonsGroup[$model->group]['title'] . '</span> ';
                                 },
                                 'format' => 'raw'
@@ -86,12 +87,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             [
                                 'header' => "操作",
                                 'class' => 'yii\grid\ActionColumn',
-                                'template'=> '{upgrade-config} {upgrade} {edit} {status} {delete}',
+                                'template' => '{install} {upgrade} {edit} {status} {delete}',
                                 'buttons' => [
-                                    'upgrade-config' => function ($url, $model, $key) {
-                                        return Html::linkButton(['upgrade-config', 'name' => $model->name], '更新配置', [
-                                            'onclick' => "rfTwiceAffirm(this, '确认更新配置吗？', '会重载模块的配置和权限, 更新后需要重新授权');return false;",
-                                        ]);
+                                    'install' => function ($url, $model, $key) {
+                                        return Html::linkButton(['install', 'name' => $model->name, 'data' => false],
+                                            '更新配置', [
+                                                'onclick' => "rfTwiceAffirm(this, '确认更新配置吗？', '会重载模块的配置和权限, 更新后需要重新授权');return false;"
+                                            ]);
                                     },
                                     'upgrade' => function ($url, $model, $key) {
                                         return Html::linkButton(['upgrade', 'name' => $model->name], '数据库升级', [

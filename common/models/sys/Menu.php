@@ -22,7 +22,7 @@ use common\helpers\TreeHelper;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class Menu extends \common\models\common\BaseModel
+class Menu extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}
@@ -40,7 +40,7 @@ class Menu extends \common\models\common\BaseModel
         return [
             [['title', 'pid', 'cate_id'], 'required'],
             [['cate_id', 'pid', 'level', 'dev', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['params'], 'string'],
+            [['params'], 'safe'],
             [['title', 'url'], 'string', 'max' => 50],
             [['icon'], 'string', 'max' => 20],
             [['tree'], 'string', 'max' => 300],

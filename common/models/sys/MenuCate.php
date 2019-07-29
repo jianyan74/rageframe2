@@ -9,7 +9,7 @@ use common\enums\StatusEnum;
  *
  * @property int $id 主键
  * @property string $title 标题
- * @property string $pid 上级id
+ * @property int $pid 上级id
  * @property int $level 级别
  * @property string $icon icon
  * @property string $tree 树
@@ -17,10 +17,10 @@ use common\enums\StatusEnum;
  * @property int $is_addon 应用顶级分类
  * @property int $sort 排序
  * @property int $status 状态[-1:删除;0:禁用;1启用]
- * @property string $created_at 添加时间
- * @property string $updated_at 修改时间
+ * @property int $created_at 添加时间
+ * @property int $updated_at 修改时间
  */
-class MenuCate extends \common\models\common\BaseModel
+class MenuCate extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}

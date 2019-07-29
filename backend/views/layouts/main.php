@@ -51,6 +51,7 @@ AppAsset::register($this);
         let config = {
             tag: "<?= Yii::$app->debris->config('sys_tags') ?? false; ?>",
             isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
+            emojiBaseUrl : "<?= Yii::$app->request->baseUrl ?>/resources/dist/img/emoji/",
         };
     </script>
     <?= $this->render('_footer')?>

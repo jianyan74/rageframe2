@@ -1,8 +1,10 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
 use yii\filters\RateLimitInterface;
+use common\models\base\User;
 
 /**
  * 速率控制

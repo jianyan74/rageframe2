@@ -9,7 +9,7 @@ use yii\captcha\Captcha;
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <?= Yii::$app->params['adminTitle']; ?>
+        <?= Html::encode(Yii::$app->params['adminTitle']); ?>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -43,7 +43,7 @@ use yii\captcha\Captcha;
         </div>
         <?php ActiveForm::end(); ?>
         <div class="social-auth-links text-center">
-            <p><?= Yii::$app->debris->config('web_copyright'); ?></p>
+            <p><?= Html::encode(Yii::$app->debris->config('web_copyright')); ?></p>
         </div>
     </div>
     <!-- /.login-box-body -->

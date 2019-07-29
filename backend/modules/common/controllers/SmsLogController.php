@@ -1,10 +1,13 @@
 <?php
+
 namespace backend\modules\common\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\common\SmsLog;
 use common\enums\StatusEnum;
+use common\helpers\EchantsHelper;
+use common\helpers\ResultDataHelper;
 use backend\controllers\BaseController;
 
 /**
@@ -39,6 +42,39 @@ class SmsLogController extends BaseController
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * 行为日志详情
+     *
+     * @param $id
+     * @return string
+     */
+    public function actionView($id)
+    {
+        $model = SmsLog::find()
+            ->where(['id' => $id])
+            ->one();
+
+        return $this->renderAjax($this->action->id, [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * @param string $data
+     * @return array|string
+     */
+    public function actionStat($type = '')
+    {
+        if (!empty($type)) {
+            $data = Yii::$app->services->sms->stat($type);
+            return ResultDataHelper::json(200, '获取成功', $data);
+        }
+
+        return $this->renderAjax($this->action->id, [
+
         ]);
     }
 }

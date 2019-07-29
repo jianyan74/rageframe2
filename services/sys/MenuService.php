@@ -1,11 +1,14 @@
 <?php
+
 namespace services\sys;
 
+use common\helpers\Auth;
 use Yii;
 use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\models\sys\Menu;
 use common\enums\StatusEnum;
+use yii\helpers\Json;
 
 /**
  * Class MenuService
@@ -60,8 +63,8 @@ class MenuService extends Service
 
         foreach ($models as $key => &$model) {
             if (!empty($model['url'])) {
-                $params = unserialize($model['params']);
-                empty($params) && $params = [];
+                $params = Json::decode($model['params']);
+                (empty($params) || !is_array($params)) && $params = [];
                 $model['fullUrl'][] = $model['url'];
 
                 foreach ($params as $param) {
@@ -74,7 +77,7 @@ class MenuService extends Service
             }
 
             // 移除无权限菜单
-            if (!Yii::$app->services->auth->isSuperAdmin() && false !== $auth && !in_array($model['url'], $auth)) {
+            if (false !== $auth && Auth::verify($model['url'], $auth) === false) {
                 unset($models[$key]);
             }
         }

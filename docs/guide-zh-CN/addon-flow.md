@@ -15,7 +15,7 @@
 
 ### 权限
 
-权限请在创建的模块下的 AddonConfig 文件内手动填写，安装后会自动注册进系统权限管理
+权限请在创建的模块下的 Common/config 的各种应用文件内手动填写，安装后会自动注册进系统权限管理
 
 例如：
 
@@ -30,7 +30,7 @@
      *  )
      * @var array
      */
-    public $authItem = [
+    'authItem' => [
         'curd/index' => 'Curd首页',
         'curd/edit' => 'Curd编辑',
     ];

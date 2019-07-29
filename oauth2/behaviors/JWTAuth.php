@@ -9,6 +9,8 @@ use yii\web\UnauthorizedHttpException;
 use yii\web\UnprocessableEntityHttpException;
 use yii\web\IdentityInterface;
 use oauth2\components\ServerRequest;
+use League\OAuth2\Server\CryptKey;
+use common\helpers\StringHelper;
 use common\models\oauth2\repository\AccessTokenRepository;
 
 /**
@@ -47,7 +49,7 @@ class JWTAuth extends Behavior
         $publicKeyPath = 'file://' . Yii::$app->debris->config('oauth2_rsa_public');
         $server = new \League\OAuth2\Server\ResourceServer(
             $accessTokenRepository,
-            $publicKeyPath
+            new CryptKey($publicKeyPath, null, !StringHelper::isWindowsOS())
         );
 
         try {

@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\GenderEnum;
@@ -27,9 +28,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
-                                    'class' => 'img-circle rf-img-md img-bordered-sm',
-                                ]);
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)),
+                                    [
+                                        'class' => 'img-circle rf-img-md img-bordered-sm',
+                                    ]);
                             },
                             'filter' => false,
                             'format' => 'raw',
@@ -37,7 +39,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         'nickname',
                         [
                             'attribute' => 'gender',
-                            'value' => function ($model, $key, $index, $column){
+                            'value' => function ($model, $key, $index, $column) {
                                 return GenderEnum::$listExplain[$model->gender];
                             },
                             'filter' => Html::activeDropDownList($searchModel, 'gender', GenderEnum::$listExplain, [
@@ -48,12 +50,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         ],
                         'oauth_client',
                         [
-                            'label'=> '关联用户',
+                            'label' => '关联用户',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return "用户ID：" . $model->member->id . '<br>'.
-                                    "昵称：" . $model->member->nickname . '<br>'.
-                                    "账号：" . $model->member->username . '<br>'.
+                                return "用户ID：" . $model->member->id . '<br>' .
+                                    "昵称：" . $model->member->nickname . '<br>' .
+                                    "账号：" . $model->member->username . '<br>' .
                                     "手机：" . $model->member->mobile . '<br>';
                             },
                             'format' => 'raw',
@@ -74,13 +76,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{edit} {destroy}',
+                            'template' => '{edit} {destroy}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
                                     return Html::edit(['edit', 'id' => $model->id]);
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return Html::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy', 'id' => $model->id]);
                                 },
                             ],
                         ],

@@ -23,6 +23,7 @@ class Upgrade implements AddonWidget
     /**
     * @param $addon
     * @return mixed|void
+    * @throws \yii\db\Exception
     */
     public function run($addon)
     {

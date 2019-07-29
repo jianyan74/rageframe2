@@ -5,7 +5,7 @@ use Yii;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\components\Curd;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\ArticleTag;
 use addons\RfArticle\common\models\ArticleTagMap;

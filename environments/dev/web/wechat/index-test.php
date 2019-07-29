@@ -29,9 +29,15 @@ $config = yii\helpers\ArrayHelper::merge(
  *
  * @param $array
  */
-function p($array){
+function p(...$array)
+{
     echo "<pre>";
-    print_r($array);
+
+    if (count($array) == 1) {
+        print_r($array[0]);
+    } else {
+        print_r($array);
+    }
 }
 
 (new yii\web\Application($config))->run();

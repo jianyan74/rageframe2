@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components\payment;
 
 use Yii;
@@ -95,7 +96,7 @@ class WechatPay
     public function app($order, $debug = false)
     {
         $gateway = $this->create(self::APP);
-        $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
         return $debug ? $response->getData() : $response->getAppOrderData();
@@ -116,7 +117,7 @@ class WechatPay
     public function native($order, $debug = false)
     {
         $gateway = $this->create(self::NATIVE);
-        $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
         return $debug ? $response->getData() : $response->getCodeUrl();
@@ -138,7 +139,7 @@ class WechatPay
     public function js($order, $debug = true)
     {
         $gateway = $this->create(self::JS);
-        $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
         return $debug ? $response->getData() : $response->getJsOrderData();
@@ -160,7 +161,7 @@ class WechatPay
     public function pos($order, $debug = false)
     {
         $gateway = $this->create(self::POS);
-        $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
         return $debug ? $response->getData() : $response->getData();
@@ -180,7 +181,7 @@ class WechatPay
     public function mweb($order, $debug = false)
     {
         $gateway = $this->create(self::MWEB);
-        $request  = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
         return $debug ? $response->getData() : $response->getData();

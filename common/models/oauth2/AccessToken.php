@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\oauth2;
 
 use Yii;
@@ -6,7 +7,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\behaviors\MerchantBehavior;
-use common\models\common\User;
+use common\models\base\User;
 
 /**
  * This is the model class for table "{{%oauth2_access_token}}".

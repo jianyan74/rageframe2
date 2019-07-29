@@ -24,7 +24,7 @@ use common\helpers\StringHelper;
  * @property string $created_at
  * @property int $updated_at 修改时间
  */
-class MassRecord extends \common\models\common\BaseModel
+class MassRecord extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

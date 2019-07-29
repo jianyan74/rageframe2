@@ -4,7 +4,7 @@ namespace addons\RfExample\backend\controllers;
 use common\helpers\ResultDataHelper;
 use Yii;
 use addons\RfExample\common\models\Curd as CurdModel;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\enums\StatusEnum;
 use common\controllers\AddonsController;

@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
@@ -25,7 +26,7 @@ use common\behaviors\MerchantBehavior;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Attachment extends \common\models\common\BaseModel
+class Attachment extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -34,9 +35,20 @@ class Attachment extends \common\models\common\BaseModel
     const UPLOAD_TYPE_VIDEOS = 'videos';
     const UPLOAD_TYPE_VOICES = 'voices';
 
+    /**
+     * @var array
+     */
+    public static $uploadTypeExplain = [
+        self::UPLOAD_TYPE_IMAGES => '图片',
+        self::UPLOAD_TYPE_FILES => '文件',
+        self::UPLOAD_TYPE_VIDEOS => '视频',
+        self::UPLOAD_TYPE_VOICES => '音频',
+    ];
+
     const DRIVE_LOCAL = 'local';
     const DRIVE_QINIU = 'qiniu';
     const DRIVE_OSS = 'oss';
+    const DRIVE_OSS_JS = 'oss-js';
     const DRIVE_COS = 'cos';
 
     /**
@@ -47,16 +59,6 @@ class Attachment extends \common\models\common\BaseModel
         self::DRIVE_QINIU => '七牛',
         self::DRIVE_OSS => 'OSS',
         self::DRIVE_COS => 'COS',
-    ];
-
-    /**
-     * @var array
-     */
-    public static $uploadTypeExplain = [
-        self::UPLOAD_TYPE_IMAGES => '图片',
-        self::UPLOAD_TYPE_FILES => '文件',
-        self::UPLOAD_TYPE_VIDEOS => '视频',
-        self::UPLOAD_TYPE_VOICES => '音频',
     ];
 
     /**
@@ -73,10 +75,10 @@ class Attachment extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'size', 'year', 'month', 'day', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'size', 'year', 'month', 'day', 'width', 'height', 'status', 'created_at', 'updated_at'], 'integer'],
             [['drive', 'extension'], 'string', 'max' => 50],
             [['upload_type'], 'string', 'max' => 10],
-            [['specific_type', 'base_url', 'path', 'name'], 'string', 'max' => 100],
+            [['specific_type', 'base_url', 'path', 'name', 'md5'], 'string', 'max' => 100],
             [['upload_ip'], 'string', 'max' => 16],
         ];
     }
@@ -92,10 +94,11 @@ class Attachment extends \common\models\common\BaseModel
             'drive' => '驱动',
             'upload_type' => '上传类别',
             'specific_type' => '文件类别',
+            'md5' => 'md5',
             'base_url' => 'Url',
             'path' => '本地路径',
             'name' => '文件名',
-            'extension' => '扩展',
+            'extension' => '扩展名',
             'size' => '文件大小',
             'year' => '年',
             'month' => '月',

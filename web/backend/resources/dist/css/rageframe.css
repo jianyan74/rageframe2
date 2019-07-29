@@ -111,8 +111,9 @@
 }
 
 /* ====== 替换AdminLTE样式 ====== */
-a {
-    color: #76838f;
+a ,
+a:hover {
+    /*color: #589ffc;*/
 }
 
 .content-header > .breadcrumb {
@@ -223,8 +224,8 @@ a {
 .label-success,
 .btn-success,
 .btn-success:hover {
-    background-color: #36ab7a;
-    border-color: #36ab7a;
+    background-color: #46be8a;
+    border-color: #46be8a;
 }
 
 .label-info,
@@ -683,8 +684,28 @@ body {
     color: #76838f;
 }
 
+b, strong {
+    font-weight: 400;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: Roboto, sans-serif;
+    /*color: #37474f;*/
+    font-weight: 400;
+}
+
+.h4, h4 {
+    font-size: 16px;
+}
+
+.table > thead > tr > th {
+    font-weight: 500;
+    color: #526069;
+}
+
+.table > thead > tr > th > a{
+    font-weight: 500;
+    color: #526069;
 }
 
 .modal-body {
@@ -726,6 +747,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     border-radius: 0;
 }
 
+.pagination > li > a {
+    background: #fff;
+}
+
 .pagination > .active > a,
 .pagination > .active > a:focus,
 .pagination > .active > a:hover,
@@ -736,7 +761,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     border-color: #62a8ea;
 }
 
-.pagination > li:first-child > a, .pagination > li:first-child > span {
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
     margin-left: 0;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -747,7 +773,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .text-success {
-    color: #18bc9c;
+    color: #28d17c;
 }
 
 .text-danger {
@@ -813,10 +839,10 @@ div.required label:before {
 .changelog-info .time-line:before {
     content: ' ';
     position: absolute;
-    top: 35px;
-    bottom: 35px;
+    top: 10px;
+    bottom: 10px;
     background: #e4eaec;
-    left: 160px;
+    left: 21px;
     width: 2px
 }
 
@@ -837,7 +863,7 @@ div.required label:before {
     border: 2px solid #e4eaec;
     position: absolute;
     background: #fff;
-    left: 139px;
+    left: 0;
     top: 5px
 }
 
@@ -852,13 +878,12 @@ div.required label:before {
 }
 
 .changelog-info .time-line > li time {
-    float: left;
+    padding-left: 25px;
 }
 
 .changelog-info .time-line > li h5 {
-    float: left;
     line-height: 24px;
-    margin: 0 0 0 55px;
+    margin: 0 0 0 25px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

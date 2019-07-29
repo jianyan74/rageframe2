@@ -1,21 +1,11 @@
 <?php
-$menuCount = 0;
-if (isset($menus['title']))
-{
-    $menuCount = count($menus['title']);
-}
-
-$coverCount = 0;
-if (isset($covers['title']))
-{
-    $coverCount = count($covers['title']);
-}
 
 echo "<?php\n";
 ?>
+
 namespace addons\<?= $model->name;?>;
 
-use addons\<?= $model->name;?>\common\config\Bootstrap;
+use addons\<?= $model->name;?>\common\components\Bootstrap;
 
 /**
  * Class Addon
@@ -24,7 +14,7 @@ use addons\<?= $model->name;?>\common\config\Bootstrap;
 class AddonConfig
 {
     /**
-     * 配置信息
+     * 基础信息
      *
      * @var array
      */
@@ -38,6 +28,20 @@ class AddonConfig
     ];
 
     /**
+    * 应用配置
+    *
+    * 例如：菜单设置/权限设置/快捷入口
+    *
+    * @var array
+    */
+    public $appsConfig = [
+        'backend' => 'common/config/backend.php',
+        'frontend' => 'common/config/frontend.php',
+        'wechat' => 'common/config/wechat.php',
+        'api' => 'common/config/api.php',
+    ];
+
+    /**
     * 引导文件
     *
     * 设置后系统会在执行插件控制器前执行
@@ -47,43 +51,21 @@ class AddonConfig
     public $bootstrap = '';
 
     /**
-     * 可授权权限
-     *
-     * 注意：采用Yii2的路由命名方式
-     * 例子：array(
-     *          'index/index' => '首页',
-     *          'cate-index/index' => '分类首页',
-     *          'cate-index/first-data' => '分类数据',
-     *        )
-     * @var array
-     */
-    public $authItem = [
-        'backend' => [
-        ],
-        'frontend' => [
-        ],
-        'wechat' => [
-        ],
-        'api' => [
-        ],
-    ];
-
-    /**
-     * 参数配置
+     * 参数配置开启
      *
      * @var bool
      */
     public $isSetting = <?= $model['is_setting'] == true ? 'true' : 'false' ?>;
 
     /**
-     * 钩子
+     * 钩子开启
      *
      * @var bool
      */
     public $isHook = <?= $model['is_hook'] == true ? 'true' : 'false' ?>;
 
     /**
-     * 规则管理
+     * 规则管理开启
      *
      * @var bool
      */
@@ -115,67 +97,23 @@ class AddonConfig
     public $wechatMessage = <?= $wechatMessage ?>;
 
     /**
-     * 后台菜单
-     *
-     * 例如
-     * public $menu = [
-     *  [
-     *      'title' => '基本表格',
-     *      'route' => 'curd-base/index',
-     *      'icon' => ''
-     *   ]
-     * ]
-     * @var array
-     */
-    public $menu = [
-<?php for ($i = 0; $i < $menuCount; $i++){
-    if (!empty($menus['title'][$i]) && !empty($menus['route'][$i])){
-        ?>
-        [
-            'title' => '<?= $menus['title'][$i]; ?>',
-            'route' => '<?= $menus['route'][$i]; ?>',
-            'icon' => '<?= $menus['icon'][$i]; ?>'
-        ],
-<?php }
-} ?>
-    ];
-
-    /**
-     * 同menu上
-     *
-     * @var array
-     */
-    public $cover = [
-<?php for ($i = 0; $i < $coverCount; $i++){
-    if (!empty($covers['title'][$i]) && !empty($covers['route'][$i])){
-        ?>
-        [
-            'title' => '<?= $covers['title'][$i]; ?>',
-            'route' => '<?= $covers['route'][$i]; ?>',
-            'icon' => '<?= $covers['icon'][$i]; ?>'
-        ],
-<?php }
-}?>
-    ];
-
-    /**
      * 保存在当前模块的根目录下面
      *
-     * 例如 public $install = 'Install';
-     * 安装SQL,只支持php文件
+     * 例如 $install = 'Install';
+     * 安装类
      * @var string
      */
     public $install = '<?= $model['install'] ?>';
     
     /**
-     * 卸载SQL
+     * 卸载SQL类
      *
      * @var string
      */
     public $uninstall = '<?= $model['uninstall'] ?>';
     
     /**
-     * 更新SQL
+     * 更新SQL类
      *
      * @var string
      */

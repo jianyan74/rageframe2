@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use yii\helpers\Html as BaseHtml;
 use common\helpers\Html;
@@ -32,15 +33,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'class' => 'form-control'
                                 ]
                             ),
-                            'value' => function($model) use ($driveExplain) {
+                            'value' => function ($model) use ($driveExplain) {
                                 return $driveExplain[$model->drive];
                             },
                         ],
                         [
                             'attribute' => 'base_url',
                             'filter' => false, //不显示搜索框
-                            'value' => function($model){
-                                if (($model['upload_type'] == 'images' || preg_match("/^image/", $model['specific_type'])) && $model['extension'] != 'psd') {
+                            'value' => function ($model) {
+                                if (($model['upload_type'] == 'images' || preg_match("/^image/",
+                                            $model['specific_type'])) && $model['extension'] != 'psd') {
                                     return ImageHelper::fancyBox($model->base_url);
                                 }
 
@@ -58,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'class' => 'form-control'
                                 ]
                             ),
-                            'value' => function($model) use ($uploadTypeExplain) {
+                            'value' => function ($model) use ($uploadTypeExplain) {
                                 return $uploadTypeExplain[$model->upload_type];
                             },
                         ],
@@ -66,19 +68,30 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'size',
                             'filter' => false, //不显示搜索框
-                            'value' => function($model) {
+                            'value' => function ($model) {
                                 return Yii::$app->formatter->asShortSize($model->size, 0);
                             },
                         ],
                         [
+                            'attribute' => 'extension',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
+                        [
                             'attribute' => 'upload_ip',
                             'filter' => false, //不显示搜索框
-                            'value' => function($model) {
+                            'value' => function ($model) {
                                 return long2ip($model->upload_ip);
                             },
                         ],
                         [
-                            'label'=> '创建时间',
+                            'label' => 'ip解析',
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                return \common\helpers\DebrisHelper::analysisIp($model->upload_ip);
+                            },
+                        ],
+                        [
+                            'label' => '创建时间',
                             'attribute' => 'created_at',
                             'filter' => false, //不显示搜索框
                             'format' => ['date', 'php:Y-m-d H:i:s'],
@@ -86,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{status} {delete}',
+                            'template' => '{status} {delete}',
                             'buttons' => [
                                 'status' => function ($url, $model, $key) {
                                     return Html::status($model->status);

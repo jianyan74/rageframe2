@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\assets;
 
 use yii\web\AssetBundle;
@@ -16,7 +17,7 @@ class HeadJsAsset extends AssetBundle
     public $js = [
         'bower_components/jquery/dist/jquery.min.js',
         'plugins/toastr/toastr.min.js',
-        'plugins/cropper/dist/cropper.min.js',
+        'plugins/cropper/cropper.min.js',
     ];
 
     public $jsOptions = [

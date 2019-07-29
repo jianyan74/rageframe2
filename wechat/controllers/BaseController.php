@@ -1,4 +1,5 @@
 <?php
+
 namespace wechat\controllers;
 
 use Yii;

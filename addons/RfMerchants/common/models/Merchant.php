@@ -13,7 +13,7 @@ use Yii;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class Merchant extends \common\models\common\BaseModel
+class Merchant extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}

@@ -21,7 +21,7 @@ use Yii;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class User extends \common\models\common\BaseModel
+class User extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
         border: 4px inset transparent;
     }
     .postItem.active{
-        border: 2px solid #1ab394 !important;
+        border: 1px solid #62a8ea !important;
     }
     .subPostCover{
         position: absolute; right: 10px; bottom: 10px;

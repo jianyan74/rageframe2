@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\menu;
 
 use Yii;
@@ -19,8 +20,8 @@ class MenuLeftWidget extends Widget
     public function run()
     {
         return $this->render('menu-left', [
-            'menus'=> Yii::$app->services->sysMenu->getList(),
-            'addonsMenus'=> Yii::$app->services->addons->getMenus(),
+            'menus' => Yii::$app->services->sysMenu->getList(),
+            'addonsMenus' => Yii::$app->services->addons->getMenus(),
         ]);
     }
 }

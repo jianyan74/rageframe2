@@ -1,7 +1,7 @@
 <?php
 return [
     'name' => 'RageFrame',
-    'version' => '2.3.39',
+    'version' => '2.3.65',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -47,6 +47,10 @@ return [
         /** ------ 网站碎片管理 ------ **/
         'debris' => [
             'class' => 'common\components\Debris',
+        ],
+        /** ------ 访问设备信息 ------ **/
+        'mobileDetect' => [
+            'class' => 'Detection\MobileDetect',
         ],
         /** ------ 队列设置 ------ **/
         'queue' => [

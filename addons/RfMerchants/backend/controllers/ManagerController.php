@@ -2,7 +2,7 @@
 namespace addons\RfMerchants\backend\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\sys\Manager;
 use common\enums\StatusEnum;
@@ -104,9 +104,6 @@ class ManagerController extends BaseController
         // ajax 校验
         $this->activeFormValidate($model);
         if ($model->load($request->post())) {
-            // 记录行为日志
-            Yii::$app->services->sysActionLog->create('managerEdit', '创建/编辑管理员密码|账号:' . $model->username, false);
-
             return $model->save()
                 ? $this->redirect(['index', 'merchant_id' => $this->merchant_id])
                 : $this->message($this->getError($model), $this->redirect(['index', 'merchant_id' => $this->merchant_id]), 'error');

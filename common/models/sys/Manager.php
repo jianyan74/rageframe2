@@ -6,7 +6,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\enums\AuthEnum;
-use common\models\common\User;
+use common\models\base\User;
 use common\models\common\AuthAssignment;
 
 /**

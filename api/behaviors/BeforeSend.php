@@ -50,6 +50,11 @@ class BeforeSend extends Behavior
             $response->data['message'] = $response->data['data']['message'];
         }
 
+        // ip黑名单
+        if ($response->statusCode == 429) {
+            Yii::$app->services->ipBlacklist->create(Yii::$app->request->userIP, '请求频率过高');
+        }
+
         $response->format = yii\web\Response::FORMAT_JSON;
         $response->statusCode = 200; // 考虑到了某些前端必须返回成功操作，所以这里可以设置为都返回200的状态码
     }

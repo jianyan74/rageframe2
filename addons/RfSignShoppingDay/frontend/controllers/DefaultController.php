@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfSignShoppingDay\frontend\controllers;
 
 use Yii;

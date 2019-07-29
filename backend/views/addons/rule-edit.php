@@ -1,6 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use common\helpers\Html;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
 
@@ -59,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                 <tr>
                                                                     <td class="saveKeywordInput">
                                                                         <span class="key-hint"></span>
-                                                                        <span class="key-text"><?= $value?></span>
+                                                                        <span class="key-text"><?= Html::encode($value) ?></span>
                                                                         <input type="text" class="form-control key-input" name="ruleKey[<?= RuleKeyword::TYPE_INCLUDE ?>][]" value="<?= $value?>" style="display: none;">
                                                                     </td>
                                                                     <td type="<?= RuleKeyword::TYPE_INCLUDE ?>">
@@ -84,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                 <tr>
                                                                     <td class="saveKeywordInput">
                                                                         <span class="key-hint"></span>
-                                                                        <span class="key-text"><?= $value?></span>
+                                                                        <span class="key-text"><?= Html::encode($value) ?></span>
                                                                         <input type="text" class="form-control key-input" name="ruleKey[<?= RuleKeyword::TYPE_REGULAR ?>][]" value="<?= $value?>" style="display: none;">
                                                                     </td>
                                                                     <td type="<?= RuleKeyword::TYPE_REGULAR ?>">

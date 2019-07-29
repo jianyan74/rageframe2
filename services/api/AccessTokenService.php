@@ -1,14 +1,15 @@
 <?php
+
 namespace services\api;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\web\UnprocessableEntityHttpException;
 use common\enums\CacheKeyEnum;
 use common\helpers\ArrayHelper;
 use common\models\member\Member;
 use common\models\api\AccessToken;
 use common\components\Service;
-use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Class AccessTokenService
@@ -58,7 +59,7 @@ class AccessTokenService extends Service
         }
 
         $result = [];
-        $result['refresh_token'] =  $model->refresh_token;
+        $result['refresh_token'] = $model->refresh_token;
         $result['access_token'] = $model->access_token;
         $result['expiration_time'] = Yii::$app->params['user.accessTokenExpire'];
 
@@ -121,7 +122,10 @@ class AccessTokenService extends Service
      */
     protected function findModel($member_id, $group)
     {
-        if (empty(($model = AccessToken::find()->where(['member_id' => $member_id, 'group' => $group])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
+        if (empty(($model = AccessToken::find()->where([
+            'member_id' => $member_id,
+            'group' => $group
+        ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
             $model = new AccessToken();
             return $model->loadDefaultValues();
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace common\controllers;
 
 use Yii;
@@ -113,7 +114,7 @@ class AddonsController extends Controller
         }
 
         $appId = $this->isHook == true ? 'backend' : Yii::$app->id;
-        return "@addons" . '/'. Yii::$app->params['addonInfo']['name'] . '/' . $appId . '/views/' . $controller . $view;
+        return "@addons" . '/' . Yii::$app->params['addonInfo']['name'] . '/' . $appId . '/views/' . $controller . $view;
     }
 
     /**

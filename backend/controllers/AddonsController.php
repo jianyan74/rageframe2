@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
@@ -6,6 +7,8 @@ use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
+use common\helpers\Url;
+use common\enums\AuthEnum;
 use common\helpers\Auth;
 use common\models\common\Addons;
 use common\helpers\AddonHelper;
@@ -85,13 +88,45 @@ class AddonsController extends Controller
      * 导航入口
      *
      * @return string
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionCover()
     {
         // 初始化模块
         AddonHelper::initAddon($this->addonName, $this->route);
-        return $this->render('@backend/views/addons/cover');
+
+        $covers = [];
+        $baseCover = Yii::$app->params['addonBinding']['cover'];
+
+        foreach ($baseCover as $value) {
+            $key = AuthEnum::$typeExplain[$value['type']] . '入口';
+            $value['url'] = '';
+
+            switch ($value['type']) {
+                case AuthEnum::TYPE_API :
+                    $value['url'] = Url::toApi(ArrayHelper::merge([$value['route']], $value['params']));
+                    break;
+                case AuthEnum::TYPE_FRONTEND :
+                    $value['url'] = Url::toFront(ArrayHelper::merge([$value['route']], $value['params']));
+                    break;
+                case AuthEnum::TYPE_WECHAT :
+                    $value['url'] = Url::toWechat(ArrayHelper::merge([$value['route']], $value['params']));
+                    break;
+                case AuthEnum::TYPE_OAUTH2 :
+                    $value['url'] = Url::toOAuth2(ArrayHelper::merge([$value['route']], $value['params']));
+                    break;
+                case AuthEnum::TYPE_STORAGE:
+                    $value['url'] = Url::toStorage(ArrayHelper::merge([$value['route']], $value['params']));
+                    break;
+            }
+
+            $covers[$key][] = $value;
+        }
+
+        return $this->render('@backend/views/addons/cover', [
+            'covers' => $covers
+        ]);
     }
 
     /**

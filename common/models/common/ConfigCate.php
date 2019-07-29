@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use backend\components\Tree;
@@ -17,7 +18,7 @@ use common\enums\StatusEnum;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class ConfigCate extends \common\models\common\BaseModel
+class ConfigCate extends \common\models\base\BaseModel
 {
     use Tree;
 
@@ -35,7 +36,7 @@ class ConfigCate extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title', 'sort'], 'required'],
             [['pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
             [['tree'], 'string', 'max' => 300],
@@ -65,7 +66,9 @@ class ConfigCate extends \common\models\common\BaseModel
      */
     public function getConfig()
     {
-        return $this->hasMany(Config::class, ['cate_id' => 'id'])->with('value')->orderBy('sort asc')->where(['status' => StatusEnum::ENABLED]);
+        return $this->hasMany(Config::class, ['cate_id' => 'id'])->with('value')
+            ->orderBy('sort asc')
+            ->where(['status' => StatusEnum::ENABLED]);
     }
 
     /**

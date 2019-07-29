@@ -2,6 +2,7 @@
 
 namespace common\models\common;
 
+use Yii;
 use common\behaviors\MerchantBehavior;
 
 /**
@@ -23,7 +24,7 @@ use common\behaviors\MerchantBehavior;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class SmsLog extends \common\models\common\BaseModel
+class SmsLog extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -54,7 +55,7 @@ class SmsLog extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'member_id', 'error_code', 'used', 'mobile', 'code', 'use_time', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'error_code', 'used', 'mobile', 'code', 'use_time', 'ip', 'status', 'created_at', 'updated_at'], 'integer'],
             [['error_data'], 'string'],
             [['usage'], 'string', 'max' => 20],
             [['content'], 'string', 'max' => 500],
@@ -74,15 +75,29 @@ class SmsLog extends \common\models\common\BaseModel
             'mobile' => '手机号码',
             'code' => '验证码',
             'content' => '内容',
-            'error_code' => '报错 Code',
-            'error_msg' => '报错说明',
-            'error_data' => '具体报错信息',
+            'error_code' => '状态Code',
+            'error_msg' => '状态说明',
+            'error_data' => '具体信息',
             'usage' => '用途',
             'used' => '是否使用',
             'use_time' => '使用时间',
+            'ip' => 'ip',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord) {
+            $this->ip = ip2long(Yii::$app->request->userIP);
+        }
+
+        return parent::beforeSave($insert);
     }
 }

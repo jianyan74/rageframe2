@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
@@ -48,7 +49,7 @@ class MenuService extends Service
             $buttons[] = $arr;
         }
 
-        $model->menu_data = serialize($buttons);
+        $model->menu_data = $buttons;
         // 判断写入是否成功
         if (!$model->validate()) {
             throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
@@ -89,9 +90,9 @@ class MenuService extends Service
     public function mergeButton(array $button)
     {
         $arr = [];
-        if($button['type'] == 'click' || $button['type'] == 'view') {
+        if ($button['type'] == 'click' || $button['type'] == 'view') {
             $arr[Menu::$menuTypes[$button['type']]['meta']] = $button['content'];
-        } else if($button['type'] == 'miniprogram') {
+        } elseif ($button['type'] == 'miniprogram') {
             $arr['appid'] = $button['appid'];
             $arr['pagepath'] = $button['pagepath'];
             $arr['url'] = $button['url'];
@@ -122,7 +123,7 @@ class MenuService extends Service
             $model = new Menu;
             $model->title = "默认菜单";
             $model = $model->loadDefaultValues();
-            $model->menu_data = serialize($list['menu']['button']);
+            $model->menu_data = $list['menu']['button'];
             $model->menu_id = isset($list['menu']['menuid']) ? $list['menu']['menuid'] : '';
             $model->save();
         }
@@ -139,7 +140,7 @@ class MenuService extends Service
                 $model->attributes = $menu['matchrule'];
                 $model->type = Menu::TYPE_INDIVIDUATION;
                 $model->tag_id = isset($menu['group_id']) ? $menu['group_id'] : '';
-                $model->menu_data = serialize($menu['button']);
+                $model->menu_data = $menu['button'];
                 $model->menu_id = $menu['menuid'];
                 $model->save();
             }

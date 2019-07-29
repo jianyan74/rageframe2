@@ -1,13 +1,18 @@
 <?php
+
 namespace services\common;
 
 use Yii;
-use yii\base\InvalidConfigException;
+use yii\helpers\Json;
+use common\enums\StatusEnum;
+use common\helpers\EchantsHelper;
+use common\enums\AuthEnum;
 use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\models\common\Log;
 use common\queues\LogJob;
+use common\models\api\AccessToken;
 
 /**
  * Class LogService
@@ -26,14 +31,14 @@ class LogService extends Service
     /**
      * 状态码
      *
-     * @var
+     * @var int
      */
     private $statusCode;
 
     /**
      * 状态内容
      *
-     * @var
+     * @var string
      */
     private $statusText;
 
@@ -47,7 +52,7 @@ class LogService extends Service
     /**
      * 唯一标识
      *
-     * @var
+     * @var string
      */
     private $req_id;
 
@@ -99,45 +104,7 @@ class LogService extends Service
     }
 
     /**
-     * 初始化默认日志数据
-     *
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function initData()
-    {
-        $member_id = Yii::$app->user->id;
-        $url = explode('?', Yii::$app->request->getUrl());
-
-        $data = [];
-        $data['member_id'] = $member_id ?? 0;
-        $data['merchant_id'] = Yii::$app->services->merchant->getId();
-        $data['url'] = $url[0];
-        $data['get_data'] = json_encode(Yii::$app->request->get());
-
-        $module = $controller = $action = '';
-        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
-        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
-        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
-
-        $route = $module . '/' . $controller . '/' . $action;
-        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
-            $data['post_data'] = json_encode(Yii::$app->request->post());
-        }
-
-        $data['method'] = Yii::$app->request->method;
-        $data['module'] = $module;
-        $data['controller'] = $controller;
-        $data['action'] = $action;
-        $data['ip'] = ip2long(Yii::$app->request->userIP);
-
-        return $data;
-    }
-
-    /**
      * 写入日志
-     *
-     * @throws \yii\base\InvalidConfigException
      */
     public function insertLog()
     {
@@ -152,8 +119,53 @@ class LogService extends Service
                 $log->attributes = $this->getData();
                 $log->save();
             }
-        } catch (InvalidConfigException $e) {
+        } catch (\Exception $e) {
         }
+    }
+
+    /**
+     * 初始化默认日志数据
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function initData()
+    {
+        $user_id = Yii::$app->user->id;
+        if (Yii::$app->id == AuthEnum::TYPE_API && !Yii::$app->user->isGuest) {
+            /** @var AccessToken $identity */
+            $identity = Yii::$app->user->identity;
+            $user_id = $identity->member_id ?? 0;
+        }
+
+        $url = explode('?', Yii::$app->request->getUrl());
+
+        $data = [];
+        $data['user_id'] = $user_id ?? 0;
+        $data['app_id'] = Yii::$app->id;
+        $data['merchant_id'] = Yii::$app->services->merchant->getId();
+        $data['url'] = $url[0];
+        $data['get_data'] = Json::encode(Yii::$app->request->get());
+        $data['header_data'] = Json::encode(ArrayHelper::toArray(Yii::$app->request->headers));
+
+        $module = $controller = $action = '';
+        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
+        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
+        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
+
+        $route = $module . '/' . $controller . '/' . $action;
+        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
+            $data['post_data'] = Json::encode(Yii::$app->request->post());
+        }
+
+        $data['device'] = Yii::$app->debris->detectVersion();
+        $data['method'] = Yii::$app->request->method;
+        $data['module'] = $module;
+        $data['controller'] = $controller;
+        $data['action'] = $action;
+        $data['ip'] = ip2long(Yii::$app->request->userIP);
+
+        return $data;
     }
 
     /**
@@ -181,6 +193,38 @@ class LogService extends Service
     }
 
     /**
+     * 报表统计
+     *
+     * @param $type
+     * @return array
+     */
+    public function stat($type)
+    {
+        $fields = [];
+        $codes = [400, 401, 403, 404, 405, 422, 429, 500];
+        foreach ($codes as $code) {
+            $fields[$code] = $code . '错误';
+        }
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) use ($codes) {
+            $statData = Log::find()
+                ->select(["from_unixtime(created_at, '$formatting') as time", 'count(id) as count', 'error_code'])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->andWhere(['status' => StatusEnum::ENABLED])
+                ->andWhere(['in', 'error_code', $codes])
+                ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+                ->groupBy(['time', 'error_code'])
+                ->asArray()
+                ->all();
+
+            return EchantsHelper::regroupTimeData($statData, 'error_code');
+        }, $fields, $time, $format);
+    }
+
+    /**
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
@@ -190,7 +234,7 @@ class LogService extends Service
         $data['req_id'] = $this->req_id;
         $data['error_code'] = $this->statusCode;
         $data['error_msg'] = $this->statusText;
-        $data['error_data'] = is_array($this->errData) ? json_encode($this->errData) : $this->errData;
+        $data['error_data'] = is_array($this->errData) ? Json::encode($this->errData) : $this->errData;
 
         return $data;
     }

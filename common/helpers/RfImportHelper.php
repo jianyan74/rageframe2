@@ -62,6 +62,8 @@ class RfImportHelper
      */
     public static function auth($data)
     {
+        ini_set('max_execution_time', '0');
+
         AuthItem::deleteAll();
         $allData = [];
         $sortArr = [];

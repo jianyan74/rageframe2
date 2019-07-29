@@ -1,12 +1,14 @@
 <?php
+
 namespace services\common;
 
 use Yii;
 use yii\data\Pagination;
+use yii\web\NotFoundHttpException;
 use common\models\common\Attachment;
 use common\components\Service;
 use common\enums\StatusEnum;
-use yii\web\NotFoundHttpException;
+use common\helpers\UploadHelper;
 
 /**
  * Class AttachmentService
@@ -15,6 +17,27 @@ use yii\web\NotFoundHttpException;
  */
 class AttachmentService extends Service
 {
+    /**
+     * @param $md5
+     * @return array|bool
+     */
+    public function findByMd5($md5)
+    {
+        $model = Attachment::find()
+            ->where(['md5' => $md5])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+
+        if ($model) {
+            $model->updated_at = time();
+            $model->save();
+            return $model->toArray();
+        }
+
+        return false;
+    }
+
     /**
      * 获取百度编辑器查询数据
      *
@@ -65,17 +88,15 @@ class AttachmentService extends Service
 
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 10, 'validatePage' => false]);
         $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
+            ->orderBy('updated_at desc')
             ->limit($pages->limit)
             ->asArray()
             ->all();
 
         // 如果是以文件形式上传的图片手动修改为图片类型显示
         foreach ($models as &$model) {
-            if (preg_match("/^image/", $model['specific_type']) && $model['extension'] != 'psd') {
-                $model['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
-            }
-
+            $model['upload_type'] = UploadHelper::formattingFileType($model['specific_type'], $model['extension'],
+                $model['upload_type']);
             $model['size'] = Yii::$app->formatter->asShortSize($model['size'], 2);
         }
 

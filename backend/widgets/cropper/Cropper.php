@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\cropper;
 
 use yii\helpers\Url;
@@ -56,7 +57,8 @@ class Cropper extends InputWidget
 
         $this->boxId = md5($this->name) . StringHelper::uuid('uniqid');
         $this->config = ArrayHelper::merge([
-            'circle' => false,
+            'aspectRatio' => '1',
+            'multiple' => false,
             'server' => Url::to(['/file/base64']),
         ], $this->config);
 
@@ -66,7 +68,7 @@ class Cropper extends InputWidget
         ], $this->formData);
 
         $this->themeConfig = ArrayHelper::merge([
-
+            'select' => true
         ], $this->themeConfig);
     }
 
@@ -78,29 +80,32 @@ class Cropper extends InputWidget
         $value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
         $name = $this->hasModel() ? Html::getInputName($this->model, $this->attribute) : $this->name;
 
-        $this->registerClientScript();
+        empty($value) && $value = [];
+        if ($this->config['multiple'] == true) {
+            // 赋予默认值
+            $name = $name . '[]';
+
+            if ($value && !is_array($value)) {
+                $value = json_decode($value, true);
+                empty($value) && $value = unserialize($value);
+                empty($value) && $value = [];
+            }
+        }
+
+        if (!is_array($value)) {
+            $tmp = $value;
+            $value = [];
+            $value[] = $tmp;
+        }
 
         return $this->render($this->theme, [
             'name' => $name,
             'value' => $value,
             'boxId' => $this->boxId,
             'config' => $this->config,
+            'type' => 'images',
             'formData' => $this->formData,
             'themeConfig' => $this->themeConfig,
         ]);
-    }
-
-    /**
-     * 注册资源
-     */
-    protected function registerClientScript()
-    {
-        $view = $this->getView();
-        $boxId = $this->boxId;
-
-//        $view->registerJs(<<<Js
-//
-//Js
-//        );
     }
 }

@@ -20,7 +20,7 @@ use common\behaviors\MerchantBehavior;
  * @property string $created_at 创建时间
  * @property int $updated_at 修改时间
  */
-class Attachment extends \common\models\common\BaseModel
+class Attachment extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

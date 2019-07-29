@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\LinkPager;
 use common\helpers\Html;
 
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?= Html::create(['ajax-edit', 'member_id' => $member_id], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -34,22 +35,22 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($models as $model){ ?>
+                    <?php foreach ($models as $model) { ?>
                         <tr id="<?= $model->id ?>">
                             <td><?= $model->id ?></td>
                             <td><?= Html::encode($model->realname) ?></td>
-                            <td><?= $model->mobile ?></td>
+                            <td><?= Html::encode($model->mobile) ?></td>
                             <td><?= $model->address_name ?></td>
-                            <td><?= $model->address_details ?></td>
+                            <td><?= Html::encode($model->address_details) ?></td>
                             <td><?= Html::whether($model->is_default) ?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>
                             <td>
                                 <?= Html::edit(['ajax-edit', 'id' => $model->id, 'member_id' => $member_id], '编辑', [
                                     'data-toggle' => 'modal',
                                     'data-target' => '#ajaxModal',
-                                ])?>
+                                ]) ?>
                                 <?= Html::status($model['status']); ?>
-                                <?= Html::delete(['destroy','id' => $model->id, 'member_id' => $member_id])?>
+                                <?= Html::delete(['destroy', 'id' => $model->id, 'member_id' => $member_id]) ?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -59,7 +60,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-footer">
                 <?= LinkPager::widget([
                     'pagination' => $pages
-                ]);?>
+                ]); ?>
             </div>
         </div>
     </div>

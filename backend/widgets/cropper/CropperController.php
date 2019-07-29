@@ -19,6 +19,8 @@ class CropperController extends Controller
     {
         return $this->renderAjax('@backend/widgets/cropper/views/crop', [
             'boxId' => Yii::$app->request->get('boxId'),
+            'multiple' => Yii::$app->request->get('multiple'),
+            'aspectRatio' => Yii::$app->request->get('aspectRatio'),
         ]);
     }
 }

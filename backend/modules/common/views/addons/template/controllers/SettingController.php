@@ -2,6 +2,7 @@
 
 echo "<?php\n";
 ?>
+
 namespace addons\<?= $model->name;?>\<?= $appID;?>\controllers;
 
 use Yii;

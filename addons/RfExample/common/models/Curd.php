@@ -37,7 +37,7 @@ use common\helpers\StringHelper;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Curd extends \common\models\common\BaseModel
+class Curd extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

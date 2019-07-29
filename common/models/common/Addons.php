@@ -2,6 +2,7 @@
 namespace common\models\common;
 
 use Yii;
+use common\models\base\BaseModel;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
 use common\enums\AuthEnum;

@@ -23,7 +23,7 @@ use common\behaviors\MerchantBehavior;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class ArticleSingle extends \common\models\common\BaseModel
+class ArticleSingle extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

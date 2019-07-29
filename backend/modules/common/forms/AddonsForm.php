@@ -1,7 +1,7 @@
 <?php
+
 namespace backend\modules\common\forms;
 
-use Yii;
 use common\helpers\ArrayHelper;
 use common\models\common\Addons;
 

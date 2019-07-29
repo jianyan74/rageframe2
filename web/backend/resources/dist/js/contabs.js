@@ -168,7 +168,8 @@ $(function () {
         // 获取标识数据
         var dataUrl = that.attr('href'),
             dataIndex = that.data('index'),
-            menuName = $.trim(that.text()),
+            menuTitle = $.trim(that.data('title')),
+            menuName = menuTitle.length > 0 ? menuTitle : $.trim(that.text()),
             flag = true;
 
         if (dataUrl == undefined || $.trim(dataUrl).length == 0)return false;

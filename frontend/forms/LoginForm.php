@@ -9,7 +9,7 @@ use common\models\member\Member;
  * Class LoginForm
  * @package frontend\models
  */
-class LoginForm extends \common\models\common\LoginForm
+class LoginForm extends \common\models\forms\LoginForm
 {
     /**
      * @inheritdoc

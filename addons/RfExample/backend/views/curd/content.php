@@ -75,11 +75,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     // 不配置则不生成缩略图
                     'thumb' => [
                         [
-                            'widget' => 100,
+                            'width' => 100,
                             'height' => 100,
                         ],
                         [
-                            'widget' => 200,
+                            'width' => 200,
                             'height' => 200,
                         ],
                     ],
@@ -139,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'drive' => 'local', // 默认本地 支持qiniu/oss/cos 上传
                 'thumb' => [
                     [
-                        'widget' => 100,
+                        'width' => 100,
                         'height' => 100,
                     ],
                 ]

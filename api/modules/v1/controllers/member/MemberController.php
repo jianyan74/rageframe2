@@ -1,4 +1,5 @@
 <?php
+
 namespace api\modules\v1\controllers\member;
 
 use yii\web\NotFoundHttpException;
@@ -32,7 +33,13 @@ class MemberController extends OnAuthController
     {
         $model = $this->modelClass::find()
             ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
-            ->select(['id', 'username', 'nickname', 'realname', 'head_portrait', 'gender', 'qq', 'email', 'birthday', 'user_money', 'user_integral', 'status', 'created_at'])
+            ->select([
+                'id', 'username', 'nickname',
+                'realname', 'head_portrait', 'gender',
+                'qq', 'email', 'birthday',
+                'user_money', 'user_integral', 'status',
+                'created_at'
+            ])
             ->asArray()
             ->one();
 

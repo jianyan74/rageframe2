@@ -12,7 +12,7 @@ AppAsset::register($this);
         <meta name="viewport" content="width=device-width, initial-scale=1.0"<
         <meta name="renderer" content="webkit">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Yii::$app->params['adminTitle'];?></title>
+        <title><?= Html::encode(Yii::$app->params['adminTitle']);?></title>
         <?= Html::cssFile('@web/resources/dist/css/skins/_all-skins.min.css'); ?>
         <?php $this->head() ?>
     </head>

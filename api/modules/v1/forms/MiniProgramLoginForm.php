@@ -48,16 +48,18 @@ class MiniProgramLoginForm extends Model
      */
     public function authVerify($attribute)
     {
-        if (!($oauth = Yii::$app->cache->get(CacheKeyEnum::API_MINI_PROGRAM_LOGIN . $this->auth_key))) {
-            return $this->addError($attribute, 'auth_key已过期');
+        if (!($auth = Yii::$app->cache->get(CacheKeyEnum::API_MINI_PROGRAM_LOGIN . $this->auth_key))) {
+            $this->addError($attribute, 'auth_key已过期');
+            return;
         }
 
-        $sign = sha1(htmlspecialchars_decode($this->rawData . $oauth['session_key']));
+        $sign = sha1(htmlspecialchars_decode($this->rawData . $auth['session_key']));
         if ($sign !== $this->signature) {
-            return $this->addError($attribute, '签名错误');
+            $this->addError($attribute, '签名错误');
+            return;
         }
 
-        $this->auth = $oauth;
+        $this->auth = $auth;
     }
 
     /**
@@ -66,7 +68,6 @@ class MiniProgramLoginForm extends Model
      */
     public function getUser()
     {
-        return Yii::$app->wechat->miniProgram->encryptor->decryptData($this->oauth['session_key'], $this->iv,
-            $this->encryptedData);
+        return Yii::$app->wechat->miniProgram->encryptor->decryptData($this->auth['session_key'], $this->iv, $this->encryptedData);
     }
 }

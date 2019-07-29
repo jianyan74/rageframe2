@@ -2,7 +2,6 @@
 namespace oauth2\controllers;
 
 use Yii;
-use yii\web\Controller;
 use common\models\oauth2\repository\UserRepository;
 use common\models\oauth2\repository\RefreshTokenRepository;
 use common\helpers\ResultDataHelper;
@@ -16,7 +15,7 @@ use oauth2\components\Response;
  * @package oauth2\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class PasswordController extends Controller
+class PasswordController extends OnAuthController
 {
     public $modelClass = '';
 

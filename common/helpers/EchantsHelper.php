@@ -12,160 +12,258 @@ namespace common\helpers;
 class EchantsHelper
 {
     /**
-     * 某天的数据
+     * 通用格式化日期匹配
      *
-     * @param array $data
+     * @var array
+     */
+    protected static $formats = [
+        'minute' => [
+            'default' => 'Y-n-d H:i',
+            'sql' => '%Y-%c-%d %H:%i',
+            'view' => 'd H:i',
+        ],
+        'hour' => [
+            'default' => 'Y-n-d H:00',
+            'sql' => '%Y-%c-%d %H:00',
+            'view' => 'H:00',
+        ],
+        'week' => [
+            'default' => 'Y-n-d',
+            'sql' => '%Y-%c-%d',
+            'view' => 'Y-n-d',
+        ],
+        'day' => [
+            'default' => 'Y-n-d',
+            'sql' => '%Y-%c-%d',
+            'view' => 'Y-n-d',
+        ],
+        'month' => [
+            'default' => 'Y-n',
+            'sql' => '%Y-%c',
+            'view' => 'Y-m',
+        ],
+        'year' => [
+            'default' => 'Y',
+            'sql' => '%Y',
+            'view' => 'Y',
+        ],
+    ];
+
+    /**
+     * 根据类型快速获取时间区间和格式
      *
-     * ...
-     *  $data = [
-     *       0 => [
-     *           'count' => 6,
-     *           'time' => '1',
-     *       ],
-     *       1 => [
-     *           'count' => 8,
-     *           'time' => '18',
-     *       ],
-     *  ];
-     * ...
-     *
+     * @param $type
+     * @param array $betweenTime
      * @return array
      */
-    public static function day(array $data)
+    public static function getFormatTime($type, $start_time = '', $end_time = '')
     {
-        $numBetween = ArrayHelper::numBetween(0, 23);
-        $data = ArrayHelper::arrayKey($data, 'time');
+        switch ($type) {
+            case 'yesterday' :
+                list($time, $format) = [DateHelper::yesterday(), 'hour'];
+                break;
+            case 'thisWeek' :
+                list($time, $format) = [DateHelper::thisWeek(), 'week'];
+                break;
+            case 'thisMonth' :
+                list($time, $format) = [DateHelper::thisMonth(), 'day'];
+                break;
+            case 'thisYear' :
+                list($time, $format) = [DateHelper::aYear(date('Y')), 'month'];
+                break;
+            case 'this30Day' :
+                list($time, $format) = [['start' => time() - 60 * 60 *24 *30, 'end' => time()], 'day'];
+                break;
+            case 'betweenHour' :
+                list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'hour'];
+                break;
+            case 'betweenDay' :
+                list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'day'];
+                break;
+            case 'betweenMonth' :
+                list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'month'];
+                break;
+            case 'betweenYear' :
+                list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'year'];
+                break;
+            default :
+                // 默认今天
+                list($time, $format) = [DateHelper::today(), 'hour'];
+                break;
+        }
+
+        return [$time, $format];
+    }
+
+    /**
+     * 折线 柱状 获取区间统计
+     *
+     * $fields = [
+     *      'count' => '订单笔数',
+     *      'product_count' => '产品数量',
+     * ];
+     *
+     * @param $function
+     * @param array $fields 字段数组
+     * @param array $time
+     * @param string $format
+     * @param string $distinguishKey 时间字段名称
+     * @return array
+     */
+    public static function lineOrBarInTime(
+        $function,
+        array $fields,
+        array $time,
+        $format = 'day',
+        $distinguishKey = 'time',
+        $echartType = 'line'
+    ) {
+        $data = call_user_func($function, $time['start'], $time['end'], self::$formats[$format]['sql']);
+        // 对比key
+        $data = ArrayHelper::arrayKey($data, $distinguishKey);
+        // 递增时间
+        $all = self::progressiveIncreaseTime($time['start'], $time['end'], $format);
+        // 默认数据
         $seriesData = [];
-        foreach ($numBetween as &$item) {
-            $item < 10 && $item = '0' . $item;
-            $seriesData[] = isset($data[$item]) ? $data[$item]['count'] : 0;
-            $item = $item . ':00';
+        foreach ($fields as $field => $value) {
+            $seriesData[] = [
+                'field' => $field,
+                'name' => $value,
+                'type' => $echartType,
+                // 'smooth' => 'true',
+                'data' => [],
+            ];
+        }
+
+        foreach ($all as &$item) {
+            if (isset($data[$item])) {
+                foreach ($seriesData as $key => &$value) {
+                    $field = $seriesData[$key]['field'];
+                    $value['data'][] = $data[$item][$field] ?? 0;
+                }
+            } else {
+                foreach ($seriesData as $key => &$value) {
+                    $value['data'][] = 0;
+                }
+            }
+
+            // 格式化页面显示
+            if ($format == 'week') {
+                $item .= '(' . DateHelper::getWeekName(strtotime($item)) . ')';
+            } else {
+                $item = date(self::$formats[$format]['view'], strtotime($item));
+            }
         }
 
         return [
-            'xAxisData' => $numBetween,
+            'xAxisData' => $all,
             'seriesData' => $seriesData,
+            'fieldsName' => array_values($fields),
         ];
     }
 
     /**
-     * 某周的数据
+     * 饼图
      *
-     * @param array $data
-     *
-     * ...
-     *  $data = [
-     *       0 => [
-     *           'count' => 6,
-     *           'time' => '2019-6-10',
-     *       ],
-     *       1 => [
-     *           'count' => 8,
-     *           'time' => '2019-6-15',
-     *       ],
-     *  ];
-     * ...
-     *
+     * @param $function
      * @param array $time
+     * @param array $defaultSeries
      * @return array
      */
-    public static function week(array $data, array $time)
+    public static function pie($function, array $time, $defaultSeries = [])
     {
-        $numBetween = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
-        $data = ArrayHelper::arrayKey($data, 'time');
-        $seriesData = [];
-        $index = 0;
-        for ($i = $time['start']; $i < $time['end']; $i = $i + 60 * 60 * 24) {
-            $date = date('Y-n-j', $i);
-            $seriesData[] = isset($data[$date]) ? $data[$date]['count'] : 0;
+        list($data, $fields) = call_user_func($function, $time['start'], $time['end']);
 
-            $numBetween[$index] = $numBetween[$index] . "(" . date('n-j', $i) . "日)";
-            $index++;
+        // 重组增加默认数据
+        $seriesData = [];
+        $seriesData[] = ArrayHelper::merge([
+            'name' => '',
+            'type' => 'pie',
+            'radius' => '55%',
+            'center' => ['50%', '50%'],
+            'data' => [],
+            'itemStyle' => [
+                'emphasis' => [
+                    'shadowBlur' => 10,
+                    'shadowOffsetX' => 0,
+                    'shadowColor' => 'rgba(0, 0, 0, 0.5)',
+                ]
+            ]
+        ], $defaultSeries);
+
+        if (empty($data)) {
+            $data = [
+                [
+                    'name' => '暂无数据',
+                    'value' => 0
+                ]
+            ];
         }
 
+        $seriesData[0]['data'] = $data;
+
         return [
-            'xAxisData' => $numBetween,
             'seriesData' => $seriesData,
+            'fieldsName' => $fields,
         ];
     }
 
     /**
-     * 某月的数据
+     * 重组数据 - 主要用户多此分组
      *
-     * @param array $data
-     *
-     * ...
-     *  $data = [
-     *       0 => [
-     *           'count' => 6,
-     *           'time' => '2019-6-10',
-     *       ],
-     *       1 => [
-     *           'count' => 8,
-     *           'time' => '2019-6-15',
-     *       ],
-     *  ];
-     * ...
-     *
-     * @param array $time
+     * @param array $statData
+     * @param $field
+     * @param string $distinguishKey
+     * @param string $sumKey
      * @return array
      */
-    public static function month(array $data, array $time)
+    public static function regroupTimeData(array $statData, $field, $distinguishKey = 'time', $sumKey = 'count')
     {
-        $numBetween = ArrayHelper::numBetween(1, date('t', $time['start']), false);
-        $data = ArrayHelper::arrayKey($data, 'time');
-        $seriesData = [];
-        for ($i = $time['start']; $i < $time['end']; $i = $i + 60 * 60 * 24) {
-            $date = date('Y-n-j', $i);
-            $seriesData[] = isset($data[$date]) ? $data[$date]['count'] : 0;
+        $resData = [];
+        foreach ($statData as $statDatum) {
+            $key = $statDatum[$distinguishKey];
+            if (!isset($resData[$key])) {
+                $resData[$key] = [
+                    $distinguishKey => $statDatum[$distinguishKey],
+                    $statDatum[$field] => $statDatum[$sumKey],
+                ];
+            } else {
+                $fieldKey = $statDatum[$field];
+                if (!isset($resData[$key][$fieldKey])) {
+                    $resData[$key][$fieldKey] = $statDatum[$sumKey];
+                } else {
+                    $resData[$key][$fieldKey] += $statDatum[$sumKey];
+                }
+            }
         }
 
-        foreach ($numBetween as &$item) {
-            $item = date('m') . '-' . $item . '日';
-        }
-
-        return [
-            'xAxisData' => $numBetween,
-            'seriesData' => $seriesData,
-        ];
+        return $resData;
     }
 
     /**
-     * 某年的数据
+     * 获取递增时间区间
      *
-     * @param array $data
-     *
-     * ...
-     *  $data = [
-     *       0 => [
-     *           'count' => 6,
-     *           'time' => '2019-5',
-     *       ],
-     *       1 => [
-     *           'count' => 8,
-     *           'time' => '2019-6',
-     *       ],
-     *  ];
-     * ...
-     *
-     * @param array $time
+     * @param $start_time
+     * @param $end_time
+     * @param $type
      * @return array
      */
-    public static function year(array $data, array $time)
+    protected static function progressiveIncreaseTime($start_time, $end_time, $type)
     {
-        $numBetween = ArrayHelper::numBetween(1, 12, false);
-        $data = ArrayHelper::arrayKey($data, 'time');
-        $seriesData = [];
-        foreach ($numBetween as &$item) {
-            $year = date('Y', $time['start']);
-            $month = $year . '-' . $item;
-            $seriesData[] = isset($data[$month]) ? $data[$month]['count'] : 0;
-            $item = date('y', $time['start']) . '年' . $item . '月';
+        $type == 'week' && $type = 'day';
+
+        // 获取格式化
+        $dateformat = self::$formats[$type]['default'];
+        $startTime = strtotime(date($dateformat, $start_time));
+        $endTime = strtotime(date($dateformat, $end_time));
+
+        // 取得递增
+        $all = [];
+        $all[] = date($dateformat, $start_time);
+        while (($startTime = strtotime("+1 $type", $startTime)) <= $endTime) {
+            $all[] = date($dateformat, $startTime);
         }
 
-        return [
-            'xAxisData' => $numBetween,
-            'seriesData' => $seriesData,
-        ];
+        return $all;
     }
 }

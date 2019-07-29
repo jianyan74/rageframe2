@@ -1,4 +1,5 @@
 <?php
+
 namespace wechat\controllers;
 
 use Yii;
@@ -87,8 +88,7 @@ class SiteController extends BaseController
 
         $payment = Yii::$app->wechat->payment;
         $result = $payment->order->unify($orderData);
-        if ($result['return_code'] == 'SUCCESS')
-        {
+        if ($result['return_code'] == 'SUCCESS') {
             $config = $payment->jssdk->sdkConfig($result['prepay_id']);
 
             /**
@@ -97,21 +97,20 @@ class SiteController extends BaseController
              * 结果示例：weixin://wxpay/bizpayurl?sign=XXXXX&appid=XXXXX&mch_id=XXXXX&product_id=XXXXXX&time_stamp=XXXXXX&nonce_str=XXXXX
              */
 
-             /**
-                $content = $payment->scheme($result['prepay_id']);
-                $qr = Yii::$app->get('qr');
-                Yii::$app->response->format = Response::FORMAT_RAW;
-                Yii::$app->response->headers->add('Content-Type', $qr->getContentType());
-
-                return $qr->setText($content)
-                    ->setSize(150)
-                    ->setMargin(7)
-                    ->writeString();
-            */
-        }
-        else
-        {
-            p($result);die();
+            /**
+             * $content = $payment->scheme($result['prepay_id']);
+             * $qr = Yii::$app->get('qr');
+             * Yii::$app->response->format = Response::FORMAT_RAW;
+             * Yii::$app->response->headers->add('Content-Type', $qr->getContentType());
+             *
+             * return $qr->setText($content)
+             * ->setSize(150)
+             * ->setMargin(7)
+             * ->writeString();
+             */
+        } else {
+            p($result);
+            die();
         }
 
         return $this->render('demo', [

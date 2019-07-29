@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components\payment;
 
 use Yii;
@@ -101,7 +102,7 @@ class UnionPay
         $response = $gateway->query([
             'orderId' => $orderId, //Your site trade no, not union tn.
             'txnTime' => $txnTime, //Order trade time
-            'txnAmt'  => $txnAmt, //Order total fee
+            'txnAmt' => $txnAmt, //Order total fee
         ])->send();
 
         return $response->getData();

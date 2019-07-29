@@ -3,7 +3,7 @@ namespace backend\modules\sys\controllers;
 
 use Yii;
 use common\enums\StatusEnum;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\sys\Manager;
 use common\enums\AuthEnum;
@@ -79,9 +79,6 @@ class ManagerController extends BaseController
         // ajax 校验
         $this->activeFormValidate($model);
         if ($model->load($request->post())) {
-            // 记录行为日志
-            Yii::$app->services->sysActionLog->create('managerEdit', '创建/编辑管理员密码|账号:' . $model->username, false);
-
             return $model->save()
                 ? $this->redirect(['index'])
                 : $this->message($this->getError($model), $this->redirect(['index']), 'error');
@@ -136,8 +133,6 @@ class ManagerController extends BaseController
             $manager = Yii::$app->user->identity;
             $manager->password_hash = Yii::$app->security->generatePasswordHash($model->passwd_new);;
 
-            // 记录行为日志
-            Yii::$app->services->sysActionLog->create('updateManagerPwd', '修改管理员密码|账号:' . $manager->username, false);
             if ($manager->save()) {
                 Yii::$app->user->logout();
                 return ResultDataHelper::json(200, '修改成功');
@@ -149,20 +144,5 @@ class ManagerController extends BaseController
         return $this->render($this->action->id, [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * @param \yii\base\Action $action
-     * @param mixed $result
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function afterAction($action, $result)
-    {
-        if ($action->id == 'delete') {
-            Yii::$app->services->sysActionLog->create('managerDel', '删除管理员');
-        }
-
-        return parent::afterAction($action, $result);
     }
 }

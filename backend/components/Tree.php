@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\components;
 
 use yii\db\ActiveRecord;

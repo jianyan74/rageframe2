@@ -21,7 +21,7 @@ if (!YII_ENV_TEST) {
         'class' => 'yii\gii\Module',
         'generators' => [
             'crud' => [
-                'class' => yii\gii\generators\crud\Generator::className(),
+                'class' => yii\gii\generators\crud\Generator::class,
                 'templates' => [
                     'default' => '@vendor/yiisoft/yii2-gii/src/generators/crud/default',
                     'rageframe' => '@backend/components/gii/crud/default',

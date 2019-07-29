@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'value' => function ($model) {
                                 return "最后访问IP：" . $model->last_ip . '<br>'.
                                     "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>'.
-                                    "访问次数：" . $model->visit_count;
+                                    "登陆次数：" . $model->visit_count;
                             },
                             'format' => 'raw',
                         ],

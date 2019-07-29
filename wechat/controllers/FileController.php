@@ -1,4 +1,5 @@
 <?php
+
 namespace wechat\controllers;
 
 use Yii;
@@ -52,7 +53,7 @@ class FileController extends FileBaseController
         $fileName = $config['prefix'] . StringHelper::randomNum(time());
         $relativePath = Yii::getAlias("@attachurl/") . $filePath; // 相对路径
         $absolutePath = Yii::getAlias("@attachment/") . $filePath; // 绝对路径
-        $fileFullName  = $fileName . $fileExc; // 完整文件名
+        $fileFullName = $fileName . $fileExc; // 完整文件名
 
         if (!FileHelper::mkdirs($absolutePath)) {
             return ResultDataHelper::json(422, '文件夹创建失败，请确认是否开启attachment文件夹写入权限');

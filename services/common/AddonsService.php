@@ -1,7 +1,9 @@
 <?php
+
 namespace services\common;
 
 use Yii;
+use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use common\helpers\Url;
 use common\helpers\AddonHelper;
@@ -9,7 +11,6 @@ use common\models\common\Addons;
 use common\enums\StatusEnum;
 use common\components\Service;
 use common\helpers\StringHelper;
-use common\enums\AuthEnum;
 use common\helpers\ArrayHelper;
 use Overtrue\Pinyin\Pinyin;
 
@@ -33,17 +34,29 @@ class AddonsService extends Service
 
         foreach ($models as $k => &$model) {
             $addon = StringHelper::toUnderScore($model['name']);
+
+            // 超级管理员
             if (Yii::$app->services->auth->isSuperAdmin()) {
-                isset($model['bindingIndexMenu']['route']) && $model['menuUrl'] = Url::to(['/addons/'. $addon . '/' . $model['bindingIndexMenu']['route']]);
+                if (isset($model['bindingIndexMenu']['route'])) {
+                    $url = ['/addons/' . $addon . '/' . $model['bindingIndexMenu']['route']];
+                    $params = $model['bindingIndexMenu']['params'] ? Json::decode($model['bindingIndexMenu']['params']) : [];
+                    $model['menuUrl'] = Url::to(ArrayHelper::merge($url, $params));
+                }
+
                 empty($model['menuUrl']) && $model['menuUrl'] = Url::to(['/addons/blank', 'addon' => StringHelper::toUnderScore($model['name'])]);
                 $model['menuUrl'] = urldecode($model['menuUrl']);
             } else {
-                isset($model['authChildMenuByBackend']['name']) && $model['menuUrl'] = Url::to(['/addons/'. $addon . '/' . $model['authChildMenuByBackend']['name']]);
-                 if (empty($model['menuUrl'])) {
-                     unset($models[$k]);
-                 } else {
-                     $model['menuUrl'] = urldecode($model['menuUrl']);
-                 }
+                if (isset($model['authChildMenuByBackend']['name'])) {
+                    $url = ['/addons/' . $addon . '/' . $model['authChildMenuByBackend']['name']];
+                    $params = $model['authChildMenuByBackend']['params'] ? Json::decode($model['authChildMenuByBackend']['params']) : [];
+                    $model['menuUrl'] = Url::to(ArrayHelper::merge($url, $params));
+                }
+
+                if (empty($model['menuUrl'])) {
+                    unset($models[$k]);
+                } else {
+                    $model['menuUrl'] = urldecode($model['menuUrl']);
+                }
             }
         }
 
@@ -94,14 +107,14 @@ class AddonsService extends Service
 
         // 获取插件列表
         $dirs = array_map('basename', glob($addonDir . '/*'));
-        $list =	Addons::find()
+        $list = Addons::find()
             ->where(['in', 'name', $dirs])
             ->asArray()
             ->all();
 
         $tmpAddons = [];
-        foreach($list as $addon) {
-            $tmpAddons[$addon['name']]	= $addon;
+        foreach ($list as $addon) {
+            $tmpAddons[$addon['name']] = $addon;
         }
 
         $addons = [];
@@ -113,79 +126,12 @@ class AddonsService extends Service
                 // 实例化插件失败忽略执行
                 if (class_exists($class)) {
                     $config = new $class;
-                    $addons[$value]	= $config->info;
+                    $addons[$value] = $config->info;
                 }
             }
         }
 
         return $addons;
-    }
-
-    /**
-     * @param $name
-     * @param $config
-     * @throws \yii\web\UnprocessableEntityHttpException
-     */
-    public function createAuth($name, $config)
-    {
-        // 卸载权限
-        Yii::$app->services->authItem->uninstallAddonsByName($name);
-        $menu = ArrayHelper::getColumn($config->menu, 'route');
-
-        $defaultAuth = [
-            [
-                'name' => Addons::AUTH_COVER,
-                'title' => '应用入口',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
-                'addons_name' => $name,
-            ],
-            [
-                'name' => Addons::AUTH_RULE,
-                'title' => '规则回复',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
-                'addons_name' => $name,
-            ],
-            [
-                'name' => Addons::AUTH_SETTING,
-                'title' => '参数设置',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
-                'addons_name' => $name,
-            ],
-        ];
-
-        $authItem = $config->authItem;
-        $allAuth = [];
-        foreach ($authItem as $key => $item) {
-            foreach ($item as $k => $value) {
-                $data = [
-                    'name' => $k,
-                    'title' => $value,
-                    'type' => $key,
-                    'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
-                    'addons_name' => $name,
-                ];
-
-                // 判断是否是菜单
-                if ($key == AuthEnum::TYPE_BACKEND && in_array($k, $menu)) {
-                    $data['is_menu'] = 1;
-                }
-
-                $allAuth[] = $data;
-                unset($data);
-            }
-        }
-
-        $installData = ArrayHelper::merge($defaultAuth, $allAuth);
-
-        // 创建权限
-        foreach ($installData as $datum) {
-            Yii::$app->services->authItem->create($datum);
-        }
-
-        unset($data, $allAuth, $installData, $defaultAuth);
     }
 
     /**
@@ -253,7 +199,7 @@ class AddonsService extends Service
         $model->is_rule = $config->isRule ? StatusEnum::ENABLED : StatusEnum::DISABLED;
         $model->group = $config->group;
         $model->bootstrap = $config->bootstrap ?? '';
-        $model->wechat_message = isset($config->wechatMessage) ? serialize($config->wechatMessage) : '';
+        $model->wechat_message = $config->wechatMessage;
         $model->updated_at = time();
         // 首先字母转大写拼音
         if (($chinese = StringHelper::strToChineseCharacters($model->title)) && !empty($chinese[0])) {
@@ -262,8 +208,7 @@ class AddonsService extends Service
         }
 
         if (!$model->save()) {
-            $error = Yii::$app->debris->analyErr($model->getFirstErrors());
-            throw new NotFoundHttpException($error);
+            throw new NotFoundHttpException($this->getError($model));
         }
 
         return $model;

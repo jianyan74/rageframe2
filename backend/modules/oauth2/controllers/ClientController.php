@@ -1,8 +1,9 @@
 <?php
+
 namespace backend\modules\oauth2\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\oauth2\Client;
 use common\enums\StatusEnum;

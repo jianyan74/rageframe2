@@ -51,6 +51,7 @@ trait BaseAction
      * 重载配置
      *
      * @param $merchant_id
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function afreshLoad($merchant_id)
     {

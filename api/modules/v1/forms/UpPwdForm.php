@@ -14,7 +14,7 @@ use common\models\api\AccessToken;
  * @package api\modules\v1\forms
  * @author jianyan74 <751393839@qq.com>
  */
-class UpPwdForm extends \common\models\common\LoginForm
+class UpPwdForm extends \common\models\forms\LoginForm
 {
     public $mobile;
     public $password;

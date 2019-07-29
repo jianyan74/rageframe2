@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::status($model['status']);
                                 },
                                 'delete' => function ($url, $model, $key) use ($merchant_id) {
-                                    return Html::delete(['delete', 'id' => $model['id'], 'merchant_id' => $merchant_id]);
+                                    return Html::delete(['delete','id' => $model['id'], 'merchant_id' => $merchant_id]);
                                 },
                             ],
                         ],

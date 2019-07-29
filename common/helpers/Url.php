@@ -43,25 +43,8 @@ class Url extends BaseUrl
      */
     public static function toFront(array $url, $scheme = false)
     {
-        $url = static::isMerchant($url);
-        Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
-
-        if (!Yii::$app->has('urlManagerFront')) {
-            $domainName = Yii::getAlias('@frontendUrl');
-
-            Yii::$app->set('urlManagerFront', [
-                'class' => 'yii\web\urlManager',
-                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo,
-                'scriptUrl' => '', // 代替'baseUrl'
-                'enablePrettyUrl' => true,
-                'showScriptName' => true,
-                // 'suffix' => '.html',// 静态
-            ]);
-
-            unset($domainName);
-        }
-
-        return urldecode(Yii::$app->urlManagerFront->createAbsoluteUrl($url, $scheme));
+        $domainName = Yii::getAlias('@frontendUrl');
+        return static::create($url, $scheme, $domainName, '', 'urlManagerFront');
     }
 
     /**
@@ -74,25 +57,36 @@ class Url extends BaseUrl
      */
     public static function toWechat(array $url, $scheme = false)
     {
-        $url = static::isMerchant($url);
-        Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
+        $domainName = Yii::getAlias('@wechatUrl');
+        return static::create($url, $scheme, $domainName, '/wechat', 'urlManagerWechat');
+    }
 
-        if (!Yii::$app->has('urlManagerWechat')) {
-            $domainName = Yii::getAlias('@wechatUrl');
+    /**
+     * 生成oauth2链接
+     *
+     * @param array $url
+     * @param bool $scheme
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function toOAuth2(array $url, $scheme = false)
+    {
+        $domainName = Yii::getAlias('@oauth2Url');
+        return static::create($url, $scheme, $domainName, '/oauth2', 'urlManagerOAuth2');
+    }
 
-            Yii::$app->set('urlManagerWechat', [
-                'class' => 'yii\web\urlManager',
-                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/wechat',
-                'scriptUrl' => '', // 代替'baseUrl'
-                'enablePrettyUrl' => true,
-                'showScriptName' => true,
-                // 'suffix' => '.html',// 静态
-            ]);
-
-            unset($domainName);
-        }
-
-        return urldecode(Yii::$app->urlManagerWechat->createAbsoluteUrl($url, $scheme));
+    /**
+     * 生成oauth2链接
+     *
+     * @param array $url
+     * @param bool $scheme
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function toStorage(array $url, $scheme = false)
+    {
+        $domainName = Yii::getAlias('@storageUrl');
+        return static::create($url, $scheme, $domainName, '/storage', 'urlManagerStorage');
     }
 
     /**
@@ -105,25 +99,8 @@ class Url extends BaseUrl
      */
     public static function toApi(array $url, $scheme = false)
     {
-        $url = static::isMerchant($url);
-        Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
-
-        if (!Yii::$app->has('urlManagerApi')) {
-            $domainName = Yii::getAlias('@apiUrl');
-
-            Yii::$app->set('urlManagerApi', [
-                'class' => 'yii\web\urlManager',
-                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . '/api',
-                'scriptUrl' => '', // 代替'baseUrl'
-                'enablePrettyUrl' => true,
-                'showScriptName' => true,
-                'suffix' => '',// 静态
-            ]);
-
-            unset($domainName);
-        }
-
-        return urldecode(Yii::$app->urlManagerApi->createAbsoluteUrl($url, $scheme));
+        $domainName = Yii::getAlias('@apiUrl');
+        return static::create($url, $scheme, $domainName, '/api', 'urlManagerApi');
     }
 
     /**
@@ -135,6 +112,36 @@ class Url extends BaseUrl
     public static function getAuthUrl($url)
     {
         return static::normalizeRoute($url);
+    }
+
+    /**
+     * @param $url
+     * @param $scheme
+     * @param $domainName
+     * @param $appId
+     * @param $key
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected static function create($url, $scheme, $domainName, $appId, $key)
+    {
+        $url = static::isMerchant($url);
+        Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
+
+        if (!Yii::$app->has($key)) {
+            Yii::$app->set($key, [
+                'class' => 'yii\web\urlManager',
+                'hostInfo' => !empty($domainName) ? $domainName : Yii::$app->request->hostInfo . $appId,
+                'scriptUrl' => '', // 代替'baseUrl'
+                'enablePrettyUrl' => true,
+                'showScriptName' => true,
+                'suffix' => '',// 静态
+            ]);
+
+            unset($domainName);
+        }
+
+        return urldecode(Yii::$app->$key->createAbsoluteUrl($url, $scheme));
     }
 
     /**

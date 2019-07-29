@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\member;
 
 use Yii;
@@ -25,7 +26,7 @@ use common\enums\StatusEnum;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class Auth extends \common\models\common\BaseModel
+class Auth extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

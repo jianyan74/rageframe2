@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\helpers\ImageHelper;
@@ -24,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'class' => 'yii\grid\SerialColumn',
                         ],
                         [
-                            'label'=> '昵称',
+                            'label' => '昵称',
                             'attribute' => 'fans.nickname',
                             'filter' => false, //不显示搜索框
                         ],
@@ -33,31 +34,31 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
-                            'label'=> '内容',
+                            'label' => '内容',
                             'attribute' => 'message',
                             'value' => function ($model) {
                                 $data = Yii::$app->services->wechatMsgHistory->readMessage($model->type, $model->message);
-                                return '<div style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;">' . $data . '</div>';
+                                return '<div style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;" class="emoji">' . $data . '</div>';
                             },
                             'format' => 'raw',
                         ],
                         [
-                            'label'=> '触发规则',
+                            'label' => '触发规则',
                             'value' => function ($model) {
-                                if(!$model->rule_id){
+                                if (!$model->rule_id) {
                                     return '<span class="label label-default">未触发</span>';
-                                }else{
+                                } else {
                                     return '<span class="label label-info">' . $model->rule->name ?? '规则被删除' . '</span>';
                                 }
                             },
                             'format' => 'raw',
                         ],
                         [
-                            'label'=> '触发回复',
+                            'label' => '触发回复',
                             'value' => function ($model) use ($moduleExplain) {
-                                if(!$model->module){
+                                if (!$model->module) {
                                     return '<span class="label label-default">未触发</span>';
-                                }else{
+                                } else {
                                     $title = $moduleExplain[$model->module] ?? $model->module;
                                     return '<span class="label label-info">' . $title . '</span>';
                                 }
@@ -78,13 +79,14 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{send-message} {delete}',
+                            'template' => '{send-message} {delete}',
                             'buttons' => [
                                 'send-message' => function ($url, $model, $key) {
-                                    return Html::linkButton(['/wechat/fans/send-message', 'openid' => $model->openid], '发送消息', [
-                                        'data-toggle' => 'modal',
-                                        'data-target' => '#ajaxModalLg',
-                                    ]);
+                                    return Html::linkButton(['/wechat/fans/send-message', 'openid' => $model->openid],
+                                        '发送消息', [
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#ajaxModalLg',
+                                        ]);
                                 },
                                 'delete' => function ($url, $model, $key) {
                                     return Html::delete(['delete', 'id' => $model->id]);
@@ -97,3 +99,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         </div>
     </div>
 </div>
+
+<?php Yii::$app->view->registerJs(<<<js
+  $('.emoji').each(function (i, data) {
+        var text = $(data).html();
+        var html = qqWechatEmotionParser(text);
+        $(data).html(html)
+    })
+js
+)?>

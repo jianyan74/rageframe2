@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         return Html::status($model->status);
                                     },
                                     'delete' => function ($url, $model, $key) {
-                                        return Html::delete(['delete', 'id' => $model->id]);
+                                        return Html::delete(['delete','id' => $model->id]);
                                     },
                                 ],
                             ],

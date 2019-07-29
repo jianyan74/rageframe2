@@ -13,9 +13,9 @@ use backend\interfaces\AddonWidget;
 class Install implements AddonWidget
 {
     /**
-    * @param $addon
-    * @return mixed|void
-    */
+     * @param $addon
+     * @return mixed|void
+     */
     public function run($addon)
     {
         $sql = "

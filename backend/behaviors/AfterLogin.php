@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\behaviors;
 
 use Yii;

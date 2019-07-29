@@ -18,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at 添加时间
  * @property string $updated_at 修改时间
  */
-class FansStat extends \common\models\common\BaseModel
+class FansStat extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}

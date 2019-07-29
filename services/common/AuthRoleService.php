@@ -1,4 +1,5 @@
 <?php
+
 namespace services\common;
 
 use Yii;
@@ -58,7 +59,7 @@ class AuthRoleService extends Service
      *
      * @return array
      */
-    public function getChildList($type, array $role) : array
+    public function getChildList($type, array $role): array
     {
         $where = [];
         if (!empty($role)) {
@@ -231,18 +232,27 @@ class AuthRoleService extends Service
         // 删除原先所有权限
         AuthItemChild::deleteAll(['role_id' => $role_id, 'type_child' => $type_child]);
 
-         if (empty($data)) {
-             return true;
-         }
+        if (empty($data)) {
+            return true;
+        }
 
-        $row = [];
+        $rows = [];
         $items = Yii::$app->services->authItem->getList($data);
         foreach ($items as $value) {
-            $row[] = [$role_id, $value['id'], $value['name'], $value['type'], $value['type_child'], $value['addons_name'], $value['is_menu']];
+            $rows[] = [
+                $role_id,
+                $value['id'],
+                $value['name'],
+                $value['type'],
+                $value['type_child'],
+                $value['addons_name'],
+                $value['is_menu']
+            ];
         }
 
         $field = ['role_id', 'item_id', 'name', 'type', 'type_child', 'addons_name', 'is_menu'];
-        !empty($row) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field, $row)->execute();
+        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field,
+            $rows)->execute();
     }
 
     /**

@@ -16,10 +16,10 @@
 
 参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-orderGroup | int | 是 | 无 | 订单类型 | 1:在线充值;2:订单 | 
+payType | int | 是 | 无 | 支付类型 | 0:余额支付;1:微信;2:支付宝;3:银联 |
 tradeType | string | 是 | 无 | 交易类型 | 具体查看下文具体参数说明 |
+orderGroup | string | 是 | 无 | 订单类型 | default:默认;goods:订单商品 | 
 data | string | 是 | 无 | json格式数组具体看下文 |
-payType | int | 是 | 无 | 支付类型 | 0:余额支付;1:微信;2:支付宝; |
 
 tradeType
 

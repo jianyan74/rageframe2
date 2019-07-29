@@ -11,9 +11,10 @@ Yii::setAlias('@root', dirname(dirname(__DIR__)) . '/');
 Yii::setAlias('@addons', dirname(dirname(__DIR__)) . '/addons');
 // 各自应用域名配置，如果没有配置应用独立域名请忽略
 Yii::setAlias('@attachment', dirname(dirname(__DIR__)) . '/web/attachment'); // 本地资源目录绝对路径
-Yii::setAlias('@attachurl', '/attachment'); // 资源目前相对路径
+Yii::setAlias('@attachurl', '/attachment'); // 资源目前相对路径，可以带独立域名
 Yii::setAlias('@backendUrl', '');
 Yii::setAlias('@frontendUrl', '');
 Yii::setAlias('@wechatUrl', '');
 Yii::setAlias('@apiUrl', '');
+Yii::setAlias('@storageUrl', '');
 Yii::setAlias('@oauth2Url', '');

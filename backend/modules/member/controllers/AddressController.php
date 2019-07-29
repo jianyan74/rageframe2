@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\member\controllers;
 
 use Yii;
@@ -26,6 +27,7 @@ class AddressController extends BaseController
     public function init()
     {
         $this->member_id = Yii::$app->request->get('member_id');
+
         parent::init();
     }
 
@@ -128,7 +130,8 @@ class AddressController extends BaseController
         if ($model->load(Yii::$app->request->post())) {
             return $model->save()
                 ? $this->redirect(['index', 'member_id' => $model->member_id])
-                : $this->message($this->getError($model), $this->redirect(['index', 'member_id' => $model->member_id]), 'error');
+                : $this->message($this->getError($model), $this->redirect(['index', 'member_id' => $model->member_id]),
+                    'error');
         }
 
         return $this->renderAjax($this->action->id, [

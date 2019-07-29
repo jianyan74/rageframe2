@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components;
 
 use Yii;
@@ -6,6 +7,7 @@ use yii\base\BootstrapInterface;
 use common\models\sys\Manager;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Class InitConfig
@@ -18,7 +20,7 @@ class Init implements BootstrapInterface
 
     /**
      * @param \yii\base\Application $application
-     * @throws \yii\base\InvalidConfigException
+     * @throws UnauthorizedHttpException
      */
     public function bootstrap($application)
     {
@@ -39,18 +41,39 @@ class Init implements BootstrapInterface
      * 重载配置
      *
      * @param $merchant_id
+     * @throws UnauthorizedHttpException
      */
     public function afreshLoad($merchant_id)
     {
         try {
             Yii::$app->services->merchant->setId($merchant_id);
             $config = Yii::$app->debris->configAll();
-            $this->initParams($config);// 初始化组件
-            $this->initComponents($config);
 
-            unset($config);
+            // 初始化配置
+            $this->initParams($config);
+            // 初始化组件
+            $this->initComponents($config);
         } catch (\Exception $e) {
 
+        }
+
+        // ip黑名单拦截器
+        if (isset($config['sys_ip_blacklist_open']) && $config['sys_ip_blacklist_open'] == true) {
+            $this->verifyIp();
+        }
+
+        unset($config);
+    }
+
+    /**
+     * @throws UnauthorizedHttpException
+     */
+    protected function verifyIp()
+    {
+        $userIP = Yii::$app->request->userIP;
+        $ips = Yii::$app->services->ipBlacklist->getList();
+        if (in_array($userIP, $ips)) {
+            throw new UnauthorizedHttpException('你的访问被禁止');
         }
     }
 
@@ -73,7 +96,7 @@ class Init implements BootstrapInterface
              *
              * 当值为 false 时，所有的日志都不会记录
              */
-            'debug'  => true,
+            'debug' => true,
             /**
              * 账号基本信息，请从微信公众平台/开放平台获取
              */

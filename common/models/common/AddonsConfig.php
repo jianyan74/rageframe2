@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\common;
 
 use common\behaviors\MerchantBehavior;
@@ -42,7 +43,7 @@ class AddonsConfig extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'addons_name' => 'Name',
+            'addons_name' => '插件名称',
             'merchant_id' => '商户',
             'data' => 'Data',
         ];

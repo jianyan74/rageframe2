@@ -21,7 +21,7 @@
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
 - [服务层](sys-service.md)
-- [公用服务](sys-common-service.md)
+- 公用服务
 - [RESTful Api](sys-restful-api.md)
 - [数据字典](sys-data-dictionary.md)
 - 单元测试
@@ -49,6 +49,7 @@
 #### Api
 
 - [接口说明](api-explain.md)
+- [接口加密](api-encryption.md)
 - [登录重置](api-login.md)
 - [小程序登录注册](api-mini-program.md)
 - [文件上传](api-upload.md)

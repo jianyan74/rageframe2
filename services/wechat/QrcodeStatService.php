@@ -1,7 +1,9 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
+use common\helpers\ArrayHelper;
 use common\enums\WechatEnum;
 use common\models\wechat\QrcodeStat;
 use common\components\Service;
@@ -53,7 +55,7 @@ class QrcodeStatService extends Service
     public function create($qrCode, $openid, $type)
     {
         $model = new QrcodeStat();
-        $model->attributes = $qrCode;
+        $model->attributes = ArrayHelper::toArray($qrCode);
         $model->openid = $openid;
         $model->type = $type;
         $model->save();

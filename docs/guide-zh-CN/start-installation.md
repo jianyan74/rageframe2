@@ -69,21 +69,26 @@ php ./yii password/init
 php composer.phar update
 ```
 
-### 站点配置及说明
+### 站点配置
 
-> 注意：先要设置好[伪静态](start-rewrite.md)
+> 注意：Nginx/IIS 先要设置好[伪静态](start-rewrite.md)，Apache 默认已配置
 
-站点指向目录为当前项目的web下 例如: 
+站点指向目录为当前项目的web下 
+
+例如: 
 
 ```
 /path/to/rageframe2/web/
 ```
 
-后台地址：当前域名/backend
+访问说明
 
-微信地址：当前域名/wechat
-
-Api地址：当前域名/api
+应用 | Url
+---|---
+后台 | 当前域名/backend
+微信 | 当前域名/wechat
+Api | 当前域名/api
+OAuth2 | 当前域名/oauth2
 
 
 

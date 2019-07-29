@@ -1,9 +1,11 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
+use common\helpers\Url;
 use common\helpers\DebrisHelper;
 
-$this->title = '报错日志';
+$this->title = '全局日志';
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
 ?>
 
@@ -12,6 +14,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="box-tools">
+                    <a class="btn btn-white" href="<?= Url::to(['stat']) ?>" data-toggle="modal" data-target="#ajaxModalMax">
+                        <i class="fa fa-area-chart"></i> 异常请求报表统计
+                    </a>
+                </div>
             </div>
             <div class="box-body table-responsive">
                 <?= GridView::widget([
@@ -23,16 +30,21 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'class' => 'yii\grid\SerialColumn',
                         ],
-                        'method',
-                        'module',
                         [
-                            'attribute' => '控制器方法',
-                            'value' => function ($model) {
-                                return $model->controller . '/' . $model->action;
-                            },
+                            'attribute' => 'method',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
+                        [
+                            'attribute' => 'app_id',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
+                        [
+                            'attribute' => 'module',
+                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         'url',
                         [
+                            'label' => 'ip',
                             'attribute' => 'ip',
                             'value' => function ($model) {
                                 return DebrisHelper::long2ip($model->ip);
@@ -42,7 +54,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'label' => '地区',
                             'value' => function ($model) {
-                                return DebrisHelper::analysisLongIp($model->ip);
+                                return DebrisHelper::analysisIp($model->ip);
                             },
                         ],
                         [
@@ -55,6 +67,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                     return '<span class="label label-danger">' . $model->error_code . '</span>';
                                 }
                             },
+                            'headerOptions' => ['class' => 'col-md-1'],
                             'format' => 'raw',
                         ],
                         [
@@ -65,10 +78,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{view}',
+                            'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $model, $key) {
-                                    return Html::linkButton(['view','id' => $model->id], '查看详情', [
+                                    return Html::linkButton(['view', 'id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ]);

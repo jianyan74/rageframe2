@@ -1,11 +1,12 @@
 <?php
+
 namespace backend\modules\member\controllers;
 
 use Yii;
 use common\enums\StatusEnum;
 use common\components\Curd;
 use common\models\member\Auth;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use backend\controllers\BaseController;
 
 /**

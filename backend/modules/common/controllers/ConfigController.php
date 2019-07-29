@@ -1,10 +1,11 @@
 <?php
+
 namespace backend\modules\common\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\common\Config;
 use common\helpers\ResultDataHelper;
 use common\components\Curd;
@@ -102,8 +103,6 @@ class ConfigController extends BaseController
     {
         $request = Yii::$app->request;
         if ($request->isAjax) {
-            // 记录行为日志
-            Yii::$app->services->sysActionLog->create('updateConfig', '修改配置信息');
             $config = $request->post('config', []);
             Yii::$app->services->config->updateAll($config);
             return ResultDataHelper::json(200, "修改成功");

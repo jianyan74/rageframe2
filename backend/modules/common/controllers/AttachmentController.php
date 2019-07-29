@@ -1,9 +1,10 @@
 <?php
+
 namespace backend\modules\common\controllers;
 
 use Yii;
 use common\components\Curd;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\common\Attachment;
 use common\enums\StatusEnum;
 use backend\controllers\BaseController;

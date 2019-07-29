@@ -12,6 +12,7 @@ use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
 use common\components\BaseAction;
+use common\behaviors\ActionLogBehavior;
 use api\behaviors\HttpSignAuth;
 
 /**
@@ -112,6 +113,12 @@ class ActiveController extends \yii\rest\ActiveController
             'enableRateLimitHeaders' => true,
         ];
 
+        // 行为日志
+        // $behaviors['actionLog'] = [
+        //    'class' => ActionLogBehavior::class,
+        //    'enabled' => false // 激活
+        // ];
+
         return $behaviors;
     }
 
@@ -135,7 +142,7 @@ class ActiveController extends \yii\rest\ActiveController
         $page = Yii::$app->request->get('page', 1);
         $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
         $this->limit > 50 && $this->limit = 50;
-        $this->offset = ($page - 1) * $this->pageSize;
+        $this->offset = ($page - 1) * $this->limit;
 
         return true;
     }

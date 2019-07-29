@@ -1,7 +1,9 @@
 <?php
+
 use common\helpers\Html;
 use yii\helpers\Json;
 use common\helpers\DebrisHelper;
+
 ?>
 
 <div class="modal-header">
@@ -13,8 +15,12 @@ use common\helpers\DebrisHelper;
     <table class="table">
         <tbody>
         <tr>
+            <td>设备/浏览器</td>
+            <td><?= Html::encode($model['device']) ?></td>
+        </tr>
+        <tr>
             <td>提交方法</td>
-            <td><?= $model['method']?></td>
+            <td><?= Html::encode($model['method']) ?></td>
         </tr>
         <tr>
             <td>用户</td>
@@ -22,7 +28,7 @@ use common\helpers\DebrisHelper;
         </tr>
         <tr>
             <td>模块</td>
-            <td><?= Html::encode($model['module'])?></td>
+            <td><?= Html::encode($model['module']) ?></td>
         </tr>
         <tr>
             <td>控制器方法</td>
@@ -30,7 +36,7 @@ use common\helpers\DebrisHelper;
         </tr>
         <tr>
             <td>Url</td>
-            <td><?= Html::encode($model['url'])?></td>
+            <td><?= Html::encode($model['url']) ?></td>
         </tr>
         <tr>
             <td>IP</td>
@@ -43,7 +49,7 @@ use common\helpers\DebrisHelper;
                 echo "<pre>";
                 print_r(Json::decode($model['get_data']))
                 ?>
-            </>
+            </td>
         </tr>
         <tr>
             <td style="min-width: 100px">Post数据</td>
@@ -55,25 +61,34 @@ use common\helpers\DebrisHelper;
             </td>
         </tr>
         <tr>
+            <td style="min-width: 100px">Header数据</td>
+            <td style="max-width: 700px">
+                <?php
+                echo "<pre>";
+                print_r(Json::decode($model['header_data']))
+                ?>
+            </td>
+        </tr>
+        <tr>
             <td>状态码</td>
             <td>
-                <?php if($model->error_code < 300){ ?>
+                <?php if ($model->error_code < 300) { ?>
                     <span class="label label-primary"><?= $model->error_code; ?></span>
-                <?php }else{ ?>
+                <?php } else { ?>
                     <span class="label label-danger"><?= $model->error_code; ?></span>
                 <?php } ?>
             </td>
         </tr>
         <tr>
             <td>状态信息</td>
-            <td><?= $model['error_msg']?></td>
+            <td><?= $model['error_msg'] ?></td>
         </tr>
         <tr>
             <td style="min-width: 100px">状态说明</td>
             <td style="max-width: 700px">
                 <?php
                 echo "<pre>";
-                print_r(json_decode($model['error_data'], true))
+                print_r(Json::decode($model['error_data']))
                 ?>
             </td>
         </tr>

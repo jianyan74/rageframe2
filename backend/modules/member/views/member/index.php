@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\helpers\ImageHelper;
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -28,13 +29,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
+                            'visible' => false, // 不显示#
+                        ],
+                        [
+                            'attribute' => 'id',
+                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)),
+                                    [
                                         'class' => 'img-circle rf-img-md img-bordered-sm',
-                                ]);
+                                    ]);
                             },
                             'filter' => false,
                             'format' => 'raw',
@@ -46,23 +53,23 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'realname',
                         'mobile',
                         [
-                            'label'=> '账户金额',
+                            'label' => '账户金额',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return "余额：" . $model->user_money . '<br>'.
-                                    "累积金额：" . $model->accumulate_money . '<br>'.
-                                    "积分：" . $model->user_integral . '<br>'.
+                                return "余额：" . $model->user_money . '<br>' .
+                                    "累积金额：" . $model->accumulate_money . '<br>' .
+                                    "积分：" . $model->user_integral . '<br>' .
                                     "累计积分：" . $model->accumulate_integral;
                             },
                             'format' => 'raw',
                         ],
                         [
-                            'label'=> '最后登陆',
+                            'label' => '最后登陆',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return "最后访问IP：" . $model->last_ip . '<br>'.
-                                    "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>'.
-                                    "访问次数：" . $model->visit_count . '<br>'.
+                                return "最后访问IP：" . $model->last_ip . '<br>' .
+                                    "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>' .
+                                    "登陆次数：" . $model->visit_count . '<br>' .
                                     "注册时间：" . Yii::$app->formatter->asDatetime($model->created_at) . '<br>';
                             },
                             'format' => 'raw',
@@ -70,7 +77,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{ajax-edit} {address}  {recharge} {edit} {status} {destroy}',
+                            'template' => '{ajax-edit} {address} {recharge} {edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
@@ -94,12 +101,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::status($model->status);
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return Html::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy', 'id' => $model->id]);
                                 },
                             ],
                         ],
                     ],
                 ]); ?>
+            </div>
         </div>
     </div>
-</div>

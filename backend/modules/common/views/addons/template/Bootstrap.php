@@ -2,7 +2,8 @@
 
 echo "<?php\n";
 ?>
-namespace addons\<?= $model->name;?>\common\config;
+
+namespace addons\<?= $model->name;?>\common\components;
 
 use Yii;
 use backend\interfaces\AddonWidget;

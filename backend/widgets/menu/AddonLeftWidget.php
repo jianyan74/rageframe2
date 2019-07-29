@@ -33,7 +33,8 @@ class AddonLeftWidget extends Widget
             $addon['is_setting'] = ($addon['is_setting'] == true && in_array(Addons::AUTH_SETTING, $auth));
 
             foreach ($menus as $kye => $menu) {
-                if (!in_array($menu['route'], $auth)) {
+                // 移除无权限菜单
+                if (Auth::verify($menu['route'], $auth) === false) {
                     unset($menus[$kye]);
                 }
             }

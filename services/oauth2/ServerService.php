@@ -1,8 +1,10 @@
 <?php
+
 namespace services\oauth2;
 
 use Yii;
 use common\components\Service;
+use common\helpers\StringHelper;
 use common\models\oauth2\repository\ClientRepository;
 use common\models\oauth2\repository\ScopeRepository;
 use common\models\oauth2\repository\AccessTokenRepository;
@@ -24,7 +26,7 @@ class ServerService extends Service
     /**
      * @return AuthorizationServer
      */
-    public function get() : AuthorizationServer
+    public function get(): AuthorizationServer
     {
         return $this->_server;
     }
@@ -58,13 +60,21 @@ class ServerService extends Service
     /**
      * 私钥文件
      *
-     * @return string
+     * @return CryptKey|string
      */
-    public function getPrivateKey() : string
+    public function getPrivateKey()
     {
         $privateKey = 'file://' . Yii::$app->debris->config('oauth2_rsa_private');
+
+        // 如果私钥文件有密码
         if (!empty(Yii::$app->debris->config('oauth2_rsa_private_encryption'))) {
-            $privateKey = new CryptKey($privateKey, Yii::$app->debris->config('oauth2_rsa_private_password')); // 如果私钥文件有密码
+            $privateKey = new CryptKey(
+                $privateKey,
+                Yii::$app->debris->config('oauth2_rsa_private_password'),
+                !StringHelper::isWindowsOS()
+            );
+        } else {
+            $privateKey = new CryptKey($privateKey, null, !StringHelper::isWindowsOS());
         }
 
         return $privateKey;
@@ -75,7 +85,7 @@ class ServerService extends Service
      *
      * @return string
      */
-    public function getEncryptionKey() : string
+    public function getEncryptionKey(): string
     {
         $encryptionKey = Yii::$app->debris->config('oauth2_encryption_key'); // 加密密钥字符串
         // generate using base64_encode(random_bytes(32))

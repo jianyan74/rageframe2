@@ -2,7 +2,8 @@
 
 echo "<?php\n";
 ?>
-namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers;
+
+namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers\<?= $versions ?>;
 
 use Yii;
 use api\controllers\OnAuthController;
@@ -12,7 +13,7 @@ use api\controllers\UserAuthController;
  * 默认控制器
  *
  * Class DefaultController
- * @package addons\<?= $model->name;?>\<?= $appID ?>\controllers
+ * @package addons\<?= $model->name;?>\<?= $appID ?>\controllers\<?= $versions ?>
  */
 class DefaultController extends OnAuthController
 {

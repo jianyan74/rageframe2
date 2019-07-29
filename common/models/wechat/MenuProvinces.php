@@ -12,7 +12,7 @@ namespace common\models\wechat;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class MenuProvinces extends \common\models\common\BaseModel
+class MenuProvinces extends \common\models\base\BaseModel
 {
     /**
      * {@inheritdoc}

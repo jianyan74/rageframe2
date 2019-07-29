@@ -11,7 +11,7 @@ use common\models\member\Member;
  * @package api\modules\v1\forms
  * @author jianyan74 <751393839@qq.com>
  */
-class LoginForm extends \common\models\common\LoginForm
+class LoginForm extends \common\models\forms\LoginForm
 {
     public $group;
 

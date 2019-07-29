@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\assets;
 
 use yii\web\AssetBundle;
@@ -21,9 +22,8 @@ class AppAsset extends AssetBundle
         'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
         'plugins/toastr/toastr.min.css', // 状态通知
         'plugins/fancybox/jquery.fancybox.min.css', // 图片查看
-        'plugins/cropper/dist/cropper.min.css',
+        'plugins/cropper/cropper.min.css',
         'dist/css/AdminLTE.min.css',
-        'dist/css/upload.css',
         'dist/css/wechat.css',
         'dist/css/rageframe.css',
         'dist/css/rageframe.widgets.css',
@@ -34,11 +34,12 @@ class AppAsset extends AssetBundle
         'bower_components/fastclick/lib/fastclick.js',
         'plugins/layer/layer.js',
         'plugins/sweetalert/sweetalert.min.js',
+        'plugins/fancybox/jquery.fancybox.min.js',
+        'plugins/emoji/qq-wechat-emotion-parser.min.js',
         'dist/js/adminlte.js',
         'dist/js/demo.js',
         'dist/js/template.js',
         'dist/js/ueditor.all.min.js',
-        'plugins/fancybox/jquery.fancybox.min.js',
         'dist/js/rageframe.js',
         'dist/js/rageframe.widgets.js',
     ];

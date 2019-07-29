@@ -18,7 +18,7 @@ use common\behaviors\MerchantBehavior;
  * @property string $created_at 创建时间
  * @property int $updated_at 修改时间
  */
-class MsgHistory extends \common\models\common\BaseModel
+class MsgHistory extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

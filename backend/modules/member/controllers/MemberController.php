@@ -1,14 +1,14 @@
 <?php
+
 namespace backend\modules\member\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\member\Member;
 use common\enums\StatusEnum;
 use backend\controllers\BaseController;
 use backend\modules\member\forms\RechargeForm;
-use yii\base\Model;
 
 /**
  * 会员管理
@@ -76,8 +76,6 @@ class MemberController extends BaseController
         if ($model->load(Yii::$app->request->post())) {
             // 验证密码
             if ($modelInfo['password_hash'] != $model->password_hash) {
-                // 记录行为日志
-                Yii::$app->services->sysActionLog->create('updateMemberPwd', '创建/修改用户密码|账号:' . $model->username, false);
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
             }
 
@@ -109,7 +107,8 @@ class MemberController extends BaseController
         $this->activeFormValidate($rechargeForm);
         if ($rechargeForm->load(Yii::$app->request->post())) {
             if (!$rechargeForm->save($member)) {
-                return $this->message($this->analyErr($rechargeForm->getFirstErrors()), $this->redirect(['index']), 'error');
+                return $this->message($this->analyErr($rechargeForm->getFirstErrors()), $this->redirect(['index']),
+                    'error');
             }
 
             return $this->message('充值成功', $this->redirect(['index']));

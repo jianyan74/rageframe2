@@ -18,15 +18,21 @@ class Auth
      * 校验权限是否拥有
      *
      * @param string $route
+     * @param array $defaultAuth
      * @return bool
      */
-    public static function verify(string $route)
+    public static function verify(string $route, $defaultAuth = [])
     {
         if (Yii::$app->services->auth->isSuperAdmin()) {
             return true;
         }
 
-        return in_array($route, self::getAuth());
+        $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
+        if (in_array($route, $auth) || in_array('/*', $auth)) {
+            return true;
+        }
+
+        return self::multistageCheck($route, $auth);
     }
 
     /**
@@ -42,6 +48,34 @@ class Auth
         }
 
         return ArrayHelper::filter(self::getAuth(), $route);
+    }
+
+    /**
+     * 支持通配符 *
+     *
+     * 例如：
+     * /goods/*
+     * /goods/index/*
+     *
+     * @param $route
+     * @param array $auth
+     * @return bool
+     */
+    public static function multistageCheck($route, array $auth)
+    {
+        $key = '/';
+        $routeArr = explode('/', $route);
+        foreach ($routeArr as $value) {
+            if (!empty($value)) {
+                $key .= $value . '/';
+
+                if (in_array($key . '*', $auth)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
-class RuleKeywordStat extends \common\models\common\BaseModel
+class RuleKeywordStat extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 

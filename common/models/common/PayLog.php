@@ -1,6 +1,8 @@
 <?php
+
 namespace common\models\common;
 
+use Yii;
 use common\behaviors\MerchantBehavior;
 
 /**
@@ -28,7 +30,7 @@ use common\behaviors\MerchantBehavior;
  * @property int $created_at 创建时间
  * @property int $updated_at 修改时间
  */
-class PayLog extends \common\models\common\BaseModel
+class PayLog extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
@@ -46,7 +48,7 @@ class PayLog extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'member_id', 'pay_type', 'pay_status', 'pay_time', 'is_refund', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'pay_type', 'pay_status', 'pay_time', 'is_refund', 'ip', 'status', 'created_at', 'updated_at'], 'integer'],
             [['total_fee', 'pay_fee', 'refund_fee'], 'number'],
             [['order_sn', 'mch_id', 'order_group'], 'string', 'max' => 20],
             [['openid', 'transaction_id'], 'string', 'max' => 50],
@@ -82,6 +84,7 @@ class PayLog extends \common\models\common\BaseModel
             'refund_sn' => 'Refund Sn',
             'refund_fee' => 'Refund Fee',
             'is_refund' => 'Is Refund',
+            'ip' => 'ip',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',

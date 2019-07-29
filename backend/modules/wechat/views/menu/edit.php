@@ -192,7 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         };
 
-        var list = '<?= json_encode(unserialize($model->menu_data)) ?>';
+        var list = '<?= json_encode($model->menu_data ?? []) ?>';
         list = JSON.parse(list);
 
         for (var i=0; i<list.length; i++){

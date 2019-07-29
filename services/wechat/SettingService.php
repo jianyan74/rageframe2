@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
@@ -8,6 +9,7 @@ use common\enums\StatusEnum;
 use common\enums\WechatEnum;
 use common\models\wechat\Setting;
 use common\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class SettingService
@@ -35,8 +37,15 @@ class SettingService extends Service
             $defaultList[$key]['module'] = [];
 
             foreach ($modules as $module) {
-                $wechat_message = !empty($module['wechat_message']) ? unserialize($module['wechat_message']) : [];
-                $wechat_message = $wechat_message ?? [];
+                $wechat_message = [];
+
+                if (!empty($module['wechat_message'])) {
+                    $wechat_message = $module['wechat_message'];
+
+                    if (!is_array($module['wechat_message'])) {
+                        $wechat_message = Json::decode($module['wechat_message']);
+                    }
+                }
 
                 foreach ($wechat_message as $item) {
                     if ($key == $item) {
@@ -55,20 +64,23 @@ class SettingService extends Service
     }
 
     /**
-     * 写入字段数据
-     *
-     * @return array|mixed
+     * @param $filds
+     * @param $data
+     * @return bool
+     * @throws NotFoundHttpException
      */
     public function setByFieldName($filds, $data)
     {
-        $row = [];
-        $row[$filds] = Json::encode($data);
         if (!($setting = $this->getOne())) {
             $setting = new Setting();
         }
 
-        $setting->attributes = $row;
-        return $setting->save();
+        $setting->$filds = Json::encode($data);
+        if (!$setting->save()) {
+            throw new NotFoundHttpException($this->getError($setting));
+        }
+
+        return true;
     }
 
     /**
@@ -78,8 +90,9 @@ class SettingService extends Service
     public function getByFieldName($field)
     {
         $setting = $this->getOne();
+
         if (!empty($setting[$field])) {
-            return json_decode($setting[$field], true);
+            return is_array($setting[$field]) ? $setting[$field] : Json::decode($setting[$field]);
         }
 
         return [];

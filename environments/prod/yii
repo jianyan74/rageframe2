@@ -19,6 +19,9 @@ $config = yii\helpers\ArrayHelper::merge(
     require __DIR__ . '/console/config/main-local.php'
 );
 
+// 临时替换
+Yii::$classMap['yii\db\mysql\JsonExpressionBuilder'] = '@common/replaces/JsonExpressionBuilder.php';
+
 $application = new yii\console\Application($config);
 $exitCode = $application->run();
 exit($exitCode);

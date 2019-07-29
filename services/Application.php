@@ -10,7 +10,6 @@ use common\components\Service;
  * @property \services\merchant\MerchantService $merchant 商户
  * @property \services\sys\SysService $sys 系统
  * @property \services\sys\ManagerService $sysManager 管理员
- * @property \services\sys\ActionLogService $sysActionLog 系统行为日志
  * @property \services\sys\MenuService $sysMenu 菜单
  * @property \services\sys\MenuCateService $sysMenuCate 菜单分类
  * @property \services\sys\NotifyService $sysNotify 消息
@@ -36,6 +35,10 @@ use common\components\Service;
  * @property \services\member\MemberService $member 会员
  * @property \services\member\AuthService $memberAuth 会员第三方授权
  * @property \services\member\AddressService $memberAddress 会员收货地址
+ * @property \services\member\CreditsLogService $memberCreditsLog 会员积分/余额变动日志
+ * @property \services\member\MoneyLogService $memberMoneyLog 会员金额日志
+ * @property \services\common\ActionLogService $actionLog 行为日志
+ * @property \services\common\ActionBehaviorService $actionBehavior 可被记录的行为
  * @property \services\common\AttachmentService $attachment 公用资源
  * @property \services\common\LogService $log 公用日志
  * @property \services\common\PayService $pay 公用支付
@@ -48,7 +51,8 @@ use common\components\Service;
  * @property \services\common\AuthService $auth 权限验证
  * @property \services\common\ConfigService $config 基础配置
  * @property \services\common\ConfigCateService $configCate 基础配置分类
- * @property \services\common\ProvincesService $provinces 省市区
+ * @property \services\common\ProvincesService $provinces ip黑名单
+ * @property \services\common\IpBlacklistService $ipBlacklist 省市区
  * @property \services\oauth2\ServerService $oauth2Server oauth2服务
  * @property \services\oauth2\ClientService $oauth2Client oauth2客户端
  * @property \services\oauth2\AccessTokenService $oauth2AccessToken oauth2授权token
@@ -73,7 +77,6 @@ class Application extends Service
         ],
         /** ------ 系统 ------ **/
         'sys' => 'services\sys\SysService',
-        'sysActionLog' => 'services\sys\ActionLogService',
         'sysMenu' => 'services\sys\MenuService',
         'sysMenuCate' => 'services\sys\MenuCateService',
         'sysNotify' => 'services\sys\NotifyService',
@@ -101,9 +104,14 @@ class Application extends Service
         'member' => 'services\member\MemberService',
         'memberAuth' => 'services\member\AuthService',
         'memberAddress' => 'services\member\AddressService',
+        'memberCreditsLog' => 'services\member\CreditsLogService',
+        'memberMoneyLog' => 'services\member\MoneyLogService',
         /** ------ 公用部分 ------ **/
         'config' => 'services\common\ConfigService',
         'configCate' => 'services\common\ConfigCateService',
+        'actionLog' => 'services\common\ActionLogService',
+        'actionBehavior' => 'services\common\ActionBehaviorService',
+        'ipBlacklist' => 'services\common\IpBlacklistService',
         'provinces' => 'services\common\ProvincesService',
         'attachment' => 'services\common\AttachmentService',
         'addons' => 'services\common\AddonsService',

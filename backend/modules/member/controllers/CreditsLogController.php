@@ -1,8 +1,9 @@
 <?php
+
 namespace backend\modules\member\controllers;
 
 use Yii;
-use common\models\common\SearchModel;
+use common\models\base\SearchModel;
 use common\models\member\CreditsLog;
 use common\enums\StatusEnum;
 use backend\controllers\BaseController;
@@ -26,7 +27,7 @@ class CreditsLogController extends BaseController
         $searchModel = new SearchModel([
             'model' => CreditsLog::class,
             'scenario' => 'default',
-            'partialMatchAttributes' => ['realname', 'mobile'], // 模糊查询
+            'partialMatchAttributes' => ['realname', 'mobile', 'member_id'], // 模糊查询
             'defaultOrder' => [
                 'id' => SORT_DESC
             ],

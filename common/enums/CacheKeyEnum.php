@@ -17,4 +17,6 @@ class CacheKeyEnum
     const COMMON_ADDONS = 'common:addons:'; // 插件
     const COMMON_ADDONS_CONFIG = 'common:addons-config:'; // 插件配置
     const COMMON_PROVINCES = 'common:provinces:'; // 省市区
+    const COMMON_IP_BLACKLIST = 'common:ip-blacklist:'; // ip黑名单
+    const COMMON_ACTION_BEHAVIOR = 'common:action-behavior'; // 需要被记录的行为
 }

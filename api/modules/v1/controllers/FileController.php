@@ -126,7 +126,7 @@ class FileController extends OnAuthController
             return ResultDataHelper::api(404, '找不到文件信息, 合并文件失败');
         }
 
-        $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type']);
+        $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type'], true);
         $upload->setPaths($mergeInfo['paths']);
         $upload->setBaseInfo($mergeInfo['baseInfo']);
         $upload->merge();

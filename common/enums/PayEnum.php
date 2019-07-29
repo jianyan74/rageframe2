@@ -30,7 +30,7 @@ class PayEnum
     const PAY_TYPE_UNION = 3;
     const PAY_TYPE_MINI_PROGRAM = 4;
     const PAY_TYPE_USER_MONEY = 5;
-    const PAY_TYPE_INT = 100;
+    const PAY_TYPE_OFFLINE = 100;
 
     /**
      * 支付类型
@@ -43,8 +43,8 @@ class PayEnum
         self::PAY_TYPE_UNION => '银联',
         self::PAY_TYPE_MINI_PROGRAM => '小程序',
         self::PAY_TYPE_USER_MONEY => '余额',
-        self::PAY_TYPE_INT => '积分',
-        self::PAY_TYPE => '未支付',
+        self::PAY_TYPE_OFFLINE => '线下',
+        self::PAY_TYPE => '待支付',
     ];
 
     /**
