@@ -69,9 +69,9 @@ class NotifyController extends Controller
         $this->payment = 'wechat';
 
         // 微信支付参数配置
-        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge([
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
             'app_id' => Yii::$app->debris->config('miniprogram_appid'),
-        ], Yii::$app->params['wechatPaymentConfig']);
+        ]);
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function($message, $fail) {
             $logPath = $this->getLogPath('miniprogram');
