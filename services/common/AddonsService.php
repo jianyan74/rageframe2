@@ -48,7 +48,7 @@ class AddonsService extends Service
             } else {
                 if (isset($model['authChildMenuByBackend']['name'])) {
                     $url = ['/addons/' . $addon . '/' . $model['authChildMenuByBackend']['name']];
-                    $params = $model['authChildMenuByBackend']['params'] ? Json::decode($model['authChildMenuByBackend']['params']) : [];
+                    $params = isset($model['authChildMenuByBackend']['params']) ? Json::decode($model['authChildMenuByBackend']['params']) : [];
                     $model['menuUrl'] = Url::to(ArrayHelper::merge($url, $params));
                 }
 
