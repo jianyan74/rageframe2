@@ -7,7 +7,7 @@ use yii\web\User;
 use yii\base\Behavior;
 
 /**
- * 登陆后的行为
+ * 登录后的行为
  *
  * Class AfterLogin
  * @package backend\behaviors

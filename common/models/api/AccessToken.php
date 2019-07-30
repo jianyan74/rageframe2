@@ -97,7 +97,7 @@ class AccessToken extends RateLimit
 
             // 验证有效期
             if ($timestamp + $expire <= time()) {
-                throw new UnauthorizedHttpException('您的登录验证已经过期，请重新登陆');
+                throw new UnauthorizedHttpException('您的登录验证已经过期，请重新登录');
             }
         }
 

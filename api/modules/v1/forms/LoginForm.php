@@ -37,7 +37,7 @@ class LoginForm extends \common\models\forms\LoginForm
     }
 
     /**
-     * 用户登陆
+     * 用户登录
      *
      * @return mixed|null|static
      */

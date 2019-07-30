@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 
 /**
- * 登陆注册基类
+ * 登录注册基类
  *
  * Class LoginForm
  * @package common\models\base
@@ -73,7 +73,7 @@ abstract class LoginForm extends Model
     }
 
     /**
-     * 登陆
+     * 登录
      *
      * @return bool
      */

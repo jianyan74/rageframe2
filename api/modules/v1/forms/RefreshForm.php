@@ -54,7 +54,7 @@ class RefreshForm extends Model
 
             // 验证有效期
             if ($timestamp + $expire <= time()) {
-                throw new UnauthorizedHttpException('您的重置令牌已经过期，请重新登陆');
+                throw new UnauthorizedHttpException('您的重置令牌已经过期，请重新登录');
             }
         }
 

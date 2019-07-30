@@ -20,7 +20,7 @@
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-file | string| 是 | 无 | 文件 | 
+file | file| 是 | 无 | 文件 | 
 drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 thumb | array| 否 | 无 | 生成缩略图(具体看例子) | 
 
@@ -29,10 +29,10 @@ thumb 数组例子(生成`100*100`和`200*200`的缩略图)
 ```
 {
 	"thumb": [{
-		"widget": 100,
+		"width": 100,
 		"height": 100
 	}, {
-		"widget": 200,
+		"width": 200,
 		"height": 200
 	}]
 }
@@ -62,7 +62,7 @@ thumb 数组例子(生成`100*100`和`200*200`的缩略图)
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-file | string| 是 | 无 | 文件 | 
+file | file| 是 | 无 | 文件 | 
 drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回
@@ -89,7 +89,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾�
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-file | string| 是 | 无 | 文件 | 
+file | file| 是 | 无 | 文件 | 
 drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回
@@ -116,7 +116,7 @@ drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾�
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-file | string| 是 | 无 | 文件 | 
+file | file| 是 | 无 | 文件 | 
 drive | string| 否 | local | 本地上传 | oss:阿里云;qiniu:七牛;cos:腾讯
 
 返回

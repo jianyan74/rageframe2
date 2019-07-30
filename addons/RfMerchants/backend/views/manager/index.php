@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'format' => 'raw',
                         ],
                         [
-                            'label'=> '最后登陆',
+                            'label'=> '最后登录',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
                                 return "最后访问IP：" . $model->last_ip . '<br>'.
