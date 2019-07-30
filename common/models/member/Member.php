@@ -36,8 +36,8 @@ use common\helpers\RegularHelper;
  * @property string $home_phone 家庭号码
  * @property string $mobile 手机号码
  * @property int $role 权限
- * @property int $last_time 最后一次登陆时间
- * @property string $last_ip 最后一次登陆ip
+ * @property int $last_time 最后一次登录时间
+ * @property string $last_ip 最后一次登录ip
  * @property int $province_id 省
  * @property int $city_id 城市
  * @property int $area_id 地区

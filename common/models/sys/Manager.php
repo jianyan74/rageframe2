@@ -32,8 +32,8 @@ use common\models\common\AuthAssignment;
  * @property string $mobile 手机号码
  * @property string $home_phone 家庭号码
  * @property int $visit_count 访问次数
- * @property int $last_time 最后一次登陆时间
- * @property string $last_ip 最后一次登陆ip
+ * @property int $last_time 最后一次登录时间
+ * @property string $last_ip 最后一次登录ip
  * @property int $role 权限
  * @property int $status 状态[-1:删除;0:禁用;1启用]
  * @property string $created_at 创建时间

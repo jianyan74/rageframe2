@@ -96,7 +96,7 @@ class LoginForm extends \common\models\forms\LoginForm
     }
 
     /**
-     * 登陆
+     * 登录
      *
      * @return bool
      * @throws \yii\base\InvalidConfigException
