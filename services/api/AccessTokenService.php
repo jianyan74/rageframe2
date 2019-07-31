@@ -2,6 +2,7 @@
 
 namespace services\api;
 
+use common\enums\StatusEnum;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\UnprocessableEntityHttpException;
@@ -48,6 +49,7 @@ class AccessTokenService extends Service
         !empty($model->access_token) && Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $model->access_token);
         $model->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
         $model->access_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $model->status = StatusEnum::ENABLED;
 
         if (!$model->save()) {
             if ($cycle_index <= 3) {
@@ -108,9 +110,25 @@ class AccessTokenService extends Service
     public function getTokenByAccessToken($token)
     {
         return AccessToken::find()
-            ->where(['access_token' => $token])
+            ->where(['access_token' => $token, 'status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
+    }
+
+    /**
+     * 禁用token
+     * @param $access_token
+     * @return bool
+     */
+    public function disableToken($access_token)
+    {
+        if ($this->cache === true) {
+            Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $access_token);
+        }
+
+        $model = $this->getTokenByAccessToken($access_token);
+        $model->status = StatusEnum::DISABLED;
+        return $model->save();
     }
 
     /**
