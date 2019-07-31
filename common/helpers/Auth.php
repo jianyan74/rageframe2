@@ -28,7 +28,8 @@ class Auth
         }
 
         $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
-        if (in_array($route, $auth) || in_array('/*', $auth)) {
+        $route_in_urlManager = str_replace(Yii::$app->request->baseUrl, '', Yii::$app->urlManager->createUrl($route));
+        if (in_array($route, $auth) || in_array('/*', $auth) || in_array($route_in_urlManager, $auth)) {
             return true;
         }
 
