@@ -87,6 +87,7 @@ return [
                         'pluralize' => false, // 是否启用复数形式，注意index的复数indices，开启后不直观
                         'extraPatterns' => [
                             'POST login' => 'login', // 登录获取token
+                            'POST logout' => 'logout', // 登出
                             'POST refresh' => 'refresh', // 重置token
                             'POST sms-code' => 'sms-code', // 获取验证码
                             'POST register' => 'register', // 注册

@@ -55,6 +55,20 @@ class SiteController extends OnAuthController
     }
 
     /**
+     * 登出
+     *
+     * @return array|mixed
+     */
+    public function actionLogout()
+    {
+        if (Yii::$app->services->apiAccessToken->disableToken(Yii::$app->user->identity->access_token)) {
+            return ResultDataHelper::api(200, '成功');
+        } else {
+            return ResultDataHelper::api(500, '失败');
+        }
+    }
+
+    /**
      * 重置令牌
      *
      * @param $refresh_token

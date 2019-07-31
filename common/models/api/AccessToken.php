@@ -2,6 +2,7 @@
 
 namespace common\models\api;
 
+use common\enums\StatusEnum;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
@@ -112,7 +113,7 @@ class AccessToken extends RateLimit
      */
     public static function findIdentityByRefreshToken($token, $group = null)
     {
-        return static::findOne(['group' => $group, 'refresh_token' => $token]);
+        return static::findOne(['group' => $group, 'refresh_token' => $token, 'status' => StatusEnum::ENABLED]);
     }
 
     /**
