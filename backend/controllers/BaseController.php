@@ -53,10 +53,7 @@ class BaseController extends Controller
         }
 
         // 判断当前模块的是否为主模块, 模块+控制器+方法
-        $permissionName = '/' . Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
-        if (Yii::$app->controller->module->id != Yii::$app->id) {
-            $permissionName = '/' . Yii::$app->controller->module->id . $permissionName;
-        }
+        $permissionName = '/' . Yii::$app->requestedRoute;
 
         // 判断是否忽略校验
         if (in_array($permissionName, Yii::$app->params['noAuthRoute'])) {
