@@ -18,7 +18,8 @@ use Zhuzhichao\IpLocationZh\Ip;
 class ActionLogService extends Service
 {
     /**
-     * @param $manager_id
+     * @param $app_id
+     * @param $user_id
      * @param int $limit
      * @return array|\yii\db\ActiveRecord[]
      */

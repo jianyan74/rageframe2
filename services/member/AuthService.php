@@ -27,7 +27,7 @@ class AuthService extends Service
 
     /**
      * @param $oauthClient
-     * @param $oauthClientId
+     * @param $oauthClientUserId
      * @return array|null|\yii\db\ActiveRecord
      */
     public function findOauthClientWithMember($oauthClient, $oauthClientUserId)
