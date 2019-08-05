@@ -29,7 +29,7 @@
 --- migrations | 数据迁移目录
 **environments** | 初始化设置目录
 **storage** | 存储目录
-**servers** | 服务层目录
+**services** | 服务层目录
 **vendor** | 第三方加载文件目录
 **frontend** | 前台目录
 --- tests | 单元测试文件目录
