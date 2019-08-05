@@ -21,9 +21,8 @@ class MemberService extends Service
     protected $member;
 
     /**
-     * @param $member_id
+     * @param $member
      * @return $this
-     * @throws NotFoundHttpException
      */
     public function set(Member $member)
     {
@@ -32,7 +31,7 @@ class MemberService extends Service
     }
 
     /**
-     * @param $member_id
+     * @param $id
      * @return array|Member|null|\yii\db\ActiveRecord
      */
     public function get($id)
