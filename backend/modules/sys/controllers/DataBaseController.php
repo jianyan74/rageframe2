@@ -454,6 +454,7 @@ class DataBaseController extends BaseController
             foreach ($datum['item'] as $item) {
                 empty($item['comment']) && $item['comment'] = "无";
                 $item['allowNull'] = !empty($item['allowNull']) ? "是" : '否';
+                is_array($item['defaultValue']) && $item['defaultValue'] = json_encode($item['defaultValue']);
                 $str .= "{$item['name']} | {$item['type']} | {$item['allowNull']} | {$item['defaultValue']} | {$item['comment']}" . "<br>";
             }
 
