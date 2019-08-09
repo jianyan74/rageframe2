@@ -48,7 +48,7 @@ class Auth
             return $route;
         }
 
-        return ArrayHelper::filter(self::getAuth(), $route);
+        return array_intersect(self::getAuth(), $route);
     }
 
     /**
