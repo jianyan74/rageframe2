@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         var time;
         // 优化表单击
         $(".table-restore").click(function () {
-            time = $(this).parent().parent().parent().attr('data-time');
+            time = $(this).parent().parent().attr('data-time');
             $.ajax({
                 type: "post",
                 url: "<?= Url::to(['restore-init'])?>",

@@ -128,7 +128,7 @@ class SystemInfo
         $environment['flag'] = php_uname();
         $environment['phpOs'] = PHP_OS;
         $environment['os'] = $os[0] . '内核版本：' . $this->os() ? $os[2] : $os[1];
-        $environment['language'] = getenv("HTTP_ACCEPT_LANGUAGE");
+        $environment['language'] = @$_SERVER['HTTP_ACCEPT_LANGUAGE'];
         $environment['name'] =$this->os() ? $os[1] : $os[2];
         $environment['email'] = @$_SERVER['SERVER_ADMIN'];
         $environment['webEngine'] = $_SERVER['SERVER_SOFTWARE'];
