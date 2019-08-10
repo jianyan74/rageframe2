@@ -329,6 +329,42 @@ class UploadHelper
     }
 
     /**
+     * 获取视频封面图
+     *
+     * @return bool
+     * @throws \League\Flysystem\FileExistsException
+     * @throws NotFoundHttpException
+     */
+    public function getVideoPoster()
+    {
+        // use `ffmpeg` get first frame as video poster
+        // save poster local and upload to cloud, return the cloud url
+
+        $file = UploadedFile::getInstanceByName($this->uploadFileName);
+        if ($file->error === UPLOAD_ERR_OK) {
+            $this->baseInfo['name'] = $this->baseInfo['name'] . '_poster';
+            $this->baseInfo['extension'] = 'jpg';
+            $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
+            $tmpPosterFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
+            FfmpegHelper::imageResize($file->tempName, $tmpPosterFilePath, 0);
+            if (file_exists($tmpPosterFilePath)) {
+                $stream = fopen($tmpPosterFilePath, 'r+');
+                $result = $this->filesystem->writeStream($this->baseInfo['url'], $stream);
+                if (! $result) {
+                    throw new NotFoundHttpException('文件写入失败');
+                }
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+
+                unlink($tmpPosterFilePath); // delete tmp file
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 水印
      *
      * @param $fullPathName
