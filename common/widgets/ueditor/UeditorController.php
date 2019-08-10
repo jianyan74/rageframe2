@@ -211,14 +211,19 @@ class UeditorController extends Controller
 
             $baseInfo = $upload->getBaseInfo();
             $url = $baseInfo['url'];
-            $upload->getVideoPoster();
-            $baseInfo = $upload->getBaseInfo();
-            $videoPoster = $baseInfo['url'];
+
+            if (isset($upload->config['poster']) && $upload->config['poster'] == true) {
+                $upload->getVideoPoster();
+                $baseInfo = $upload->getBaseInfo();
+                $posterUrl = $baseInfo['url'];
+            } else {
+                $posterUrl = '';
+            }
 
             return [
                 'state' => 'SUCCESS',
                 'url' => $url,
-                'posterUrl' => $videoPoster,
+                'posterUrl' => $posterUrl,
             ];
         } catch (\Exception $e) {
             return $this->result($e->getMessage());
