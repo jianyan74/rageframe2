@@ -39,7 +39,7 @@ class FfmpegHelper
      */
     public static function imageResize($filePath, $imagePath, $second)
     {
-        exec(self::$ffmpegPath . "-ss {$second}  -i {$filePath} {$imagePath}  -r 1 -vframes 1 -an -f mjpeg 1>/dev/null");
+        exec(self::$ffmpegPath . "-ss {$second} -i {$filePath} -r 1 -vframes 1 -an -f mjpeg {$imagePath} 1>/dev/null");
     }
 
     /**
