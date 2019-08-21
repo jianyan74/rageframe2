@@ -54,7 +54,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         }
     }
 } else {
-    $listFields = $generator->listFields ?? [];
+    $listFields = !empty($generator->listFields) ? $generator->listFields : [];
     foreach ($tableSchema->columns as $column) {
         $format = $generator->generateColumnFormat($column);
         if (in_array($column->name, $listFields)) {
