@@ -3,14 +3,16 @@
 namespace common\models\common;
 
 use backend\components\Tree;
+use common\helpers\ArrayHelper;
+use common\helpers\TreeHelper;
 
 /**
  * This is the model class for table "{{%common_auth_item}}".
  *
  * @property int $id
  * @property string $name 别名
- * @property string $type 类别
- * @property string $type_child 子类别
+ * @property string $app_id 类别
+ * @property string $type 子类别
  * @property string $addons_name 插件名称
  * @property string $title 说明
  * @property int $pid 父级id
@@ -44,7 +46,7 @@ class AuthItem extends \common\models\base\BaseModel
             [['name'], 'uniquName'],
             [['is_menu', 'pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['type', 'type_child'], 'string', 'max' => 20],
+            [['app_id', 'type'], 'string', 'max' => 20],
             [['addons_name'], 'string', 'max' => 100],
             [['title'], 'string', 'max' => 200],
             [['tree'], 'string', 'max' => 500],
@@ -59,8 +61,8 @@ class AuthItem extends \common\models\base\BaseModel
         return [
             'id' => 'ID',
             'title' => '说明',
+            'app_id' => '应用',
             'type' => '类型',
-            'type_child' => '子类型',
             'addons_name' => '插件名称',
             'name' => '路由/别名',
             'pid' => '父类',
@@ -80,7 +82,7 @@ class AuthItem extends \common\models\base\BaseModel
     public function uniquName($attribute)
     {
         $model = self::find()
-            ->where(['name' => $this->name, 'type' => $this->type])
+            ->where(['name' => $this->name, 'app_id' => $this->app_id])
             ->andFilterWhere(['addons_name' => $this->addons_name])
             ->one();
 
@@ -110,9 +112,23 @@ class AuthItem extends \common\models\base\BaseModel
         parent::afterSave($insert, $changedAttributes);
     }
 
-    public function afterDelete()
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
     {
-        AuthItemChild::deleteAll(['item_id' => $this->id]);
-        parent::afterDelete();
+        // 删除已授权的子权限
+        $childs = self::find()
+            ->where(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false])
+            ->select('id')
+            ->asArray()
+            ->column();
+
+        $childs = ArrayHelper::merge($childs, [$this->id]);
+        AuthItemChild::deleteAll(['in', 'item_id', $childs]);
+
+        self::deleteAll(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false]);
+
+        return parent::beforeDelete();
     }
 }

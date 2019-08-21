@@ -3,7 +3,6 @@
 namespace backend\modules\wechat\controllers;
 
 use Yii;
-use yii\helpers\Json;
 use backend\controllers\BaseController;
 use backend\modules\wechat\forms\HistoryForm;
 

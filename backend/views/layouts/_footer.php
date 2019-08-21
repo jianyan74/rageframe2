@@ -105,10 +105,14 @@ $this->registerJs($script);
 
     // 启用状态 status 1:启用;0禁用;
     function rfStatus(obj){
-        let id = $(obj).parent().parent().attr('id');
+        let id = $(obj).attr('data-id');
         let status = 0; self = $(obj);
         if (self.hasClass("btn-success")){
             status = 1;
+        }
+
+        if (!id) {
+            id = $(obj).parent().parent().attr('id');
         }
 
         if (!id) {
@@ -141,7 +145,12 @@ $this->registerJs($script);
 
     // 排序
     function rfSort(obj){
-        let id = $(obj).parent().parent().attr('id');
+        let id = $(obj).attr('data-id');
+
+        if (!id) {
+            id = $(obj).parent().parent().attr('id');
+        }
+
         if (!id) {
             id = $(obj).parent().parent().attr('data-key');
         }

@@ -13,7 +13,7 @@ class m190729_055605_common_auth_assignment extends Migration
         $this->createTable('{{%common_auth_assignment}}', [
             'role_id' => "int(11) NOT NULL",
             'user_id' => "int(11) NOT NULL",
-            'type' => "varchar(20) NULL DEFAULT '' COMMENT '类型'",
+            'app_id' => "varchar(20) NULL DEFAULT '' COMMENT '类型'",
         ], "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公用_会员授权角色表'");
         
         /* 索引设置 */

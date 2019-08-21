@@ -1,6 +1,5 @@
 <?php
 
-use common\helpers\Url;
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
@@ -15,9 +14,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <a class="btn btn-white" href="<?= Url::to(['stat']) ?>" data-toggle="modal" data-target="#ajaxModalMax">
-                        <i class="fa fa-area-chart"></i> 异常发送报表统计
-                    </a>
+                    <?= Html::linkButton(['stat'], '<i class="fa fa-area-chart"></i> 异常发送报表统计', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModalMax',
+                    ]) ?>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -92,10 +92,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{view}',
+                            'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $model, $key) {
-                                    return Html::linkButton(['view','id' => $model->id], '查看详情', [
+                                    return Html::linkButton(['view', 'id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ]);

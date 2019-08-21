@@ -4,7 +4,7 @@ namespace common\helpers;
 
 use Yii;
 use yii\helpers\BaseUrl;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 
 /**
  * Class Url
@@ -22,7 +22,7 @@ class Url extends BaseUrl
      */
     public static function to($url = '', $scheme = false)
     {
-        if (is_array($url) && Yii::$app->id != AuthEnum::TYPE_BACKEND) {
+        if (is_array($url) && Yii::$app->id != AppEnum::BACKEND) {
             $url = static::isMerchant($url);
         }
 
@@ -112,6 +112,27 @@ class Url extends BaseUrl
     public static function getAuthUrl($url)
     {
         return static::normalizeRoute($url);
+    }
+
+    /**
+     * 创建支付回调专门Url
+     *
+     * @param string $action
+     * @param array $url
+     * @param bool $scheme
+     * @return array
+     */
+    public static function removeMerchantIdUrl(string $action, array $url, $scheme = false)
+    {
+        if (true == Yii::$app->params['merchantOpen']) {
+            Yii::$app->params['merchantOpen'] = false;
+            $url = self::$action($url, $scheme);
+            Yii::$app->params['merchantOpen'] = true;
+
+            return $url;
+        }
+
+        return self::$action($url, $scheme);
     }
 
     /**

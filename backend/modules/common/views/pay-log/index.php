@@ -1,4 +1,5 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\StatusEnum;
@@ -28,8 +29,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'label' => '支付金额',
                             'value' => function ($model) {
-                                $total_fee = $model->total_fee > 0 ? $model->total_fee / 100 : 0 ;
-                                $pay_fee = $model->pay_fee > 0 ? $model->pay_fee / 100 : 0 ;
+                                $total_fee = $model->total_fee > 0 ? $model->total_fee / 100 : 0;
+                                $pay_fee = $model->pay_fee > 0 ? $model->pay_fee / 100 : 0;
                                 $str = '应付金额：' . $total_fee . '<br>';
                                 $str .= '实际支付：' . $pay_fee;
                                 return $str;
@@ -76,10 +77,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{view}',
+                            'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $model, $key) {
-                                    return Html::linkButton(['view','id' => $model->id], '查看详情', [
+                                    return Html::linkButton(['view', 'id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ]);

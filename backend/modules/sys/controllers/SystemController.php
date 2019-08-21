@@ -1,8 +1,8 @@
 <?php
+
 namespace backend\modules\sys\controllers;
 
 use Yii;
-use common\helpers\ResultDataHelper;
 use common\helpers\FileHelper;
 use backend\controllers\BaseController;
 
@@ -29,24 +29,6 @@ class SystemController extends BaseController
             'mysql_size' => Yii::$app->services->sys->getDefaultDbSize(),
             'attachment_size' => $attachmentSize ?? 0,
             'disable_functions' => $disableFunctions,
-        ]);
-    }
-
-    /**
-     * 服务器探针
-     *
-     * @return array|string
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function actionProbe()
-    {
-        $info = Yii::$app->services->sys->getProbeInfo();
-        if (Yii::$app->request->isAjax) {
-            return ResultDataHelper::json(200, '获取成功', $info);
-        }
-
-        return $this->render('probe', [
-            'info' => $info,
         ]);
     }
 }

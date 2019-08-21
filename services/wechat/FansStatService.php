@@ -78,7 +78,7 @@ class FansStatService extends Service
     public function getFansStat()
     {
         // 缓存设置
-        $cacheKey = CacheKeyEnum::WECHAT_FANS_STAT . $this->getMerchantId(true);
+        $cacheKey = CacheKeyEnum::WECHAT_FANS_STAT;
         if (Yii::$app->cache->get($cacheKey)) {
             return true;
         }

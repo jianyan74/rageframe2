@@ -25,11 +25,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 <div class="normalPadding relativePosition postItem">
                                     <?php if($index == 0){ ?>
                                         <div style="background-image: url(<?= Url::to(['analysis/image','attach'=>$news['thumb_url']]) ?>); height: 160px" class="backgroundCover relativePosition mainPostCover">
-                                            <div class="bottomBar"><?= $news['title'] ?></div>
+                                            <div class="bottomBar"><?= Html::encode($news['title']) ?></div>
                                         </div>
                                     <?php }else{ ?>
                                         <div class="flex-row">
-                                            <div class="flex-col normalPadding"><?= $news['title'] ?></div>
+                                            <div class="flex-col normalPadding"><?= Html::encode($news['title']) ?></div>
                                             <div style="background-image: url(<?= Url::to(['analysis/image', 'attach' => $news['thumb_url']]) ?>);" class="backgroundCover subPostCover"></div>
                                         </div>
                                     <?php } ?>

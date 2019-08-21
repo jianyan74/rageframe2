@@ -2,12 +2,12 @@
 
 namespace common\models\api;
 
-use common\enums\StatusEnum;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UnauthorizedHttpException;
+use common\enums\StatusEnum;
 use common\models\member\Member;
 use common\models\common\RateLimit;
 use common\models\common\AuthAssignment;

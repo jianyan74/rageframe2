@@ -15,6 +15,8 @@ class AuthorizationCodeService extends Service
      * @param $client_id
      * @param $authorization_code
      * @param $expires
+     * @param $member_id
+     * @param $scopes
      */
     public function create($client_id, $authorization_code, $expires, $member_id, $scopes)
     {

@@ -7,7 +7,7 @@ use yii\web\UnauthorizedHttpException;
 use common\helpers\StringHelper;
 use common\helpers\AddonHelper;
 use common\helpers\Auth;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\helpers\ExecuteHelper;
 
 /**
@@ -59,7 +59,7 @@ class AddonsModule extends \yii\base\Module
         // 解析路由
         AddonHelper::analysisRoute($this->_route, $appId);
         // 后台校验权限
-        $appId == AuthEnum::TYPE_BACKEND && $this->verify();
+        $appId == AppEnum::BACKEND && $this->verify();
         // 引导执行
         $this->bootstrap();
 

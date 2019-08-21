@@ -36,9 +36,9 @@
     'layout'=>'{picker}{input}',
     'pluginOptions' => [
         'format' => 'yyyy-mm-dd',
-        'todayHighlight' => true,//今日高亮
-        'autoclose' => true,//选择后自动关闭
-        'todayBtn' => true,//今日按钮显示
+        'todayHighlight' => true, // 今日高亮
+        'autoclose' => true, // 选择后自动关闭
+        'todayBtn' => true, // 今日按钮显示
     ],
     'options'=>[
         'class' => 'form-control no_bor',
@@ -395,7 +395,7 @@ class TreeController extends Controller
 
 
 ```
-use leandrogehlen\treegrid\TreeGrid;
+use jianyan\treegrid\TreeGrid;
   
 <?= TreeGrid::widget([
     'dataProvider' => $dataProvider,
@@ -448,6 +448,6 @@ use leandrogehlen\treegrid\TreeGrid;
 ]); ?>
 ```
 
-更多文档：https://github.com/leandrogehlen/yii2-treegrid
+更多文档：https://github.com/jianyan74/yii2-treegrid
 
 

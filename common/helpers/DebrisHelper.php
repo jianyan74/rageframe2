@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use Yii;
+use yii\helpers\Json;
 
 /**
  * Class DebrisHelper
@@ -114,6 +115,28 @@ class DebrisHelper
         }
 
         return $url;
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public static function htmlEncode($value)
+    {
+        if (!is_array($value)) {
+            $value = Json::decode($value);
+        }
+
+        $array = [];
+        foreach ($value as $key => &$item) {
+            if (!is_array($item)) {
+                $array[$key] = Html::encode($item);
+            } else {
+                $array[$key] = self::htmlEncode($item);
+            }
+        }
+
+        return $array;
     }
 
     /**

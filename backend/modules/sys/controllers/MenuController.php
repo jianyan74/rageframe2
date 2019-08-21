@@ -1,10 +1,10 @@
 <?php
+
 namespace backend\modules\sys\controllers;
 
 use Yii;
 use common\components\Curd;
 use common\models\sys\Menu;
-use common\helpers\ArrayHelper;
 use backend\controllers\BaseController;
 use yii\data\ActiveDataProvider;
 

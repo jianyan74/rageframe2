@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 
     function present(obj) {
         // 获取表单内信息
-        let values = $("#form-tab-" + obj).serialize();
+        let values = $("#form-tab-" + obj).serializeObject();
         $.ajax({
             type: "post",
             url: "<?= Url::to(['update-info'])?>",
@@ -132,4 +132,27 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         }
         $("#" + id).val(token);
     }
+
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        var $radio = $('input[type=radio],input[type=checkbox]',this);
+        $.each($radio,function(){
+            if(!o.hasOwnProperty(this.name)){
+                o[this.name] = '';
+            }
+        });
+        return o;
+    };
 </script>

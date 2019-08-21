@@ -86,17 +86,23 @@ class Html extends BaseHtml
      * @param int $status
      * @return mixed
      */
-    public static function status($status = 1)
+    public static function status($status = 1, $options = [])
     {
         $listBut = [
-            StatusEnum::DISABLED => self::tag('span', '启用', [
-                'class' => "btn btn-success btn-sm",
-                'onclick' => "rfStatus(this)"
-            ]),
-            StatusEnum::ENABLED => self::tag('span', '禁用', [
-                'class' => "btn btn-default btn-sm",
-                'onclick' => "rfStatus(this)"
-            ]),
+            StatusEnum::DISABLED => self::tag('span', '启用', array_merge(
+                [
+                    'class' => "btn btn-success btn-sm",
+                    'onclick' => "rfStatus(this)"
+                ],
+                $options
+            )),
+            StatusEnum::ENABLED => self::tag('span', '禁用', array_merge(
+                [
+                    'class' => "btn btn-default btn-sm",
+                    'onclick' => "rfStatus(this)"
+                ],
+                $options
+            )),
         ];
 
         return $listBut[$status] ?? '';

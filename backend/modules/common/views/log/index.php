@@ -1,6 +1,7 @@
 <?php
 
 use yii\grid\GridView;
+use common\enums\AppEnum;
 use common\helpers\Html;
 use common\helpers\Url;
 use common\helpers\DebrisHelper;
@@ -15,9 +16,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <a class="btn btn-white" href="<?= Url::to(['stat']) ?>" data-toggle="modal" data-target="#ajaxModalMax">
-                        <i class="fa fa-area-chart"></i> 异常请求报表统计
-                    </a>
+                    <?= Html::linkButton(['stat'], '<i class="fa fa-area-chart"></i> 异常请求报表统计', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModalMax',
+                    ])?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -37,6 +39,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'attribute' => 'app_id',
                             'headerOptions' => ['class' => 'col-md-1'],
+                        ],
+                        [
+                            'label' => '用户',
+                            'value' => function ($model) {
+                                if (empty($model->user_id)) {
+                                    return '游客';
+                                } elseif (AppEnum::BACKEND == $model->app_id){
+                                    return $model->manager->username;
+                                } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])){
+                                    return $model->member->username;
+                                }
+                            },
+                            'filter' => false, //不显示搜索框
                         ],
                         [
                             'attribute' => 'module',

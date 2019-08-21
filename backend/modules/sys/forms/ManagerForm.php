@@ -1,11 +1,11 @@
 <?php
+
 namespace backend\modules\sys\forms;
 
 use Yii;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use common\models\common\AuthRole;
-use common\models\common\AuthAssignment;
 use common\models\sys\Manager;
 
 /**
@@ -38,7 +38,13 @@ class ManagerForm extends Model
         return [
             [['password', 'username'], 'required'],
             ['password', 'string', 'min' => 6],
-            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRole::class, 'targetAttribute' => ['role_id' => 'id']],
+            [
+                ['role_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => AuthRole::class,
+                'targetAttribute' => ['role_id' => 'id']
+            ],
             [['username'], 'isUnique'],
             [['role_id'], 'required'],
         ];
@@ -61,7 +67,11 @@ class ManagerForm extends Model
      */
     public function loadData()
     {
-        $this->managerModel = Manager::find()->where(['id' => $this->id])->with('assignment')->one();
+        $this->managerModel = Manager::find()
+            ->where(['id' => $this->id])
+            ->with('assignment')
+            ->one();
+
         if ($this->managerModel) {
             $this->username = $this->managerModel->username;
             $this->password = $this->managerModel->password_hash;
@@ -129,13 +139,7 @@ class ManagerForm extends Model
             }
 
             // 角色授权
-            AuthAssignment::deleteAll(['user_id' => $manager->id, 'type' => Yii::$app->id]);
-            $authAssignment = new AuthAssignment();
-            $authAssignment->user_id = $manager->id;
-            $authAssignment->role_id = $this->role_id;
-            $authAssignment->type = Yii::$app->id;
-            if (!$authAssignment->save()) {
-                $this->addErrors($authAssignment->getErrors());
+            if (!Yii::$app->services->authAssignment->authorization($manager->id, $this->role_id, Yii::$app->id)) {
                 throw new NotFoundHttpException('权限写入错误');
             }
 

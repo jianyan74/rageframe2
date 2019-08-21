@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -75,7 +76,7 @@ class RuleController extends BaseController
 
             try {
                 if (!$model->save()) {
-                   throw new \Exception($this->getError($model));
+                    throw new \Exception($this->getError($model));
                 }
 
                 // 全部关键字
@@ -96,7 +97,7 @@ class RuleController extends BaseController
             'model' => $model,
             'ruleKeywords' => $defaultRuleKeywords,
             'modules' => Json::encode(Rule::$moduleExplain),
-            'apiList' =>  Yii::$app->services->wechatRule->getApiList(),
+            'apiList' => Yii::$app->services->wechatRule->getApiList(),
         ]);
     }
 

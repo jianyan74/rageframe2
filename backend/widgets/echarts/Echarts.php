@@ -2,6 +2,7 @@
 
 namespace backend\widgets\echarts;
 
+use Yii;
 use yii\base\Widget;
 use common\helpers\ArrayHelper;
 use common\helpers\StringHelper;
@@ -98,5 +99,9 @@ class Echarts extends Widget
     {
         $view = $this->getView();
         AppAsset::register($view);
+
+        if ($this->theme == 'bmap') {
+            $view->registerJsFile('http://api.map.baidu.com/api?v=2.0&ak=' . Yii::$app->debris->config('map_baidu_ak'));
+        }
     }
 }

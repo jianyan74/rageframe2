@@ -44,8 +44,10 @@ class ConfigController extends BaseController
             'pageSize' => $this->pageSize
         ]);
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

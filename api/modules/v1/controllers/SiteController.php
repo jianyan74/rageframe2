@@ -28,6 +28,7 @@ class SiteController extends OnAuthController
 
     /**
      * 不用进行登录验证的方法
+     *
      * 例如： ['index', 'update', 'create', 'view', 'delete']
      * 默认全部需要验证
      *
@@ -61,11 +62,11 @@ class SiteController extends OnAuthController
      */
     public function actionLogout()
     {
-        if (Yii::$app->services->apiAccessToken->disableToken(Yii::$app->user->identity->access_token)) {
-            return ResultDataHelper::api(200, '成功');
-        } else {
-            return ResultDataHelper::api(500, '失败');
+        if (Yii::$app->services->apiAccessToken->disableByAccessToken(Yii::$app->user->identity->access_token)) {
+            return ResultDataHelper::api(200, '退出成功');
         }
+
+        return ResultDataHelper::api(200, '退出失败');
     }
 
     /**

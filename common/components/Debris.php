@@ -48,7 +48,7 @@ class Debris
     protected function getConfigInfo($noCache)
     {
         // 获取缓存信息
-        $cacheKey = CacheKeyEnum::SYS_CONFIG . ':' . Yii::$app->services->merchant->getId();
+        $cacheKey = CacheKeyEnum::SYS_CONFIG;
         if (!($info = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
             $config = Yii::$app->services->config->getListWithValue();
             $info = [];

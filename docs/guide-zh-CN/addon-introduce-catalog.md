@@ -40,6 +40,11 @@
 --- --- controllers | 控制器目录
 --- **common** | 公用
 --- --- models | 公共模型层
+--- --- components | 组件
+--- --- --- Bootstrap | 引导文件，插件启动前会访问该文件
+--- --- config | 配置：例如权限、菜单、导航入口
+--- **console** | 控制层
+--- --- migrations | 数据迁移文件
 --- AddonConfig.php | 模块配置文件(必须有)
 --- AddonMessage.php | 模块微信消息接收处理文件(可选)
 --- Install | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)

@@ -3,10 +3,11 @@
 namespace backend\modules\common\controllers;
 
 use Yii;
-use common\enums\AuthEnum;
 use yii\data\ActiveDataProvider;
 use common\components\Curd;
 use common\enums\StatusEnum;
+use common\enums\AppEnum;
+use common\enums\AuthTypeEnum;
 use common\models\common\AuthItem;
 use backend\controllers\BaseController;
 
@@ -25,11 +26,11 @@ class AuthItemController extends BaseController
     public $modelClass = AuthItem::class;
 
     /**
-     * 默认类型
+     * 默认应用
      *
      * @var string
      */
-    public $type = AuthEnum::TYPE_BACKEND;
+    public $appId = AppEnum::BACKEND;
 
     /**
      * Lists all Tree models.
@@ -38,7 +39,7 @@ class AuthItemController extends BaseController
     public function actionIndex()
     {
         $query = $this->modelClass::find()
-            ->where(['type' => $this->type, 'type_child' => AuthEnum::TYPE_CHILD_DEFAULT])
+            ->where(['app_id' => $this->appId, 'type' => AuthTypeEnum::TYPE_DEFAULT])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->orderBy('sort asc, created_at asc');
         $dataProvider = new ActiveDataProvider([
@@ -64,8 +65,8 @@ class AuthItemController extends BaseController
         /** @var AuthItem $model */
         $model = $this->findModel($id);
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
-        $model->type = $this->type;
-        $model->type_child = AuthEnum::TYPE_CHILD_DEFAULT;
+        $model->app_id = $this->appId;
+        $model->type = AuthTypeEnum::TYPE_DEFAULT;
 
         // ajax 校验
         $this->activeFormValidate($model);

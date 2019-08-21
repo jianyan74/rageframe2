@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -75,7 +76,12 @@ class QrcodeController extends BaseController
      */
     public function actionDeleteAll()
     {
-        if (Qrcode::deleteAll(['and', ['model' => Qrcode::MODEL_TEM], ['<', 'end_time', time()], ['merchant_id' => $this->getMerchantId()]])) {
+        if (Qrcode::deleteAll([
+            'and',
+            ['model' => Qrcode::MODEL_TEM],
+            ['<', 'end_time', time()],
+            ['merchant_id' => $this->getMerchantId()]
+        ])) {
             return $this->message("删除成功", $this->redirect(['index']));
         }
 

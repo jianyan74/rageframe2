@@ -7,6 +7,7 @@ use common\helpers\ImageHelper;
 
 $this->title = '第三方用户';
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
+
 ?>
 
 <div class="row">

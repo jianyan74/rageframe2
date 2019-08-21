@@ -22,7 +22,7 @@ return [
           ],
         /** ------ 数据库命令行备份 ------ **/
         'migrate' => [
-            'class' => 'console\controllers\ConsoleController',
+            'class' => 'jianyan\migration\ConsoleController',
         ],
     ],
     'components' => [

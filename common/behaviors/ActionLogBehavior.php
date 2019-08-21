@@ -86,7 +86,7 @@ class ActionLogBehavior extends Behavior
             }
 
             // 记录行为
-            Yii::$app->services->actionLog->create($row['behavior'], $row['remark'], !empty($row['is_record_post']), $url);
+            Yii::$app->services->actionLog->create($row['behavior'], $row['remark'], !empty($row['is_record_post']), $url, $row['level']);
         }
     }
 

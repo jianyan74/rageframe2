@@ -2,13 +2,13 @@
 
 namespace services\sys;
 
-use common\helpers\Auth;
 use Yii;
+use yii\helpers\Json;
 use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\models\sys\Menu;
 use common\enums\StatusEnum;
-use yii\helpers\Json;
+use common\helpers\Auth;
 
 /**
  * Class MenuService

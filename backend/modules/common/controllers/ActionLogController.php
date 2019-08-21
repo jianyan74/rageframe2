@@ -36,7 +36,7 @@ class ActionLogController extends BaseController
         $dataProvider->query
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->with(['manager']);
+            ->with(['manager', 'member']);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

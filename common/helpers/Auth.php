@@ -3,7 +3,7 @@
 namespace common\helpers;
 
 use Yii;
-use common\enums\AuthEnum;
+use common\enums\AuthTypeEnum;
 
 /**
  * Class Auth
@@ -28,8 +28,7 @@ class Auth
         }
 
         $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
-        $route_in_urlManager = str_replace(Yii::$app->request->baseUrl, '', Yii::$app->urlManager->createUrl($route));
-        if (in_array($route, $auth) || in_array('/*', $auth) || in_array($route_in_urlManager, $auth)) {
+        if (in_array($route, $auth) || in_array('/*', $auth)) {
             return true;
         }
 
@@ -95,7 +94,7 @@ class Auth
         if (true === Yii::$app->params['inAddon']) {
             $name = Yii::$app->params['addonInfo']['name'] ?? Yii::$app->request->get('addon');
             $name = StringHelper::strUcwords($name);
-            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, AuthEnum::TYPE_CHILD_ADDONS, $name);
+            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, AuthTypeEnum::TYPE_ADDONS, $name);
         } else {
             self::$auth = Yii::$app->services->authRole->getAuthByRole($role);
         }

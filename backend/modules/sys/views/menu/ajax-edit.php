@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 use common\enums\StatusEnum;
@@ -25,7 +26,7 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'title')->textInput() ?>
         <?= $form->field($model, 'url')->textInput()->hint("例如：/index/index，要绝对路由哦") ?>
         <?= $form->field($model, 'params')->widget(MultipleInput::class, [
-            'max' => 6,
+            'max' => 1,
             'columns' => [
                 [
                     'name'  => 'key',

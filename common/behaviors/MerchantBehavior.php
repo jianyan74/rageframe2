@@ -1,4 +1,5 @@
 <?php
+
 namespace common\behaviors;
 
 use Yii;

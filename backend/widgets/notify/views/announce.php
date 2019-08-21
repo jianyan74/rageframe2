@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <ul class="nav nav-tabs">
                 <li class="active"><a href="<?= Url::to(['announce']) ?>"> 公告列表</a></li>
                 <li><a href="<?= Url::to(['message'])?>"> 私信列表</a></li>
+                <li><a href="<?= Url::to(['remind'])?>"> 提醒列表</a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane">

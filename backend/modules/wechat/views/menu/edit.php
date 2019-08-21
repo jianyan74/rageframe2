@@ -1,10 +1,10 @@
 <?php
+
 use common\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use common\helpers\Html;
 use common\models\wechat\Menu;
-use common\models\wechat\MenuProvinces;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => Menu::$typeExplain[$type], 'url' => ['index', 'type' => $type]];

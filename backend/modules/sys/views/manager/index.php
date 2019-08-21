@@ -1,4 +1,5 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\Html;
 use common\helpers\ImageHelper;
@@ -35,9 +36,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'attribute' => 'head_portrait',
                             'value' => function ($model) {
-                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)), [
-                                    'class' => 'img-circle rf-img-md img-bordered-sm',
-                                ]);
+                                return Html::img(ImageHelper::defaultHeaderPortrait(Html::encode($model->head_portrait)),
+                                    [
+                                        'class' => 'img-circle rf-img-md img-bordered-sm',
+                                    ]);
                             },
                             'filter' => false,
                             'format' => 'raw',
@@ -46,12 +48,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'realname',
                         'mobile',
                         [
-                            'label'=> '角色',
+                            'label' => '角色',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
                                 if ($model->id == Yii::$app->params['adminAccount']) {
                                     return Html::tag('span', '超级管理员', ['class' => 'label label-success']);
-                                }else{
+                                } else {
                                     if (isset($model->assignment->role->title)) {
                                         return Html::tag('span', $model->assignment->role->title, ['class' => 'label label-primary']);
                                     } else {
@@ -62,11 +64,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'format' => 'raw',
                         ],
                         [
-                            'label'=> '最后登录',
+                            'label' => '最后登录',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return "最后访问IP：" . $model->last_ip . '<br>'.
-                                    "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>'.
+                                return "最后访问IP：" . $model->last_ip . '<br>' .
+                                    "最后访问：" . Yii::$app->formatter->asDatetime($model->last_time) . '<br>' .
                                     "登录次数：" . $model->visit_count;
                             },
                             'format' => 'raw',
@@ -74,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{recharge} {edit} {status} {destroy}',
+                            'template' => '{recharge} {edit} {status} {destroy}',
                             'buttons' => [
                                 'recharge' => function ($url, $model, $key) {
                                     return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [

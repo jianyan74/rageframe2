@@ -73,7 +73,11 @@ return [
             'subName' => 'Y/m/d',// 上传子目录规则
             'prefix' => 'file_',// 名称前缀
             'mimeTypes' => '*', // 媒体类型
-            'blacklist' => ['php', 'java', 'javac', 'py', 'pl', 'rb', 'ini', 'svg'], // 文件后缀黑名单
+            'blacklist' => [ // 文件后缀黑名单
+                'php', 'php5', 'php4', 'php3', 'php2', 'php1',
+                'java', 'asp', 'jsp', 'jspa', 'javac',
+                'py', 'pl', 'rb', 'sh', 'ini', 'svg', 'html', 'jtml','phtml','pht', 'js'
+            ],
         ],
         // 缩略图
         'thumb' => [

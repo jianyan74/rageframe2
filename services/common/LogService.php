@@ -3,16 +3,17 @@
 namespace services\common;
 
 use Yii;
-use yii\helpers\Json;
 use common\enums\StatusEnum;
 use common\helpers\EchantsHelper;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\models\common\Log;
 use common\queues\LogJob;
 use common\models\api\AccessToken;
+use common\enums\SubscriptionActionEnum;
+use common\enums\SubscriptionReasonEnum;
 
 /**
  * Class LogService
@@ -115,12 +116,38 @@ class LogService extends Service
                     'data' => $this->getData(),
                 ]));
             } else {
-                $log = new Log();
-                $log->attributes = $this->getData();
-                $log->save();
+                $this->realCreate($this->getData());
             }
         } catch (\Exception $e) {
         }
+    }
+
+    /**
+     * 真实写入
+     *
+     * @param $data
+     */
+    public function realCreate($data)
+    {
+        $log = new Log();
+        $log->attributes = $data;
+        $log->save();
+
+        // 创建订阅消息
+        $action = $this->getLevel($log['error_code']);
+        $actions = [
+            'info' => SubscriptionActionEnum::LOG_INFO,
+            'warning' => SubscriptionActionEnum::LOG_WARNING,
+            'error' => SubscriptionActionEnum::LOG_ERROR,
+        ];
+
+        Yii::$app->services->sysNotify->createRemind(
+            $log->id,
+            SubscriptionReasonEnum::LOG_CREATE,
+            $actions[$action],
+            $log['user_id'],
+            "请求异常，报错信息：" . $log->error_msg
+        );
     }
 
     /**
@@ -132,7 +159,7 @@ class LogService extends Service
     public function initData()
     {
         $user_id = Yii::$app->user->id;
-        if (Yii::$app->id == AuthEnum::TYPE_API && !Yii::$app->user->isGuest) {
+        if (Yii::$app->id == AppEnum::API && !Yii::$app->user->isGuest) {
             /** @var AccessToken $identity */
             $identity = Yii::$app->user->identity;
             $user_id = $identity->member_id ?? 0;
@@ -145,8 +172,8 @@ class LogService extends Service
         $data['app_id'] = Yii::$app->id;
         $data['merchant_id'] = Yii::$app->services->merchant->getId();
         $data['url'] = $url[0];
-        $data['get_data'] = Json::encode(Yii::$app->request->get());
-        $data['header_data'] = Json::encode(ArrayHelper::toArray(Yii::$app->request->headers));
+        $data['get_data'] = Yii::$app->request->get();
+        $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
 
         $module = $controller = $action = '';
         isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
@@ -155,7 +182,7 @@ class LogService extends Service
 
         $route = $module . '/' . $controller . '/' . $action;
         if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
-            $data['post_data'] = Json::encode(Yii::$app->request->post());
+            $data['post_data'] = Yii::$app->request->post();
         }
 
         $data['device'] = Yii::$app->debris->detectVersion();
@@ -233,8 +260,8 @@ class LogService extends Service
         $data = $this->initData();
         $data['req_id'] = $this->req_id;
         $data['error_code'] = $this->statusCode;
-        $data['error_msg'] = $this->statusText;
-        $data['error_data'] = is_array($this->errData) ? Json::encode($this->errData) : $this->errData;
+        $data['error_data'] = $this->errData;
+        $data['error_msg'] = isset($this->errData['errorMessage']) ? $this->errData['errorMessage'] : $this->statusText;
 
         return $data;
     }

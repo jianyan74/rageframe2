@@ -12,7 +12,7 @@ use backend\components\Tree;
  *
  * @property int $id 主键
  * @property string $title 标题
- * @property string $type 类别
+ * @property string $app_id 类别
  * @property string $pid 上级id
  * @property int $level 级别
  * @property int $sort 排序
@@ -43,7 +43,7 @@ class AuthRole extends \common\models\base\BaseModel
             [['title'], 'uniquTitle'],
             [['merchant_id', 'pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
-            [['type'], 'string', 'max' => 20],
+            [['app_id'], 'string', 'max' => 20],
             [['tree'], 'string', 'max' => 300],
         ];
     }
@@ -56,7 +56,7 @@ class AuthRole extends \common\models\base\BaseModel
         return [
             'id' => 'ID',
             'title' => '角色名称',
-            'type' => '类型',
+            'app_id' => '应用id',
             'pid' => '父级',
             'level' => '级别',
             'sort' => '排序',

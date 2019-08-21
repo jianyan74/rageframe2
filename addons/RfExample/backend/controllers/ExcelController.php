@@ -24,7 +24,6 @@ class ExcelController extends AddonsController
             try {
                 $file = $_FILES['excelFile'];
                 $data = ExcelHelper::import($file['tmp_name'], 2);
-                // \common\helpers\RfImportHelper::auth($data);
             } catch (\Exception $e) {
                 return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }

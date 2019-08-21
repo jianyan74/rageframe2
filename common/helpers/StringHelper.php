@@ -127,12 +127,18 @@ class StringHelper extends BaseStringHelper
      */
     public static function getLocalFilePath($url, $type = 'images')
     {
-        $prefix = Yii::getAlias("@root/") . 'web';
-        if (Yii::$app->params['uploadConfig'][$type]['fullPath'] == true) {
-            $url = str_replace(Yii::$app->request->hostInfo, '', $url);
+        if (RegularHelper::verify('url', $url)) {
+            if (!RegularHelper::verify('url', Yii::getAlias("@attachurl"))) {
+                $hostInfo = Yii::$app->request->hostInfo . Yii::getAlias("@attachurl");
+                $url = str_replace($hostInfo, '', $url);
+            } else {
+                $url = str_replace(Yii::getAlias("@attachurl"), '', $url);
+            }
+        } else {
+            $url = str_replace(Yii::getAlias("@attachurl"), '', $url);
         }
 
-        return $prefix . $url;
+        return Yii::getAlias("@attachment") . $url;
     }
 
     /**

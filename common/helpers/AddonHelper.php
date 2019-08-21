@@ -153,12 +153,11 @@ class AddonHelper
     public static function getConfig()
     {
         $model = Yii::$app->params['addon'];
-        $merchant_id = Yii::$app->services->merchant->getId();
-        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'] . ':' . $merchant_id;
+        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'];
         if (!($configModel = Yii::$app->cache->get($key))) {
             if (empty($configModel = AddonsConfig::find()->where([
                 'addons_name' => $model['name'],
-                'merchant_id' => $merchant_id
+                'merchant_id' => Yii::$app->services->merchant->getId()
             ])->one())) {
                 return [];
             }
@@ -197,7 +196,7 @@ class AddonHelper
         $configModel->addons_name = $model['name'];
 
         // 清理缓存
-        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'] . ':' . $configModel->merchant_id;
+        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'];
         Yii::$app->cache->delete($key);
         return $configModel->save();
     }

@@ -5,7 +5,7 @@ use Yii;
 use common\models\base\BaseModel;
 use common\models\wechat\Rule;
 use common\models\wechat\RuleKeyword;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\enums\StatusEnum;
 
 /**
@@ -135,7 +135,7 @@ class Addons extends BaseModel
     {
         $role = Yii::$app->services->authRole->getRole();
         return $this->hasOne(AuthItemChild::class, ['addons_name' => 'name'])
-            ->where(['is_menu' => StatusEnum::ENABLED, 'type' => AuthEnum::TYPE_BACKEND, 'role_id' => $role['id'] ?? -1])
+            ->where(['is_menu' => StatusEnum::ENABLED, 'app_id' => AppEnum::BACKEND, 'role_id' => $role['id'] ?? -1])
             ->orderBy('item_id asc');
     }
 

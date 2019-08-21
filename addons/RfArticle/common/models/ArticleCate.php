@@ -113,6 +113,7 @@ class ArticleCate extends \common\models\base\BaseModel
             ->asArray()
             ->all();
 
+        $models = ArrayHelper::itemsMerge($models);
         return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
     }
 

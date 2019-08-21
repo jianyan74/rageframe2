@@ -7,6 +7,7 @@ use common\helpers\ImageHelper;
 
 $this->title = '文件列表';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="row">
     <div class="col-xs-12">

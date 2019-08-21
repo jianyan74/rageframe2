@@ -29,7 +29,7 @@ use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 use common\components\Curd;
 use common\models\base\SearchModel;
-use <?= ltrim($generator->baseControllerClass, '\\') ?>;
+use backend\controllers\BaseController;
 
 /**
 * <?= $modelClass . "\n" ?>
@@ -37,7 +37,7 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 * Class <?= $controllerClass . "\n" ?>
 * @package <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) . "\n" ?>
 */
-class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
+class <?= $controllerClass ?> extends BaseController
 {
     use Curd;
 

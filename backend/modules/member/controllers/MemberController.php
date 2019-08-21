@@ -107,8 +107,7 @@ class MemberController extends BaseController
         $this->activeFormValidate($rechargeForm);
         if ($rechargeForm->load(Yii::$app->request->post())) {
             if (!$rechargeForm->save($member)) {
-                return $this->message($this->analyErr($rechargeForm->getFirstErrors()), $this->redirect(['index']),
-                    'error');
+                return $this->message($this->getError($rechargeForm), $this->redirect(['index']), 'error');
             }
 
             return $this->message('充值成功', $this->redirect(['index']));

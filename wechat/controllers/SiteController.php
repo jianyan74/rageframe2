@@ -76,11 +76,12 @@ class SiteController extends BaseController
         $totalFee = 100;// 支付金额单位：分
         $orderSn = time() . StringHelper::randomNum();// 订单号
         $out_trade_no = Yii::$app->services->pay->getOutTradeNo($totalFee, $orderSn, PayEnum::PAY_TYPE_WECHAT);
+
         $orderData = [
             'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
             'body' => '支付简单说明',
             'detail' => '支付详情',
-            'notify_url' => Url::toFront(['notify/wechat']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => Url::removeMerchantIdUrl('toFront', ['notify/wechat']), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'out_trade_no' => $out_trade_no, // 支付
             'total_fee' => $totalFee,
             'openid' => Yii::$app->params['wechatMember']['id'], // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，

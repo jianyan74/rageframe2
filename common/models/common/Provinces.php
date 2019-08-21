@@ -66,4 +66,13 @@ class Provinces extends \yii\db\ActiveRecord
             'sort' => '排序',
         ];
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(self::class, ['id' => 'pid'])
+            ->select(['id', 'title', 'pid']);
+    }
 }

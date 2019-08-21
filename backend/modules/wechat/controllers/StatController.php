@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -41,7 +42,7 @@ class StatController extends BaseController
 
         $request = Yii::$app->request;
         $from_date = $request->get('from_date', date('Y-m-d', strtotime("-6 day")));
-        $to_date = $request->get('to_date',date('Y-m-d'));
+        $to_date = $request->get('to_date', date('Y-m-d'));
 
         $models = Yii::$app->services->wechatFansStat->findBetweenByCreatedAt($from_date, $to_date);
         $stat = ArrayHelper::arrayKey($models, 'date');
@@ -64,20 +65,20 @@ class StatController extends BaseController
         }
 
         // 昨日关注
-        $yesterday =  $this->attention;
-        if($yesterdayModel = Yii::$app->services->wechatFansStat->findByCreatedAt(strtotime(date('Y-m-d')) - 60 * 60 * 24)) {
+        $yesterday = $this->attention;
+        if ($yesterdayModel = Yii::$app->services->wechatFansStat->findByCreatedAt(strtotime(date('Y-m-d')) - 60 * 60 * 24)) {
             $yesterday = ArrayHelper::merge($this->attention, $yesterdayModel);
             $yesterday['increase_attention'] = $yesterday['new_attention'] - $yesterday['cancel_attention'];
         }
 
         // 今日关注
         $today = $this->attention;
-        if($todayModel = Yii::$app->services->wechatFansStat->findByCreatedAt(strtotime(date('Y-m-d')))) {
+        if ($todayModel = Yii::$app->services->wechatFansStat->findByCreatedAt(strtotime(date('Y-m-d')))) {
             $today = ArrayHelper::merge($this->attention, $todayModel);
             $today['increase_attention'] = $today['new_attention'] - $today['cancel_attention'];
         }
 
-        return $this->render('fans-follow',[
+        return $this->render('fans-follow', [
             'models' => $models,
             'yesterday' => $yesterday,
             'today' => $today,
@@ -94,14 +95,14 @@ class StatController extends BaseController
      */
     public function actionRule()
     {
-        $request  = Yii::$app->request;
-        $from_date  = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
-        $to_date  = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
+        $request = Yii::$app->request;
+        $from_date = $request->get('from_date', date('Y-m-d', strtotime("-60 day")));
+        $to_date = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
 
         $data = RuleStat::find()
-            ->select(['merchant_id', 'rule_id','sum(hit) as hit','max(updated_at) as updated_at'])
+            ->select(['merchant_id', 'rule_id', 'sum(hit) as hit', 'max(updated_at) as updated_at'])
             ->groupBy(['rule_id'])
-            ->where(['between','created_at', strtotime($from_date), strtotime($to_date)])
+            ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
@@ -111,7 +112,7 @@ class StatController extends BaseController
             ->limit($pages->limit)
             ->all();
 
-        return $this->render('rule',[
+        return $this->render('rule', [
             'models' => $models,
             'pages' => $pages,
             'from_date' => $from_date,
@@ -131,19 +132,25 @@ class StatController extends BaseController
         $to_date = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
 
         $data = RuleKeywordStat::find()
-            ->select(['merchant_id', 'keyword_id','sum(hit) as hit','max(rule_id) as rule_id','max(updated_at) as updated_at'])
+            ->select([
+                'merchant_id',
+                'keyword_id',
+                'sum(hit) as hit',
+                'max(rule_id) as rule_id',
+                'max(updated_at) as updated_at'
+            ])
             ->groupBy(['keyword_id'])
             ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
-            ->with(['rule','ruleKeyword'])
+            ->with(['rule', 'ruleKeyword'])
             ->orderBy('updated_at desc')
             ->limit($pages->limit)
             ->all();
 
-        return $this->render('rule-keyword',[
+        return $this->render('rule-keyword', [
             'models' => $models,
             'pages' => $pages,
             'from_date' => $from_date,

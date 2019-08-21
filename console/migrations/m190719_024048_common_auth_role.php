@@ -14,7 +14,7 @@ class m190719_024048_common_auth_role extends Migration
             'id' => "int(10) NOT NULL AUTO_INCREMENT COMMENT '主键'",
             'merchant_id' => "int(10) unsigned NULL DEFAULT '0' COMMENT '商户id'",
             'title' => "varchar(50) NOT NULL DEFAULT '' COMMENT '标题'",
-            'type' => "varchar(20) NOT NULL DEFAULT '' COMMENT '类别'",
+            'app_id' => "varchar(20) NOT NULL DEFAULT '' COMMENT '应用'",
             'pid' => "int(10) unsigned NULL DEFAULT '0' COMMENT '上级id'",
             'level' => "tinyint(1) unsigned NULL DEFAULT '1' COMMENT '级别'",
             'sort' => "int(5) NULL DEFAULT '0' COMMENT '排序'",

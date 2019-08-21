@@ -5,6 +5,7 @@ use common\helpers\Html;
 
 $this->title = '客户授权';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">

@@ -7,6 +7,7 @@ use common\enums\WechatEnum;
 
 $this->title = '设计新插件';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">

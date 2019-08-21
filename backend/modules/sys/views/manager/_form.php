@@ -38,7 +38,7 @@ $actionLog = Yii::$app->services->actionLog->findByAppIdAndManagerId(Yii::$app->
                         <!-- /.widget-user -->
                     </div>
                     <div class="pull-right">
-                        <a href="<?= Url::to(['/sys/action-log/index']); ?>" class="openContab" data-title="行为日志">更多</a>
+                        <a href="<?= Url::to(['/common/action-log/index']); ?>" class="openContab blue" data-title="行为日志">更多</a>
                     </div>
                 </div>
             <?php } ?>

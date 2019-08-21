@@ -21,6 +21,7 @@ class DefaultController extends OnAuthController
 
     /**
     * 不用进行登录验证的方法
+    *
     * 例如： ['index', 'update', 'create', 'view', 'delete']
     * 默认全部需要验证
     *

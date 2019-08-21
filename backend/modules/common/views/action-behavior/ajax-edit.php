@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 use common\enums\StatusEnum;
@@ -26,6 +27,7 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'remark')->textInput() ?>
         <?= $form->field($model, 'method')->dropDownList($methodExplain) ?>
         <?= $form->field($model, 'is_record_post')->radioList(\common\enums\WhetherEnum::$listExplain) ?>
+        <?= $form->field($model, 'level')->dropDownList(\common\enums\MessageLevelEnum::$listExplain) ?>
         <?= $form->field($model, 'action')->radioList($actionExplain) ?>
         <?= $form->field($model, 'is_ajax')->radioList($ajaxExplain) ?>
         <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>

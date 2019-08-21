@@ -2,14 +2,16 @@
 namespace addons\RfArticle;
 
 use Yii;
+use yii\db\Migration;
 use backend\interfaces\AddonWidget;
 
 /**
  * 升级数据库
  *
  * Class Upgrade
- * @package addons\RfArticle */
-class Upgrade implements AddonWidget
+ * @package addons\RfArticle
+ */
+class Upgrade extends Migration implements AddonWidget
 {
     /**
      * @var array
@@ -27,17 +29,16 @@ class Upgrade implements AddonWidget
     */
     public function run($addon)
     {
+        $migration = new Migration();
         switch ($addon->version)
         {
             case '1.0.1' :
                 // 增加测试 - 冗余的字段
-                $sql = "ALTER TABLE rf_addon_example_curd ADD COLUMN redundancy_field varchar(48);";
-                // Yii::$app->getDb()->createCommand($sql)->execute();
+                // $migration->addColumn('{{%addon_example_curd}}', 'redundancy_field', 'varchar(48)');
                 break;
             case '1.0.2' :
                 // 删除测试 - 冗余的字段
-                $sql = "ALTER TABLE `rf_addon_example_curd` DROP `redundancy_field`;";
-                // Yii::$app->getDb()->createCommand($sql)->execute();
+                // $migration->dropColumn('{{%addon_example_curd}}', 'redundancy_field');
                 break;
         }
     }

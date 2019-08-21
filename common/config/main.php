@@ -1,7 +1,7 @@
 <?php
 return [
     'name' => 'RageFrame',
-    'version' => '2.3.65',
+    'version' => '2.3.94',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -11,7 +11,7 @@ return [
     'sourceLanguage' => 'zh-cn',
     'timeZone' => 'Asia/Shanghai',
     'bootstrap' => [
-        // 'queue', // 队列系统
+        'queue', // 队列系统
         'common\components\Init', // 加载默认的配置
     ],
     'components' => [
@@ -74,6 +74,9 @@ return [
             'userOptions' => [],  // 用户身份类参数
             'sessionParam' => 'wechatUser', // 微信用户信息将存储在会话在这个密钥
             'returnUrlParam' => '_wechatReturnUrl', // returnUrl 存储在会话中
+            'rebinds' => [
+                'cache' => 'common\components\WechatCache',
+            ]
         ],
     ],
     'modules' => [

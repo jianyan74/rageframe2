@@ -1,7 +1,8 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\Html;
-use leandrogehlen\treegrid\TreeGrid;
+use jianyan\treegrid\TreeGrid;
 
 $this->title = '角色管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -21,9 +22,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'dataProvider' => $dataProvider,
                     'keyColumnName' => 'id',
                     'parentColumnName' => 'pid',
-                    'parentRootValue' => '0', // first parentId value
+                    'parentRootValue' => $role['id'] ?? 0, // first parentId value
                     'pluginOptions' => [
-                        'initialState' => 'collapsed',
+                        // 'initialState' => 'collapsed',
                     ],
                     'options' => ['class' => 'table table-hover'],
                     'columns' => [
@@ -31,11 +32,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'attribute' => 'title',
                             'label' => '角色名称',
                             'format' => 'raw',
-                            'value' => function ($model, $key, $index, $column){
+                            'value' => function ($model, $key, $index, $column) {
                                 $str = Html::tag('span', $model['title'], [
                                     'class' => 'm-l-sm'
                                 ]);
-                                $str .= Html::a(' <i class="icon ion-android-add-circle"></i>', ['edit', 'pid' => $model['id']]);
+                                $str .= Html::a(' <i class="icon ion-android-add-circle"></i>',
+                                    ['edit', 'pid' => $model['id']]);
                                 return $str;
                             }
                         ],
@@ -44,23 +46,23 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'label' => '排序',
                             'format' => 'raw',
                             'headerOptions' => ['class' => 'col-md-1'],
-                            'value' => function ($model, $key, $index, $column){
-                                return  Html::sort($model['sort']);
+                            'value' => function ($model, $key, $index, $column) {
+                                return Html::sort($model['sort']);
                             }
                         ],
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{edit} {status} {delete}',
+                            'template' => '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) {
-                                    return Html::edit(['edit','id' => $model['id']]);
+                                    return Html::edit(['edit', 'id' => $model['id']]);
                                 },
                                 'status' => function ($url, $model, $key) {
                                     return Html::status($model['status']);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return Html::delete(['delete','id' => $model['id']]);
+                                    return Html::delete(['delete', 'id' => $model['id']]);
                                 },
                             ],
                         ],

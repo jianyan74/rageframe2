@@ -1,6 +1,8 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
+use common\enums\AppEnum;
 use common\helpers\DebrisHelper;
 
 $this->title = '行为日志';
@@ -24,7 +26,18 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                             'class' => 'yii\grid\SerialColumn',
                         ],
                         'app_id',
-                        'manager.username',
+                        [
+                            'label' => '用户',
+                            'value' => function ($model) {
+                                if (AppEnum::BACKEND == $model->app_id) {
+                                    return $model->manager->username;
+                                } elseif (in_array($model->app_id,
+                                    [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])) {
+                                    return $model->member->username;
+                                }
+                            },
+                            'filter' => false, //不显示搜索框
+                        ],
                         'behavior',
                         'url',
                         [
@@ -57,10 +70,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{view}',
+                            'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $model, $key) {
-                                    return Html::linkButton(['view','id' => $model->id], '查看详情', [
+                                    return Html::linkButton(['view', 'id' => $model->id], '查看详情', [
                                         'data-toggle' => 'modal',
                                         'data-target' => '#ajaxModalLg',
                                     ]);

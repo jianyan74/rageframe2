@@ -218,6 +218,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAssignment()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'id'])
-            ->where(['type' => Yii::$app->id]);
+            ->where(['app_id' => Yii::$app->id]);
     }
 }

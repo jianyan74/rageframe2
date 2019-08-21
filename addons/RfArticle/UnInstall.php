@@ -1,7 +1,9 @@
 <?php
+
 namespace addons\RfArticle;
 
 use Yii;
+use common\helpers\MigrateHelper;
 use backend\interfaces\AddonWidget;
 
 /**
@@ -13,32 +15,16 @@ use backend\interfaces\AddonWidget;
 class UnInstall implements AddonWidget
 {
     /**
-     * 表前缀
-     *
-     * @var string
-     */
-    protected $table_prefixion = "rf_addon_";
-
-    /**
-     * 列表
-     *
-     * @var array
-     */
-    protected $table_name = ['article', 'article_cate', 'article_single', 'article_tag', 'article_tag_map', 'article_adv'];
-
-    /**
      * @param $addon
      * @return mixed|void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function run($addon)
     {
-        $sql = "";
-        foreach ($this->table_name as $value) {
-            $table = $this->table_prefixion . $value;
-            $sql .= "DROP TABLE IF EXISTS `{$table}`;";
-        }
-
-        // 执行sql
-        Yii::$app->getDb()->createCommand($sql)->execute();
+        MigrateHelper::downByPath([
+            '@addons/RfArticle/console/migrations/'
+        ]);
     }
 }

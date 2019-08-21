@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <div class="normalPadding">
                             <div style="height: 160px;text-align:center;" class="backgroundCover relativePosition mainPostCover">
                                 <i class="fa fa-play-circle-o" style="font-size: 50px;margin:0 auto;padding-top: 30px"></i>
-                                <div class="bottomBar"><?= $model['file_name'] ?></div>
+                                <div class="bottomBar"><?= Html::encode($model['file_name']) ?></div>
                             </div>
                         </div>
                         <div class="flex-row hAlignCenter normalPadding postToolbar">

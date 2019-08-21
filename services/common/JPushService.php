@@ -1,4 +1,5 @@
 <?php
+
 namespace services\common;
 
 use Yii;
@@ -31,7 +32,6 @@ class JPushService extends Service
     /**
      * @param string $form
      * @param $message
-     * @throws \yii\base\InvalidConfigException
      */
     public function send($form = 'all', $message)
     {

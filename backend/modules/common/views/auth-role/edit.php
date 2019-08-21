@@ -25,8 +25,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-body">
                 <?= $form->field($model, 'pid')->dropDownList($dropDownList) ?>
                 <?= $form->field($model, 'title')->textInput(); ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
-                <?php // = $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-5"><div id="userTree"></div></div>
                 <div class="col-sm-5"><div id="plugTree"></div></div>
@@ -175,7 +175,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 plugTreeIds : plugTreeIds
             },
             success : function(data){
-                if (data.code == 200) {
+                if (parseInt(data.code) === 200) {
                     window.location = "<?= Url::to(['index'])?>";
                 } else {
                     rfError(data.message);

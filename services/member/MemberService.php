@@ -21,7 +21,7 @@ class MemberService extends Service
     protected $member;
 
     /**
-     * @param $member
+     * @param Member $member
      * @return $this
      */
     public function set(Member $member)
@@ -32,11 +32,11 @@ class MemberService extends Service
 
     /**
      * @param $id
-     * @return array|Member|null|\yii\db\ActiveRecord
+     * @return array|Member|\yii\db\ActiveRecord|null
      */
     public function get($id)
     {
-        if (!$this->member) {
+        if (!$this->member || $this->member['id'] != $id) {
             $this->member = Member::find()
                 ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
                 ->andFilterWhere(['merchant_id' => $this->getMerchantId()])

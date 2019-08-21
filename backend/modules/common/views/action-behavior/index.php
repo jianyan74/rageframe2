@@ -1,7 +1,9 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
+use common\enums\MessageLevelEnum;
 
 $this->title = '行为监控';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -16,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -41,7 +43,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'class' => 'form-control'
                             ])
                         ],
-                        'remark',
                         [
                             'attribute' => 'action',
                             'value' => function ($model, $key, $index, $column) use ($actionExplain) {
@@ -70,21 +71,31 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 return Html::whether($model->is_record_post);
                             },
                             'format' => 'raw',
-                            'filter' => Html::activeDropDownList($searchModel, 'is_record_post', WhetherEnum::$listExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'is_record_post',
+                                WhetherEnum::$listExplain, [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
                             )
                         ],
                         [
-                            'attribute' => 'created_at',
-                            'filter' => false, //不显示搜索框
-                            'format' => ['date', 'php:Y-m-d H:i:s'],
+                            'attribute' => 'level',
+                            'value' => function ($model, $key, $index, $column) {
+                                return MessageLevelEnum::$listExplain[$model->level] ?? '';
+                            },
+                            'format' => 'raw',
+                            'filter' => Html::activeDropDownList($searchModel, 'level',
+                                MessageLevelEnum::$listExplain, [
+                                    'prompt' => '全部',
+                                    'class' => 'form-control'
+                                ]
+                            )
                         ],
+                        'remark',
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{ajax-edit} {status} {delete}',
+                            'template' => '{ajax-edit} {status} {delete}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [
@@ -96,12 +107,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::status($model->status);
                                 },
                                 'delete' => function ($url, $model, $key) {
-                                    return Html::delete(['delete','id' => $model->id]);
+                                    return Html::delete(['delete', 'id' => $model->id]);
                                 },
                             ],
                         ],
                     ],
                 ]); ?>
+            </div>
         </div>
     </div>
-</div>

@@ -26,29 +26,46 @@ class AddonsService extends Service
      */
     public function getMenus()
     {
+        $with = ['authChildMenuByBackend'];
+        Yii::$app->services->auth->isSuperAdmin() && $with = ['bindingIndexMenu'];
+
         $models = Addons::find()
             ->select(['title', 'name', 'group'])
-            ->with(['bindingIndexMenu', 'authChildMenuByBackend'])
+            ->with($with)
             ->asArray()
             ->all();
+
+        // 所有菜单信息
+        $allAddonsMenu = [];
+        if (!Yii::$app->services->auth->isSuperAdmin()) {
+            $data = array_column($models, 'authChildMenuByBackend');
+            $names = array_column($data, 'addons_name');
+            $allAddonsMenu = Yii::$app->services->addonsBinding->regroupMenuByNames($names);
+        }
 
         foreach ($models as $k => &$model) {
             $addon = StringHelper::toUnderScore($model['name']);
 
             // 超级管理员
             if (Yii::$app->services->auth->isSuperAdmin()) {
-                if (isset($model['bindingIndexMenu']['route'])) {
-                    $url = ['/addons/' . $addon . '/' . $model['bindingIndexMenu']['route']];
-                    $params = $model['bindingIndexMenu']['params'] ? Json::decode($model['bindingIndexMenu']['params']) : [];
+                $bindingIndexMenu = $model['bindingIndexMenu'];
+
+                if (isset($bindingIndexMenu['route'])) {
+                    $url = ['/addons/' . $addon . '/' . $bindingIndexMenu['route']];
+                    $params = isset($bindingIndexMenu['params']) ? Json::decode($bindingIndexMenu['params']) : [];
                     $model['menuUrl'] = Url::to(ArrayHelper::merge($url, $params));
                 }
 
                 empty($model['menuUrl']) && $model['menuUrl'] = Url::to(['/addons/blank', 'addon' => StringHelper::toUnderScore($model['name'])]);
                 $model['menuUrl'] = urldecode($model['menuUrl']);
             } else {
-                if (isset($model['authChildMenuByBackend']['name'])) {
-                    $url = ['/addons/' . $addon . '/' . $model['authChildMenuByBackend']['name']];
-                    $params = isset($model['authChildMenuByBackend']['params']) ? Json::decode($model['authChildMenuByBackend']['params']) : [];
+                $authChildMenuByBackend = $model['authChildMenuByBackend'];
+
+                if (isset($authChildMenuByBackend['name'])) {
+                    $url = ['/addons/' . $addon . '/' . $authChildMenuByBackend['name']];
+                    // 查询全部的菜单列表进行匹配显示url
+                    $key = $authChildMenuByBackend['addons_name'] . '|' . $authChildMenuByBackend['name'];
+                    $params = isset($allAddonsMenu[$key]) ? Json::decode($allAddonsMenu[$key]['params']) : [];
                     $model['menuUrl'] = Url::to(ArrayHelper::merge($url, $params));
                 }
 
@@ -99,6 +116,8 @@ class AddonsService extends Service
     }
 
     /**
+     * 获取本地插件列表
+     *
      * @return array
      */
     public function getLocalList()
@@ -135,6 +154,8 @@ class AddonsService extends Service
     }
 
     /**
+     * 获取列表
+     *
      * @return array|\yii\db\ActiveRecord[]
      */
     public function getList()

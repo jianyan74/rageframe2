@@ -6,7 +6,7 @@ use common\models\base\SearchModel;
 use common\components\Curd;
 use common\models\sys\Manager;
 use common\enums\StatusEnum;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\helpers\ArrayHelper;
 use backend\modules\sys\forms\ManagerForm;
 
@@ -111,7 +111,7 @@ class ManagerController extends BaseController
 
         // 角色信息
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList(AuthEnum::TYPE_BACKEND, $role);
+        $childRoles = Yii::$app->services->authRole->getChildList(AppEnum::BACKEND, $role);
         $roles = ArrayHelper::itemsMerge($childRoles, $role['id'] ?? 0);
         $roles = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($roles, 'id', 'title', isset($role['level']) ? $role['level'] + 1 : 1), 'id', 'title');
 

@@ -1,13 +1,14 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\widgets\selector\Select;
-?>
 
-<?php $form = ActiveForm::begin([
-        'id' => 'sendMessage'
-]); ?>
+$form = ActiveForm::begin([
+    'id' => 'sendMessage'
+]);
+?>
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -23,11 +24,11 @@ use backend\widgets\selector\Select;
                 <td class="feed-element">
                     <img src="<?= $model->head_portrait ?>" class="img-circle img-bordered-sm" width="48" height="48">
                 </td>
-                <td><?= $model['nickname']?></td>
+                <td><?= Html::encode($model['nickname']) ?></td>
             </tr>
             <tr>
                 <td>粉丝编号</td>
-                <td><?= $model['openid']?></td>
+                <td><?= Html::encode($model['openid']) ?></td>
             </tr>
             </tbody>
         </table>
@@ -36,7 +37,8 @@ use backend\widgets\selector\Select;
         <div class="col-sm-12">
             <div class="nav-tabs-custom" style="box-shadow: 0 1px 1px rgba(0,0,0,0);">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true" onclick="setType('text')">内容</a></li>
+                    <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"
+                                          onclick="setType('text')">内容</a></li>
                     <li><a data-toggle="tab" href="#tab-2" aria-expanded="false" onclick="setType('image')">图片</a></li>
                     <li><a data-toggle="tab" href="#tab-3" aria-expanded="false" onclick="setType('news')">图文</a></li>
                     <li><a data-toggle="tab" href="#tab-4" aria-expanded="false" onclick="setType('video')">视频</a></li>
@@ -48,7 +50,7 @@ use backend\widgets\selector\Select;
                             <?= Html::textarea('content', '', [
                                 'class' => 'form-control',
                                 'id' => 'text',
-                            ])?>
+                            ]) ?>
                         </div>
                     </div>
                     <div id="tab-2" class="tab-pane">
@@ -56,7 +58,7 @@ use backend\widgets\selector\Select;
                             <?= Select::widget([
                                 'name' => 'image',
                                 'type' => 'image',
-                            ])?>
+                            ]) ?>
                         </div>
                     </div>
                     <div id="tab-3" class="tab-pane">
@@ -64,7 +66,7 @@ use backend\widgets\selector\Select;
                             <?= Select::widget([
                                 'name' => 'news',
                                 'type' => 'news',
-                            ])?>
+                            ]) ?>
                         </div>
                     </div>
                     <div id="tab-4" class="tab-pane">
@@ -72,7 +74,7 @@ use backend\widgets\selector\Select;
                             <?= Select::widget([
                                 'name' => 'video',
                                 'type' => 'video',
-                            ])?>
+                            ]) ?>
                         </div>
                     </div>
                     <div id="tab-5" class="tab-pane">
@@ -80,7 +82,7 @@ use backend\widgets\selector\Select;
                             <?= Select::widget([
                                 'name' => 'voice',
                                 'type' => 'voice',
-                            ])?>
+                            ]) ?>
                         </div>
                     </div>
                     <div class="col-sm-12">注意：三天内有互动的才可发送消息</div>
@@ -90,7 +92,7 @@ use backend\widgets\selector\Select;
     </div>
 </div>
 
-<?= Html::hiddenInput('type', 'text', ['id' => 'type'])?>
+<?= Html::hiddenInput('type', 'text', ['id' => 'type']) ?>
 
 <div class="modal-footer">
     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
@@ -135,15 +137,15 @@ use backend\widgets\selector\Select;
         }
 
         $.ajax({
-            type:"post",
-            url:"<?= Url::to(['/wechat/fans/send-message', 'openid' => $model->openid])?>",
+            type: "post",
+            url: "<?= Url::to(['/wechat/fans/send-message', 'openid' => $model->openid])?>",
             dataType: "json",
             data: $("#sendMessage").serialize(),
-            success: function(data){
-                if(data.code == 200) {
+            success: function (data) {
+                if (data.code == 200) {
                     $('.close').click();
                     rfAffirm('发送成功');
-                }else{
+                } else {
                     rfWarning(data.message);
                 }
             }

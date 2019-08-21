@@ -80,6 +80,7 @@
 
 #### 附录
 
+- [安全防范](php-safety.md)
 - [SearchModel](component-search-model.md)
 - Curd
 - [应用配置独立域名](independent-app-domain-name.md)

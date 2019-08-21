@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -33,7 +34,7 @@ class ReplyDefaultController extends BaseController
         $keyword = ArrayHelper::map($keyword, 'content', 'content');
         $keyword = ArrayHelper::merge([' ' => '不触发关键字'], $keyword);
 
-        return $this->render('index',[
+        return $this->render('index', [
             'model' => $model,
             'keyword' => $keyword
         ]);

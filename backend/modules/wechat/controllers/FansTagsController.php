@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -37,7 +38,7 @@ class FansTagsController extends BaseController
             }
         }
 
-        return $this->render('index',[
+        return $this->render('index', [
             'tags' => Yii::$app->services->wechatFansTags->getList()
         ]);
     }

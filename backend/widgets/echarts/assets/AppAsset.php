@@ -19,11 +19,12 @@ class AppAsset extends AssetBundle
 
     public $js = [
         'echarts.min.js',
-        // 'theme/macarons.js',
-        // 'theme/purple-passion.js',
-        // 'theme/roma.js',
+        'extension/bmap.js',
+        'theme/macarons.js',
+        'theme/purple-passion.js',
+        'theme/roma.js',
         'theme/walden.js',
-        // 'theme/westeros.js',
-        // 'theme/wonderland.js',
+        'theme/westeros.js',
+        'theme/wonderland.js',
     ];
 }

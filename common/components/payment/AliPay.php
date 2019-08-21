@@ -172,7 +172,7 @@ class AliPay
     {
         $gateway = $this->create();
         $request = $gateway->refund();
-        $response = $request->setBizContent($info);
+        $response = $request->setBizContent($info)->send();
 
         return $response->getData();
     }

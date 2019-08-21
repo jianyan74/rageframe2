@@ -10,8 +10,8 @@ use common\enums\StatusEnum;
  * @property string $role_id 角色id
  * @property string $item_id 权限id
  * @property string $name 别名
- * @property string $type 类别
- * @property string $type_child 子类别
+ * @property string $app_id 类别
+ * @property string $type 子类别
  * @property string $addons_name 插件名称
  */
 class AuthItemChild extends \yii\db\ActiveRecord
@@ -32,7 +32,7 @@ class AuthItemChild extends \yii\db\ActiveRecord
         return [
             [['role_id', 'item_id', 'is_menu'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['type', 'type_child'], 'string', 'max' => 20],
+            [['app_id', 'type'], 'string', 'max' => 20],
             [['addons_name'], 'string', 'max' => 100],
         ];
     }
@@ -43,12 +43,12 @@ class AuthItemChild extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'role_id' => 'Role ID',
-            'item_id' => 'Item ID',
-            'name' => 'Name',
-            'type' => 'Type',
-            'type_child' => 'Type Child',
-            'addons_name' => 'Addons Name',
+            'role_id' => '角色id',
+            'item_id' => '权限id',
+            'name' => '权限标识',
+            'app_id' => '应用',
+            'type' => '类型',
+            'addons_name' => '插件名称',
             'is_menu' => '是否菜单',
         ];
     }
@@ -61,6 +61,6 @@ class AuthItemChild extends \yii\db\ActiveRecord
         return $this->hasOne(AuthItem::class, ['id' => 'item_id'])
             ->orderBy('sort asc, id asc')
             ->where(['status' => StatusEnum::ENABLED])
-            ->select(['id', 'title', 'name', 'pid', 'level', 'type', 'type_child', 'addons_name', 'is_menu']);
+            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'type', 'addons_name', 'is_menu']);
     }
 }

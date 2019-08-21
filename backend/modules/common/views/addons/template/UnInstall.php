@@ -2,9 +2,12 @@
 
 echo "<?php\n";
 ?>
+
 namespace addons\<?= $model->name;?>;
 
 use Yii;
+use yii\db\Migration;
+use common\helpers\MigrateHelper;
 use backend\interfaces\AddonWidget;
 
 /**
@@ -13,36 +16,19 @@ use backend\interfaces\AddonWidget;
  * Class UnInstall
  * @package addons\<?= $model->name . "\r";?>
  */
-class UnInstall implements AddonWidget
+class UnInstall extends Migration implements AddonWidget
 {
-    /**
-     * 表前缀
-     *
-     * @var string
-     */
-    protected $table_prefixion = "rf_addon_example_";
-
-    /**
-     * 列表
-     *
-     * @var array
-     */
-    protected $table_name = ['curd'];
-
     /**
     * @param $addon
     * @return mixed|void
-    * @throws \yii\db\Exception
+    * @throws \yii\base\InvalidConfigException
+    * @throws \yii\web\NotFoundHttpException
+    * @throws \yii\web\UnprocessableEntityHttpException
     */
     public function run($addon)
     {
-        $sql = "";
-        foreach ($this->table_name as $value) {
-            $table = $this->table_prefixion . $value;
-            $sql .= "DROP TABLE IF EXISTS `{$table}`;";
-        }
-
-        // 执行sql
-        // Yii::$app->getDb()->createCommand($sql)->execute();
+        // MigrateHelper::downByPath([
+        //     '@addons/<?= $model->name;?>/console/migrations/'
+        // ]);
     }
 }

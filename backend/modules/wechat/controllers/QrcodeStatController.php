@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -38,7 +39,7 @@ class QrcodeStatController extends BaseController
         $data = QrcodeStat::find()
             ->andFilterWhere(['like', 'name', $keyword])
             ->andFilterWhere(['type' => $type])
-            ->andFilterWhere(['between','created_at', strtotime($from_date), strtotime($to_date)]);
+            ->andFilterWhere(['between', 'created_at', strtotime($from_date), strtotime($to_date)]);
 
         $attention_data = clone $data;
         $scan_data = clone $data;
@@ -58,7 +59,7 @@ class QrcodeStatController extends BaseController
             ->andWhere(['type' => QrcodeStat::TYPE_SCAN])
             ->count();
 
-        return $this->render('index',[
+        return $this->render('index', [
             'models' => $models,
             'pages' => $pages,
             'type' => $type,

@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\sys\controllers;
 
 use Yii;
@@ -19,7 +20,7 @@ class NotifyAnnounceController extends BaseController
     use Curd;
 
     /**
-     * @var \yii\db\ActiveRecord
+     * @var Notify
      */
     public $modelClass = Notify::class;
 

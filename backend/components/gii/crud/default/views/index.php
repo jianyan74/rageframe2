@@ -15,7 +15,6 @@ echo "<?php\n";
 use common\helpers\Html;
 use common\helpers\Url;
 use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
-<?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -34,11 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
             <div class="box-body table-responsive">
-<?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : '' ?>
-<?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
-<?php endif; ?>
-
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
         'dataProvider' => $dataProvider,
@@ -60,9 +54,10 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         }
     }
 } else {
+    $listFields = $generator->listFields ?? [];
     foreach ($tableSchema->columns as $column) {
         $format = $generator->generateColumnFormat($column);
-        if (++$count < 6) {
+        if (in_array($column->name, $listFields)) {
             echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         } else {
             echo "            //'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
@@ -70,7 +65,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 }
 ?>
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '操作',
@@ -98,7 +92,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         },
     ]) ?>
 <?php endif; ?>
-<?= $generator->enablePjax ? "    <?php Pjax::end(); ?>\n" : '' ?>
             </div>
         </div>
     </div>

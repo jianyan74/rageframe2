@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $role_id
  * @property int $user_id
- * @property string $type 类型
+ * @property string $app_id 类型
  */
 class AuthAssignment extends \yii\db\ActiveRecord
 {
@@ -29,7 +29,7 @@ class AuthAssignment extends \yii\db\ActiveRecord
         return [
             [['role_id', 'user_id'], 'required'],
             [['role_id', 'user_id'], 'integer'],
-            [['type'], 'string', 'max' => 20],
+            [['app_id'], 'string', 'max' => 20],
         ];
     }
 
@@ -41,7 +41,7 @@ class AuthAssignment extends \yii\db\ActiveRecord
         return [
             'role_id' => '角色',
             'user_id' => '用户',
-            'type' => '类别',
+            'app_id' => '应用',
         ];
     }
 

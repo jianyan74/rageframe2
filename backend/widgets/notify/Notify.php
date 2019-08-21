@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\notify;
 
 use Yii;
@@ -19,6 +20,8 @@ class Notify extends Widget
     {
         // 拉取公告
         Yii::$app->services->sysNotify->pullAnnounce(Yii::$app->user->id, Yii::$app->user->identity->created_at);
+        // 拉取订阅
+        Yii::$app->services->sysNotify->pullRemind(Yii::$app->user->id);
         // 获取当前通知
         list($notify, $notifyPage) = Yii::$app->services->sysNotify->getUserNotify(Yii::$app->user->id);
 

@@ -17,6 +17,3 @@ use common\helpers\Url;
         ]
     ])?>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-</div>

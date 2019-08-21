@@ -13,7 +13,7 @@ class m190719_024048_common_addons_binding extends Migration
         $this->createTable('{{%common_addons_binding}}', [
             'id' => "int(11) NOT NULL AUTO_INCREMENT COMMENT '主键'",
             'addons_name' => "varchar(100) NOT NULL DEFAULT '' COMMENT '插件名称'",
-            'type' => "varchar(20) NOT NULL DEFAULT '' COMMENT '类别'",
+            'app_id' => "varchar(20) NOT NULL DEFAULT '' COMMENT '应用'",
             'entry' => "varchar(10) NOT NULL DEFAULT '' COMMENT '入口类别[menu,cover]'",
             'title' => "varchar(50) NOT NULL DEFAULT '' COMMENT '名称'",
             'route' => "varchar(30) NOT NULL DEFAULT '' COMMENT '路由'",

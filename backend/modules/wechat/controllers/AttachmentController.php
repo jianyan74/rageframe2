@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\controllers;
 
 use Yii;
@@ -33,7 +34,7 @@ class AttachmentController extends BaseController
             ->where(['media_type' => $type, 'status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['like', 'file_name', $keywords]);
-        $pages = new Pagination(['totalCount' =>$data->count(), 'pageSize' => 15]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 15]);
         $type == Attachment::TYPE_NEWS && $data = $data->with('news');
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -85,7 +86,7 @@ class AttachmentController extends BaseController
             }
         }
 
-        return $this->render('news-edit',[
+        return $this->render('news-edit', [
             'attachment' => $attachment,
             'list' => Yii::$app->services->wechatAttachmentNews->formattingList($attach_id),
         ]);
@@ -111,7 +112,7 @@ class AttachmentController extends BaseController
             }
         }
 
-        return $this->renderAjax($type . '-create',[
+        return $this->renderAjax($type . '-create', [
             'model' => $model
         ]);
     }
@@ -172,7 +173,7 @@ class AttachmentController extends BaseController
             }
         }
 
-        return $this->renderAjax('preview',[
+        return $this->renderAjax('preview', [
             'model' => $model,
         ]);
     }
@@ -204,11 +205,12 @@ class AttachmentController extends BaseController
 
                 return $this->message('发送成功', $this->redirect(['attachment/index', 'type' => $mediaType]));
             } catch (\Exception $e) {
-                return $this->message($e->getMessage(), $this->redirect(['attachment/index', 'type' => $mediaType]), 'error');
+                return $this->message($e->getMessage(), $this->redirect(['attachment/index', 'type' => $mediaType]),
+                    'error');
             }
         }
 
-        return $this->renderAjax('send',[
+        return $this->renderAjax('send', [
             'model' => $model,
             'tags' => Yii::$app->services->wechatFansTags->getList(),
         ]);

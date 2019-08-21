@@ -5,6 +5,7 @@ use common\helpers\Url;
 
 $this->title = '修改密码';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">

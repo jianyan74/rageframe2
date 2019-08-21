@@ -52,20 +52,12 @@ class BaseController extends Controller
             return false;
         }
 
-        $requestedRoute = Yii::$app->requestedRoute;
-        // 默认首页判空
-        if (empty($requestedRoute)) {
-            $requestedRoute = Yii::$app->controller->id . '/'. Yii::$app->controller->action->id;
-        }
-
         // 判断当前模块的是否为主模块, 模块+控制器+方法
-        $permissionName = '/' . $requestedRoute;
-
+        $permissionName = '/' . Yii::$app->controller->route;
         // 判断是否忽略校验
         if (in_array($permissionName, Yii::$app->params['noAuthRoute'])) {
             return true;
         }
-
         // 开始权限校验
         if (!Auth::verify($permissionName)) {
             throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');

@@ -1,4 +1,5 @@
 <?php
+
 namespace services\common;
 
 use Yii;
@@ -24,6 +25,7 @@ class ProvincesService extends Service
             $data = Provinces::find()
                 ->select(['id', 'title', 'pid', 'level'])
                 ->where(['<=', 'level', 4])
+                ->orderBy('id asc')
                 ->asArray()
                 ->all();
 
@@ -156,7 +158,7 @@ class ProvincesService extends Service
             '港澳台' => [
                 '香港特别行政区',
                 '澳门特别行政区',
-                '台湾',
+                '台湾省',
             ],
         ];
 
@@ -184,7 +186,22 @@ class ProvincesService extends Service
     {
         return Provinces::find()
             ->select(['id', 'title', 'pid', 'level'])
+            ->orderBy('id asc')
             ->where(['in', 'id', $ids])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * @param $titles
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getListByTitles($titles)
+    {
+        return Provinces::find()
+            ->select(['id', 'title', 'lng', 'lat'])
+            ->orderBy('id asc')
+            ->where(['in', 'title', $titles])
             ->asArray()
             ->all();
     }
@@ -203,6 +220,7 @@ class ProvincesService extends Service
 
         $model = Provinces::find()
             ->where(['pid' => $pid])
+            ->orderBy('id asc')
             ->select(['id', 'title', 'pid'])
             ->andFilterWhere(['level' => $level])
             ->cache(600)
@@ -235,7 +253,7 @@ class ProvincesService extends Service
      */
     public function getCityListName(array $ids)
     {
-        if ($provinces = Provinces::find()->where(['in', 'id', $ids])->all()) {
+        if ($provinces = Provinces::find()->where(['in', 'id', $ids])->orderBy('id asc')->all()) {
             $address = '';
 
             foreach ($provinces as $province) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\sys\forms;
 
 use Yii;
@@ -168,7 +169,8 @@ class Database
             $result = $db->createCommand("SELECT * FROM `{$table}` LIMIT {$start}, 1000")->queryAll();
             foreach ($result as $row) {
                 $row = array_map('addslashes', $row);
-                $sql = "INSERT INTO `{$table}` VALUES ('" . str_replace(array("\r", "\n"), array('\r', '\n'), implode("', '", $row)) . "');\n";
+                $sql = "INSERT INTO `{$table}` VALUES ('" . str_replace(array("\r", "\n"), array('\r', '\n'),
+                        implode("', '", $row)) . "');\n";
                 if (false === $this->write($sql)) {
                     return false;
                 }
@@ -216,8 +218,10 @@ class Database
                 }
 
                 $sql = '';
-            } else if ($this->config['compress'] ? gzeof($gz) : feof($gz)) {
-                return 0;
+            } else {
+                if ($this->config['compress'] ? gzeof($gz) : feof($gz)) {
+                    return 0;
+                }
             }
         }
 

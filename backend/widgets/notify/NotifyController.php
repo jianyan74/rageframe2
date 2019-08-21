@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\notify;
 
 use Yii;
@@ -57,7 +58,10 @@ class NotifyController extends BaseController
      */
     public function actionAnnounceView($id)
     {
-        if (empty($id) || empty(($model = NotifyManager::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED])->one()))) {
+        if (empty($id) || empty(($model = NotifyManager::find()->where([
+                'id' => $id,
+                'status' => StatusEnum::ENABLED
+            ])->one()))) {
             return $this->message('找不到该公告', $this->redirect(['index']), 'error');
         }
 
@@ -97,11 +101,52 @@ class NotifyController extends BaseController
         if ($data = $dataProvider->getModels()) {
             $ids = [];
             foreach ($data as $datum) {
-                $ids[] = $datum->notify_id;
+                $datum['is_read'] == 0 && $ids[] = $datum->notify_id;
             }
 
-            // 设置私信为已读
-            Yii::$app->services->sysNotify->read(Yii::$app->user->id, $ids);
+            // 设置消息为已读
+            !empty($ids) && Yii::$app->services->sysNotify->read(Yii::$app->user->id, $ids);
+        }
+
+        return $this->render($this->view . $this->action->id, [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * 私信
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionRemind()
+    {
+        $searchModel = new SearchModel([
+            'model' => NotifyManager::class,
+            'scenario' => 'default',
+            'partialMatchAttributes' => ['content'], // 模糊查询
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ],
+            'pageSize' => $this->pageSize
+        ]);
+
+        $dataProvider = $searchModel
+            ->search(Yii::$app->request->queryParams);
+        $dataProvider->query
+            ->with(['notifySenderForManager'])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['type' => Notify::TYPE_REMIND, 'manager_id' => Yii::$app->user->id]);
+
+        if ($data = $dataProvider->getModels()) {
+            $ids = [];
+            foreach ($data as $datum) {
+                $datum['is_read'] == 0 && $ids[] = $datum->notify_id;
+            }
+
+            // 设置消息为已读
+            !empty($ids) && Yii::$app->services->sysNotify->read(Yii::$app->user->id, $ids);
         }
 
         return $this->render($this->view . $this->action->id, [

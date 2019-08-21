@@ -21,12 +21,19 @@ if (!YII_ENV_TEST) {
         'class' => 'yii\gii\Module',
         'generators' => [
             'crud' => [
-                'class' => yii\gii\generators\crud\Generator::class,
+                'class' => \backend\components\gii\crud\Generator::class,
                 'templates' => [
-                    'default' => '@vendor/yiisoft/yii2-gii/src/generators/crud/default',
                     'rageframe' => '@backend/components/gii/crud/default',
+                    'default' => '@vendor/yiisoft/yii2-gii/src/generators/crud/default',
                 ]
-            ]
+            ],
+            'model' => [
+                'class' => \yii\gii\generators\model\Generator::class,
+                'templates' => [
+                    'rageframe' => '@backend/components/gii/model/default',
+                    'default' => '@vendor/yiisoft/yii2-gii/src/generators/model/default',
+                ]
+            ],
         ],
     ];
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\sys\forms;
 
 use Yii;
@@ -31,7 +32,7 @@ class PasswdForm extends Model
             [['passwd', 'passwd_new', 'passwd_repetition'], 'filter', 'filter' => 'trim'],
             [['passwd', 'passwd_new', 'passwd_repetition'], 'required'],
             [['passwd', 'passwd_new', 'passwd_repetition'], 'string', 'min' => 6, 'max' => 15],
-            [['passwd_repetition'], 'compare','compareAttribute' => 'passwd_new'],// 验证新密码和重复密码是否相等
+            [['passwd_repetition'], 'compare', 'compareAttribute' => 'passwd_new'],// 验证新密码和重复密码是否相等
             ['passwd', 'validatePassword'],
             ['passwd_new', 'notCompare'],
         ];
@@ -51,8 +52,7 @@ class PasswdForm extends Model
      */
     public function notCompare($attribute)
     {
-        if ($this->passwd == $this->passwd_new)
-        {
+        if ($this->passwd == $this->passwd_new) {
             $this->addError($attribute, '新密码不能和原密码相同');
         }
     }
@@ -65,11 +65,9 @@ class PasswdForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
-        if (!$this->hasErrors())
-        {
+        if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->passwd))
-            {
+            if (!$user || !$user->validatePassword($this->passwd)) {
                 $this->addError($attribute, '原密码不正确');
             }
         }
@@ -82,8 +80,7 @@ class PasswdForm extends Model
      */
     protected function getUser()
     {
-        if ($this->_user === null)
-        {
+        if ($this->_user === null) {
             $this->_user = Manager::findByUsername(Yii::$app->user->identity->username);
         }
 

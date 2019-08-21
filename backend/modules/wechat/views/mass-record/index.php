@@ -1,9 +1,8 @@
 <?php
-use common\helpers\Url;
+
 use yii\widgets\LinkPager;
 use common\helpers\Html;
 use common\enums\StatusEnum;
-use common\helpers\Auth;
 
 $this->title = '定时群发';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
@@ -37,9 +36,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <?php foreach($models as $model){ ?>
                         <tr>
                             <td><?= $model->id; ?></td>
-                            <td><?= $model->tag_name ?></td>
-                            <td><span class="label label-info"><?= $model->module ?></span></td>
-                            <td><?= $model->fans_num?></td>
+                            <td><?= Html::encode($model->tag_name) ?></td>
+                            <td><span class="label label-info"><?= Html::encode($model->module) ?></span></td>
+                            <td><?= $model->fans_num ?></td>
                             <td>
                                 预计：<?= Yii::$app->formatter->asDatetime($model->send_time) ?><br>
                                 实际：<?= !empty($model->final_send_time) ? Yii::$app->formatter->asDatetime($model->final_send_time) : '暂无'  ?>

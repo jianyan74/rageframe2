@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'form' => $form,
             ]); ?>
             <!-- /.box-body -->
-            <div class="box-footer hide">
+            <div class="box-footer">
                 <div class="col-sm-12 text-center">
                     <button class="btn btn-primary" type="submit">保存</button>
                     <span class="btn btn-white" onclick="history.go(-1)">返回</span>

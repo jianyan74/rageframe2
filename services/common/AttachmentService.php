@@ -95,8 +95,7 @@ class AttachmentService extends Service
 
         // 如果是以文件形式上传的图片手动修改为图片类型显示
         foreach ($models as &$model) {
-            $model['upload_type'] = UploadHelper::formattingFileType($model['specific_type'], $model['extension'],
-                $model['upload_type']);
+            $model['upload_type'] = UploadHelper::formattingFileType($model['specific_type'], $model['extension'], $model['upload_type']);
             $model['size'] = Yii::$app->formatter->asShortSize($model['size'], 2);
         }
 

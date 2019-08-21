@@ -7,6 +7,7 @@ use common\helpers\AddonHelper;
 
 $this->title = '已安装的插件';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">

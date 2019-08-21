@@ -1,11 +1,13 @@
 <?php
+
 namespace services\common;
 
-use common\models\common\Addons;
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
-use common\enums\AuthEnum;
+use common\enums\AuthTypeEnum;
+use common\enums\AppEnum;
+use common\models\common\Addons;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\common\AuthItem;
@@ -46,22 +48,22 @@ class AuthItemService extends Service
             [
                 'name' => Addons::AUTH_COVER,
                 'title' => '应用入口',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'app_id' => AppEnum::BACKEND,
+                'type' => AuthTypeEnum::TYPE_ADDONS,
                 'addons_name' => $name,
             ],
             [
                 'name' => Addons::AUTH_RULE,
                 'title' => '规则回复',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'app_id' => AppEnum::BACKEND,
+                'type' => AuthTypeEnum::TYPE_ADDONS,
                 'addons_name' => $name,
             ],
             [
                 'name' => Addons::AUTH_SETTING,
                 'title' => '参数设置',
-                'type' => AuthEnum::TYPE_BACKEND,
-                'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                'app_id' => AppEnum::BACKEND,
+                'type' => AuthTypeEnum::TYPE_ADDONS,
                 'addons_name' => $name,
             ],
         ];
@@ -73,13 +75,14 @@ class AuthItemService extends Service
                 $data = [
                     'name' => $k,
                     'title' => $value,
-                    'type' => $key,
-                    'type_child' => AuthEnum::TYPE_CHILD_ADDONS,
+                    'app_id' => $key,
+                    'type' => AuthTypeEnum::TYPE_ADDONS,
                     'addons_name' => $name,
+                    // 'params' => $name,
                 ];
 
                 // 判断是否是菜单
-                if ($key == AuthEnum::TYPE_BACKEND && in_array($k, $menu)) {
+                if ($key == AppEnum::BACKEND && in_array($k, $menu)) {
                     $data['is_menu'] = 1;
                 }
 
@@ -105,8 +108,8 @@ class AuthItemService extends Service
      */
     public function uninstallAddonsByName($name)
     {
-        AuthItem::deleteAll(['type_child' => AuthEnum::TYPE_CHILD_ADDONS, 'addons_name' => $name]);
-        AuthItemChild::deleteAll(['type_child' => AuthEnum::TYPE_CHILD_ADDONS, 'addons_name' => $name]);
+        AuthItem::deleteAll(['type' => AuthTypeEnum::TYPE_ADDONS, 'addons_name' => $name]);
+        AuthItemChild::deleteAll(['type' => AuthTypeEnum::TYPE_ADDONS, 'addons_name' => $name]);
     }
 
     /**
@@ -118,7 +121,7 @@ class AuthItemService extends Service
         return AuthItem::find()
             ->where(['status' => StatusEnum::ENABLED])
             ->andFilterWhere(['in', 'id', $ids])
-            ->select(['id', 'title', 'name', 'pid', 'level', 'type', 'type_child', 'addons_name', 'is_menu'])
+            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'type', 'addons_name', 'is_menu'])
             ->orderBy('sort asc, id asc')
             ->asArray()
             ->all();
@@ -134,7 +137,7 @@ class AuthItemService extends Service
     {
         $list = AuthItem::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['type' => AuthEnum::TYPE_BACKEND, 'type_child' => AuthEnum::TYPE_CHILD_DEFAULT])
+            ->andWhere(['app_id' => AppEnum::BACKEND, 'type' => AuthTypeEnum::TYPE_DEFAULT])
             ->andFilterWhere(['<>', 'id', $id])
             ->select(['id', 'title', 'pid', 'level'])
             ->orderBy('sort asc')

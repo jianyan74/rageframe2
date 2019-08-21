@@ -1,4 +1,5 @@
 <?php
+
 namespace common\components;
 
 use Yii;
@@ -46,7 +47,7 @@ class Pay extends Component
     {
         return new AliPay(ArrayHelper::merge([
             'app_id' => $this->rfConfig['alipay_appid'],
-            'notify_url' => Url::toFront(['notify/ali']),
+            'notify_url' => Url::removeMerchantIdUrl('toFront', ['notify/ali']),
             'return_url' => '',
             'ali_public_key' => $this->rfConfig['alipay_cert_path'],
             // 加密方式： ** RSA2 **
@@ -82,7 +83,7 @@ class Pay extends Component
     {
         return new UnionPay(ArrayHelper::merge([
             'mch_id' => $this->rfConfig['union_mchid'],
-            'notify_url' => Url::toFront(['notify/union']),
+            'notify_url' => Url::removeMerchantIdUrl('toFront', ['notify/union']),
             'return_url' => '',
             'cert_id' => $this->rfConfig['union_cert_id'],
             'private_key' => $this->rfConfig['union_private_key'],

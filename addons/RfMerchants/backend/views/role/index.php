@@ -1,7 +1,7 @@
 <?php
 use common\helpers\Url;
 use common\helpers\Html;
-use leandrogehlen\treegrid\TreeGrid;
+use jianyan\treegrid\TreeGrid;
 
 $this->title = '角色管理';
 $this->params['breadcrumbs'][] = ['label' => '商户管理', 'url' => ['merchant/index']];

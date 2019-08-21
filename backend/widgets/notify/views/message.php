@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <ul class="nav nav-tabs">
                 <li><a href="<?= Url::to(['announce'])?>"> 公告列表</a></li>
                 <li class="active"><a href="<?= Url::to(['message'])?>"> 私信列表</a></li>
+                <li><a href="<?= Url::to(['remind'])?>"> 提醒列表</a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane">
@@ -34,6 +35,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 }
                             ],
                             'notify.content',
+                            [
+                                'label'=> '查看时间',
+                                'attribute' => 'updated_at',
+                                'filter' => false, //不显示搜索框
+                                'value' => function ($model) {
+                                    return Yii::$app->formatter->asRelativeTime($model['updated_at']);
+                                },
+                            ],
                             [
                                 'label'=> '创建时间',
                                 'attribute' => 'created_at',

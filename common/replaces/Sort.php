@@ -364,8 +364,7 @@ class Sort extends BaseObject
     public function link($attribute, $options = [])
     {
         if (($direction = $this->getAttributeOrder($attribute)) !== null) {
-            // 修改处
-            $class = $direction === SORT_DESC ? 'fa fa-sort-amount-desc' : 'fa fa-sort-amount-asc';
+            $class = $direction === SORT_DESC ? 'desc' : 'asc';
             if (isset($options['class'])) {
                 $options['class'] .= ' ' . $class;
             } else {

@@ -2,6 +2,7 @@
 
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
+use common\helpers\Html;
 use common\helpers\ImageHelper;
 use backend\modules\member\forms\RechargeForm;
 
@@ -25,11 +26,11 @@ use backend\modules\member\forms\RechargeForm;
             </div>
             <div class="col-sm-6 invoice-col">
                 <address>
-                    <strong><?= $model['nickname'] ?></strong><br>
+                    <strong><?= Html::encode($model['nickname']) ?></strong><br>
                     ID: <?= $model['id'] ?><br>
-                    昵称: <?= $model['realname'] ?><br>
-                    姓名: <?= $model['realname'] ?><br>
-                    手机号码: <?= $model['mobile'] ?>
+                    昵称: <?= Html::encode($model['realname']) ?><br>
+                    姓名: <?= Html::encode($model['realname']) ?><br>
+                    手机号码: <?= Html::encode($model['mobile']) ?>
                 </address>
             </div>
         </div>

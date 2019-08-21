@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         <td class="feed-element">
                                             <img src="<?= $model->head_portrait ?>" class="img-circle rf-img-md img-bordered-sm">
                                         </td>
-                                        <td><?= $model->nickname ?></td>
+                                        <td><?= Html::encode($model->nickname) ?></td>
                                         <td><?= $model->sex == 1 ? '男' : '女' ?></td>
                                         <td>
                                             <?php if ($model->follow == Fans::FOLLOW_OFF){ ?>

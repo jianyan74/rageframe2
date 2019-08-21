@@ -11,7 +11,7 @@ use common\helpers\FileHelper;
 use common\helpers\AddonHelper;
 use common\models\common\Addons;
 use common\helpers\ExecuteHelper;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\helpers\ArrayHelper;
 use backend\modules\common\forms\AddonsForm;
 use backend\controllers\BaseController;
@@ -127,24 +127,20 @@ class AddonsController extends BaseController
             foreach ($config->appsConfig as $appId => $item) {
                 $file = $rootPath . $item;
 
-                if (!in_array($appId, array_keys(AuthEnum::$typeExplain))) {
+                if (!in_array($appId, array_keys(AppEnum::$listExplain))) {
                     throw new NotFoundHttpException('找不到应用');
                 }
-
                 if (!file_exists($file)) {
                     throw new NotFoundHttpException("找不到 $appId 应用文件");
                 }
 
                 $appConfig = require $file;
-
                 if (isset($appConfig['authItem']) && !empty($appConfig['authItem'])) {
                     $allAuthItem[$appId] = $appConfig['authItem'];
                 }
-
                 if (isset($appConfig['menu']) && !empty($appConfig['menu'])) {
                     $allMenu[$appId] = $appConfig['menu'];
                 }
-
                 if (isset($appConfig['cover']) && !empty($appConfig['cover'])) {
                     $allCover[$appId] = $appConfig['cover'];
                 }
@@ -242,7 +238,6 @@ class AddonsController extends BaseController
             }
 
             $addonDir = Yii::getAlias('@addons') . '/' . trim($model->name) . '/';
-
             if (is_dir($addonDir)) {
                 return $this->message('插件已经存在，请删除后在试', $this->redirect(['create']), 'error');
             }
@@ -259,11 +254,11 @@ class AddonsController extends BaseController
             }
 
             $app = [
-                AuthEnum::TYPE_BACKEND,
-                AuthEnum::TYPE_FRONTEND,
-                AuthEnum::TYPE_WECHAT,
-                AuthEnum::TYPE_OAUTH2,
-                AuthEnum::TYPE_API
+                AppEnum::BACKEND,
+                AppEnum::FRONTEND,
+                AppEnum::WECHAT,
+                AppEnum::OAUTH2,
+                AppEnum::API
             ];
 
             $files[] = "{$addonDir}console/";
@@ -281,9 +276,7 @@ class AddonsController extends BaseController
                 $files[] = "{$addonDir}{$item}/";
                 $files[] = "{$addonDir}{$item}/controllers/";
 
-                // api特殊目录
-                if ($item != AuthEnum::TYPE_API) {
-
+                if ($item != AppEnum::API) {
                     $files[] = "{$addonDir}{$item}/controllers/DefaultController.php";
                     $files[] = "{$addonDir}{$item}/views/";
                     $files[] = "{$addonDir}{$item}/views/layouts/";
@@ -294,6 +287,7 @@ class AddonsController extends BaseController
                     $files[] = "{$addonDir}{$item}/assets/AppAsset.php";
                     $files[] = "{$addonDir}{$item}/resources/";
                 } else {
+                    // api特殊目录
                     $files[] = "{$addonDir}{$item}/controllers/v1/";
                     $files[] = "{$addonDir}{$item}/controllers/v1/DefaultController.php";
                     $files[] = "{$addonDir}{$item}/controllers/v2/";
@@ -317,7 +311,7 @@ class AddonsController extends BaseController
                 file_put_contents("{$addonDir}common/config/{$item}.php",
                     $this->renderPartial('template/config/app', ['bindings' => $data['bindings'] ?? [], 'appID' => $item]));
 
-                if ($item === AuthEnum::TYPE_API) {
+                if ($item === AppEnum::API) {
                     file_put_contents("{$addonDir}api/controllers/v1/DefaultController.php",
                         $this->renderPartial('template/controllers/ApiDefaultController',
                             ['appID' => $item, 'model' => $model, 'versions' => 'v1']));
@@ -398,7 +392,7 @@ class AddonsController extends BaseController
 
         return $this->render($this->action->id, [
             'model' => $model,
-            'coverTypes' => ArrayHelper::filter(AuthEnum::$typeExplain, [AuthEnum::TYPE_FRONTEND, AuthEnum::TYPE_API, AuthEnum::TYPE_WECHAT, AuthEnum::TYPE_OAUTH2]),
+            'coverTypes' => ArrayHelper::filter(AppEnum::$listExplain, [AppEnum::FRONTEND, AppEnum::API, AppEnum::WECHAT, AppEnum::OAUTH2]),
             'addonsGroup' => Yii::$app->params['addonsGroup'],
         ]);
     }

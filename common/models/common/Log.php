@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\models\member\Member;
 use common\models\sys\Manager;
 
@@ -90,14 +90,7 @@ class Log extends \common\models\base\BaseModel
      */
     public function getMember()
     {
-        return $this->hasOne(Member::class, ['id' => 'user_id'])
-            ->where([
-                'app_id', [
-                    AuthEnum::TYPE_API,
-                    AuthEnum::TYPE_FRONTEND,
-                    AuthEnum::TYPE_WECHAT,
-                ]
-            ]);
+        return $this->hasOne(Member::class, ['id' => 'user_id']);
     }
 
     /**
@@ -105,6 +98,6 @@ class Log extends \common\models\base\BaseModel
      */
     public function getManager()
     {
-        return $this->hasOne(Manager::class, ['id' => 'user_id'])->where(['app_id' => AuthEnum::TYPE_BACKEND]);
+        return $this->hasOne(Manager::class, ['id' => 'user_id']);
     }
 }

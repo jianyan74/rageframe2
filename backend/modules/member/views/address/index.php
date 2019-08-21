@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model->id ?></td>
                             <td><?= Html::encode($model->realname) ?></td>
                             <td><?= Html::encode($model->mobile) ?></td>
-                            <td><?= $model->address_name ?></td>
+                            <td><?= Html::encode($model->address_name) ?></td>
                             <td><?= Html::encode($model->address_details) ?></td>
                             <td><?= Html::whether($model->is_default) ?></td>
                             <td><?= Yii::$app->formatter->asDatetime($model->created_at) ?></td>

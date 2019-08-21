@@ -4,10 +4,11 @@ namespace common\components;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use yii\web\UnauthorizedHttpException;
 use common\models\sys\Manager;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
-use yii\web\UnauthorizedHttpException;
+use common\enums\AppEnum;
 
 /**
  * Class InitConfig
@@ -26,11 +27,11 @@ class Init implements BootstrapInterface
     {
         $this->id = $application->id;// 初始化变量
         // 商户信息
-        if (Yii::$app->id == 'backend') {
+        if (Yii::$app->id == AppEnum::BACKEND) {
             /** @var Manager $identity */
             $identity = Yii::$app->user->identity;
             $this->afreshLoad($identity->merchant_id ?? 1);
-        } elseif (Yii::$app->id == 'console') {
+        } elseif (Yii::$app->id == AppEnum::CONSOLE) {
             $this->afreshLoad(1);
         } else {
             $this->afreshLoad(Yii::$app->request->get('merchant_id', 1));
@@ -47,8 +48,10 @@ class Init implements BootstrapInterface
     {
         try {
             Yii::$app->services->merchant->setId($merchant_id);
+            // 设置缓存前缀
+            Yii::$app->cache->keyPrefix = $merchant_id;
+            // 获取配置
             $config = Yii::$app->debris->configAll();
-
             // 初始化配置
             $this->initParams($config);
             // 初始化组件
@@ -84,7 +87,7 @@ class Init implements BootstrapInterface
     protected function initParams($config)
     {
         $callbackUrl = $notifyUrl = '';
-        if (!empty($this->id) && $this->id != 'console') {
+        if (!empty($this->id) && $this->id != AppEnum::CONSOLE) {
             $callbackUrl = Yii::$app->request->getUrl();
             $notifyUrl = Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']);
         }

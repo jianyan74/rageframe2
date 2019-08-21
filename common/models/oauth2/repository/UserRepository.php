@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\oauth2\repository;
 
 use common\models\member\Member;

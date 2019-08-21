@@ -6,6 +6,7 @@ use yii\grid\GridView;
 
 $this->title = '充值日志';
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
+
 ?>
 
 <div class="row">
@@ -30,7 +31,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                             [
                                 'label' => '关联用户',
                                 'attribute' => 'member_id',
-                                'headerOptions' => ['class' => 'col-md-1'],
                                 'filter' => Html::activeTextInput($searchModel, 'member_id', [
                                         'class' => 'form-control',
                                         'placeholder' => '用户ID'
@@ -53,7 +53,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                     ]
                                 ),
                                 'value' => function ($model) {
-
                                     $operational = $model->num < 0 ? '-' : '+';
                                     return $model->old_num . $operational . abs($model->num) . '=' . $model->new_num;
                                 },

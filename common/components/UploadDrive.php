@@ -2,10 +2,11 @@
 
 namespace common\components;
 
-use common\helpers\RegularHelper;
 use Yii;
+use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use common\models\common\Attachment;
+use common\helpers\RegularHelper;
 use League\Flysystem\Adapter\Local;
 use Overtrue\Flysystem\Qiniu\QiniuAdapter;
 use Overtrue\Flysystem\Qiniu\Plugins\FileUrl;
@@ -26,7 +27,7 @@ class UploadDrive
     protected $drive;
 
     /**
-     * @var CosAdapter
+     * @var CosAdapter|OssAdapter|QiniuAdapter
      */
     protected $adapter;
 
@@ -65,8 +66,8 @@ class UploadDrive
                     'endpoint' => $config['storage_aliyun_is_internal'] == true ? $config['storage_aliyun_endpoint_internal'] : $config['storage_aliyun_endpoint'],
                     // 'timeout' => 3600,
                     // 'connectTimeout' => 10,
-                    // 'isCName'        => false,
-                    // 'token'          => '',
+                    // 'isCName' => false,
+                    // 'token' => '',
                 ]);
                 break;
             // 七牛
@@ -118,6 +119,8 @@ class UploadDrive
      */
     public function getUrl($baseInfo, $fullPath)
     {
+        $config = Yii::$app->debris->configAll();
+
         switch ($this->drive) {
             // 本地
             case Attachment::DRIVE_LOCAL :
@@ -145,13 +148,13 @@ class UploadDrive
                 break;
             // 腾讯COS
             case Attachment::DRIVE_COS :
-                if (empty($sysConfig['read_from_cdn'])) {
+                if (empty($config['read_from_cdn'])) {
                     $bucket = Yii::$app->debris->config('storage_cos_bucket');
                     $appid = Yii::$app->debris->config('storage_cos_appid');
                     $region = Yii::$app->debris->config('storage_cos_region');
                     $baseInfo['url'] = 'https://' . $bucket . '-' . $appid . '.cos.' . $region . '.myqcloud.com/' . $baseInfo['url'];
                 } else {
-                    $baseInfo['url'] = $sysConfig['storage_cos_cdn'] . $baseInfo['url'];
+                    $baseInfo['url'] = $config['storage_cos_cdn'] . $baseInfo['url'];
                 }
                 break;
         }
@@ -189,20 +192,20 @@ class UploadDrive
             'callbackBodyType' => "application/x-www-form-urlencoded"
         ];
 
-        $base64_callback_body = base64_encode(json_encode($callback_param));
+        $base64_callback_body = base64_encode(Json::encode($callback_param));
         $expiration = self::getExpiration(time() + $expire);
         // 最大文件大小
         $conditions[] = ['content-length-range', 0, $maxSize];
 
         // 表示用户上传的数据，必须是以$dir开始，不然上传会失败，这一步不是必须项，只是为了安全起见，防止用户通过policy上传到别人的目录。
-       // $conditions[] = ['starts-with','$filename', $dir];
+        // $conditions[] = ['starts-with','$filename', $dir];
 
         $arr = [
             'expiration' => $expiration,
             'conditions' => $conditions
         ];
 
-        $policy = json_encode($arr);
+        $policy = Json::encode($arr);
         $base64_policy = base64_encode($policy);
         $signature = base64_encode(hash_hmac('sha1', $base64_policy, $key, true));
 

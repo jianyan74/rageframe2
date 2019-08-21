@@ -1,8 +1,8 @@
 <?php
+
 namespace common\widgets\webuploader;
 
-use common\components\UploadDrive;
-use common\models\common\Attachment;
+
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -11,6 +11,8 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\InputWidget;
 use yii\base\InvalidConfigException;
 use common\helpers\StringHelper;
+use common\components\UploadDrive;
+use common\models\common\Attachment;
 use common\widgets\webuploader\assets\AppAsset;
 
 /**

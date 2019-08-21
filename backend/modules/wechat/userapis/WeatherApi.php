@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat\userapis;
 
 use Yii;
@@ -28,7 +29,7 @@ class WeatherApi implements AddonWidget
         }
 
         $ret = preg_match('/(.+)天气/i', $message['Content'], $matchs);
-        if(!$ret) {
+        if (!$ret) {
             return '请输入合适的格式, 城市+天气, 例如: 北京天气';
         }
 

@@ -5,11 +5,11 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\helpers\Json;
+use yii\web\UnprocessableEntityHttpException;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
 use common\helpers\WechatHelper;
-use yii\web\UnprocessableEntityHttpException;
 
 /**
  * 支付回调
@@ -197,7 +197,8 @@ class NotifyController extends Controller
             }
 
             // 业务回调
-            $this->notify($payLog);
+            Yii::$app->services->pay->notify($payLog, $this->payment);
+
             $transaction->commit();
             return true;
         } catch (\Exception $e) {
@@ -208,14 +209,6 @@ class NotifyController extends Controller
             FileHelper::writeLog($logPath, $e->getMessage());
             return false;
         }
-    }
-
-    /**
-     * @param $payLog
-     */
-    protected function notify($payLog)
-    {
-        Yii::$app->services->pay->notify($payLog, $this->payment);
     }
 
     /**

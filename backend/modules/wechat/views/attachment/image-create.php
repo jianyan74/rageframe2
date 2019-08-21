@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 
@@ -10,7 +11,8 @@ $form = ActiveForm::begin([
 ]);
 ?>
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+        </button>
         <h4 class="modal-title">图片创建</h4>
     </div>
     <div class="modal-body">
@@ -31,7 +33,7 @@ $form = ActiveForm::begin([
                 'fileSingleSizeLimit' => 2048 * 1024,// 图片大小限制
                 'independentUrl' => true,
             ]
-        ])->label('永久图片')->hint('永久图片只支持 bmp/png/jpeg/jpg/gif 格式,大小不超过为2M, 上限 5000 张');?>
+        ])->label('永久图片')->hint('永久图片只支持 bmp/png/jpeg/jpg/gif 格式,大小不超过为2M, 上限 5000 张'); ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

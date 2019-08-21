@@ -8,6 +8,8 @@ use common\enums\StatusEnum;
 use common\components\Service;
 use common\models\common\ActionLog;
 use common\helpers\ArrayHelper;
+use common\enums\SubscriptionActionEnum;
+use common\enums\SubscriptionReasonEnum;
 use Zhuzhichao\IpLocationZh\Ip;
 
 /**
@@ -43,7 +45,7 @@ class ActionLogService extends Service
      * @param $url
      * @throws \yii\base\InvalidConfigException
      */
-    public function create($behavior, $remark, $noRecordData = true, $url = '')
+    public function create($behavior, $remark, $noRecordData = true, $url = '', $level = '')
     {
         empty($url) && $url = DebrisHelper::getUrl();
 
@@ -72,5 +74,22 @@ class ActionLogService extends Service
         }
 
         $model->save();
+
+        if (!empty($level)) {
+            // 创建订阅消息
+            $actions = [
+                'info' => SubscriptionActionEnum::BEHAVIOR_INFO,
+                'warning' => SubscriptionActionEnum::BEHAVIOR_WARNING,
+                'error' => SubscriptionActionEnum::BEHAVIOR_ERROR,
+            ];
+
+            Yii::$app->services->sysNotify->createRemind(
+                $model->id,
+                SubscriptionReasonEnum::BEHAVIOR_CREATE,
+                $actions[$level],
+                $model['user_id'],
+                "新增加了一条 $level 行为"
+            );
+        }
     }
 }

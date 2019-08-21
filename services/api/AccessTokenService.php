@@ -2,7 +2,6 @@
 
 namespace services\api;
 
-use common\enums\StatusEnum;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\UnprocessableEntityHttpException;
@@ -11,6 +10,7 @@ use common\helpers\ArrayHelper;
 use common\models\member\Member;
 use common\models\api\AccessToken;
 use common\components\Service;
+use common\enums\StatusEnum;
 
 /**
  * Class AccessTokenService
@@ -27,6 +27,8 @@ class AccessTokenService extends Service
     public $cache = false;
 
     /**
+     * 缓存过期时间
+     *
      * @var int
      */
     public $timeout;
@@ -57,7 +59,7 @@ class AccessTokenService extends Service
                 return self::getAccessToken($member, $group, $cycle_index);
             }
 
-            throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
+            throw new UnprocessableEntityHttpException($this->getError($model));
         }
 
         $result = [];
@@ -76,9 +78,7 @@ class AccessTokenService extends Service
 
         // 写入缓存
         $key = CacheKeyEnum::API_ACCESS_TOKEN . $model->access_token;
-        if ($this->cache == true) {
-            Yii::$app->cache->set($key, $model, $this->timeout);
-        }
+        $this->cache === true && Yii::$app->cache->set($key, $model, $this->timeout);
 
         return $result;
     }
@@ -104,8 +104,10 @@ class AccessTokenService extends Service
     }
 
     /**
+     * 获取token
+     *
      * @param $token
-     * @return array|null|ActiveRecord
+     * @return array|null|ActiveRecord|AccessToken
      */
     public function getTokenByAccessToken($token)
     {
@@ -117,18 +119,17 @@ class AccessTokenService extends Service
 
     /**
      * 禁用token
+     *
      * @param $access_token
-     * @return bool
      */
-    public function disableToken($access_token)
+    public function disableByAccessToken($access_token)
     {
-        if ($this->cache === true) {
-            Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $access_token);
-        }
+        $this->cache === true && Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $access_token);
 
-        $model = $this->getTokenByAccessToken($access_token);
-        $model->status = StatusEnum::DISABLED;
-        return $model->save();
+        if ($model = $this->getTokenByAccessToken($access_token)) {
+            $model->status = StatusEnum::DISABLED;
+            $model->save();
+        }
     }
 
     /**

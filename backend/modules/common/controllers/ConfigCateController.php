@@ -28,10 +28,9 @@ class ConfigCateController extends BaseController
      */
     public function actionIndex()
     {
-        $query = $this->modelClass::find()
-            ->orderBy('sort asc, created_at asc');
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $this->modelClass::find()
+                ->orderBy('sort asc, created_at asc'),
             'pagination' => false
         ]);
 

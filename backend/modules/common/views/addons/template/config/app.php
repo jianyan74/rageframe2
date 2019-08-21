@@ -3,7 +3,7 @@
 use common\helpers\StringHelper;
 
 $menus = $bindings['menu'] ?? [];
-$appID != \common\enums\AuthEnum::TYPE_BACKEND && $menus = [];
+$appID != \common\enums\AppEnum::BACKEND && $menus = [];
 $menuCount = 0;
 if (isset($menus['title'])) {
     $menuCount = count($menus['title']);

@@ -1,4 +1,5 @@
 <?php
+
 namespace oauth2\controllers;
 
 use Yii;
@@ -50,7 +51,7 @@ class AuthorizeController extends OnAuthController
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return mixed|\yii\db\ActiveRecord
      */
     public function actionCreate()
     {

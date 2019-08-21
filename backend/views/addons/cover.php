@@ -78,6 +78,7 @@ $i = 1;
             console.info('Trigger:', e.trigger);
 
             e.clearSelection();
+            rfMsg('复制成功');
         });
 
         clipboard.on('error', function(e) {

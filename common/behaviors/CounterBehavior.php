@@ -1,14 +1,13 @@
 <?php
 
-
 namespace common\behaviors;
 
 use Yii;
 use yii\base\Behavior;
 use yii\web\Controller;
 use yii\redis\Connection;
-use common\helpers\DateHelper;
 use yii\web\TooManyRequestsHttpException;
+use common\helpers\DateHelper;
 
 /**
  * 计数器 - 限流
@@ -61,13 +60,13 @@ class CounterBehavior extends Behavior
         /** @var Connection $redis */
         $redis = Yii::$app->redis;
         $key = sprintf('hist:%s:%s', $this->userId, $this->action);
-        $now = DateHelper::microtime();   # 毫秒时间戳
+        $now = DateHelper::microtime(); // 毫秒时间戳
 
         // $pipe= $redis->multi(Redis::PIPELINE); //使用管道提升性能
-        $redis->zadd($key, $now, $now); //value 和 score 都使用毫秒时间戳
-        $redis->zremrangebyscore($key, 0, $now - $this->period); //移除时间窗口之前的行为记录，剩下的都是时间窗口内的
+        $redis->zadd($key, $now, $now); // value 和 score 都使用毫秒时间戳
+        $redis->zremrangebyscore($key, 0, $now - $this->period); // 移除时间窗口之前的行为记录，剩下的都是时间窗口内的
         $redis->zcard($key);  //获取窗口内的行为数量
-        $redis->expire($key, $this->period + 1000);  //多加一秒过期时间
+        $redis->expire($key, $this->period + 1000);  // 多加一秒过期时间
         $replies = $redis->exec();
 
         if ($replies[2] > $this->maxCount) {

@@ -1,11 +1,13 @@
 <?php
+
 namespace addons\RfMerchants\backend\controllers;
 
 use Yii;
 use common\helpers\ArrayHelper;
 use common\components\Curd;
 use common\models\common\AuthRole;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
+use common\enums\AuthTypeEnum;
 use common\helpers\ResultDataHelper;
 use yii\data\ActiveDataProvider;
 
@@ -24,11 +26,11 @@ class RoleController extends BaseController
     public $modelClass = AuthRole::class;
 
     /**
-     * 默认类型
+     * 默认应用
      *
      * @var string
      */
-    public $type = AuthEnum::TYPE_BACKEND;
+    public $appId = AppEnum::BACKEND;
 
     public $merchant_id;
 
@@ -47,7 +49,7 @@ class RoleController extends BaseController
     public function actionIndex()
     {
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->type, $role);
+        $childRoles = Yii::$app->services->authRole->getChildList($this->appId, $role);
 
         $dataProvider = new ActiveDataProvider([
             'pagination' => false
@@ -79,7 +81,7 @@ class RoleController extends BaseController
         $id = Yii::$app->request->get('id', null);
         $model = $this->findModel($id);
         $model->pid = Yii::$app->request->get('pid', null) ?? $model->pid; // 父id
-        $model->type = $this->type;
+        $model->app_id = $this->appId;
 
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -90,8 +92,8 @@ class RoleController extends BaseController
             }
 
             // 创建角色关联的权限信息
-            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], AuthEnum::TYPE_CHILD_DEFAULT);
-            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], AuthEnum::TYPE_CHILD_ADDONS);
+            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], AuthTypeEnum::TYPE_DEFAULT);
+            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], AuthTypeEnum::TYPE_ADDONS);
 
             return ResultDataHelper::json(200, '提交成功');
         }
@@ -101,7 +103,7 @@ class RoleController extends BaseController
 
         // 获取父级
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->type, $role);
+        $childRoles = Yii::$app->services->authRole->getChildList($this->appId, $role);
         !empty($role) && $childRoles = ArrayHelper::merge([$role], $childRoles);
         foreach ($childRoles as $k => $childRole) {
             if ($childRole['id'] == $id) {
@@ -110,7 +112,8 @@ class RoleController extends BaseController
         }
 
         $dropDownList = ArrayHelper::itemsMerge($childRoles, $role['pid'] ?? 0);
-        $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList, 'id', 'title', $role['level'] ?? 1), 'id', 'title');
+        $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList, 'id', 'title',
+            $role['level'] ?? 1), 'id', 'title');
         Yii::$app->services->auth->isSuperAdmin() && $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
 
         return $this->render($this->action->id, [

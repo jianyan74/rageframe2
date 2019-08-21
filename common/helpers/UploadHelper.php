@@ -253,7 +253,8 @@ class UploadHelper
 
         // 存储本地进行安全校验
         if ($this->drive == Attachment::DRIVE_LOCAL) {
-            if ($this->type == Attachment::UPLOAD_TYPE_FILES && in_array($this->baseInfo['extension'], $this->config['blacklist']))  {
+            if ($this->type == Attachment::UPLOAD_TYPE_FILES && in_array($this->baseInfo['extension'],
+                    $this->config['blacklist'])) {
                 throw new NotFoundHttpException('上传的文件类型不允许');
             }
         }
@@ -339,7 +340,6 @@ class UploadHelper
     {
         // use `ffmpeg` get first frame as video poster
         // save poster local and upload to cloud, return the cloud url
-
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
         if ($file->error === UPLOAD_ERR_OK) {
             $this->baseInfo['name'] = $this->baseInfo['name'] . '_poster';
@@ -347,10 +347,12 @@ class UploadHelper
             $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
             $tmpPosterFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
             FfmpegHelper::imageResize($file->tempName, $tmpPosterFilePath, 0);
+
             if (file_exists($tmpPosterFilePath)) {
                 $stream = fopen($tmpPosterFilePath, 'r+');
                 $result = $this->filesystem->writeStream($this->baseInfo['url'], $stream);
-                if (! $result) {
+
+                if (!$result) {
                     throw new NotFoundHttpException('文件写入失败');
                 }
                 if (is_resource($stream)) {
@@ -361,6 +363,7 @@ class UploadHelper
                 return true;
             }
         }
+
         return false;
     }
 
@@ -645,7 +648,8 @@ class UploadHelper
 
         $this->baseInfo['id'] = $attachment_id;
         $this->baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($this->baseInfo['size'], 2);
-        $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'], $this->type);
+        $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'],
+            $this->type);
 
         return $this->baseInfo;
     }

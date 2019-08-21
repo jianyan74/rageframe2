@@ -41,11 +41,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
                 <div class="col-sm-12">
-<?php foreach ($generator->getColumnNames() as $attribute) {
-if (in_array($attribute, $safeAttributes)) {
-    echo "                    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
-}
-} ?>
+<?php
+if (!empty($generator->formFields)) {
+    foreach ($generator->formFields as $attribute) {
+        echo "                    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+    }
+} else {
+    foreach ($generator->getColumnNames() as $attribute) {
+        if (in_array($attribute, $safeAttributes)) {
+            echo "                    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+        }
+    }
+}?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12 text-center">

@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Json;
+use common\enums\AppEnum;
 use common\helpers\DebrisHelper;
 use common\helpers\Html;
 
@@ -27,8 +27,20 @@ use common\helpers\Html;
             <td><?= Html::encode($model['method']) ?></td>
         </tr>
         <tr>
+            <td>应用</td>
+            <td><?= Html::encode($model['app_id']) ?></td>
+        </tr>
+        <tr>
             <td>用户</td>
-            <td><?= isset($model->manager->username) ? $model->manager->username : '游客' ?></td>
+            <td>
+                <?php
+                    if (AppEnum::BACKEND == $model->app_id) {
+                        echo $model->manager->username;
+                    } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])){
+                        echo $model->member->username;
+                    }
+                ?>
+            </td>
         </tr>
         <tr>
             <td>模块</td>
@@ -50,39 +62,30 @@ use common\helpers\Html;
             <td>地区</td>
             <td>
                 <?php
-                $data = [];
-                !empty($model['country']) && $data[] = $model['country'];
-                !empty($model['provinces']) && $data[] = $model['provinces'];
-                !empty($model['city']) && $data[] = $model['city'];
-                echo implode(' · ', $data);
+                    $data = [];
+                    !empty($model['country']) && $data[] = $model['country'];
+                    !empty($model['provinces']) && $data[] = $model['provinces'];
+                    !empty($model['city']) && $data[] = $model['city'];
+                    echo implode(' · ', $data);
                 ?>
             </td>
         </tr>
         <tr>
             <td style="min-width: 100px">Get数据</td>
             <td style="max-width: 700px">
-                <?php
-                echo "<pre>";
-                print_r($model['get_data'])
-                ?>
+                <?php Yii::$app->debris->p(DebrisHelper::htmlEncode($model['get_data'])) ?>
             </td>
         </tr>
         <tr>
             <td style="min-width: 100px">Post数据</td>
             <td style="max-width: 700px">
-                <?php
-                echo "<pre>";
-                print_r($model['post_data'])
-                ?>
+                <?php Yii::$app->debris->p(DebrisHelper::htmlEncode($model['post_data'])) ?>
             </td>
         </tr>
         <tr>
             <td style="min-width: 100px">Header数据</td>
             <td style="max-width: 700px">
-                <?php
-                echo "<pre>";
-                print_r($model['header_data'])
-                ?>
+                <?php Yii::$app->debris->p(DebrisHelper::htmlEncode($model['header_data'])) ?>
             </td>
         </tr>
         </tbody>

@@ -1,40 +1,32 @@
 <?php
 
-use common\helpers\Html;
+echo $this->render("_nav", [
+    'boxId' => $boxId,
+    'config' => $config,
+    'themeJs' => $themeJs,
+    'themeConfig' => $themeConfig,
+]);
 
-?>
+$jsonConfig = \yii\helpers\Json::encode($config);
 
-    <div class="box-body" id="<?= $boxId; ?>">
-        <div>
-            <?php $i = 0; ?>
-            <?php foreach ($themeConfig as $key => $value) { ?>
-                <span class="<?= $i == 0 ? 'orange' : '' ?> pointer"
-                      data-type="<?= Html::encode($key) ?>"> <?= Html::encode($value) ?></span>
-                <?php $i++; ?>
-            <?php } ?>
-        </div>
-        <div style="height: <?= $config['height'] ?>" id="<?= $boxId; ?>-echarts"></div>
-        <?= Html::hiddenInput('server', $config['server']) ?>
-        <!-- /.row -->
-    </div>
-
-<?php Yii::$app->view->registerJs(<<<JS
+Yii::$app->view->registerJs(<<<JS
     var boxId = "$boxId";
     echartsList[boxId] = echarts.init(document.getElementById(boxId + '-echarts'), '$themeJs');
-
+    echartsListConfig[boxId] = jQuery.parseJSON('$jsonConfig');
+    
     // 动态加载数据
     $('#'+ boxId +' div span').click(function () {
         $(this).parent().find('span').removeClass('orange');
         $(this).addClass('orange');
         var type = $(this).data('type');
         var boxId = $(this).parent().parent().attr('id');
-        var getUrl = $(this).parent().parent().find('input').val();
+        var config = echartsListConfig[boxId];
 
         $.ajax({
             type:"get",
-            url: getUrl,
+            url: config.server,
             dataType: "json",
-            data: {type:type, data: 'echarts'},
+            data: {type:type, echarts_type: 'pie'},
             success: function(result){
                 var data = result.data;
                 if (parseInt(result.code) === 200) {

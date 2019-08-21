@@ -1,4 +1,5 @@
 <?php
+
 namespace oauth2\controllers;
 
 use Yii;

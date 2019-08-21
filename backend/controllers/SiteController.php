@@ -2,11 +2,11 @@
 
 namespace backend\controllers;
 
-use common\behaviors\ActionLogBehavior;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use common\behaviors\ActionLogBehavior;
 use backend\forms\LoginForm;
 
 /**

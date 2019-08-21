@@ -2,8 +2,8 @@
 
 namespace common\models\common;
 
-use common\enums\AuthEnum;
 use common\behaviors\MerchantBehavior;
+use common\models\member\Member;
 use common\models\sys\Manager;
 
 /**
@@ -89,6 +89,14 @@ class ActionLog extends \common\models\base\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMember()
+    {
+        return $this->hasOne(Member::class, ['id' => 'user_id']);
     }
 
     /**

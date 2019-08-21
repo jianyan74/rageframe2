@@ -1,7 +1,7 @@
 <?php
+
 use yii\grid\GridView;
 use common\helpers\Html;
-use common\helpers\ImageHelper;
 
 $this->title = 'IP黑名单';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModal',
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{ajax-edit} {status} {destroy}',
+                            'template' => '{ajax-edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [
@@ -51,12 +51,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::status($model->status);
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return Html::delete(['destroy','id' => $model->id]);
+                                    return Html::delete(['destroy', 'id' => $model->id]);
                                 },
                             ],
                         ],
                     ],
                 ]); ?>
+            </div>
         </div>
     </div>
-</div>

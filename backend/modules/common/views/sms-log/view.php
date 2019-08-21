@@ -1,8 +1,6 @@
 <?php
 
 use common\helpers\Html;
-use yii\helpers\Json;
-use common\helpers\DebrisHelper;
 
 ?>
 
@@ -17,10 +15,7 @@ use common\helpers\DebrisHelper;
         <tr>
             <td style="min-width: 100px">具体信息</td>
             <td style="max-width: 700px">
-                <?php
-                echo "<pre>";
-                print_r($model['error_data'])
-                ?>
+                <?php Yii::$app->debris->p(Html::encode($model['error_data'])) ?>
             </td>
         </tr>
         </tbody>

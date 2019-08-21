@@ -7,7 +7,7 @@ use yii\web\Controller;
 use common\helpers\AddonHelper;
 use common\helpers\StringHelper;
 use common\helpers\Url;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\components\BaseAction;
 
 /**
@@ -46,7 +46,7 @@ class AddonsController extends Controller
         if (!$this->layout) {
             $this->layout = '@' . Yii::$app->id . '/views/layouts/main';
 
-            if (Yii::$app->id == AuthEnum::TYPE_BACKEND) {
+            if (Yii::$app->id == AppEnum::BACKEND) {
                 $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
             }
         }

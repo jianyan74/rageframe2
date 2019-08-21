@@ -17,7 +17,7 @@ use common\enums\StatusEnum;
         <tbody>
         <tr>
             <td>支付编号</td>
-            <td><?= $model['out_trade_no'] ?></td>
+            <td><?= Html::encode($model['out_trade_no']) ?></td>
         </tr>
         <tr>
             <td>支付金额</td>
@@ -29,8 +29,8 @@ use common\enums\StatusEnum;
         <tr>
             <td>支付来源</td>
             <td>
-                订单编号：<?= $model->order_sn; ?><br>
-                订单类型：<?= $model->order_group; ?>
+                订单编号：<?= Html::encode($model->order_sn); ?><br>
+                订单类型：<?= Html::encode($model->order_group); ?>
             </td>
         </tr>
         <tr>
@@ -39,18 +39,18 @@ use common\enums\StatusEnum;
         </tr>
         <tr>
             <td>商户号</td>
-            <td><?= $model['mch_id'] ?></td>
+            <td><?= Html::encode($model['mch_id']) ?></td>
         </tr>
         <tr>
             <td>
                 回执订单号<br>
                 (进行退款或其他操作)
             </td>
-            <td><?= $model['transaction_id'] ?></td>
+            <td><?= Html::encode($model['transaction_id']) ?></td>
         </tr>
         <tr>
             <td>交易类型</td>
-            <td><?= $model['trade_type'] ?></td>
+            <td><?= Html::encode($model['trade_type']) ?></td>
         </tr>
         <tr>
             <td>状态</td>

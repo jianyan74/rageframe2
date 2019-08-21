@@ -5,7 +5,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\models\base\User;
 use common\models\common\AuthAssignment;
 
@@ -121,7 +121,7 @@ class Manager extends User
      */
     public function beforeDelete()
     {
-        AuthAssignment::deleteAll(['user_id' => $this->id, 'type' => AuthEnum::TYPE_BACKEND]);
+        AuthAssignment::deleteAll(['user_id' => $this->id, 'app_id' => AppEnum::BACKEND]);
         return parent::beforeDelete();
     }
 

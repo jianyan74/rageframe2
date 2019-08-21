@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <div class="borderColorGray separateChildrenWithLine whiteBG m-b-sm">
                         <div class="normalPadding">
                             <div style="background-image: url(<?= Url::to(['analysis/image','attach' => $model['media_url']]) ?>); height: 160px" class="backgroundCover relativePosition mainPostCover">
-                                <div class="bottomBar"><?= $model['file_name'] ?></div>
+                                <div class="bottomBar"><?= Html::encode($model['file_name']) ?></div>
                             </div>
                         </div>
                         <div class="flex-row hAlignCenter normalPadding postToolbar">

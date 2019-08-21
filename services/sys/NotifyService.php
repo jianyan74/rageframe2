@@ -1,12 +1,17 @@
 <?php
+
 namespace services\sys;
 
 use Yii;
+use yii\helpers\Json;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
 use common\components\Service;
 use common\models\sys\Notify;
 use common\models\sys\NotifyManager;
+use common\models\sys\NotifySubscription;
+use common\models\sys\NotifySubscriptionConfig;
+use common\enums\SubscriptionActionEnum;
 
 /**
  * Class NotifyService
@@ -27,6 +32,27 @@ class NotifyService extends Service
         $model->content = $content;
         $model->sender_id = $sender_id;
         $model->type = Notify::TYPE_ANNOUNCE;
+        return $model->save();
+    }
+
+    /**
+     * 创建提醒
+     *
+     * @param int $target_id 触发id
+     * @param string $targetType 触发类型
+     * @param string $action 提醒关联动作
+     * @param int $sender_id 发送者id
+     * @param string $content 内容
+     */
+    public function createRemind($target_id, $targetType, $action, $sender_id, $content)
+    {
+        $model = new Notify();
+        $model->target_id = $target_id;
+        $model->target_type = $targetType;
+        $model->content = $content;
+        $model->sender_id = $sender_id;
+        $model->action = $action;
+        $model->type = Notify::TYPE_REMIND;
         return $model->save();
     }
 
@@ -88,6 +114,92 @@ class NotifyService extends Service
     }
 
     /**
+     * 拉取提醒
+     *
+     * @param int $manager_id 用户id
+     */
+    public function pullRemind($manager_id)
+    {
+        // 查询用户的配置文件SubscriptionConfig，如果没有则使用默认的配置DefaultSubscriptionConfig
+        $config = $this->getSubscriptionConfig($manager_id);
+        $filt = [];
+        foreach ($config as $key => $item) {
+            $item == true && $filt[] = $key;
+        }
+
+        // 查询最后的一条提醒时间
+        $lastTime = $this->getLastTimeForNotifyMember($manager_id, Notify::TYPE_REMIND);
+        // 直接通过自己的关注去拉取消息
+        $notifys = Notify::find()
+            ->where(['type' => Notify::TYPE_REMIND, 'status' => StatusEnum::ENABLED])
+            ->andWhere(['in', 'action', $filt])
+            ->andWhere(['>', 'created_at', $lastTime])
+            ->asArray()
+            ->all();
+
+        // 使用过滤好的Notify作为关联新建UserNotify
+        foreach ($notifys as $notify) {
+            $notifyManager = new NotifyManager();
+            $notifyManager->notify_id = $notify['id'];
+            $notifyManager->manager_id = $manager_id;
+            $notifyManager->type = Notify::TYPE_REMIND;
+            $notifyManager->save();
+        }
+    }
+
+    /**
+     * 获取订阅配置
+     *
+     * @param $manager_id
+     */
+    public function getSubscriptionConfig($manager_id)
+    {
+        // 查询SubscriptionConfig表，获取用户的订阅配置
+        if (!($config = NotifySubscriptionConfig::findOne(['manager_id' => $manager_id]))) {
+            return SubscriptionActionEnum::$defaultList;
+        }
+
+        if (is_array($config['action'])) {
+            return $config['action'];
+        }
+
+        return Json::decode($config['action']);
+    }
+
+    /**
+     * 更新订阅配置
+     *
+     * @param $manager_id
+     */
+    public function updateSubscriptionConfig($manager_id)
+    {
+        $actions = [];
+        $config = NotifySubscriptionConfig::findOne(['manager_id' => $manager_id]);
+        $config->action = Json::encode($actions);
+        return $config->save();
+    }
+
+    /**
+     * 获取最后一条消息时间
+     *
+     * @param $manager_id
+     * @param $type
+     * @return int|mixed
+     */
+    public function getLastTimeForNotifyMember($manager_id, $type)
+    {
+        // 查询最新的一条提醒时间
+        $notifyMember = NotifyManager::find()
+            ->select('created_at')
+            ->where(['manager_id' => $manager_id, 'type' => $type])
+            ->orderBy('id desc, created_at desc')
+            ->asArray()
+            ->one();
+
+        return $notifyMember['created_at'] ?? 0;
+    }
+
+    /**
      * 获取用户消息列表
      *
      * @param $manager_id
@@ -119,6 +231,6 @@ class NotifyService extends Service
      */
     public function read($manager_id, $notifyIds)
     {
-        NotifyManager::updateAll(['is_read' => true], ['and', ['manager_id' => $manager_id], ['in', 'notify_id', $notifyIds]]);
+        NotifyManager::updateAll(['is_read' => true, 'updated_at' => time()], ['and', ['manager_id' => $manager_id], ['in', 'notify_id', $notifyIds]]);
     }
 }

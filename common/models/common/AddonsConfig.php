@@ -31,7 +31,7 @@ class AddonsConfig extends \yii\db\ActiveRecord
     {
         return [
             [['merchant_id'], 'integer'],
-            [['data'], 'string'],
+            [['data'], 'safe'],
             [['addons_name'], 'string', 'max' => 40],
         ];
     }

@@ -3,13 +3,16 @@
 namespace backend\modules\common\controllers;
 
 use Yii;
+use yii\data\ActiveDataProvider;
+use common\enums\StatusEnum;
+use common\helpers\TreeHelper;
 use common\helpers\ArrayHelper;
 use common\components\Curd;
 use common\models\common\AuthRole;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
+use common\enums\AuthTypeEnum;
 use common\helpers\ResultDataHelper;
 use backend\controllers\BaseController;
-use yii\data\ActiveDataProvider;
 
 /**
  * Class AuthRoleController
@@ -26,11 +29,11 @@ class AuthRoleController extends BaseController
     public $modelClass = AuthRole::class;
 
     /**
-     * 默认类型
+     * 默认应用
      *
      * @var string
      */
-    public $type = AuthEnum::TYPE_BACKEND;
+    public $appId = AppEnum::BACKEND;
 
     /**
      * @return string
@@ -38,20 +41,23 @@ class AuthRoleController extends BaseController
     public function actionIndex()
     {
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->type, $role);
 
-        $dataProvider = new ActiveDataProvider([
-            'pagination' => false
-        ]);
-
-        foreach ($childRoles as &$childRole) {
-            $role_id = $role['id'] ?? 0;
-            if ($childRole['pid'] == $role_id) {
-                $childRole['pid'] = 0;
-            };
+        $where = [];
+        if (!empty($role)) {
+            $tree = $role['tree'] . TreeHelper::prefixTreeKey($role['id']);
+            $where = ['like', 'tree', $tree . '%', false];
         }
 
-        $dataProvider->setModels($childRoles);
+        $dataProvider = new ActiveDataProvider([
+            'query' => AuthRole::find()
+                ->where(['app_id' => $this->appId])
+                ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+                ->andFilterWhere($where)
+                ->orderBy('sort asc, created_at asc')
+                ->asArray(),
+            'pagination' => false
+        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -69,7 +75,7 @@ class AuthRoleController extends BaseController
         $id = Yii::$app->request->get('id', null);
         $model = $this->findModel($id);
         $model->pid = Yii::$app->request->get('pid', null) ?? $model->pid; // 父id
-        $model->type = $this->type;
+        $model->app_id = $this->appId;
 
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -80,8 +86,8 @@ class AuthRoleController extends BaseController
             }
 
             // 创建角色关联的权限信息
-            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], AuthEnum::TYPE_CHILD_DEFAULT);
-            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], AuthEnum::TYPE_CHILD_ADDONS);
+            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], AuthTypeEnum::TYPE_DEFAULT);
+            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], AuthTypeEnum::TYPE_ADDONS);
 
             return ResultDataHelper::json(200, '提交成功');
         }
@@ -91,7 +97,7 @@ class AuthRoleController extends BaseController
 
         // 获取父级
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->type, $role);
+        $childRoles = Yii::$app->services->authRole->getChildList($this->appId, $role);
         !empty($role) && $childRoles = ArrayHelper::merge([$role], $childRoles);
         foreach ($childRoles as $k => $childRole) {
             if ($childRole['id'] == $id) {

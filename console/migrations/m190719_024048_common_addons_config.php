@@ -14,7 +14,7 @@ class m190719_024048_common_addons_config extends Migration
             'id' => "int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键'",
             'addons_name' => "varchar(100) NOT NULL DEFAULT '' COMMENT '插件名或标识'",
             'merchant_id' => "int(10) unsigned NULL DEFAULT '0' COMMENT '商户id'",
-            'data' => "json NULL COMMENT '配置内'",
+            'data' => "json NULL COMMENT '配置'",
             'PRIMARY KEY (`id`)'
         ], "ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='公用_插件配置值表'");
         

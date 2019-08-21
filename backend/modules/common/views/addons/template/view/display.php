@@ -9,6 +9,7 @@ use common\helpers\Url;
 
 $this->title = '参数设置';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <?php $html = '

@@ -186,6 +186,7 @@ function openIframe(title, width, height, content){
                         rfMsg(data.message);
                     } else {
                         layer.close(index);
+                        location.reload();
                     }
                 }
             });

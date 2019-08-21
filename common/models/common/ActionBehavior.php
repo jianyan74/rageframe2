@@ -80,7 +80,7 @@ class ActionBehavior extends \common\models\base\BaseModel
             [['app_id', 'behavior'], 'string', 'max' => 50],
             [['url'], 'string', 'max' => 200],
             [['remark'], 'string', 'max' => 100],
-            [['method'], 'string', 'max' => 20],
+            [['method', 'level'], 'string', 'max' => 20],
         ];
     }
 
@@ -96,8 +96,9 @@ class ActionBehavior extends \common\models\base\BaseModel
             'method' => '请求方式',
             'behavior' => '标识',
             'remark' => '备注',
+            'level' => '行为级别',
             'action' => '触发方式',
-            'is_record_post' => '记录Post数据',
+            'is_record_post' => 'Post数据记录',
             'is_ajax' => 'Ajax请求',
             'status' => '状态',
             'created_at' => '创建时间',

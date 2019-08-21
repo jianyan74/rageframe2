@@ -27,29 +27,6 @@ return [
     'exploitOfficialWebsite' => '<a href="http://www.rageframe.com" target="_blank">www.rageframe.com</a>',
     'exploitGitHub' => '<a href="https://github.com/jianyan74/rageframe2" target="_blank">https://github.com/jianyan74/rageframe2</a>',
 
-    /** ------ 备份配置配置 ------ **/
-    'dataBackupPath' => Yii::getAlias('@root') . '/console/backup', // 数据库备份根路径
-    'dataBackPartSize' => 20971520,// 数据库备份卷大小
-    'dataBackCompress' => 1,// 压缩级别
-    'dataBackCompressLevel' => 9,// 数据库备份文件压缩级别
-    'dataBackLock' => 'backup.lock',// 数据库备份锁
-
-    /** ------ 行为日志 ------ **/
-    'behaviorLog' => [
-        // 请求之前
-        'before' => [
-            'backend/site/login' => [
-                'method' => '*',
-                'alias' => '',
-                'postRecord' => true,
-            ]
-        ],
-        // 请求之后
-        'after' => [
-
-        ]
-    ],
-
     /**
      * 不需要验证的路由全称
      *

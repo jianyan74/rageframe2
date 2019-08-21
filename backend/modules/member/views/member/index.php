@@ -6,6 +6,7 @@ use common\helpers\ImageHelper;
 
 $this->title = '会员信息';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">

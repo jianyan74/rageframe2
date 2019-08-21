@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use common\helpers\Url;
-use common\enums\AuthEnum;
+use common\enums\AppEnum;
 use common\helpers\Auth;
 use common\models\common\Addons;
 use common\helpers\AddonHelper;
@@ -100,24 +100,26 @@ class AddonsController extends Controller
         $baseCover = Yii::$app->params['addonBinding']['cover'];
 
         foreach ($baseCover as $value) {
-            $key = AuthEnum::$typeExplain[$value['type']] . '入口';
+            $key = AppEnum::$listExplain[$value['app_id']] . '入口';
             $value['url'] = '';
 
-            switch ($value['type']) {
-                case AuthEnum::TYPE_API :
-                    $value['url'] = Url::toApi(ArrayHelper::merge([$value['route']], $value['params']));
+            !is_array($value['params']) && $value['params'] = [];
+            $route = ArrayHelper::merge([$value['route']], $value['params']);
+            switch ($value['app_id']) {
+                case AppEnum::API :
+                    $value['url'] = Url::toApi($route);
                     break;
-                case AuthEnum::TYPE_FRONTEND :
-                    $value['url'] = Url::toFront(ArrayHelper::merge([$value['route']], $value['params']));
+                case AppEnum::FRONTEND :
+                    $value['url'] = Url::toFront($route);
                     break;
-                case AuthEnum::TYPE_WECHAT :
-                    $value['url'] = Url::toWechat(ArrayHelper::merge([$value['route']], $value['params']));
+                case AppEnum::WECHAT :
+                    $value['url'] = Url::toWechat($route);
                     break;
-                case AuthEnum::TYPE_OAUTH2 :
-                    $value['url'] = Url::toOAuth2(ArrayHelper::merge([$value['route']], $value['params']));
+                case AppEnum::OAUTH2 :
+                    $value['url'] = Url::toOAuth2($route);
                     break;
-                case AuthEnum::TYPE_STORAGE:
-                    $value['url'] = Url::toStorage(ArrayHelper::merge([$value['route']], $value['params']));
+                case AppEnum::STORAGE:
+                    $value['url'] = Url::toStorage($route);
                     break;
             }
 

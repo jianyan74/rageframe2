@@ -1,6 +1,6 @@
 <?php
 use common\helpers\Html;
-use leandrogehlen\treegrid\TreeGrid;
+use jianyan\treegrid\TreeGrid;
 
 $this->title = '分类管理';
 $this->params['breadcrumbs'][] = ['label' => $this->title];

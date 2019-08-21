@@ -59,7 +59,7 @@ class MsgHistory extends \common\models\base\BaseModel
             'type' => '消息类型',
             'event' => '事件',
             'status' => '状态',
-            'created_at' => '创建事件',
+            'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
     }

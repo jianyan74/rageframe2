@@ -14,8 +14,8 @@ class m190719_024048_common_auth_item_child extends Migration
             'role_id' => "int(11) unsigned NOT NULL DEFAULT '0' COMMENT '角色id'",
             'item_id' => "int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限id'",
             'name' => "varchar(64) NOT NULL DEFAULT '' COMMENT '别名'",
-            'type' => "varchar(20) NOT NULL DEFAULT '' COMMENT '类别'",
-            'type_child' => "varchar(20) NOT NULL DEFAULT '' COMMENT '子类别'",
+            'app_id' => "varchar(20) NOT NULL DEFAULT '' COMMENT '类别'",
+            'type' => "varchar(20) NOT NULL DEFAULT '' COMMENT '子类别'",
             'addons_name' => "varchar(100) NOT NULL DEFAULT '' COMMENT '插件名称'",
             'is_menu' => "tinyint(4) NULL DEFAULT '0' COMMENT '是否菜单'",
         ], "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='公用_授权角色权限表'");

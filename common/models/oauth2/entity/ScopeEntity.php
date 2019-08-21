@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\oauth2\entity;
 
 use League\OAuth2\Server\Entities\ScopeEntityInterface;

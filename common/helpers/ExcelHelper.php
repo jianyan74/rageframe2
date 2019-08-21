@@ -36,10 +36,6 @@ class ExcelHelper
             return false;
         }
 
-        // 清除之前的错误输出
-        ob_end_clean();
-        ob_start();
-
         !$filename && $filename = time();
 
         // 初始化
@@ -74,6 +70,10 @@ class ExcelHelper
             }
         }
 
+        // 清除之前的错误输出
+        ob_end_clean();
+        ob_start();
+
         // 直接输出下载
         switch ($suffix) {
             case 'xlsx' :
@@ -82,8 +82,6 @@ class ExcelHelper
                 header("Content-Disposition: inline;filename=\"{$filename}.xlsx\"");
                 header('Cache-Control: max-age=0');
                 $writer->save('php://output');
-                exit();
-
                 break;
             case 'xls' :
                 $writer = new Xls($spreadsheet);
@@ -91,8 +89,6 @@ class ExcelHelper
                 header("Content-Disposition:inline;filename=\"{$filename}.xls\"");
                 header('Cache-Control: max-age=0');
                 $writer->save('php://output');
-                exit();
-
                 break;
             case 'csv' :
                 $writer = new Csv($spreadsheet);
@@ -100,8 +96,6 @@ class ExcelHelper
                 header("Content-Disposition:attachment; filename={$filename}.csv");
                 header('Cache-Control: max-age=0');
                 $writer->save('php://output');
-                exit();
-
                 break;
             case 'html' :
                 $writer = new Html($spreadsheet);
@@ -109,10 +103,13 @@ class ExcelHelper
                 header("Content-Disposition:attachment;filename=\"{$filename}.{$suffix}\"");
                 header('Cache-Control: max-age=0');
                 $writer->save('php://output');
-                exit();
-
                 break;
         }
+
+        /* 释放内存 */
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        ob_end_flush();
 
         return true;
     }
