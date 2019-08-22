@@ -31,7 +31,7 @@ class NotifySubscriptionConfigController extends BaseController
             return $this->message('修改成功', $this->redirect(['index']));
         } else {
             $data = $this->getConfigModel()->action;
-            $model->attributes = Json::decode($data);
+            $model->attributes = is_array($data) ? $data : Json::decode($data);
         }
 
         return $this->render('index', [
