@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             ]); ?>
             <div class="box-body">
                 <?= $form->field($model, 'cache')->checkbox() ?>
-                <?= $form->field($model, 'backupCache')->checkbox(); ?>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
