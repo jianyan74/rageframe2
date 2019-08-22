@@ -29,7 +29,7 @@ use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 use common\components\Curd;
 use common\models\base\SearchModel;
-use backend\controllers\BaseController;
+use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 
 /**
 * <?= $modelClass . "\n" ?>
@@ -37,40 +37,40 @@ use backend\controllers\BaseController;
 * Class <?= $controllerClass . "\n" ?>
 * @package <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) . "\n" ?>
 */
-class <?= $controllerClass ?> extends BaseController
+class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    use Curd;
+use Curd;
 
-    /**
-    * @var <?= $modelClass . "\n" ?>
-    */
-    public $modelClass = <?= $modelClass ?>::class;
+/**
+* @var <?= $modelClass . "\n" ?>
+*/
+public $modelClass = <?= $modelClass ?>::class;
 
 
-    /**
-    * 首页
-    *
-    * @return string
-    * @throws \yii\web\NotFoundHttpException
-    */
-    public function actionIndex()
-    {
-        $searchModel = new SearchModel([
-            'model' => $this->modelClass,
-            'scenario' => 'default',
-            'partialMatchAttributes' => [], // 模糊查询
-            'defaultOrder' => [
-                'id' => SORT_DESC
-            ],
-            'pageSize' => $this->pageSize
-        ]);
+/**
+* 首页
+*
+* @return string
+* @throws \yii\web\NotFoundHttpException
+*/
+public function actionIndex()
+{
+$searchModel = new SearchModel([
+'model' => $this->modelClass,
+'scenario' => 'default',
+'partialMatchAttributes' => [], // 模糊查询
+'defaultOrder' => [
+'id' => SORT_DESC
+],
+'pageSize' => $this->pageSize
+]);
 
-        $dataProvider = $searchModel
-            ->search(Yii::$app->request->queryParams);
+$dataProvider = $searchModel
+->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-        ]);
-    }
+return $this->render('index', [
+'dataProvider' => $dataProvider,
+'searchModel' => $searchModel,
+]);
+}
 }
