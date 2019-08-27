@@ -64,7 +64,7 @@ class Fans extends \common\models\base\BaseModel
             [['merchant_id', 'member_id', 'sex', 'follow', 'followtime', 'unfollowtime', 'group_id', 'last_updated', 'status', 'created_at', 'updated_at'], 'integer'],
             [['unionid'], 'string', 'max' => 64],
             [['openid', 'nickname'], 'string', 'max' => 50],
-            [['head_portrait'], 'string', 'max' => 150],
+            [['head_portrait'], 'string', 'max' => 255],
             [['tag'], 'string', 'max' => 1000],
             [['last_longitude', 'last_latitude'], 'string', 'max' => 10],
             [['last_address', 'country', 'province', 'city'], 'string', 'max' => 100],
