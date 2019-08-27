@@ -17,7 +17,7 @@ class m190719_024050_wechat_fans extends Migration
             'unionid' => "varchar(64) NULL DEFAULT '' COMMENT '唯一公众号ID'",
             'openid' => "varchar(50) NOT NULL DEFAULT '' COMMENT 'openid'",
             'nickname' => "varchar(50) NULL DEFAULT '' COMMENT '昵称'",
-            'head_portrait' => "varchar(150) NULL DEFAULT '' COMMENT '头像'",
+            'head_portrait' => "varchar(255) NULL DEFAULT '' COMMENT '头像'",
             'sex' => "tinyint(2) NULL DEFAULT '0' COMMENT '性别'",
             'follow' => "tinyint(1) NULL DEFAULT '1' COMMENT '是否关注[1:关注;0:取消关注]'",
             'followtime' => "int(10) unsigned NULL DEFAULT '0' COMMENT '关注时间'",
