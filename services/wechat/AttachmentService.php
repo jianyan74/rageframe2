@@ -422,9 +422,9 @@ class AttachmentService extends Service
                 break;
         }
 
-        if ($total - $count > 0) {
+        if ($total - ($offset + $count) > 0) {
             return [
-                'offset' => ($offset + 1) * $count,
+                 'offset' => ($offset + $count),
                 'count' => $count
             ];
         }
