@@ -137,6 +137,9 @@ class UploadHelper
     public function verifyFile()
     {
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
+        if (!$file) {
+            throw new NotFoundHttpException('找不到上传文件');
+        }
         if ($file->getHasError()) {
             throw new NotFoundHttpException('上传失败，请检查文件');
         }
