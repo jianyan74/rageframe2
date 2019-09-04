@@ -67,7 +67,8 @@ class UploadHelper
         'compress',
         'width',
         'height',
-        'md5'
+        'md5',
+        'poster',
     ];
 
     /**
