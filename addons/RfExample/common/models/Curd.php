@@ -101,6 +101,7 @@ class Curd extends \common\models\base\BaseModel
             'views' => '浏览量',
             'date' => '日期',
             'time' => '时间',
+            'color' => '颜色',
             'start_time' => '开始时间',
             'end_time' => '结束时间',
             'status' => '状态',

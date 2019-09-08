@@ -49,6 +49,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);?>
             </div>
         </div>
+        <?= $form->field($model, 'color')->widget(\backend\widgets\color\Color::class, [
+        ]); ?>
         <?= \backend\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,
