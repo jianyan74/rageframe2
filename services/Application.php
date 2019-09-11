@@ -33,6 +33,7 @@ use common\components\Service;
  * @property \services\wechat\RuleKeywordService $wechatRuleKeyword 规则关键字
  * @property \services\wechat\RuleKeywordStatService $wechatRuleKeywordStat 规则关键字统计
  * @property \services\wechat\ReplyDefaultService $wechatReplyDefault 默认回复
+ * @property \services\wechat\TemplateMsgService $wechatTemplateMsg 模板消息
  * @property \services\member\MemberService $member 会员
  * @property \services\member\AuthService $memberAuth 会员第三方授权
  * @property \services\member\AddressService $memberAddress 会员收货地址
@@ -102,6 +103,10 @@ class Application extends Service
         'wechatRuleKeyword' => 'services\wechat\RuleKeywordService',
         'wechatRuleKeywordStat' => 'services\wechat\RuleKeywordStatService',
         'wechatReplyDefault' => 'services\wechat\ReplyDefaultService',
+        'wechatTemplateMsg' => [
+            'class' => 'services\wechat\TemplateMsgService',
+            'queueSwitch' => true, // 是否丢进队列
+        ],
         /** ------ 用户 ------ **/
         'member' => 'services\member\MemberService',
         'memberAuth' => 'services\member\AuthService',

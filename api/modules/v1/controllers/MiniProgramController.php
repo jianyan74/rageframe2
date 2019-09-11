@@ -11,6 +11,7 @@ use common\helpers\ArrayHelper;
 use common\helpers\ResultDataHelper;
 use common\models\member\Auth;
 use common\enums\CacheKeyEnum;
+use common\models\wechat\FormId;
 
 /**
  * 小程序授权验证
@@ -85,7 +86,7 @@ class MiniProgramController extends OnAuthController
 
         // 插入到用户授权表
         if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM, $userinfo['openId']))) {
-            $memberAuthInfo = Yii::$app->services->memberAuth->create([
+            Yii::$app->services->memberAuth->create([
                 'unionid' => $userinfo['unionId'] ?? '',
                 'oauth_client' => Auth::CLIENT_MINI_PROGRAM,
                 'oauth_client_user_id' => $userinfo['openId'],
@@ -150,6 +151,51 @@ class MiniProgramController extends OnAuthController
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             $filename = $response->saveAs('/path/to/directory', 'appcode.png');
         }
+    }
+
+    /**
+     * 记录小程序formid
+     *
+     * @return mixed
+     */
+    public function actionFormId()
+    {
+        $model = new FormId();
+        $model->attributes = Yii::$app->request->post();
+
+        if (!$model->validate()) {
+            return ResultDataHelper::api(422, $this->getError($model));
+        }
+
+        $model->member_id = Yii::$app->user->identity->member_id;
+        $model->merchant_id = $this->getMerchantId();
+
+        return Yii::$app->services->wechatTemplateMsg->addFormId($model);
+    }
+
+    /**
+     * 发送小程序模板消息
+     *
+     * @return mixed
+     */
+    public function actionSend()
+    {
+        $member_id = Yii::$app->user->identity->member_id;
+        $data = [
+            'touser' => 'openid',
+            'weapp_template_msg' => [
+                'template_id' => '*****',
+                'page' => 'index',
+                'form_id' => Yii::$app->services->wechatTemplateMsg->getFormId($member_id), //建议采用系统存储formid的形式获取
+                'data' => [
+                    "keyword1" => '关键字1',
+                ],
+            ],
+//          小程序绑定公众号发送模板消息
+//            'mp_template_msg' => [
+//            ]
+        ];
+        return Yii::$app->services->wechatTemplateMsg->send($data);
     }
 
     /**
