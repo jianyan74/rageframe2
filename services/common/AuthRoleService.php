@@ -79,52 +79,27 @@ class AuthRoleService extends Service
     }
 
     /**
-     * @param $id
+     * @param int $id
+     * @param string $app_id 应用id
      * @return array
      */
-    public function getJsTreeData($id)
+    public function getJsTreeData($id, $app_id)
     {
-        $allAuth = $this->getAuth();
+        $allAuth = $this->getAuth($app_id);
         $auth = $this->getAuthById($id);
-        $addonNames = $formAuth = $checkIds = $addonsFormAuth = $addonsCheckIds = [];
 
-        // 已选中的权限id
-        $tmpChildCount = [];
-        foreach ($auth as $value) {
-            if ($value['type'] == AuthTypeEnum::TYPE_DEFAULT) {
-                $checkIds[] = $value['id'];
-            } else {
-                $addonsCheckIds[] = $value['id'];
-            }
+        $addonNames = [];
+        $formAuth = $checkIds = $addonsFormAuth = $addonsCheckIds = [];
 
-            // 统计他自己出现次数
-            if ($value['pid'] > 0) {
-                !isset($tmpChildCount[$value['pid']]) ? $tmpChildCount[$value['pid']] = 1 : $tmpChildCount[$value['pid']] += 1;
-            }
-        }
-
-        // 所有权限数据
-        $tmpAuthCount = [];
+        // 区分默认和插件权限
         foreach ($allAuth as $item) {
-            $data = [
-                'id' => $item['id'],
-                'parent' => !empty($item['pid']) ? $item['pid'] : '#',
-                'text' => $item['title'],
-                // 'icon' => 'none'
-            ];
-
             if ($item['type'] == AuthTypeEnum::TYPE_DEFAULT) {
-                $formAuth[] = $data;
-
-                $count = count(ArrayHelper::getChildIds($allAuth, $item['id']));
-                $tmpAuthCount[$item['id']] = $count == 0 ? 1 : $count;
+                $formAuth[] = $item;
             } else {
+                $item['pid'] = $item['addons_name'];
+                $addonsFormAuth[] = $item;
                 $addonNames[$item['addons_name']] = $item['addons_name'];
-                $data['parent'] = $item['addons_name'];
-                $addonsFormAuth[] = $data;
             }
-
-            unset($data);
         }
 
         // 获取顶级插件数据
@@ -132,20 +107,20 @@ class AuthRoleService extends Service
         foreach ($addons as $addon) {
             $addonsFormAuth[] = [
                 'id' => $addon['name'],
-                'parent' => '#',
-                'text' => $addon['title'],
-                // 'icon' => 'none'
+                'pid' => 0,
+                'title' => $addon['title'],
             ];
         }
 
-        // 做一次筛选，不然jstree会把顶级分类下所有的子分类都选择
-        foreach ($tmpChildCount as $key => $item) {
-            if (isset($tmpAuthCount[$key]) && $item != $tmpAuthCount[$key]) {
-                $checkIds = array_merge(array_diff($checkIds, [$key]));
+        // 区分默认和插件权限ID
+        foreach ($auth as $value) {
+            if ($value['type'] == AuthTypeEnum::TYPE_DEFAULT) {
+                $checkIds[] = $value['id'];
+            } else {
+                $addonsCheckIds[] = $value['id'];
             }
         }
 
-        unset($tmpChildCount, $tmpAuthCount, $auth, $allAuth);
         return [$formAuth, $checkIds, $addonsFormAuth, $addonsCheckIds];
     }
 
@@ -154,8 +129,12 @@ class AuthRoleService extends Service
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getAuth()
+    public function getAuth($app_id)
     {
+        if ($app_id != AppEnum::BACKEND) {
+            return Yii::$app->services->authItem->getList($app_id);
+        }
+
         if (Yii::$app->services->auth->isSuperAdmin()) {
             return Yii::$app->services->authItem->getList();
         }
@@ -224,11 +203,16 @@ class AuthRoleService extends Service
     }
 
     /**
-     * @param $role_id
-     * @param array $items
+     * 授权
+     *
+     * @param int $role_id 角色ID
+     * @param array $data 数据
+     * @param string $type 类型
+     * @param string $app_id 应用ID
+     * @return bool
      * @throws \yii\db\Exception
      */
-    public function accredit($role_id, array $data, $type)
+    public function accredit($role_id, array $data, $type, $app_id)
     {
         // 删除原先所有权限
         AuthItemChild::deleteAll(['role_id' => $role_id, 'type' => $type]);
@@ -238,7 +222,8 @@ class AuthRoleService extends Service
         }
 
         $rows = [];
-        $items = Yii::$app->services->authItem->getList($data);
+        $items = Yii::$app->services->authItem->getList($app_id, $data);
+
         foreach ($items as $value) {
             $rows[] = [
                 $role_id,
@@ -252,8 +237,7 @@ class AuthRoleService extends Service
         }
 
         $field = ['role_id', 'item_id', 'name', 'app_id', 'type', 'addons_name', 'is_menu'];
-        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field,
-            $rows)->execute();
+        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field, $rows)->execute();
     }
 
     /**

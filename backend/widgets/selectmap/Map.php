@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\selectmap;
 
 use Yii;
@@ -52,10 +53,14 @@ class Map extends InputWidget
         $value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
         $name = $this->hasModel() ? Html::getInputName($this->model, $this->attribute) : $this->name;
 
-        if ($value && !is_array($value)) {
-            $value = json_decode($value, true);
-            empty($value) && $value = unserialize($value);
-            empty($value) && $value = [];
+        try {
+            if ($value && !is_array($value)) {
+                $value = json_decode($value, true);
+                empty($value) && $value = unserialize($value);
+                empty($value) && $value = [];
+            }
+        } catch (\Exception $e) {
+            $value = [];
         }
 
         // 显示地址

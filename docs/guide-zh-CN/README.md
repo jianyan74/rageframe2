@@ -13,9 +13,9 @@
 
 - [目录结构](sys-catalog.md)
 - [开发规范](sys-exploit.md)
-- [全局说明](sys-global-description.md)
+- [控制台](sys-console.md)
 - [表单控件](sys-widget.md)
-- [组件调用](sys-subassembly.md)
+- [系统组件](sys-subassembly.md)
 - [系统JS](sys-js-method.md)
 - [权限控制](sys-auth.md)
 - [公用支付](sys-payment.md)
@@ -77,6 +77,7 @@
 - UploadHelper - 上传辅助类
 - [ResultDataHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
+- ...
 
 #### 附录
 
@@ -84,7 +85,9 @@
 - [SearchModel](component-search-model.md)
 - Curd
 - [应用配置独立域名](independent-app-domain-name.md)
+- [代码模板](system-code-template.md)
 - [代码提示/线上性能优化](system-optimize.md)
+- [扩展依赖安装使用](system-relyon.md)
 - [PHP编程规范](php-standard.md)
 - [Yii2核心框架代码风格](core-code-style.md)
 - [网址收录](append-website.md)

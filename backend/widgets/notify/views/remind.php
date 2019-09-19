@@ -1,60 +1,95 @@
 <?php
-use yii\grid\GridView;
-use common\helpers\Url;
 
-$this->title = '私信列表';
+use yii\grid\GridView;
+use common\helpers\Html;
+use common\enums\SubscriptionReasonEnum;
+
+$this->title = '提醒列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <div class="col-sm-12">
-        <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                <li><a href="<?= Url::to(['announce'])?>"> 公告列表</a></li>
-                <li><a href="<?= Url::to(['message'])?>"> 私信列表</a></li>
-                <li class="active"><a href="<?= Url::to(['remind'])?>"> 提醒列表</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="active tab-pane">
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        //重新定义分页样式
-                        'tableOptions' => ['class' => 'table table-hover'],
-                        'columns' => [
-                            [
-                                'class' => 'yii\grid\SerialColumn',
-                                'visible' => false, // 不显示#
-                            ],
-                            [
-                                'label'=> '对应ID',
-                                'filter' => false, //不显示搜索框
-                                'value' => function ($model) {
-                                    return '#' . $model->notify->target_id;
-                                },
-                            ],
-                            'notify.content',
-                            [
-                                'label'=> '查看时间',
-                                'attribute' => 'updated_at',
-                                'filter' => false, //不显示搜索框
-                                'value' => function ($model) {
-                                    if ($model['updated_at'] == $model['created_at']) {
-                                        return '现在';
-                                    }
-
-                                    return Yii::$app->formatter->asRelativeTime($model['updated_at']);
-                                },
-                            ],
-                            [
-                                'label'=> '创建时间',
-                                'attribute' => 'created_at',
-                                'filter' => false, //不显示搜索框
-                                'format' => ['date', 'php:Y-m-d H:i:s'],
-                            ],
+    <div class="col-sm-2">
+        <div class="box box-solid p-xs rfAddonMenu">
+            <div class="box-header with-border">
+                <h3 class="rf-box-title">消息提醒</h3>
+            </div>
+            <div class="box-body no-padding">
+                <?= $this->render('_nav') ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="box">
+            <div class="box-body table-responsive">
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    //重新定义分页样式
+                    'tableOptions' => ['class' => 'table table-hover'],
+                    'columns' => [
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'visible' => false, // 不显示#
                         ],
-                    ]); ?>
-                </div>
+                        [
+                            'label' => '对应ID',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                return '#' . $model->notify->target_id;
+                            },
+                        ],
+                        'notify.content',
+                        [
+                            'label' => '创建时间',
+                            'attribute' => 'created_at',
+                            'headerOptions' => ['class' => 'col-md-2'],
+                            'filter' => false, //不显示搜索框
+                            'format' => ['date', 'php:Y-m-d H:i:s'],
+                        ],
+                        [
+                            'label' => '查看时间',
+                            'attribute' => 'updated_at',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                            'filter' => false, //不显示搜索框
+                            'value' => function ($model) {
+                                if ($model['updated_at'] == $model['created_at']) {
+                                    return '现在';
+                                }
+
+                                return Yii::$app->formatter->asRelativeTime($model['updated_at']);
+                            },
+                        ],
+                        [
+                            'label' => '操作',
+                            'format' => 'raw',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                            'value' => function ($model) {
+                                switch ($model->notify->target_type) {
+                                    case SubscriptionReasonEnum::LOG_CREATE :
+                                        return Html::a('查看', ['/common/log/index'], [
+                                            'class' => 'openContab blue',
+                                            'data-title' => '全局日志',
+                                        ]);
+                                        break;
+                                    case SubscriptionReasonEnum::BEHAVIOR_CREATE :
+                                        return Html::a('查看', ['/common/action-log/index'], [
+                                            'class' => 'openContab blue',
+                                            'data-title' => '行为日志',
+                                        ]);
+                                        break;
+                                    case SubscriptionReasonEnum::SMS_CREATE :
+                                        return Html::a('查看', ['/common/sms-log/index'], [
+                                            'class' => 'openContab blue',
+                                            'data-title' => '短信日志',
+                                        ]);
+                                        break;
+                                }
+                            }
+                        ]
+                    ],
+                ]); ?>
             </div>
         </div>
     </div>

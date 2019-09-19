@@ -22,9 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                     //重新定义分页样式
                     'tableOptions' => ['class' => 'table table-hover'],
                     'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                        ],
+                        'id',
                         'out_trade_no',
                         [
                             'label' => '支付金额',

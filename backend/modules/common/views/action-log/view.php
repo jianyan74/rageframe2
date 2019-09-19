@@ -7,8 +7,7 @@ use common\helpers\Html;
 ?>
 
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">×</span></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
     <h4 class="modal-title">基本信息</h4>
 </div>
 <div class="modal-body">
@@ -34,11 +33,13 @@ use common\helpers\Html;
             <td>用户</td>
             <td>
                 <?php
-                    if (AppEnum::BACKEND == $model->app_id) {
-                        echo $model->manager->username;
-                    } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])){
-                        echo $model->member->username;
-                    }
+                if (empty($model->user_id)) {
+                    echo '游客';
+                } elseif (AppEnum::BACKEND == $model->app_id) {
+                    echo $model->manager->username;
+                } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])) {
+                    echo $model->member->username;
+                }
                 ?>
             </td>
         </tr>
@@ -48,7 +49,7 @@ use common\helpers\Html;
         </tr>
         <tr>
             <td>控制器方法</td>
-            <td><?= $model['controller']; ?>/<?= $model['action']; ?></td>
+            <td><?= Html::encode($model['controller']); ?>/<?= Html::encode($model['action']); ?></td>
         </tr>
         <tr>
             <td>Url</td>
@@ -62,11 +63,11 @@ use common\helpers\Html;
             <td>地区</td>
             <td>
                 <?php
-                    $data = [];
-                    !empty($model['country']) && $data[] = $model['country'];
-                    !empty($model['provinces']) && $data[] = $model['provinces'];
-                    !empty($model['city']) && $data[] = $model['city'];
-                    echo implode(' · ', $data);
+                $data = [];
+                !empty($model['country']) && $data[] = $model['country'];
+                !empty($model['provinces']) && $data[] = $model['provinces'];
+                !empty($model['city']) && $data[] = $model['city'];
+                echo implode(' · ', $data);
                 ?>
             </td>
         </tr>

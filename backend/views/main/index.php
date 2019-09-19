@@ -2,6 +2,8 @@
 use common\helpers\Html;
 use backend\assets\AppAsset;
 
+/* @var $this yii\web\View */
+
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>

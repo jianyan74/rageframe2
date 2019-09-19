@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-12">
         <div class="box">
             <?php $form = ActiveForm::begin([]); ?>
-            <?= $this->render('../curd/content', [
+            <?= $this->render('../curd/_form', [
                 'model' => $model,
                 'form' => $form,
             ]); ?>

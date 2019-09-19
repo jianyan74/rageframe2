@@ -1,12 +1,12 @@
 <?php
+
 namespace services\wechat;
 
-use common\helpers\ArrayHelper;
-use common\queues\WxTemplateMsgJob;
 use Yii;
+use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
 use common\models\wechat\FormId;
-use yii\web\UnprocessableEntityHttpException;
+use common\queues\WechatTemplateMsgJob;
 
 /**
  * Class TemplateMsgService
@@ -34,12 +34,15 @@ class TemplateMsgService extends Service
      * ```php
      *       Yii::$app->services->wechatTemplateMsg->send($data)
      * ```
+     *
      * @param array $data 模板数据
+     * @return bool|string|null
+     * @throws UnprocessableEntityHttpException
      */
     public function send($data)
     {
         if ($this->queueSwitch == true) {
-            $messageId = Yii::$app->queue->push(new WxTemplateMsgJob([
+            $messageId = Yii::$app->queue->push(new WechatTemplateMsgJob([
                 'data' => $data,
             ]));
 
@@ -53,9 +56,10 @@ class TemplateMsgService extends Service
      * 发送 (发送不成功请先检查系统微信参数是否配置)
      * 微信小程序统一服务消息接口（格式参考文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html）
      * 微信公众号模板消息（格式参考文档：https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html）
+     *
      * @param $data
      * @return bool
-     * @throws \yii\base\UnprocessableEntityHttpException
+     * @throws UnprocessableEntityHttpException
      */
     public function realSend($data)
     {
@@ -67,22 +71,27 @@ class TemplateMsgService extends Service
                 // 微信公众号模板消息
                 $result = Yii::$app->wechat->app->template_message->send($data);
             }
+
             Yii::info($result);
             if ($result['errcode'] != 0) {
-                throw new UnprocessableEntityHttpException('模板消息发送失败:'.$result['errcode']);
+                throw new UnprocessableEntityHttpException('模板消息发送失败:' . $result['errcode']);
             }
+
             return true;
         } catch (\Exception $e) {
             Yii::error($e->getMessage());
             throw new UnprocessableEntityHttpException($e->getMessage());
         }
-
-        return false;
     }
 
     /**
      * 获取formid
+     *
      * @param $member_id
+     * @return mixed
+     * @throws UnprocessableEntityHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function getFormId($member_id)
     {
@@ -96,6 +105,7 @@ class TemplateMsgService extends Service
         if (!$model) {
             throw new \yii\web\UnprocessableEntityHttpException('未找到formid');
         }
+
         $form_id = $model->form_id;
         $model->delete();
 
@@ -104,7 +114,9 @@ class TemplateMsgService extends Service
 
     /**
      * 存储formid
+     *
      * @param FormId $model
+     * @return bool
      */
     public function addFormId(FormId $model)
     {
@@ -115,8 +127,9 @@ class TemplateMsgService extends Service
             ->count();
 
         if ($count < $this->form_count) {
-            $model->save();
+            return $model->save();
         }
-        return;
+
+        return false;
     }
 }

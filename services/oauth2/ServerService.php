@@ -64,7 +64,7 @@ class ServerService extends Service
      */
     public function getPrivateKey()
     {
-        $privateKey = 'file://' . Yii::$app->debris->config('oauth2_rsa_private');
+        $privateKey = 'file://' . Yii::getAlias(Yii::$app->debris->config('oauth2_rsa_private'));
 
         // 如果私钥文件有密码
         if (!empty(Yii::$app->debris->config('oauth2_rsa_private_encryption'))) {

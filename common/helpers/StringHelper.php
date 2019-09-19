@@ -74,6 +74,25 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
+     * 时间戳转日期
+     *
+     * @param $value
+     * @return false|int
+     */
+    public static function intToDate($value, $format = 'Y-m-d H:i:s')
+    {
+        if (empty($value)) {
+            return date($format);
+        }
+
+        if (is_numeric($value)) {
+            return date($format, $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * 获取缩略图地址
      *
      * @param string $url

@@ -7,6 +7,7 @@ use yii\web\NotFoundHttpException;
 use common\models\forms\CreditsLogForm;
 use common\components\Service;
 use common\models\member\CreditsLog;
+use common\models\member\Account;
 
 /**
  * Class CreditsLogService
@@ -46,14 +47,16 @@ class CreditsLogService extends Service
 
         $creditsLogForm->num = abs($creditsLogForm->num);
 
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-        $this->oldNum = $creditsLogForm->member->user_integral;
-        $creditsLogForm->member->user_integral += $creditsLogForm->num;
-        $creditsLogForm->member->accumulate_integral += $creditsLogForm->num;
-        $this->newNum = $creditsLogForm->member->user_integral;
+        $this->oldNum = $account->user_integral;
+        $account->user_integral += $creditsLogForm->num;
+        $account->accumulate_integral += $creditsLogForm->num;
+        $this->newNum = $account->user_integral;
 
-        if (!$creditsLogForm->member->save()) {
-            throw new NotFoundHttpException($this->getError($creditsLogForm->member));
+        if (!$account->save()) {
+            throw new NotFoundHttpException($this->getError($account));
         }
 
         $this->create($creditsLogForm);
@@ -73,18 +76,19 @@ class CreditsLogService extends Service
         }
 
         $creditsLogForm->num = - abs($creditsLogForm->num);
-
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-        $this->oldNum = $creditsLogForm->member->user_integral;
-        $creditsLogForm->member->user_integral += $creditsLogForm->num;
-        $this->newNum = $creditsLogForm->member->user_integral;
+        $this->oldNum = $account->user_integral;
+        $account->user_integral += $creditsLogForm->num;
+        $this->newNum = $account->user_integral;
 
         if ($this->newNum < 0) {
             throw new NotFoundHttpException('积分不足');
         }
 
-        if (!$creditsLogForm->member->save()) {
-            throw new NotFoundHttpException($this->getError($creditsLogForm->member));
+        if (!$account->save()) {
+            throw new NotFoundHttpException($this->getError($account));
         }
 
         $this->create($creditsLogForm);
@@ -103,21 +107,20 @@ class CreditsLogService extends Service
         }
 
         $creditsLogForm->num = abs($creditsLogForm->num);
-
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-        $this->oldNum = $creditsLogForm->member->user_money;
-        $creditsLogForm->member->user_money += $creditsLogForm->num;
-        $creditsLogForm->member->accumulate_money += $creditsLogForm->num;
-        $this->newNum = $creditsLogForm->member->user_money;
+        $this->oldNum = $account->user_money;
+        $account->user_money += $creditsLogForm->num;
+        $account->accumulate_money += $creditsLogForm->num;
+        $this->newNum = $account->user_money;
 
-        if (!$creditsLogForm->member->save()) {
-            throw new NotFoundHttpException($this->getError($creditsLogForm->member));
+        if (!$account->save()) {
+            throw new NotFoundHttpException($this->getError($account));
         }
 
         $model = $this->create($creditsLogForm);
         $creditsLogForm->map_id = $model->id;
-        // 记录到总日志
-        Yii::$app->services->memberMoneyLog->create($creditsLogForm);
     }
 
     /**
@@ -133,24 +136,23 @@ class CreditsLogService extends Service
         }
 
         $creditsLogForm->num = - abs($creditsLogForm->num);
-
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-        $this->oldNum = $creditsLogForm->member->user_money;
-        $creditsLogForm->member->user_money += $creditsLogForm->num;
-        $this->newNum = $creditsLogForm->member->user_money;
+        $this->oldNum = $account->user_money;
+        $account->user_money += $creditsLogForm->num;
+        $this->newNum = $account->user_money;
 
         if ($this->newNum < 0) {
             throw new NotFoundHttpException('余额不足');
         }
 
-        if (!$creditsLogForm->member->save()) {
-            throw new NotFoundHttpException($this->getError($creditsLogForm->member));
+        if (!$account->save()) {
+            throw new NotFoundHttpException($this->getError($account));
         }
 
         $model = $this->create($creditsLogForm);
         $creditsLogForm->map_id = $model->id;
-        // 记录到总日志
-        Yii::$app->services->memberMoneyLog->create($creditsLogForm);
     }
 
     /**
@@ -159,11 +161,12 @@ class CreditsLogService extends Service
      * @param CreditsLogForm $creditsLogForm
      * @throws NotFoundHttpException
      */
-    private function create(CreditsLogForm $creditsLogForm)
+    public function create(CreditsLogForm $creditsLogForm)
     {
         $model = new CreditsLog();
         $model = $model->loadDefaultValues();
         $model->member_id = $creditsLogForm->member->id;
+        $model->pay_type = $creditsLogForm->pay_type;
         $model->old_num = $this->oldNum;
         $model->new_num = $this->newNum;
         $model->num = $creditsLogForm->num;
@@ -174,7 +177,7 @@ class CreditsLogService extends Service
         $model->map_id = $creditsLogForm->map_id;
 
         if (!$model->save()) {
-            throw new NotFoundHttpException($this->getError($this->member));
+            throw new NotFoundHttpException($this->getError($model));
         }
 
         return $model;

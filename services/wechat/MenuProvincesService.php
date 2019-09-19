@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use common\components\Service;
@@ -45,7 +46,7 @@ class MenuProvincesService extends Service
      */
     public function getListByTitle($title)
     {
-        if($model = MenuProvinces::findOne(['title' => $title, 'level' => 2, 'status' => StatusEnum::ENABLED])) {
+        if ($model = MenuProvinces::findOne(['title' => $title, 'level' => 2, 'status' => StatusEnum::ENABLED])) {
             return $this->getMapList($model->id);
         }
 

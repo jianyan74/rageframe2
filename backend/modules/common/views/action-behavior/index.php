@@ -81,7 +81,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'attribute' => 'level',
                             'value' => function ($model, $key, $index, $column) {
-                                return MessageLevelEnum::$listExplain[$model->level] ?? '';
+                                return Html::messageLevel($model->level);
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'level',
@@ -116,3 +116,4 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             </div>
         </div>
     </div>
+</div>

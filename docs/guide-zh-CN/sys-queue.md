@@ -74,6 +74,17 @@ Yii::$app->queue->isDone($id);
 
 > 注意: RabbitMQ 驱动不支持作业状态。
 
+### Debug
+
+```
+$config['modules']['debug'] = [
+    'class' => 'yii\debug\Module',
+    'panels' => [
+        'queue' => \yii\queue\debug\Panel::class,
+    ],
+];
+```
+
 ### 控制台
 
 控制台用于监听和处理队列任务。

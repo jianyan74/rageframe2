@@ -38,7 +38,7 @@ class AccessTokenService extends Service
      *
      * @param Member $member
      * @param $group
-     * @param int $cycle_index
+     * @param int $cycle_index 重新获取次数
      * @return array
      * @throws \yii\base\Exception
      */
@@ -48,7 +48,7 @@ class AccessTokenService extends Service
         $model->member_id = $member->id;
         $model->group = $group;
         // 删除缓存
-        !empty($model->access_token) && Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $model->access_token);
+        !empty($model->access_token) && Yii::$app->cache->delete($this->getCacheKey($model->access_token));
         $model->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
         $model->access_token = Yii::$app->security->generateRandomString() . '_' . time();
         $model->status = StatusEnum::ENABLED;
@@ -68,17 +68,13 @@ class AccessTokenService extends Service
         $result['expiration_time'] = Yii::$app->params['user.accessTokenExpire'];
 
         // 记录访问次数
-        $member->visit_count += 1;
-        $member->last_time = time();
-        $member->last_ip = Yii::$app->request->getUserIP();
-        $member->save();
+        Yii::$app->services->member->lastLogin($member);
         $member = ArrayHelper::toArray($member);
         unset($member['password_hash'], $member['auth_key'], $member['password_reset_token'], $member['access_token'], $member['refresh_token']);
         $result['member'] = $member;
 
         // 写入缓存
-        $key = CacheKeyEnum::API_ACCESS_TOKEN . $model->access_token;
-        $this->cache === true && Yii::$app->cache->set($key, $model, $this->timeout);
+        $this->cache === true && Yii::$app->cache->set($this->getCacheKey($model->access_token), $model, $this->timeout);
 
         return $result;
     }
@@ -94,7 +90,7 @@ class AccessTokenService extends Service
             return $this->getTokenByAccessToken($token);
         }
 
-        $key = CacheKeyEnum::API_ACCESS_TOKEN . $token;
+        $key = $this->getCacheKey($token);
         if (!($model = Yii::$app->cache->get($key))) {
             $model = $this->getTokenByAccessToken($token);
             Yii::$app->cache->set($key, $model, $this->timeout);
@@ -124,12 +120,21 @@ class AccessTokenService extends Service
      */
     public function disableByAccessToken($access_token)
     {
-        $this->cache === true && Yii::$app->cache->delete(CacheKeyEnum::API_ACCESS_TOKEN . $access_token);
+        $this->cache === true && Yii::$app->cache->delete($this->getCacheKey($access_token));
 
         if ($model = $this->getTokenByAccessToken($access_token)) {
             $model->status = StatusEnum::DISABLED;
             $model->save();
         }
+    }
+
+    /**
+     * @param $access_token
+     * @return string
+     */
+    protected function getCacheKey($access_token)
+    {
+        return CacheKeyEnum::API_ACCESS_TOKEN . $access_token;
     }
 
     /**

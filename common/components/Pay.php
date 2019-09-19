@@ -47,11 +47,12 @@ class Pay extends Component
     {
         return new AliPay(ArrayHelper::merge([
             'app_id' => $this->rfConfig['alipay_appid'],
-            'notify_url' => Url::removeMerchantIdUrl('toFront', ['notify/ali']),
+            'notify_url' => '',
             'return_url' => '',
             'ali_public_key' => $this->rfConfig['alipay_cert_path'],
             // 加密方式： ** RSA2 **
             'private_key' => $this->rfConfig['alipay_key_path'],
+            'sandbox' => false
         ], $config));
     }
 
@@ -83,7 +84,7 @@ class Pay extends Component
     {
         return new UnionPay(ArrayHelper::merge([
             'mch_id' => $this->rfConfig['union_mchid'],
-            'notify_url' => Url::removeMerchantIdUrl('toFront', ['notify/union']),
+            'notify_url' => '',
             'return_url' => '',
             'cert_id' => $this->rfConfig['union_cert_id'],
             'private_key' => $this->rfConfig['union_private_key'],

@@ -18,14 +18,13 @@
 /**
 * 实例化钩子
 *
-* @param string $addonsName 模块名称
+* @param string $addonsName 模块名称 如果想自定义钩子方法可以用插件名称.方法，例如 RfExample.test
 * @param array $params 传递参数
 * @param bool $debug 开发者模式 是否开启报错 默认false
-* @param string $action 钩子方法默认 hook
 * @return bool
 * @throws NotFoundHttpException
 */
-<?= \common\helpers\Hook::to($addonsName, $params, $action, $debug); ?>
+<?= \common\helpers\Hook::to($addonsName, $params, $debug); ?>
 
 // 实际案例
 <?= \common\helpers\Hook::to('RfExample', []); ?>

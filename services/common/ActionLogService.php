@@ -10,6 +10,7 @@ use common\models\common\ActionLog;
 use common\helpers\ArrayHelper;
 use common\enums\SubscriptionActionEnum;
 use common\enums\SubscriptionReasonEnum;
+use common\enums\MessageLevelEnum;
 use Zhuzhichao\IpLocationZh\Ip;
 
 /**
@@ -58,6 +59,7 @@ class ActionLogService extends Service
         $model->app_id = Yii::$app->id;
         $model->get_data = Yii::$app->request->get();
         $model->post_data = $noRecordData == true ? Yii::$app->request->post() : [];
+        // $model->post_data = $noRecordData == true ? file_get_contents("php://input") : [];
         $model->header_data = ArrayHelper::toArray(Yii::$app->request->headers);
         $model->method = Yii::$app->request->method;
         $model->module = Yii::$app->controller->module->id;
@@ -78,9 +80,9 @@ class ActionLogService extends Service
         if (!empty($level)) {
             // 创建订阅消息
             $actions = [
-                'info' => SubscriptionActionEnum::BEHAVIOR_INFO,
-                'warning' => SubscriptionActionEnum::BEHAVIOR_WARNING,
-                'error' => SubscriptionActionEnum::BEHAVIOR_ERROR,
+                MessageLevelEnum::INFO => SubscriptionActionEnum::BEHAVIOR_INFO,
+                MessageLevelEnum::WARNING => SubscriptionActionEnum::BEHAVIOR_WARNING,
+                MessageLevelEnum::ERROR => SubscriptionActionEnum::BEHAVIOR_ERROR,
             ];
 
             Yii::$app->services->sysNotify->createRemind(
@@ -88,7 +90,7 @@ class ActionLogService extends Service
                 SubscriptionReasonEnum::BEHAVIOR_CREATE,
                 $actions[$level],
                 $model['user_id'],
-                "新增加了一条 $level 行为"
+                MessageLevelEnum::$listExplain[$level] . "行为：$url"
             );
         }
     }

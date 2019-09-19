@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
@@ -13,7 +14,7 @@ use common\controllers\AddonsController;
 class BaseController extends AddonsController
 {
     /**
-    * @var string
-    */
+     * @var string
+     */
     // public $layout = "@addons/RfArticle/backend/views/layouts/main";
 }

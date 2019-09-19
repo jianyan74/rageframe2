@@ -13,6 +13,7 @@ use common\models\common\Addons;
 use common\helpers\ExecuteHelper;
 use common\enums\AppEnum;
 use common\helpers\ArrayHelper;
+use backend\interfaces\AddonWidget;
 use backend\modules\common\forms\AddonsForm;
 use backend\controllers\BaseController;
 
@@ -190,6 +191,7 @@ class AddonsController extends BaseController
             throw new NotFoundHttpException($upgradeClass . '未找到');
         }
 
+        /** @var AddonWidget $upgradeModel */
         $upgradeModel = new $upgradeClass;
         if (!method_exists($upgradeModel, 'run')) {
             throw new NotFoundHttpException($upgradeClass . '/run方法未找到');

@@ -187,6 +187,9 @@ $(function () {
                             return false;
                         }
                     });
+
+                    // 重新加载
+                    $(this).trigger('dblclick');
                 }
                 flag = false;
                 return false;

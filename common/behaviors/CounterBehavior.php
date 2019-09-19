@@ -59,17 +59,14 @@ class CounterBehavior extends Behavior
     {
         /** @var Connection $redis */
         $redis = Yii::$app->redis;
-        $key = sprintf('hist:%s:%s', $this->userId, $this->action);
+        // 限流: 用户 + 访问方法
+        $key = sprintf('hist:%s:%s', $this->userId, Yii::$app->controller->route);
         $now = DateHelper::microtime(); // 毫秒时间戳
 
-        // $pipe= $redis->multi(Redis::PIPELINE); //使用管道提升性能
         $redis->zadd($key, $now, $now); // value 和 score 都使用毫秒时间戳
         $redis->zremrangebyscore($key, 0, $now - $this->period); // 移除时间窗口之前的行为记录，剩下的都是时间窗口内的
-        $redis->zcard($key);  //获取窗口内的行为数量
-        $redis->expire($key, $this->period + 1000);  // 多加一秒过期时间
-        $replies = $redis->exec();
 
-        if ($replies[2] > $this->maxCount) {
+        if ($redis->zcard($key) > $this->maxCount) {
             throw new TooManyRequestsHttpException('请求过快');
         }
     }

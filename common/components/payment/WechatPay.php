@@ -43,7 +43,7 @@ class WechatPay
         $this->order = [
             'spbill_create_ip' => Yii::$app->request->userIP,
             'fee_type' => 'CNY',
-            'notify_url' => Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['we-notify/notify']),
+            'notify_url' => '',
         ];
 
         $this->config = $config;
@@ -62,8 +62,8 @@ class WechatPay
         $gateway->setAppId($this->config['app_id']);
         $gateway->setMchId($this->config['mch_id']);
         $gateway->setApiKey($this->config['api_key']);
-        $gateway->setCertPath($this->config['cert_client']);
-        $gateway->setKeyPath($this->config['cert_key']);
+        $gateway->setCertPath(Yii::getAlias($this->config['cert_client']));
+        $gateway->setKeyPath(Yii::getAlias($this->config['cert_key']));
 
         return $gateway;
     }

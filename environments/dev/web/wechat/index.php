@@ -28,6 +28,8 @@ function p(...$array)
     } else {
         print_r($array);
     }
+
+    echo '</pre>';
 }
 
 (new yii\web\Application($config))->run();

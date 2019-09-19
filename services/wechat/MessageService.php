@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
@@ -43,6 +44,7 @@ class MessageService extends Service
      * @param MassRecord $massRecord
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function send(MassRecord $massRecord)
     {
@@ -102,7 +104,7 @@ class MessageService extends Service
         switch ($type) {
             // 文字回复
             case Rule::RULE_MODULE_TEXT :
-                $message =  new Text($data);
+                $message = new Text($data);
                 break;
             // 图片回复
             case Rule::RULE_MODULE_IMAGE :

@@ -1,4 +1,3 @@
-
 let echartsList = [];
 let echartsListConfig = [];
 // ----------------------------------- 文件上传 ----------------------------------- //
@@ -37,6 +36,14 @@ $(document).on("click", ".upload-box", function (e) {
 });
 
 // 触发上传2
+$(document).on("click", ".upload-box .fa-cloud-upload", function (e) {
+    if (e.target == this) {
+        let boxId = $(this).parent().parent().attr('data-boxId');
+        $('#upload-' + boxId + ' .webuploader-container input').trigger('click');
+    }
+});
+
+// 触发上传3
 $(document).on("click", ".upload-box-immediately", function () {
     let boxId = $(this).parent().parent().parent().attr('data-boxId');
     $('#upload-' + boxId + ' .webuploader-container input').trigger('click');
@@ -55,6 +62,7 @@ $(function () {
             let uploader = WebUploader.create(config);
             //当validate不通过时，会以派送错误事件的形式通知
             uploader.on('error', function (type) {
+                console.log(type);
                 switch (type) {
                     case 'Q_EXCEED_NUM_LIMIT':
                         rfError("上传文件数量过多！");
@@ -66,7 +74,7 @@ $(function () {
                         rfError("文件大小超出限制！");
                         break;
                     case 'Q_TYPE_DENIED':
-                        rfError("禁止上传该类型文件！");
+                        rfError("禁止上传该类型文件！", '请检查文件类型或文件为空文件');
                         break;
                     case 'F_DUPLICATE':
                         rfError("请勿重复上传该文件！");
@@ -131,7 +139,7 @@ $(function () {
                 console.log(data);
                 // 阿里js直传
                 if (config.formData.drive == 'oss-js') {
-                    getOssPathUrl(data, config);
+                    getOssPathUrl(data, config, file);
                     return;
                 }
 
@@ -232,13 +240,13 @@ $(function () {
         }
 
         // 获取oss js直传的文件信息
-        function getOssPathUrl(data, config) {
+        function getOssPathUrl(data, config, file) {
             var url = $(data._raw).find("Location").text();
             $.ajax({
                 type: "post",
                 url: config.getOssPathUrl,
                 dataType: "json",
-                data: {url: url, type: config.type},
+                data: {url: url, type: config.type, md5: md5[file.id]},
                 success: function (data) {
                     if (parseInt(data.code) === 200) {
                         data = data.data;
@@ -353,3 +361,106 @@ $(document).on("click", ".map-select", function (e) {
     parent.find('.rfSelectMap').attr('href', url);
     parent.find('.rfSelectMap').trigger('click')
 });
+
+// ----------------------------------- JsTree ----------------------------------- //
+
+/**
+ * 带checkbox的树形控件使用说明
+ * @data 应该是一个js数组
+ * @id: 将树渲染到页面的某个div上，此div的id
+ * @checkId:需要默认勾选的数节点id；1.checkId="all"，表示勾选所有节点 2.checkId=[1,2]表示勾选id为1,2的节点
+ * 节点的id号由url传入json串中的id决定
+ */
+function showCheckboxTree(data, id, checkId) {
+    var that = $("#" + id);
+
+    menuTree = that.bind("loaded.jstree", function (e, data) {
+        that.jstree("open_all");
+        that.find("li").each(function () {
+            if (checkId == 'all') {
+                that.jstree("check_node", $(this));
+            }
+
+            if (checkId instanceof Array) {
+                for (var i = 0; i < checkId.length; i++) {
+                    if ($(this).attr("id") == checkId[i]) {
+                        that.jstree("check_node", $(this));
+                    }
+                }
+            }
+        });
+    }).jstree({
+        "core": {
+            "data": data,
+            "attr": {
+                "class": "jstree-checked"
+            }
+        },
+        "types": {
+            "default": {
+                "valid_children": ["default", "file"]
+            },
+            "file": {
+                "icon": "glyphicon glyphicon-file",
+                "valid_children": []
+            }
+        },
+        "checkbox": {
+            "keep_selected_style": false,
+            "real_checkboxes": true
+        },
+        "plugins": [
+            "contextmenu", "dnd", "search",
+            "types", "checkbox"
+        ],
+        "contextmenu": {
+            "items": {
+                "create": null,
+                "rename": null,
+                "remove": null,
+                "ccp": null
+            }
+        }
+    });
+
+    // 加载完毕关闭所有节点
+    that.bind('ready.jstree', function (obj, e) {
+        that.jstree('close_all');
+    });
+}
+
+/**
+ * 获取所有选择的数据
+ *
+ * @param treeId
+ */
+function getCheckTreeIds(treeId) {
+    // 打开所有的节点，不然获取不到子节点数据
+    var that = $("#" + treeId);
+    that.jstree('open_all');
+
+    var ids = [];
+    var treeNode = that.jstree(true).get_selected(true);
+
+    for (var i = 0; i < treeNode.length; i++) {
+
+        var node = treeNode[i];
+        var nodeId = node.original.id;
+
+        // 判断是否重复
+        if ($.inArray(nodeId, ids) == -1) {
+            ids.push(nodeId);
+        }
+
+        for (var j = 0; j < node.parents.length; j++) {
+            // 判断是否重复
+            var parentId = node.parents[j];
+            if (parentId != "#" && $.inArray(parentId, ids) == -1) {
+                ids.push(parentId);
+            }
+        }
+    }
+
+    that.jstree('close_all');
+    return ids;
+}

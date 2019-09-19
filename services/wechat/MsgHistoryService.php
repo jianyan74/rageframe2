@@ -1,12 +1,13 @@
 <?php
+
 namespace services\wechat;
 
-use common\helpers\Html;
 use Yii;
 use yii\helpers\Json;
 use common\enums\WechatEnum;
 use common\components\Service;
 use common\enums\StatusEnum;
+use common\helpers\Html;
 use common\models\wechat\MsgHistory;
 
 /**
@@ -38,7 +39,7 @@ class MsgHistoryService extends Service
         // 统计记录
         if (!isset($setting['utilization_status']) || $setting['utilization_status'] == StatusEnum::ENABLED) {
             // 插入规则统计
-                !empty($data['rule_id']) && Yii::$app->services->wechatRuleStat->set($data['rule_id']);
+            !empty($data['rule_id']) && Yii::$app->services->wechatRuleStat->set($data['rule_id']);
 
             // 插入关键字统计
             if (!empty($data['keyword_id']) && !empty($data['rule_id'])) {
@@ -72,7 +73,7 @@ class MsgHistoryService extends Service
                 break;
             case WechatEnum::TYPE_LOCATION :
                 $messgae = Json::decode($messgae);
-                return '主动发送位置 : 经纬度【'.$messgae['Location_X'] . ',' . $messgae['Location_Y'] . "】<br>地址 : " . $messgae['Label'];
+                return '主动发送位置 : 经纬度【' . $messgae['Location_X'] . ',' . $messgae['Location_Y'] . "】<br>地址 : " . $messgae['Label'];
                 break;
             case WechatEnum::EVENT_CILCK :
                 $messgae = Json::decode($messgae);
@@ -94,10 +95,10 @@ class MsgHistoryService extends Service
                         return '取消关注公众号';
                         break;
                     case WechatEnum::EVENT_SUBSCRIBE :
-                        return '通过二维码关注公众号 : '. str_replace('qrscene_', '', $messgae['EventKey']);
+                        return '通过二维码关注公众号 : ' . str_replace('qrscene_', '', $messgae['EventKey']);
                         break;
                     case WechatEnum::EVENT_LOCATION :
-                        return '被动发送位置 : 经纬度【'.$messgae['Latitude'] . ',' . $messgae['Longitude'] . "】精度:" . $messgae['Precision'];
+                        return '被动发送位置 : 经纬度【' . $messgae['Latitude'] . ',' . $messgae['Longitude'] . "】精度:" . $messgae['Precision'];
                         break;
                     case WechatEnum::EVENT_VIEW :
                         return "单击菜单访问 : " . $messgae['EventKey'];
@@ -110,7 +111,7 @@ class MsgHistoryService extends Service
                         break;
                     case 'location_select' :
                         $sendLocationInfo = $messgae['SendLocationInfo'];
-                        return "主动发送位置 : " . '经纬度【'.$sendLocationInfo['Location_X'] . ',' . $sendLocationInfo['Location_Y'] . "】地址:" . $sendLocationInfo['Label'];
+                        return "主动发送位置 : " . '经纬度【' . $sendLocationInfo['Location_X'] . ',' . $sendLocationInfo['Location_Y'] . "】地址:" . $sendLocationInfo['Label'];
                         break;
                     case 'scancode_waitmsg' :
                         $scanCodeInfo = $messgae['ScanCodeInfo'];

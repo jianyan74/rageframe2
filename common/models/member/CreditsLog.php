@@ -11,6 +11,7 @@ use common\behaviors\MerchantBehavior;
  * @property int $id
  * @property string $merchant_id 商户id
  * @property string $member_id 用户id
+ * @property int $pay_type 支付类型
  * @property string $credit_type 变动类型[integral:积分;money:余额]
  * @property string $credit_group 变动的组别
  * @property string $credit_group_detail 变动的详细组别
@@ -66,7 +67,7 @@ class CreditsLog extends \common\models\base\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'member_id', 'map_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['pay_type', 'merchant_id', 'member_id', 'map_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['old_num', 'new_num', 'num'], 'number'],
             [['credit_type', 'credit_group', 'credit_group_detail', 'ip'], 'string', 'max' => 30],
             [['remark'], 'string', 'max' => 200],
@@ -82,6 +83,7 @@ class CreditsLog extends \common\models\base\BaseModel
             'id' => 'ID',
             'merchant_id' => '商户',
             'member_id' => '用户',
+            'pay_type' => '支付类型',
             'map_id' => '关联id',
             'ip' => 'ip地址',
             'credit_type' => '变动类型',

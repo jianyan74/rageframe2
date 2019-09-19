@@ -3,7 +3,6 @@
 namespace common\models\forms;
 
 use yii\base\Model;
-use common\enums\PayEnum;
 use common\models\member\Member;
 
 /**
@@ -28,5 +27,5 @@ class CreditsLogForm extends Model
      *
      * @var int
      */
-    public $pay_type = PayEnum::PAY_TYPE_USER_MONEY;
+    public $pay_type = 0;
 }

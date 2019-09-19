@@ -211,7 +211,6 @@ class UeditorController extends Controller
 
             $baseInfo = $upload->getBaseInfo();
             $url = $baseInfo['url'];
-
             if (isset($upload->config['poster']) && $upload->config['poster'] == true) {
                 $upload->getVideoPoster();
                 $baseInfo = $upload->getBaseInfo();

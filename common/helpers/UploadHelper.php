@@ -138,9 +138,11 @@ class UploadHelper
     public function verifyFile()
     {
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
+
         if (!$file) {
             throw new NotFoundHttpException('找不到上传文件');
         }
+
         if ($file->getHasError()) {
             throw new NotFoundHttpException('上传失败，请检查文件');
         }
@@ -346,6 +348,7 @@ class UploadHelper
         // save poster local and upload to cloud, return the cloud url
         $file = UploadedFile::getInstanceByName($this->uploadFileName);
         if ($file->error === UPLOAD_ERR_OK) {
+            $this->type = Attachment::UPLOAD_TYPE_IMAGES;
             $this->baseInfo['name'] = $this->baseInfo['name'] . '_poster';
             $this->baseInfo['extension'] = 'jpg';
             $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
@@ -362,6 +365,10 @@ class UploadHelper
                 if (is_resource($stream)) {
                     fclose($stream);
                 }
+
+                $imgInfo = getimagesize($tmpPosterFilePath);
+                $this->baseInfo['width'] = $imgInfo[0] ?? 0;
+                $this->baseInfo['height'] = $imgInfo[1] ?? 0;
 
                 unlink($tmpPosterFilePath); // delete tmp file
                 return true;
@@ -652,8 +659,7 @@ class UploadHelper
 
         $this->baseInfo['id'] = $attachment_id;
         $this->baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($this->baseInfo['size'], 2);
-        $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'],
-            $this->type);
+        $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'], $this->type);
 
         return $this->baseInfo;
     }

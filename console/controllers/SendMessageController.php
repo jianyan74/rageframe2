@@ -1,4 +1,5 @@
 <?php
+
 namespace console\controllers;
 
 use Yii;
@@ -26,9 +27,9 @@ class SendMessageController extends Controller
         /** @var MassRecord $record */
         foreach ($models as $record) {
             if (Yii::$app->services->wechatMessage->send($record)) {
-                $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '发送成功, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
+                $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '发送成功, 所属商户ID:' . $record->merchant_id . PHP_EOL);
             } else {
-                $this->stderr(date('Y-m-d H:i:s') . ' --- ' . '发送失败, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
+                $this->stderr(date('Y-m-d H:i:s') . ' --- ' . '发送失败, 所属商户ID:' . $record->merchant_id . PHP_EOL);
             }
         }
 

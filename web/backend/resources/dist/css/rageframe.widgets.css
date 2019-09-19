@@ -43,6 +43,7 @@
     opacity: 1;
 }
 
+.upload-list ul li .img-box:hover .delimg-crop,
 .upload-list ul li .img-box:hover .delimg {
     position: absolute;
     width: 25px;

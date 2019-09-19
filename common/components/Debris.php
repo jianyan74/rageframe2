@@ -103,6 +103,8 @@ class Debris
         } else {
             print_r($array);
         }
+
+        echo '</pre>';
     }
 
     /**

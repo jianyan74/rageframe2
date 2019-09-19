@@ -209,6 +209,48 @@ class EchantsHelper
     }
 
     /**
+     * 饼图
+     *
+     * @param $function
+     * @param array $time
+     * @param array $defaultSeries
+     * @return array
+     */
+    public static function lineGraphic($function, array $time, $defaultSeries = [])
+    {
+        list($data, $fields) = call_user_func($function, $time['start'], $time['end']);
+
+        // 重组增加默认数据
+        $seriesData = [];
+        $seriesData[] = ArrayHelper::merge([
+            'name' => '',
+            'type' => 'bar',
+            'smooth' => true,
+            'barCategoryGap' => 25,
+            'data' => [],
+            'lineStyle' => [
+                'normal' => [
+                    'width' => 3,
+                    'shadowBlur' => 10,
+                    'shadowOffsetY' => 10,
+                    'shadowColor' => 'rgba(0, 0, 0, 0.5)',
+                ]
+            ]
+        ], $defaultSeries);
+
+        if (empty($data)) {
+            $data = [0];
+        }
+
+        $seriesData[0]['data'] = $data;
+
+        return [
+            'seriesData' => $seriesData,
+            'fieldsName' => $fields,
+        ];
+    }
+
+    /**
      * 重组数据 - 主要用户多此分组
      *
      * @param array $statData

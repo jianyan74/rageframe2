@@ -34,9 +34,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <td><?= $model['title']?></td>
                             <td class="col-md-1"><?= Html::sort($model['sort']) ?></td>
                             <td>
-                                <?= Html::edit(['edit', '_id' => $model['_id']]); ?>
+                                <?= Html::edit(['edit', 'id' => $model['_id']]); ?>
                                 <?= Html::status($model['status'] ?? 1); ?>
-                                <?= Html::delete(['delete', '_id' => $model['_id']]); ?>
+                                <?= Html::delete(['delete', 'id' => $model['_id']]); ?>
                             </td>
                         </tr>
                     <?php } ?>

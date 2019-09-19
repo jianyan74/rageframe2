@@ -1,4 +1,5 @@
 <?php
+
 namespace wechat\assets;
 
 use yii\web\AssetBundle;

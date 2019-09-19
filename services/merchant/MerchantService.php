@@ -1,4 +1,5 @@
 <?php
+
 namespace services\merchant;
 
 use common\components\Service;
@@ -49,7 +50,7 @@ class MerchantService extends Service
      */
     public function setInfo($merchant_id)
     {
-        // TODO 查询商户是否存在
+        // TODO 查询商户是否存在,目前已经全部移动到插件
 
         $this->info = [];
     }

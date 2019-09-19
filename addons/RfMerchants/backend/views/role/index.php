@@ -22,9 +22,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'dataProvider' => $dataProvider,
                     'keyColumnName' => 'id',
                     'parentColumnName' => 'pid',
-                    'parentRootValue' => '0', //first parentId value
+                    'parentRootValue' => $role['id'] ?? 0, // first parentId value
                     'pluginOptions' => [
-                        'initialState' => 'collapsed',
+                        // 'initialState' => 'collapsed',
                     ],
                     'options' => ['class' => 'table table-hover'],
                     'columns' => [

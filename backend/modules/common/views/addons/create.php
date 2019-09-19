@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <?php $form = ActiveForm::begin([
                             'options' => [
                                 'enctype' => 'multipart/form-data'
-                            ]
+                            ],
                         ]); ?>
                         <div class="row">
                             <div class="col-sm-12">
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     注意: 如果需要嵌入规则, 那么此插件必须能够处理文本类型消息 (WechatMessage)<br>
                                 </div>
                                 <div class="hr-line-dashed"></div>
-                                <div class="form-group">
+                                <div class="form-group desk-menu">
                                     <label class="control-label">后台菜单</label>
                                 </div>
                                 <div class="well well-sm">

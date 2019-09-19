@@ -85,7 +85,8 @@ class SiteController extends Controller
         $openid = $client->getOpenid(); //user openid
         $userInfo = $client->getUserInfo(); // user extend info
 
-        var_dump($id, $attributes, $openid, $userInfo);
+        Yii::$app->debris->p($id, $attributes, $openid, $userInfo);
+        die();
     }
 
     /**

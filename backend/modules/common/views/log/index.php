@@ -29,9 +29,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                     //重新定义分页样式
                     'tableOptions' => ['class' => 'table table-hover'],
                     'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                        ],
+                        'id',
                         [
                             'attribute' => 'method',
                             'headerOptions' => ['class' => 'col-md-1'],
@@ -52,10 +50,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 }
                             },
                             'filter' => false, //不显示搜索框
-                        ],
-                        [
-                            'attribute' => 'module',
-                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         'url',
                         [

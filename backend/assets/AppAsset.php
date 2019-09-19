@@ -39,7 +39,6 @@ class AppAsset extends AssetBundle
         'dist/js/adminlte.js',
         'dist/js/demo.js',
         'dist/js/template.js',
-        'dist/js/ueditor.all.min.js',
         'dist/js/rageframe.js',
         'dist/js/rageframe.widgets.js',
     ];

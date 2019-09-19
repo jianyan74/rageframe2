@@ -9,6 +9,7 @@ namespace common\enums;
  */
 class MessageLevelEnum
 {
+    const SUCCESS = 'success';
     const INFO = 'info';
     const WARNING = 'warning';
     const ERROR = 'error';

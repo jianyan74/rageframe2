@@ -96,7 +96,8 @@ class NotifyController extends BaseController
         $dataProvider->query
             ->with(['notifySenderForManager'])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['type' => Notify::TYPE_MESSAGE, 'manager_id' => Yii::$app->user->id]);
+            ->andWhere(['type' => Notify::TYPE_MESSAGE, 'manager_id' => Yii::$app->user->id])
+            ->with('notify');
 
         if ($data = $dataProvider->getModels()) {
             $ids = [];
@@ -115,7 +116,7 @@ class NotifyController extends BaseController
     }
 
     /**
-     * 私信
+     * 提醒
      *
      * @return string
      * @throws \yii\web\NotFoundHttpException
@@ -135,7 +136,7 @@ class NotifyController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->with(['notifySenderForManager'])
+            ->with(['notifySenderForManager', 'notify'])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['type' => Notify::TYPE_REMIND, 'manager_id' => Yii::$app->user->id]);
 

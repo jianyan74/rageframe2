@@ -1,4 +1,5 @@
 <?php
+
 namespace services\oauth2;
 
 use common\components\Service;
@@ -13,8 +14,11 @@ class RefreshTokenService extends Service
 {
     /**
      * @param $client_id
+     * @param $grant_type
      * @param $refresh_token
      * @param $expires
+     * @param $member_id
+     * @param $scopes
      */
     public function create($client_id, $grant_type, $refresh_token, $expires, $member_id, $scopes)
     {
@@ -26,7 +30,7 @@ class RefreshTokenService extends Service
         $model->expires = $expires;
         $model->grant_type = $grant_type;
         $model->refresh_token = $refresh_token;
-        $model->member_id = (string) $member_id;
+        $model->member_id = (string)$member_id;
         $model->scope = $scopes;
         $model->save();
     }
@@ -52,7 +56,8 @@ class RefreshTokenService extends Service
 
     /**
      * @param $client_id
-     * @return array|null|\yii\db\ActiveRecord
+     * @param $grant_type
+     * @return array|\yii\db\ActiveRecord|null
      */
     public function findByClientId($client_id, $grant_type)
     {

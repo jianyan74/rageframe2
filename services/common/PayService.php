@@ -58,6 +58,7 @@ class PayService extends Service
         $config = [
             'notify_url' => $payForm->notifyUrl, // 支付通知回调地址
             'return_url' => $payForm->returnUrl, // 买家付款成功跳转地址
+            'sandbox' => false
         ];
 
         // 生成订单
@@ -165,11 +166,11 @@ class PayService extends Service
     }
 
     /**
-     * 获取订单编号
+     * 支付通知回调
      *
-     * @param string $outTradeNo 订单号
-     * @param array $data 回调数据 字段['openid', 'mch_id', 'total_fee', 'transaction_id', 'fee_type', 'trade_type', 'pay_fee']
-     * @return bool|string|array
+     * @param PayLog $log
+     * @param string $paymentType 支付类型
+     * @return bool
      */
     public function notify(PayLog $log, $paymentType)
     {
@@ -181,7 +182,7 @@ class PayService extends Service
                 // TODO 处理订单
                 return true;
                 break;
-            case PayEnum::ORDER_GROUP_GOODS :
+            case PayEnum::ORDER_GROUP_RECHARGE :
                 // TODO 处理充值信息
                 return true;
                 break;

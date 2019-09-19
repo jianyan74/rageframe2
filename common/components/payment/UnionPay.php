@@ -37,8 +37,8 @@ class UnionPay
         $gateway = Omnipay::create($type);
         $gateway->setMerId($this->config['mch_id']);
         $gateway->setCertId($this->config['cert_id']);
-        $gateway->setPublicKey($this->config['public_key']); // path or content
-        $gateway->setPrivateKey($this->config['private_key']); // path or content
+        $gateway->setPublicKey(Yii::getAlias($this->config['public_key'])); // path or content
+        $gateway->setPrivateKey(Yii::getAlias($this->config['private_key'])); // path or content
         $gateway->setReturnUrl($this->config['return_url']);
         $gateway->setNotifyUrl($this->config['notify_url']);
 
@@ -68,6 +68,7 @@ class UnionPay
     public function app($order, $debug = false)
     {
         $gateway = $this->create();
+        /* @var $response \Omnipay\UnionPay\Message\CreateOrderResponse */
         $response = $gateway->createOrder($order)->send();
 
         return $debug ? $response->getData() : $response->getTradeNo();
@@ -83,6 +84,7 @@ class UnionPay
     public function html($order, $debug = false)
     {
         $gateway = $this->create();
+        /* @var $response \Omnipay\UnionPay\Message\LegacyQuickPayPurchaseResponse */
         $response = $gateway->purchase($order)->send();
 
         return $debug ? $response->getData() : $response->getRedirectHtml();

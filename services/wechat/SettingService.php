@@ -4,12 +4,12 @@ namespace services\wechat;
 
 use Yii;
 use yii\helpers\Json;
+use yii\web\NotFoundHttpException;
 use common\components\Service;
 use common\enums\StatusEnum;
 use common\enums\WechatEnum;
 use common\models\wechat\Setting;
 use common\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  * Class SettingService

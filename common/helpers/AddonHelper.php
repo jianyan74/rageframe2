@@ -5,7 +5,6 @@ namespace common\helpers;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
-use common\models\common\Addons;
 use common\enums\CacheKeyEnum;
 use common\models\common\AddonsConfig;
 use League\Flysystem\Filesystem;
@@ -18,11 +17,6 @@ use League\Flysystem\Adapter\Local;
  */
 class AddonHelper
 {
-    /**
-     * @var array
-     */
-    protected static $addonModels = [];
-
     /**
      * 获取插件配置
      *
@@ -150,55 +144,40 @@ class AddonHelper
      *
      * @return array|mixed
      */
-    public static function getConfig()
+    public static function getConfig($noCache = false)
     {
-        $model = Yii::$app->params['addon'];
-        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'];
-        if (!($configModel = Yii::$app->cache->get($key))) {
-            if (empty($configModel = AddonsConfig::find()->where([
-                'addons_name' => $model['name'],
-                'merchant_id' => Yii::$app->services->merchant->getId()
-            ])->one())) {
+        $name = Yii::$app->params['addon']['name'];
+        $cacheKey = CacheKeyEnum::COMMON_ADDONS_CONFIG . $name;
+        if (!($configModel = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
+            if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name))) {
                 return [];
             }
 
-            Yii::$app->cache->set($key, $configModel, 7200);
+            Yii::$app->cache->set($cacheKey, $configModel, 7200);
         }
 
-        unset($model);
-
-        return Json::decode($configModel->data);
+        return $configModel->data;
     }
 
     /**
      * 写入配置信息
      *
      * @param $config
-     * @return bool
+     * @return array|mixed
      */
-    public static function setConfig($config)
+    public static function setConfig(array $config)
     {
-        /* @var $model \common\models\common\Addons */
-        $model = Yii::$app->params['addon'];
-        $merchant_id = Yii::$app->services->merchant->getId();
-        if (empty($configModel = AddonsConfig::find()->where([
-            'addons_name' => $model['name'],
-            'merchant_id' => $merchant_id
-        ])->one())) {
+        $name = Yii::$app->params['addon']['name'];
+        if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name))) {
             $configModel = new AddonsConfig();
+            $configModel->addons_name = $name;
+            $configModel->data = [];
         }
 
-        $data = empty($configModel->data) ? [] : Json::decode($configModel->data);
-        $data = ArrayHelper::merge($data, $config);
+        $configModel->data = ArrayHelper::merge($configModel->data, $config);
+        $configModel->save();
 
-        $configModel->merchant_id = $merchant_id;
-        $configModel->data = Json::encode($data);
-        $configModel->addons_name = $model['name'];
-
-        // 清理缓存
-        $key = CacheKeyEnum::COMMON_ADDONS_CONFIG . $model['name'];
-        Yii::$app->cache->delete($key);
-        return $configModel->save();
+        return self::getConfig(true);
     }
 
     /**
@@ -215,30 +194,8 @@ class AddonHelper
             throw new NotFoundHttpException("插件不能为空");
         }
 
-        // 减少模块内多次调用hook的查询
-        if (isset(self::$addonModels[$name])) {
-            $addon = self::$addonModels[$name];
-        } else {
-            // 获取缓存
-            if (!($addon = Yii::$app->cache->get(CacheKeyEnum::COMMON_ADDONS . $name))) {
-                if (!($addon = Yii::$app->services->addons->findByNameWithBinding($name))) {
-                    throw new NotFoundHttpException("插件不存在");
-                }
-
-                // 数据库依赖缓存
-                $dependency = new \yii\caching\DbDependency([
-                    'sql' => Addons::find()
-                        ->select('updated_at')
-                        ->orderBy('updated_at desc')
-                        ->where(['name' => $name])
-                        ->createCommand()
-                        ->getRawSql(),
-                ]);
-
-                Yii::$app->cache->set(CacheKeyEnum::COMMON_ADDONS . $name, $addon, 360, $dependency);
-            }
-
-            self::$addonModels[$name] = $addon;
+        if (!($addon = Yii::$app->services->addons->findByNameWithBinding($name))) {
+            throw new NotFoundHttpException("插件不存在");
         }
 
         // 当前模块实例

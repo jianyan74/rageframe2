@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle;
 
 use Yii;
@@ -23,15 +24,14 @@ class Upgrade extends Migration implements AddonWidget
     ];
 
     /**
-    * @param $addon
-    * @return mixed|void
-    * @throws \yii\db\Exception
-    */
+     * @param $addon
+     * @return mixed|void
+     * @throws \yii\db\Exception
+     */
     public function run($addon)
     {
         $migration = new Migration();
-        switch ($addon->version)
-        {
+        switch ($addon->version) {
             case '1.0.1' :
                 // 增加测试 - 冗余的字段
                 // $migration->addColumn('{{%addon_example_curd}}', 'redundancy_field', 'varchar(48)');

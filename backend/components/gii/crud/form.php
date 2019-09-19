@@ -21,6 +21,11 @@ echo $form->field($generator, 'messageCategory');
 
 if (Yii::$app->request->isPost) {
     $table_s = $generator->getTableSchema();
+
+    if (empty($table_s)) {
+        return;
+    }
+
     $columns = $table_s->columns;
     $cols = [];
     foreach ($columns as $key => $val) {

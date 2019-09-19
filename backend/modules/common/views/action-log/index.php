@@ -22,18 +22,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                     //重新定义分页样式
                     'tableOptions' => ['class' => 'table table-hover'],
                     'columns' => [
+                        'id',
                         [
-                            'class' => 'yii\grid\SerialColumn',
+                            'attribute' => 'app_id',
+                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
-                        'app_id',
                         [
                             'label' => '用户',
                             'value' => function ($model) {
                                 if (AppEnum::BACKEND == $model->app_id) {
-                                    return $model->manager->username;
+                                    return $model->manager->username ?? '游客';
                                 } elseif (in_array($model->app_id,
                                     [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])) {
-                                    return $model->member->username;
+                                    return $model->member->username ?? '游客';
                                 }
                             },
                             'filter' => false, //不显示搜索框
@@ -50,7 +51,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'label' => '地区',
                             'value' => function ($model) {
-                                if ($model->ip == '2130706433') {
+                                if ($model->ip == ip2long('127.0.0.1')) {
                                     return '本地';
                                 } else {
                                     $data = [];
@@ -82,7 +83,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         ],
                     ],
                 ]); ?>
-
             </div>
         </div>
     </div>

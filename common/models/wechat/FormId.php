@@ -2,10 +2,6 @@
 
 namespace common\models\wechat;
 
-use Yii;
-use yii\db\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
-
 /**
  * This is the model class for table "rf_wechat_form_id".
  *
@@ -23,7 +19,7 @@ class FormId extends \common\models\base\BaseModel
      */
     public static function tableName()
     {
-        return 'rf_wechat_form_id';
+        return '{{%wechat_form_id}}';
     }
 
     /**
@@ -67,21 +63,5 @@ class FormId extends \common\models\base\BaseModel
         }
 
         return parent::beforeSave($insert);
-    }
-
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-            ]
-        ];
     }
 }

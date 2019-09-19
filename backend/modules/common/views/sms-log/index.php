@@ -28,10 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     //重新定义分页样式
                     'tableOptions' => ['class' => 'table table-hover'],
                     'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                            'visible' => true, // 不显示#
-                        ],
+                        'id',
                         'mobile',
                         [
                             'attribute' => 'code',

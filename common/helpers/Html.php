@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use common\enums\MessageLevelEnum;
 use Yii;
 use yii\helpers\BaseHtml;
 use common\enums\StatusEnum;
@@ -161,12 +162,35 @@ class Html extends BaseHtml
             WhetherEnum::ENABLED => self::tag('span', '是', [
                 'class' => "label label-primary label-sm",
             ]),
-            StatusEnum::DISABLED => self::tag('span', '否', [
+            WhetherEnum::DISABLED => self::tag('span', '否', [
                 'class' => "label label-default label-sm",
             ]),
         ];
 
         return $listBut[$status] ?? '';
+    }
+
+    /**
+     * 级别标签
+     *
+     * @param $level
+     * @return mixed|string
+     */
+    public static function messageLevel($level)
+    {
+        $listBut = [
+            MessageLevelEnum::INFO => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::INFO], [
+                'class' => "label label-info label-sm",
+            ]),
+            MessageLevelEnum::WARNING => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::WARNING], [
+                'class' => "label label-warning label-sm",
+            ]),
+            MessageLevelEnum::ERROR => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::ERROR], [
+                'class' => "label label-danger label-sm",
+            ]),
+        ];
+
+        return $listBut[$level] ?? '';
     }
 
     /**

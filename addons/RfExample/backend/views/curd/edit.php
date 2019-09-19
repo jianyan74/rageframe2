@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="box-title">基本信息</h3>
             </div>
             <?php $form = ActiveForm::begin([]); ?>
-            <?= $this->render('./content', [
+            <?= $this->render('./_form', [
                 'model' => $model,
                 'form' => $form,
             ]); ?>

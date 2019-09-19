@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\wechat\controllers;
 
 use Yii;
@@ -16,7 +17,7 @@ class BaseController extends AddonsController
     use WechatLogin;
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     public $layout = "@addons/RfArticle/wechat/views/layouts/main";
 }

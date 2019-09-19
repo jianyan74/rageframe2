@@ -1,4 +1,5 @@
 <?php
+
 namespace services\oauth2;
 
 use common\models\oauth2\AccessToken;
@@ -13,8 +14,11 @@ class AccessTokenService extends Service
 {
     /**
      * @param $client_id
+     * @param $grant_type
      * @param $access_token
      * @param $expires
+     * @param $member_id
+     * @param $scopes
      */
     public function create($client_id, $grant_type, $access_token, $expires, $member_id, $scopes)
     {
@@ -26,7 +30,7 @@ class AccessTokenService extends Service
         $model->expires = $expires;
         $model->grant_type = $grant_type;
         $model->access_token = $access_token;
-        $model->member_id = (string) $member_id;
+        $model->member_id = (string)$member_id;
         $model->scope = $scopes;
         $model->save();
     }
@@ -41,7 +45,8 @@ class AccessTokenService extends Service
 
     /**
      * @param $tokenId
-     * @return array|null|\yii\db\ActiveRecord
+     * @param string $client_id
+     * @return array|\yii\db\ActiveRecord|null
      */
     public function findByAccessToken($tokenId, $client_id = '')
     {
@@ -53,7 +58,8 @@ class AccessTokenService extends Service
 
     /**
      * @param $client_id
-     * @return array|null|\yii\db\ActiveRecord
+     * @param $grant_type
+     * @return array|\yii\db\ActiveRecord|null
      */
     public function findByClientId($client_id, $grant_type)
     {

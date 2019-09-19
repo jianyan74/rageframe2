@@ -105,6 +105,12 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     <tr>
                         <td>扩展支持</td>
                         <td>
+                            <?= extension_loaded('gd')
+                                ? '<span class="label label-primary">gd支持</span>'
+                                : '<span class="label label-default">gd不支持</span>'; ?>
+                            <?= extension_loaded('imagick')
+                                ? '<span class="label label-primary">imagick支持</span>'
+                                : '<span class="label label-default">imagick不支持</span>'; ?>
                             <?= extension_loaded('curl')
                                 ? '<span class="label label-primary">curl支持</span>'
                                 : '<span class="label label-default">curl不支持</span>'; ?>

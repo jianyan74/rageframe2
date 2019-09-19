@@ -78,7 +78,8 @@ class Attachment extends \common\models\base\BaseModel
             [['merchant_id', 'size', 'year', 'month', 'day', 'width', 'height', 'status', 'created_at', 'updated_at'], 'integer'],
             [['drive', 'extension'], 'string', 'max' => 50],
             [['upload_type'], 'string', 'max' => 10],
-            [['specific_type', 'base_url', 'path', 'name', 'md5'], 'string', 'max' => 100],
+            [['specific_type', 'md5'], 'string', 'max' => 100],
+            [['base_url', 'path', 'name'], 'string', 'max' => 1000],
             [['upload_ip'], 'string', 'max' => 16],
         ];
     }

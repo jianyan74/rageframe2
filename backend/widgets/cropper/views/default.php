@@ -17,7 +17,7 @@ use yii\helpers\Url;
                             <a href="<?= trim($vo) ?>" data-fancybox="rfUploadImg">
                                 <div class="bg-cover" style="background-image: url(<?= $vo ?>);"></div>
                             </a>
-                            <i class="delimg" data-multiple="<?= $config['multiple'] ?>"></i>
+                            <i class="delimg-crop" data-multiple="<?= $config['multiple'] ?>"></i>
                         </div>
                     </li>
                 <?php } ?>
@@ -25,10 +25,8 @@ use yii\helpers\Url;
                     <i class="fa fa-crop"></i>
                     <?php if ($themeConfig['select'] === true) { ?>
                         <div class="upload-box-bg hide befor-upload">
-                            <a class="first"
-                               href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'upload_type' => $type, 'multiple' => $config['multiple'], 'upload_drive' => $formData['drive']]) ?>"
-                               data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
-                            <a class="second crop-upload" onclick="boxId">裁剪上传</a>
+                            <a class="first" href="<?= Url::to(['/file/selector', 'boxId' => $boxId, 'upload_type' => $type, 'multiple' => $config['multiple'], 'upload_drive' => $formData['drive']]) ?>" data-toggle='modal' data-target='#ajaxModalMax'>选择图片</a>
+                            <a class="second crop-upload">裁剪上传</a>
                         </div>
                     <?php } ?>
                 </li>
@@ -50,7 +48,7 @@ use yii\helpers\Url;
             <a href="{{value}}" data-fancybox="rfUploadImg">
                 <div class="bg-cover" style="background-image: url({{value}});"></div>
             </a>
-            <i class="delimg" data-multiple="{{multiple}}"></i>
+            <i class="delimg-crop" data-multiple="{{multiple}}"></i>
         </div>
     </li>
 </script>
@@ -73,7 +71,7 @@ use yii\helpers\Url;
             dataType: 'json',
             data: formDataConfig,
             success: function (data) {
-                if (data.code == 200) {
+                if (parseInt(data.code) === 200) {
                     data = data.data;
 
                     // 判断是否是多图上传
@@ -100,7 +98,7 @@ use yii\helpers\Url;
     });
 
     // 删除图片节点
-    $(document).on("click", ".delimg", function () {
+    $(document).on("click", ".delimg-crop", function () {
         let parentObj = $(this).parent().parent();
         let multiple = $(this).data('multiple');
         let name = parentObj.parent().attr('data-name');

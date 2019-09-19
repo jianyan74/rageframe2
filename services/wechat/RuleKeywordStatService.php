@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use common\components\Service;
@@ -21,7 +22,7 @@ class RuleKeywordStatService extends Service
     {
         $ruleKeywordStat = RuleKeywordStat::find()
             ->where([
-                'rule_id'=> $rule_id,
+                'rule_id' => $rule_id,
                 'keyword_id' => $keyword_id,
                 'created_at' => strtotime(date('Y-m-d'))
             ])

@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;

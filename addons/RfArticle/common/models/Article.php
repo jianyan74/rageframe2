@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\common\models;
 
 use Yii;
@@ -106,7 +107,7 @@ class Article extends \common\models\base\BaseModel
             ->where(['<', 'id', $id])
             ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->select(['id', 'title'])
-            ->orderBy('id asc')
+            ->orderBy('id desc')
             ->one();
     }
 
@@ -180,7 +181,7 @@ class Article extends \common\models\base\BaseModel
      */
     public function getCate()
     {
-        return $this->hasOne(ArticleCate::class,['id' => 'cate_id']);
+        return $this->hasOne(ArticleCate::class, ['id' => 'cate_id']);
     }
 
     /**

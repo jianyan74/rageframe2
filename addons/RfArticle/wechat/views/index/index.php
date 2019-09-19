@@ -1,4 +1,5 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\AddonHelper;
 
@@ -15,7 +16,7 @@ $this->title = '文章列表';
     <li>
         <a href="{{item.link}}">
             <div class="thumb">
-                <img src="{{item.cover}}" alt="" />
+                <img src="{{item.cover}}" alt=""/>
             </div>
             <p class="title">{{item.title}}</p>
             <p class="time">{{item.created_at}}</p>
@@ -25,27 +26,27 @@ $this->title = '文章列表';
 </script>
 
 <script>
-    $(function(){
-        var loadData = function(page,mescroll){
+    $(function () {
+        var loadData = function (page, mescroll) {
             $.ajax({
-                type:"get",
-                url:"<?= Url::to(['index'])?>",
+                type: "get",
+                url: "<?= Url::to(['index'])?>",
                 dataType: "json",
                 data: {
-                    page:page.num,
+                    page: page.num,
                     rows_limit: page.size
                 },
-                success: function(res){
-                    if(res.code == 200){
+                success: function (res) {
+                    if (parseInt(res.code) === 200) {
                         mescroll.endSuccess(res.data.length);
                         var html = template('listTpl', res);
                         $(".list").append(html);
-                    }else{
+                    } else {
                         mescroll.endSuccess();
                     }
                 }
             });
-        }
+        };
 
         var mescroll = new MeScroll("mescroll", {
             up: {
@@ -58,11 +59,11 @@ $this->title = '文章列表';
                 callback: loadData,
                 page: {
                     num: 0,
-                    size:4
+                    size: 4
                 },
                 clearEmptyId: "list",
-                toTop:{
-                    src : "<?= AddonHelper::file('img/mescroll-totop.png'); ?>"
+                toTop: {
+                    src: "<?= AddonHelper::file('img/mescroll-totop.png'); ?>"
                 }
             }
         });

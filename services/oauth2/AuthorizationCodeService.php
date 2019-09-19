@@ -1,4 +1,5 @@
 <?php
+
 namespace services\oauth2;
 
 use common\components\Service;
@@ -27,7 +28,7 @@ class AuthorizationCodeService extends Service
 
         $model->expires = $expires;
         $model->authorization_code = $authorization_code;
-        $model->member_id = (string) $member_id;
+        $model->member_id = (string)$member_id;
         $model->scope = $scopes;
         $model->save();
     }

@@ -1,10 +1,11 @@
 <?php
+
 namespace services\wechat;
 
-use common\enums\CacheKeyEnum;
 use Yii;
 use common\models\wechat\FansStat;
 use common\components\Service;
+use common\enums\CacheKeyEnum;
 
 /**
  * Class FansStatService
@@ -94,7 +95,7 @@ class FansStatService extends Service
         ];
 
         $models = FansStat::find()
-            ->where(['in','date',$sevenDays])
+            ->where(['in', 'date', $sevenDays])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->all();
 
@@ -142,7 +143,7 @@ class FansStatService extends Service
         // 更新到数据库
         foreach ($list as $key => $value) {
             $model = new FansStat();
-            if(isset($weekStat[$key])) {
+            if (isset($weekStat[$key])) {
                 $model = $weekStat[$key];
             }
 
@@ -154,7 +155,7 @@ class FansStatService extends Service
 
         // 今日累计关注统计计算
         $cumulate_attention = Yii::$app->services->wechatFans->getCountFollow();
-        if(!($today = FansStat::find()->where(['date' => date('Y-m-d')])->one())) {
+        if (!($today = FansStat::find()->where(['date' => date('Y-m-d')])->one())) {
             $today = new FansStat();
             $today->date = date('Y-m-d');
             $today->created_at = strtotime($today->date);

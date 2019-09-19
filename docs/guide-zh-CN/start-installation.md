@@ -8,7 +8,7 @@
 
 ### 环境要求
 
-- PHP >= 7.1.3
+- PHP >= 7.2 (卸载邮件依赖 7.1.3 亦可)
 - PHP cURL 扩展
 - PHP OpenSSL 扩展
 - PHP fileinfo 拓展 素材管理模块需要用到

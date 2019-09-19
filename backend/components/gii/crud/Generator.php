@@ -30,13 +30,13 @@ class Generator extends \yii\gii\generators\crud\Generator
             'multipleInput' => "Input组",
             'radioList' => "单选按钮",
             'checkboxList' => "复选框",
-             'baiduUEditor' => "百度编辑器",
-             'image' => "图片上传",
-             'images' => "多图上传",
-             'file' => "文件上传",
-             'files' => "多文件上传",
+            'baiduUEditor' => "百度编辑器",
+            'image' => "图片上传",
+            'images' => "多图上传",
+            'file' => "文件上传",
+            'files' => "多文件上传",
             'cropper' => "图片裁剪上传",
-             'latLngSelection' => "经纬度选择",
+            'latLngSelection' => "经纬度选择",
         ];
     }
 
@@ -81,160 +81,160 @@ class Generator extends \yii\gii\generators\crud\Generator
                 break;
             case 'color':
                 return "\$form->field(\$model, '$attribute')->widget(\kartik\color\ColorInput::class, [
-    'options' => ['placeholder' => '请选择颜色'],
-]);";
+                            'options' => ['placeholder' => '请选择颜色'],
+                    ]);";
                 break;
             case 'time':
                 return "\$form->field(\$model, '$attribute')->widget(kartik\\time\TimePicker::class, [
-    'language' => 'zh-CN',
-    'pluginOptions' => [
-        'showSeconds' => true
-    ]
-])";
+                        'language' => 'zh-CN',
+                        'pluginOptions' => [
+                            'showSeconds' => true
+                        ]
+                    ])";
                 break;
             case 'date':
                 return "\$form->field(\$model, '$attribute')->widget(kartik\date\DatePicker::class, [
-    'language' => 'zh-CN',
-    'layout'=>'{picker}{input}',
-    'pluginOptions' => [
-        'format' => 'yyyy-mm-dd',
-        'todayHighlight' => true, // 今日高亮
-        'autoclose' => true, // 选择后自动关闭
-        'todayBtn' => true, // 今日按钮显示
-    ],
-    'options'=>[
-        'class' => 'form-control no_bor',
-    ]
-])";
+                        'language' => 'zh-CN',
+                        'layout'=>'{picker}{input}',
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd',
+                            'todayHighlight' => true, // 今日高亮
+                            'autoclose' => true, // 选择后自动关闭
+                            'todayBtn' => true, // 今日按钮显示
+                        ],
+                        'options'=>[
+                            'class' => 'form-control no_bor',
+                        ]
+                    ])";
                 break;
             case 'datetime':
                 return "\$form->field(\$model, '$attribute')->widget(kartik\datetime\DateTimePicker::class, [
-    'language' => 'zh-CN',
-    'options' => [
-        'value' => \$model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',\$model->$attribute),
-    ],
-    'pluginOptions' => [
-        'format' => 'yyyy-mm-dd hh:ii',
-        'todayHighlight' => true, // 今日高亮
-        'autoclose' => true, // 选择后自动关闭
-        'todayBtn' => true, // 今日按钮显示
-    ]
-])";
+                        'language' => 'zh-CN',
+                        'options' => [
+                            'value' => \$model->isNewRecord ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s',\$model->$attribute),
+                        ],
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd hh:ii',
+                            'todayHighlight' => true, // 今日高亮
+                            'autoclose' => true, // 选择后自动关闭
+                            'todayBtn' => true, // 今日按钮显示
+                        ]
+                    ])";
                 break;
             case 'multipleInput':
                 return "\$form->field(\$model, '$attribute')->widget(unclead\multipleinput\MultipleInput::class, [
-    'max' => 4,
-    'columns' => [
-        [
-            'name'  => 'user_id',
-            'type'  => 'dropDownList',
-            'title' => 'User',
-            'defaultValue' => 1,
-            'items' => [
-                1 => 'User 1',
-                2 => 'User 2'
-            ]
-        ],
-        [
-            'name'  => 'day',
-            'type'  => \kartik\date\DatePicker::class,
-            'title' => 'Day',
-            'value' => function(\$data) {
-                return \$data['day'];
-            },
-            'items' => [
-                '0' => 'Saturday',
-                '1' => 'Monday'
-            ],
-            'options' => [
-                'pluginOptions' => [
-                    'format' => 'dd.mm.yyyy',
-                    'todayHighlight' => true
-                ]
-            ]
-        ],
-        [
-            'name'  => 'priority',
-            'title' => 'Priority',
-            'enableError' => true,
-            'options' => [
-                'class' => 'input-priority'
-            ]
-        ]
-    ]
- ])";
+                        'max' => 4,
+                        'columns' => [
+                            [
+                                'name'  => 'user_id',
+                                'type'  => 'dropDownList',
+                                'title' => 'User',
+                                'defaultValue' => 1,
+                                'items' => [
+                                   1 => 'User 1',
+                                    2 => 'User 2'
+                                ]
+                            ],
+                            [
+                                'name'  => 'day',
+                                'type'  => \kartik\date\DatePicker::class,
+                                'title' => 'Day',
+                                'value' => function(\$data) {
+                                    return \$data['day'];
+                                },
+                                'items' => [
+                                    '0' => 'Saturday',
+                                    '1' => 'Monday'
+                                ],
+                                'options' => [
+                                    'pluginOptions' => [
+                                        'format' => 'dd.mm.yyyy',
+                                        'todayHighlight' => true
+                                    ]
+                                ]
+                            ],
+                            [
+                                'name'  => 'priority',
+                                'title' => 'Priority',
+                                'enableError' => true,
+                                'options' => [
+                                    'class' => 'input-priority'
+                                ]
+                            ]
+                        ]
+                     ])";
                 break;
             case 'cropper':
                 return "\$form->field(\$model, '$attribute')->widget(\backend\widgets\cropper\Cropper::class, [
-        'config' => [
-              // 可设置自己的上传地址, 不设置则默认地址
-              // 'server' => '',
-         ],
-        'formData' => [
-            // 'drive' => 'local',// 默认本地 支持 qiniu/oss/cos 上传
-        ],
-]);";
+                            'config' => [
+                                  // 可设置自己的上传地址, 不设置则默认地址
+                                  // 'server' => '',
+                             ],
+                            'formData' => [
+                                // 'drive' => 'local',// 默认本地 支持 qiniu/oss/cos 上传
+                            ],
+                    ]);";
                 break;
             case 'latLngSelection':
                 return "\$form->field(\$model, '$attribute')->widget(\backend\widgets\selectmap\Map::class, [
-            'type' => 'amap', // amap高德;tencent:腾讯;baidu:百度
-        ])->hint('点击地图某处才会获取到经纬度，否则默认北京')";
+                            'type' => 'amap', // amap高德;tencent:腾讯;baidu:百度
+                    ])->hint('点击地图某处才会获取到经纬度，否则默认北京')";
                 break;
             case 'image':
                 return "\$form->field(\$model, '$attribute')->widget(\common\widgets\webuploader\Files::class, [
-            'type' => 'images',
-            'theme' => 'default',
-            'themeConfig' => [],
-            'config' => [
-                // 可设置自己的上传地址, 不设置则默认地址
-                // 'server' => '',
-                'pick' => [
-                    'multiple' => false,
-                ],
-            ]
-        ]);";
+                            'type' => 'images',
+                            'theme' => 'default',
+                            'themeConfig' => [],
+                            'config' => [
+                                // 可设置自己的上传地址, 不设置则默认地址
+                                // 'server' => '',
+                                'pick' => [
+                                    'multiple' => false,
+                                ],
+                            ]
+                    ]);";
                 break;
             case 'images':
                 return "\$form->field(\$model, '$attribute')->widget(\common\widgets\webuploader\Files::class, [
-            'type' => 'images',
-            'theme' => 'default',
-            'themeConfig' => [],
-            'config' => [
-                // 可设置自己的上传地址, 不设置则默认地址
-                // 'server' => '',
-                'pick' => [
-                    'multiple' => true,
-                ],
-            ]
-        ]);";
+                            'type' => 'images',
+                            'theme' => 'default',
+                            'themeConfig' => [],
+                            'config' => [
+                                // 可设置自己的上传地址, 不设置则默认地址
+                                // 'server' => '',
+                                'pick' => [
+                                    'multiple' => true,
+                                ],
+                            ]
+                    ]);";
                 break;
             case 'file':
                 return "\$form->field(\$model, '$attribute')->widget(\common\widgets\webuploader\Files::class, [
-            'type' => 'files',
-            'theme' => 'default',
-            'themeConfig' => [],
-            'config' => [
-                // 可设置自己的上传地址, 不设置则默认地址
-                // 'server' => '',
-                'pick' => [
-                    'multiple' => false,
-                ],
-            ]
-        ]);";
+                            'type' => 'files',
+                            'theme' => 'default',
+                            'themeConfig' => [],
+                            'config' => [
+                                // 可设置自己的上传地址, 不设置则默认地址
+                                // 'server' => '',
+                                'pick' => [
+                                    'multiple' => false,
+                                ],
+                            ]
+                    ]);";
                 break;
             case 'files':
                 return "\$form->field(\$model, '$attribute')->widget(\common\widgets\webuploader\Files::class, [
-            'type' => 'files',
-            'theme' => 'default',
-            'themeConfig' => [],
-            'config' => [
-                // 可设置自己的上传地址, 不设置则默认地址
-                // 'server' => '',
-                'pick' => [
-                    'multiple' => true,
-                ],
-            ]
-        ]);";
+                            'type' => 'files',
+                            'theme' => 'default',
+                            'themeConfig' => [],
+                            'config' => [
+                                // 可设置自己的上传地址, 不设置则默认地址
+                                // 'server' => '',
+                                'pick' => [
+                                    'multiple' => true,
+                                ],
+                            ]
+                    ]);";
                 break;
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace console\controllers;
 
 use Yii;
@@ -25,8 +26,13 @@ class MsgHistoryController extends Controller
                 if ($history && $history['msg_history_date'] > 0) {
                     $oneDay = 60 * 60 * 24;
                     $time = time() - $oneDay * $history['msg_history_date'];
-                    MsgHistory::deleteAll(['and', ['merchant_id' => $record->merchant_id], ['<=', 'created_at', $time]]);
-                    $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '清理成功, 所属商户ID:' . $record->merchant_id  . PHP_EOL);
+                    MsgHistory::deleteAll([
+                        'and',
+                        ['merchant_id' => $record->merchant_id],
+                        ['<=', 'created_at', $time]
+                    ]);
+
+                    $this->stdout(date('Y-m-d H:i:s') . ' --- ' . '清理成功, 所属商户ID:' . $record->merchant_id . PHP_EOL);
                 }
             }
         }

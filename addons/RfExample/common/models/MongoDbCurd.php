@@ -1,9 +1,10 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
 use yii\mongodb\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for collection "mongodb curd".
@@ -21,6 +22,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class MongoDbCurd extends ActiveRecord
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -47,7 +50,7 @@ class MongoDbCurd extends ActiveRecord
     {
         return [
             [['title', 'status', 'cover', 'longitude', 'latitude'], 'required'],
-            [['sort', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['sort', 'created_at', 'updated_at', 'status', 'merchant_id'], 'integer'],
             [['sort', 'created_at', 'updated_at', 'status'], 'filter', 'filter' => 'intval'],
             [['author'], 'safe'],
         ];
@@ -60,6 +63,7 @@ class MongoDbCurd extends ActiveRecord
     {
         return [
             '_id' => 'ID',
+            'merchant_id' => '商户ID',
             'title' => '标题',
             'sort' => '排序',
             'status' => '状态',
@@ -69,22 +73,6 @@ class MongoDbCurd extends ActiveRecord
             'latitude' => '纬度',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-            ],
         ];
     }
 }

@@ -112,7 +112,7 @@ class SiteController extends OnAuthController
      * @return int|mixed
      * @throws \yii\web\UnprocessableEntityHttpException
      */
-    private function actionSmsCode()
+    public function actionSmsCode()
     {
         $model = new SmsCodeForm();
         $model->attributes = Yii::$app->request->post();

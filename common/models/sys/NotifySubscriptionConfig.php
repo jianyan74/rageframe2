@@ -2,7 +2,7 @@
 
 namespace common\models\sys;
 
-use Yii;
+use common\enums\StatusEnum;
 
 /**
  * This is the model class for table "{{%member_notify_subscription_config}}".
@@ -27,7 +27,7 @@ class NotifySubscriptionConfig extends \yii\db\ActiveRecord
     {
         return [
             [['manager_id'], 'integer'],
-            [['action'], 'string', 'max' => 500],
+            [['action'], 'safe'],
         ];
     }
 
@@ -40,5 +40,13 @@ class NotifySubscriptionConfig extends \yii\db\ActiveRecord
             'manager_id' => '用户id',
             'action' => 'Action',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getManager()
+    {
+        return $this->hasOne(Manager::class, ['id' => 'manager_id'])->where(['status' => StatusEnum::ENABLED]);
     }
 }

@@ -11,8 +11,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                class="sr-only">关闭</span></button>
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
     <h4 class="modal-title">消息群发</h4>
 </div>
 <div class="modal-body">

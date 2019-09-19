@@ -12,6 +12,9 @@ use common\queues\SmsJob;
 use common\components\Service;
 use common\models\common\SmsLog;
 use common\helpers\ArrayHelper;
+use common\enums\MessageLevelEnum;
+use common\enums\SubscriptionActionEnum;
+use common\enums\SubscriptionReasonEnum;
 use Overtrue\EasySms\EasySms;
 
 /**
@@ -97,6 +100,7 @@ class SmsService extends Service
      *
      * @param $mobile
      * @param $code
+     * @param $usage
      * @param int $member_id
      * @throws UnprocessableEntityHttpException
      */
@@ -132,25 +136,34 @@ class SmsService extends Service
         } catch (NotFoundHttpException $e) {
             throw new UnprocessableEntityHttpException($e->getMessage());
         } catch (\Exception $e) {
-            $errorMessage = '';
+            $errorMessage = [];
             $exceptions = $e->getExceptions();
             $gateways = $this->config['default']['gateways'];
 
             foreach ($gateways as $gateway) {
                 if (isset($exceptions[$gateway])) {
-                    $errorMessage .= "[$gateway]=" . $exceptions[$gateway]->getMessage();
+                    $errorMessage[$gateway] = $exceptions[$gateway]->getMessage();
                 }
             }
 
-            $this->saveLog([
+            $log = $this->saveLog([
                 'mobile' => $mobile,
                 'code' => $code,
                 'member_id' => $member_id,
                 'usage' => $usage,
                 'error_code' => 422,
                 'error_msg' => '发送失败',
-                'error_data' => $errorMessage,
+                'error_data' => Json::encode($errorMessage),
             ]);
+
+            // 加入提醒池
+            Yii::$app->services->sysNotify->createRemind(
+                $log->id,
+                SubscriptionReasonEnum::SMS_CREATE,
+                SubscriptionActionEnum::SMS_ERROR,
+                $log['member_id'],
+                MessageLevelEnum::$listExplain[MessageLevelEnum::ERROR] . "短信：$log->error_data"
+            );
 
             throw new UnprocessableEntityHttpException('短信发送失败');
         }
@@ -197,13 +210,15 @@ class SmsService extends Service
 
     /**
      * @param array $data
-     * @return bool
+     * @return SmsLog
      */
     protected function saveLog($data = [])
     {
         $log = new SmsLog();
         $log = $log->loadDefaultValues();
         $log->attributes = $data;
-        return $log->save();
+        $log->save();
+
+        return $log;
     }
 }

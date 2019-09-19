@@ -1,6 +1,7 @@
 <?php
 namespace common\models\sys;
 
+use common\helpers\ArrayHelper;
 use Yii;
 use common\helpers\TreeHelper;
 
@@ -115,16 +116,14 @@ class Menu extends \common\models\base\BaseModel
                 // 查找所有子级
                 $list = self::find()
                     ->where(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false])
-                    ->select(['id', 'level', 'tree'])
+                    ->select(['id', 'level', 'tree', 'pid'])
                     ->asArray()
                     ->all();
 
-                /** @var Menu $item */
-                foreach ($list as $item) {
-                    $itemLevel = $item['level'] + ($level - $this->level);
-                    $itemTree = str_replace($this->tree, $tree, $item['tree']);
-                    self::updateAll(['cate_id' => $parent->cate_id, 'level' => $itemLevel, 'tree' => $itemTree], ['id' => $item['id']]);
-                }
+                $distanceLevel = $level - $this->level;
+                // 递归修改
+                $data = ArrayHelper::itemsMerge($list, $this->id);
+                $this->recursionUpdate($data, $parent->cate_id, $distanceLevel, $tree);
 
                 $this->level = $level;
                 $this->tree = $tree;
@@ -132,6 +131,31 @@ class Menu extends \common\models\base\BaseModel
         }
 
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * 递归更新数据
+     *
+     * @param $data
+     * @param $distanceLevel
+     * @param $tree
+     */
+    protected function recursionUpdate($data, $cate_id, $distanceLevel, $tree)
+    {
+        $updateIds = [];
+        $itemLevel = '';
+        $itemTree = '';
+
+        foreach ($data as $item) {
+            $updateIds[] = $item['id'];
+            empty($itemLevel) && $itemLevel = $item['level'] + $distanceLevel;
+            empty($itemTree) && $itemTree = str_replace($this->tree, $tree, $item['tree']);
+            !empty($item['-']) && $this->recursionUpdate($item['-'], $cate_id, $distanceLevel, $tree);
+
+            unset($item);
+        }
+
+        !empty($updateIds) && self::updateAll(['cate_id' => $cate_id, 'level' => $itemLevel, 'tree' => $itemTree], ['in', 'id', $updateIds]);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\wechat\controllers;
 
 use Yii;
@@ -22,22 +23,24 @@ class IndexController extends BaseController
      */
     public function actionIndex()
     {
-        if (Yii::$app->request->isAjax)
-        {
+        if (Yii::$app->request->isAjax) {
             $data = ArticleSingle::find()
                 ->select(['id', 'title', 'cover', 'created_at'])
                 ->where(['status' => StatusEnum::ENABLED])
                 ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
 
-            $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize, 'validatePage' => false]);
+            $pages = new Pagination([
+                'totalCount' => $data->count(),
+                'pageSize' => $this->pageSize,
+                'validatePage' => false
+            ]);
             $models = $data->offset($pages->offset)
                 ->orderBy('sort asc, id desc')
                 ->limit($pages->limit)
                 ->asArray()
                 ->all();
 
-            foreach ($models as &$model)
-            {
+            foreach ($models as &$model) {
                 $model['link'] = Url::to(['detail', 'id' => $model['id']]);
                 $model['created_at'] = date('Y-m-d', $model['created_at']);
             }

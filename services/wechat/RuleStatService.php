@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use common\components\Service;
@@ -19,7 +20,7 @@ class RuleStatService extends Service
     public function set($rule_id)
     {
         $ruleStat = RuleStat::find()
-            ->where(['rule_id'=> $rule_id, 'created_at' => strtotime(date('Y-m-d'))])
+            ->where(['rule_id' => $rule_id, 'created_at' => strtotime(date('Y-m-d'))])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
 

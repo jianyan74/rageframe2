@@ -1,8 +1,10 @@
 <?php
+
 namespace backend\widgets\selectmap;
 
 use Yii;
 use yii\web\Controller;
+use yii\filters\AccessControl;
 
 /**
  * Class MapController
@@ -18,7 +20,7 @@ class MapController extends Controller
     {
         return [
             'access' => [
-                'class' => Yii\filters\AccessControl::class,
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,

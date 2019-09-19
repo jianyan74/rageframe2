@@ -113,7 +113,7 @@ class Notify extends \common\models\base\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->status <= StatusEnum::DISABLED) {
+        if (!$this->isNewRecord && $this->status <= StatusEnum::DISABLED) {
             NotifyManager::updateAll(['status' => $this->status], ['notify_id' => $this->id]);
         }
 

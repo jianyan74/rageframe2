@@ -120,11 +120,16 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 var $cur = $(this),
                     idx = 0,
                     minSumHeight = colSumHeight[0];
+                    maxSumHeight = colSumHeight[0];
                 // 获取到solSumHeight中的最小高度
                 for (var i=0;i<colSumHeight.length;i++) {
                     if (minSumHeight > colSumHeight[i]) {
                         minSumHeight = colSumHeight[i];
                         idx = i;
+                    }
+
+                    if (maxSumHeight < colSumHeight[i]) {
+                        maxSumHeight = colSumHeight[i];
                     }
                 }
                 // 设置各个item的css属性
@@ -134,7 +139,9 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 });
                 // 更新solSumHeight
                 colSumHeight[idx] = colSumHeight[idx] + $cur.outerHeight(true);
-            })
+            });
+
+            $('.inlineBlockContainer').height(maxSumHeight)
         }
         // 设置窗口改变时也能重新加载
         $(window).on("resize", function(){

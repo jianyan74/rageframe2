@@ -60,6 +60,7 @@ $actionLog = Yii::$app->services->actionLog->findByAppIdAndManagerId(Yii::$app->
                 <?= $form->field($model, 'realname')->textInput() ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
+                <?= $form->field($model, 'dingtalk_robot_token')->textInput()->hint('配置后并开启钉钉消息提醒和定时任务即可进行提醒') ?>
                 <?= \backend\widgets\provinces\Provinces::widget([
                     'form' => $form,
                     'model' => $model,

@@ -81,6 +81,11 @@ class DataBaseController extends BaseController
         // 读取备份配置
         $config = $this->config;
 
+        // 检查备份目录是否可写
+        if (!is_writeable($config['path'])) {
+            return ResultDataHelper::json(404, '备份目录不存在或不可写，请检查后重试！');
+        }
+
         // 检查是否有正在执行的任务
         $lock = $config['path'] . $config['lock'];
         if (is_file($lock)) {
@@ -89,11 +94,6 @@ class DataBaseController extends BaseController
 
         // 创建锁文件
         file_put_contents($lock, time());
-
-        // 检查备份目录是否可写
-        if (!is_writeable($config['path'])) {
-            return ResultDataHelper::json(404, '备份目录不存在或不可写，请检查后重试！');
-        }
 
         // 生成备份文件信息
         $file = [

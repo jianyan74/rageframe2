@@ -11,10 +11,8 @@ use yii\base\Model;
  */
 class NotifySubscriptionActionForm extends Model
 {
-    public $log_warning = 0;
-    public $log_error = 0;
-    public $behavior_warning = 0;
-    public $behavior_error = 0;
+    public $sys;
+    public $dingtalk;
 
     /**
      * {@inheritdoc}
@@ -22,8 +20,7 @@ class NotifySubscriptionActionForm extends Model
     public function rules()
     {
         return [
-            [['log_warning', 'log_error'], 'integer'],
-            [['behavior_warning', 'behavior_error'], 'integer'],
+            [['sys', 'dingtalk'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -33,10 +30,8 @@ class NotifySubscriptionActionForm extends Model
     public function attributeLabels()
     {
         return [
-            'behavior_warning' => '警告行为',
-            'behavior_error' => '错误行为',
-            'log_warning' => '警告请求日志',
-            'log_error' => '错误请求日志',
+            'sys' => '系统',
+            'dingtalk' => '钉钉',
         ];
     }
 }

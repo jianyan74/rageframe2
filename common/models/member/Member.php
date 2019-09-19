@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\member;
 
 use Yii;
@@ -26,12 +27,6 @@ use common\helpers\RegularHelper;
  * @property string $qq qq
  * @property string $email 邮箱
  * @property string $birthday 生日
- * @property string $user_money 余额
- * @property string $accumulate_money 累积金额
- * @property string $frozen_money 冻结金额
- * @property int $user_integral 当前积分
- * @property int $accumulate_integral 累计积分
- * @property int $frozen_integral 冻结积分
  * @property string $visit_count 访问次数
  * @property string $home_phone 家庭号码
  * @property string $mobile 手机号码
@@ -65,9 +60,8 @@ class Member extends User
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
             [['username'], 'unique', 'on' => ['backendCreate']],
-            [['merchant_id', 'type', 'gender', 'user_integral', 'accumulate_integral', 'frozen_integral', 'visit_count', 'role', 'last_time', 'province_id', 'city_id', 'area_id', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'type', 'gender','visit_count', 'role', 'last_time', 'province_id', 'city_id', 'area_id', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
-            [['user_money', 'accumulate_money', 'frozen_money'], 'number'],
             [['username', 'qq', 'home_phone', 'mobile'], 'string', 'max' => 20],
             [['password_hash', 'password_reset_token', 'head_portrait'], 'string', 'max' => 150],
             [['auth_key'], 'string', 'max' => 32],
@@ -98,12 +92,6 @@ class Member extends User
             'qq' => 'QQ',
             'email' => '邮箱',
             'birthday' => '生日',
-            'user_money' => '余额',
-            'accumulate_money' => '累计金额',
-            'frozen_money' => '冻结金额',
-            'user_integral' => '积分',
-            'accumulate_integral' => '累计积分',
-            'frozen_integral' => '冻结积分',
             'visit_count' => '登录总次数',
             'home_phone' => '家庭号码',
             'mobile' => '手机号码',
@@ -134,11 +122,19 @@ class Member extends User
     }
 
     /**
+     * 关联账号
+     */
+    public function getAccount()
+    {
+        return $this->hasOne(Account::class, ['member_id' => 'id']);
+    }
+
+    /**
      * 关联第三方绑定
      */
     public function getAuth()
     {
-        $this->hasMany(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
+        return $this->hasMany(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
     }
 
     /**
@@ -155,6 +151,21 @@ class Member extends User
         }
 
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+            $account = new Account();
+            $account->member_id = $this->id;
+            $account->save();
+        }
+
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /**

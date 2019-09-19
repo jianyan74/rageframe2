@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
@@ -29,7 +30,7 @@ class AttachmentService extends Service
         Attachment::TYPE_VOICE => 'previewVoice',
         Attachment::TYPE_IMAGE => 'previewImage',
         Attachment::TYPE_VIDEO => 'previewVideo',
-        Attachment::TYPE_CARD  => 'previewCard',
+        Attachment::TYPE_CARD => 'previewCard',
     ];
 
     /**
@@ -43,7 +44,7 @@ class AttachmentService extends Service
         Attachment::TYPE_VOICE => 'previewVoiceByName',
         Attachment::TYPE_IMAGE => 'previewImageByName',
         Attachment::TYPE_VIDEO => 'previewVideoByName',
-        Attachment::TYPE_CARD  => 'previewCardByName',
+        Attachment::TYPE_CARD => 'previewCardByName',
     ];
 
     /**
@@ -292,7 +293,8 @@ class AttachmentService extends Service
 
         switch ($defaultType) {
             case Attachment::TYPE_VIDEO :
-                $result = Yii::$app->wechat->app->material->uploadVideo($localFilePath, $model->file_name, $model->description);
+                $result = Yii::$app->wechat->app->material->uploadVideo($localFilePath, $model->file_name,
+                    $model->description);
                 $detail = Yii::$app->wechat->app->material->get($result['media_id']);
                 $model->media_url = $detail['down_url'];
                 break;
@@ -368,8 +370,7 @@ class AttachmentService extends Service
         $systemMaterial = $this->getListByMediaIds(array_column($list, 'media_id'));
         $defaultData = array_column($systemMaterial, 'media_id');
 
-        switch ($type)
-        {
+        switch ($type) {
             // ** 图文 **//
             case Attachment::TYPE_NEWS :
                 foreach ($list as $vo) {
@@ -409,14 +410,35 @@ class AttachmentService extends Service
                             $mediaDescription = '';
                         }
 
-                        $addMaterial[] = [$merchant_id, $vo['name'], $vo['media_id'], $mediaUrl, $mediaDescription, $type, Attachment::MODEL_PERM, $vo['update_time'], time()];
+                        $addMaterial[] = [
+                            $merchant_id,
+                            $vo['name'],
+                            $vo['media_id'],
+                            $mediaUrl,
+                            $mediaDescription,
+                            $type,
+                            Attachment::MODEL_PERM,
+                            $vo['update_time'],
+                            time()
+                        ];
                     }
                 }
 
                 if (!empty($addMaterial)) {
                     // 批量插入数据
-                    $field = ['merchant_id', 'file_name', 'media_id', 'media_url', 'description', 'media_type', 'is_temporary', 'created_at', 'updated_at'];
-                    Yii::$app->db->createCommand()->batchInsert(Attachment::tableName(), $field, $addMaterial)->execute();
+                    $field = [
+                        'merchant_id',
+                        'file_name',
+                        'media_id',
+                        'media_url',
+                        'description',
+                        'media_type',
+                        'is_temporary',
+                        'created_at',
+                        'updated_at'
+                    ];
+                    Yii::$app->db->createCommand()->batchInsert(Attachment::tableName(), $field,
+                        $addMaterial)->execute();
                 }
 
                 break;
@@ -424,7 +446,7 @@ class AttachmentService extends Service
 
         if ($total - ($offset + $count) > 0) {
             return [
-                 'offset' => ($offset + $count),
+                'offset' => ($offset + $count),
                 'count' => $count
             ];
         }

@@ -1,10 +1,12 @@
 <?php
 echo "<?php\n";
 ?>
+
 use addons\<?= $model->name;?>\<?= $appID ?>\assets\AppAsset;
 use common\helpers\Html;
 
 AppAsset::register($this);
+
 ?>
 <?= "<?php " ?>$this->beginPage() ?>
 <!DOCTYPE html>

@@ -21,5 +21,6 @@ class StatusEnum
     public static $listExplain = [
         self::ENABLED => '启用',
         self::DISABLED => '禁用',
+        // self::DELETE => '已删除',
     ];
 }

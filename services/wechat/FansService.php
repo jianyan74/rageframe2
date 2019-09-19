@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use Yii;
@@ -106,20 +107,38 @@ class FansService extends Service
             $new_system_fans = ArrayHelper::arrayKey($system_fans, 'openid');
 
             $add_fans = [];
-            foreach($fans as $openid) {
+            foreach ($fans as $openid) {
                 if (empty($new_system_fans) || empty($new_system_fans[$openid])) {
-                    $add_fans[] = [0, $openid, Fans::FOLLOW_ON, 0, '', Yii::$app->services->merchant->getId(), time(), time()];
+                    $add_fans[] = [
+                        0,
+                        $openid,
+                        Fans::FOLLOW_ON,
+                        0,
+                        '',
+                        Yii::$app->services->merchant->getId(),
+                        time(),
+                        time()
+                    ];
                 }
             }
 
             if (!empty($add_fans)) {
                 // 批量插入数据
-                $field = ['member_id', 'openid', 'follow', 'followtime', 'tag', 'merchant_id', 'created_at', 'updated_at'];
+                $field = [
+                    'member_id',
+                    'openid',
+                    'follow',
+                    'followtime',
+                    'tag',
+                    'merchant_id',
+                    'created_at',
+                    'updated_at'
+                ];
                 Yii::$app->db->createCommand()->batchInsert(Fans::tableName(), $field, $add_fans)->execute();
             }
 
             // 更新当前粉丝为关注
-            Fans::updateAll(['follow' => 1 ], ['in', 'openid', $fans]);
+            Fans::updateAll(['follow' => 1], ['in', 'openid', $fans]);
         }
 
         return [$fans_list['total'], !empty($fans_list['data']['openid']) ? $fans_count : 0, $fans_list['next_openid']];

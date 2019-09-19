@@ -3,16 +3,24 @@ $this->title = '公告详情';
 $this->params['breadcrumbs'][] = ['label' => '公告管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 
+use common\helpers\Url;
+
 ?>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="box box-primary">
+    <div class="col-sm-2">
+        <div class="box box-solid p-xs rfAddonMenu">
             <div class="box-header with-border">
-                <h3 class="box-title">公告详情</h3>
+                <h3 class="rf-box-title">消息提醒</h3>
             </div>
-            <!-- /.box-header -->
             <div class="box-body no-padding">
+                <?= $this->render('_nav') ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="box">
+            <div class="box-body">
                 <div class="mailbox-read-info">
                     <h3><?= $model['notifySenderForManager']['title']; ?></h3>
                     <h5>来自: <?= $model->notifySenderForManager->senderForManager->username ?? ''; ?>
@@ -23,15 +31,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <div class="mailbox-read-message">
                     <p><?= \common\helpers\Html::decode($model['notifySenderForManager']['content']); ?></p>
                 </div>
-                <!-- /.mailbox-read-message -->
             </div>
-            <!-- /.box-body -->
-            <!-- /.box-footer -->
             <div class="box-footer text-center">
                 <span class="btn btn-white" onclick="history.go(-1)">返回</span>
             </div>
-            <!-- /.box-footer -->
         </div>
-        <!-- /. box -->
     </div>
 </div>

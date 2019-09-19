@@ -77,10 +77,8 @@ class WechatApiController extends Controller
                         return $reply;
                     } catch (\Exception $e) {
                         // 记录行为日志
-                        Yii::$app->services->log->setStatusCode(500);
-                        Yii::$app->services->log->setStatusText('wechatApiReply');
-                        Yii::$app->services->log->setErrData($e->getMessage());
-                        Yii::$app->services->log->insertLog();
+                        Yii::$app->services->log->setErrorStatus(500, 'wechatApiReply', $e->getMessage());
+                        Yii::$app->services->log->push();
 
                         if (YII_DEBUG) {
                             return $e->getMessage();

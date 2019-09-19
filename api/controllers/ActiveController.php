@@ -13,7 +13,7 @@ use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
 use common\components\BaseAction;
 use common\behaviors\ActionLogBehavior;
-use api\behaviors\HttpSignAuth;
+use common\behaviors\HttpSignAuth;
 
 /**
  * Class ActiveController
@@ -116,7 +116,6 @@ class ActiveController extends \yii\rest\ActiveController
         // 行为日志
         // $behaviors['actionLog'] = [
         //    'class' => ActionLogBehavior::class,
-        //    'enabled' => false // 激活
         // ];
 
         return $behaviors;

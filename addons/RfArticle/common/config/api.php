@@ -11,10 +11,20 @@ return [
 
     'cover' => [
         [
-            'title' => '首页入口',
-            'route' => 'index/index',
+            'title' => '幻灯片管理',
+            'route' => 'adv/index',
             'icon' => ''
-        ]
+        ],
+        [
+            'title' => '文章分类管理',
+            'route' => 'article-cate/index',
+            'icon' => ''
+        ],
+        [
+            'title' => '文章管理',
+            'route' => 'article/index',
+            'icon' => ''
+        ],
     ],
 
     // ----------------------- 菜单配置 ----------------------- //

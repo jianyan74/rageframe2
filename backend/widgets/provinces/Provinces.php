@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\provinces;
 
 use Yii;
@@ -92,4 +93,5 @@ class Provinces extends Widget
         ]);
     }
 }
+
 ?>

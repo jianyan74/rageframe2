@@ -1,7 +1,9 @@
 <?php
+
 use common\helpers\Html;
 use common\helpers\Url;
 use common\helpers\DebrisHelper;
+
 ?>
 
 <!--ajax模拟框加载-->
@@ -9,7 +11,7 @@ use common\helpers\DebrisHelper;
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
+                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading']) ?>
                 <span>加载中... </span>
             </div>
         </div>
@@ -20,7 +22,7 @@ use common\helpers\DebrisHelper;
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
+                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading']) ?>
                 <span>加载中... </span>
             </div>
         </div>
@@ -31,7 +33,7 @@ use common\helpers\DebrisHelper;
     <div class="modal-dialog modal-lg" style="width: 80%">
         <div class="modal-content">
             <div class="modal-body">
-                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
+                <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading']) ?>
                 <span>加载中... </span>
             </div>
         </div>
@@ -40,7 +42,7 @@ use common\helpers\DebrisHelper;
 <!--初始化模拟框-->
 <div id="rfModalBody" class="hide">
     <div class="modal-body">
-        <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading'])?>
+        <?= Html::img('@web/resources/dist/img/loading.gif', ['class' => 'loading']) ?>
         <span>加载中... </span>
     </div>
 </div>
@@ -104,10 +106,11 @@ $this->registerJs($script);
     });
 
     // 启用状态 status 1:启用;0禁用;
-    function rfStatus(obj){
+    function rfStatus(obj) {
         let id = $(obj).attr('data-id');
-        let status = 0; self = $(obj);
-        if (self.hasClass("btn-success")){
+        let status = 0;
+        self = $(obj);
+        if (self.hasClass("btn-success")) {
             status = 1;
         }
 
@@ -120,16 +123,16 @@ $this->registerJs($script);
         }
 
         $.ajax({
-            type : "get",
-            url : "<?= Url::to(['ajax-update'])?>",
-            dataType :  "json",
-            data : {
-                id : id,
-                status : status
+            type: "get",
+            url: "<?= Url::to(['ajax-update'])?>",
+            dataType: "json",
+            data: {
+                id: id,
+                status: status
             },
-            success : function(data){
+            success: function (data) {
                 if (parseInt(data.code) === 200) {
-                    if(self.hasClass("btn-success")){
+                    if (self.hasClass("btn-success")) {
                         self.removeClass("btn-success").addClass("btn-default");
                         self.text('禁用');
                     } else {
@@ -144,7 +147,7 @@ $this->registerJs($script);
     }
 
     // 排序
-    function rfSort(obj){
+    function rfSort(obj) {
         let id = $(obj).attr('data-id');
 
         if (!id) {
@@ -161,14 +164,14 @@ $this->registerJs($script);
             return false;
         } else {
             $.ajax({
-                type : "get",
-                url : "<?= Url::to(['ajax-update'])?>",
-                dataType : "json",
-                data : {
-                    id : id,
-                    sort : sort
+                type: "get",
+                url: "<?= Url::to(['ajax-update'])?>",
+                dataType: "json",
+                data: {
+                    id: id,
+                    sort: sort
                 },
-                success : function(data) {
+                success: function (data) {
                     if (parseInt(data.code) !== 200) {
                         rfAffirm(data.message);
                     }

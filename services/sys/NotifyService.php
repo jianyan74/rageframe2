@@ -9,9 +9,8 @@ use common\enums\StatusEnum;
 use common\components\Service;
 use common\models\sys\Notify;
 use common\models\sys\NotifyManager;
-use common\models\sys\NotifySubscription;
+use common\enums\SubscriptionAlertTypeEnum;
 use common\models\sys\NotifySubscriptionConfig;
-use common\enums\SubscriptionActionEnum;
 
 /**
  * Class NotifyService
@@ -41,7 +40,7 @@ class NotifyService extends Service
      * @param int $target_id 触发id
      * @param string $targetType 触发类型
      * @param string $action 提醒关联动作
-     * @param int $sender_id 发送者id
+     * @param int $sender_id 发送者(用户)id
      * @param string $content 内容
      */
     public function createRemind($target_id, $targetType, $action, $sender_id, $content)
@@ -116,19 +115,25 @@ class NotifyService extends Service
     /**
      * 拉取提醒
      *
-     * @param int $manager_id 用户id
+     * @param NotifySubscriptionConfig $subscriptionConfig
+     * @param string $type
      */
-    public function pullRemind($manager_id)
+    public function pullRemind(NotifySubscriptionConfig $subscriptionConfig, $type = SubscriptionAlertTypeEnum::SYS)
     {
-        // 查询用户的配置文件SubscriptionConfig，如果没有则使用默认的配置DefaultSubscriptionConfig
-        $config = $this->getSubscriptionConfig($manager_id);
+        /** @var array $action 查询用户的配置文件SubscriptionConfig */
+        $action = $subscriptionConfig->action;
         $filt = [];
-        foreach ($config as $key => $item) {
-            $item == true && $filt[] = $key;
+        foreach ($action as $key => $item) {
+            // 默认拉取系统通知
+            if ($key == $type) {
+                foreach ($item as $index => $value) {
+                    $value == true && $filt[] = $index;
+                }
+            }
         }
 
         // 查询最后的一条提醒时间
-        $lastTime = $this->getLastTimeForNotifyMember($manager_id, Notify::TYPE_REMIND);
+        $lastTime = Yii::$app->services->sysNotifyPullTime->getLastTime($subscriptionConfig->manager_id, Notify::TYPE_REMIND, $type);
         // 直接通过自己的关注去拉取消息
         $notifys = Notify::find()
             ->where(['type' => Notify::TYPE_REMIND, 'status' => StatusEnum::ENABLED])
@@ -141,29 +146,12 @@ class NotifyService extends Service
         foreach ($notifys as $notify) {
             $notifyManager = new NotifyManager();
             $notifyManager->notify_id = $notify['id'];
-            $notifyManager->manager_id = $manager_id;
+            $notifyManager->manager_id = $subscriptionConfig->manager_id;
             $notifyManager->type = Notify::TYPE_REMIND;
             $notifyManager->save();
         }
-    }
 
-    /**
-     * 获取订阅配置
-     *
-     * @param $manager_id
-     */
-    public function getSubscriptionConfig($manager_id)
-    {
-        // 查询SubscriptionConfig表，获取用户的订阅配置
-        if (!($config = NotifySubscriptionConfig::findOne(['manager_id' => $manager_id]))) {
-            return SubscriptionActionEnum::$defaultList;
-        }
-
-        if (is_array($config['action'])) {
-            return $config['action'];
-        }
-
-        return Json::decode($config['action']);
+        return $notifys;
     }
 
     /**
@@ -177,26 +165,6 @@ class NotifyService extends Service
         $config = NotifySubscriptionConfig::findOne(['manager_id' => $manager_id]);
         $config->action = Json::encode($actions);
         return $config->save();
-    }
-
-    /**
-     * 获取最后一条消息时间
-     *
-     * @param $manager_id
-     * @param $type
-     * @return int|mixed
-     */
-    public function getLastTimeForNotifyMember($manager_id, $type)
-    {
-        // 查询最新的一条提醒时间
-        $notifyMember = NotifyManager::find()
-            ->select('created_at')
-            ->where(['manager_id' => $manager_id, 'type' => $type])
-            ->orderBy('id desc, created_at desc')
-            ->asArray()
-            ->one();
-
-        return $notifyMember['created_at'] ?? 0;
     }
 
     /**

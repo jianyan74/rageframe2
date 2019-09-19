@@ -28,7 +28,7 @@ class Auth
         }
 
         $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
-        if (in_array($route, $auth) || in_array('/*', $auth)) {
+        if (in_array('/*', $auth) || in_array($route, $auth)) {
             return true;
         }
 

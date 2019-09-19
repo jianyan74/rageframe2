@@ -11,7 +11,7 @@ $this->title = '我的博客';
     <div class="container">
         <div class="row w_main_row">
             <div class="col-lg-9 col-md-9 w_main_left">
-                <?= Hook::to('RfArticle', [], 'adv'); ?>
+                <?= Hook::to('RfArticle.adv', []); ?>
                 <div class="panel panel-default contenttop">
                     <a href="javascript:void (0)">
                         <strong>置顶</strong>

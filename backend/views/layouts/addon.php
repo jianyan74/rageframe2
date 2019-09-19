@@ -1,11 +1,15 @@
 <?php
+
 use common\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use backend\assets\AppAsset;
 use backend\widgets\Alert;
 use backend\widgets\menu\AddonLeftWidget;
 
+/* @var $this yii\web\View */
+
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,7 +29,7 @@ AppAsset::register($this);
         <a href="<?= Yii::$app->request->getUrl(); ?>" class="rfHeaderFont">
             <i class="glyphicon glyphicon-refresh"></i> 刷新
         </a>
-        <?php if (Yii::$app->request->referrer != Yii::$app->request->hostInfo . Yii::$app->request->getBaseUrl() . '/'){ ?>
+        <?php if (Yii::$app->request->referrer != Yii::$app->request->hostInfo . Yii::$app->request->getBaseUrl() . '/') { ?>
             <a href="javascript:history.go(-1)" class="rfHeaderFont">
                 <i class="fa fa-mail-reply"></i> 返回
             </a>
@@ -36,7 +40,7 @@ AppAsset::register($this);
         ?>
         <?= Breadcrumbs::widget([
             'tag' => 'ol',
-            'homeLink'=>[
+            'homeLink' => [
                 'label' => '<i class="fa fa-dashboard"></i>' . Yii::$app->params['adminAcronym'],
                 'url' => "",
             ],
@@ -61,10 +65,10 @@ AppAsset::register($this);
     let config = {
         tag: "<?= Yii::$app->debris->config('sys_tags') ?? false; ?>",
         isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
-        emojiBaseUrl : "<?= Yii::$app->request->baseUrl ?>/resources/dist/img/emoji/",
+        emojiBaseUrl: "<?= Yii::$app->request->baseUrl ?>/resources/dist/img/emoji/",
     };
 </script>
-<?= $this->render('_footer')?>
+<?= $this->render('_footer') ?>
 <?php $this->endBody() ?>
 </body>
 </html>

@@ -87,7 +87,7 @@ class ActionBehaviorController extends BaseController
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::find()->where(['id' => $id])->one()))) {
+        if (empty($id) || empty(($model = $this->modelClass::findOne($id)))) {
             $model = new $this->modelClass;
             return $model->loadDefaultValues();
         }

@@ -24,17 +24,22 @@ class Hook
     /**
      * 实例化钩子
      *
-     * @param string $addonsName 模块名称
+     * @param string $name 模块名称
      * @param array $params 传递参数
-     * @param string $action 默认钩子方法
      * @param bool $debug 是否开启报错
      * @return bool
      * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
      */
-    public static function to($addonsName, $params = [], $action = 'hook', $debug = false)
+    public static function to(string $name, $params = [], $debug = false)
     {
         try {
+            $tmpAction = explode('.', $name);
+            if (count($tmpAction) >= 2) {
+                list($addonsName, $action) = $tmpAction;
+            } else {
+                list($addonsName, $action) = [$name, 'hook'];
+            }
+
             $oldAddonInfo = Yii::$app->params['addonInfo'] ?? [];
             $oldAddon = Yii::$app->params['addon'] ?? [];
             $oldAddonBinding = Yii::$app->params['addonBinding'] ?? [];
@@ -63,10 +68,8 @@ class Hook
             return $data;
         } catch (\Exception $e) {
             // 记录到报错日志
-            Yii::$app->services->log->setStatusCode(500);
-            Yii::$app->services->log->setStatusText('hookError');
-            Yii::$app->services->log->setErrData($e->getMessage());
-            Yii::$app->services->log->insertLog();
+            Yii::$app->services->log->setErrorStatus(500, 'hookError', $e->getMessage());
+            Yii::$app->services->log->push();
 
             if (YII_DEBUG || $debug) {
                 throw new NotFoundHttpException($e->getMessage());

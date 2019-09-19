@@ -15,19 +15,22 @@ class SubscriptionActionEnum
     const BEHAVIOR_ERROR = 'behavior_error';
 
     /** @var string 日志提醒 隶属日志  */
-    const LOG_INFO = 'behavior_info';
+    const LOG_SUCCESS = 'log_success';
+    const LOG_INFO = 'log_info';
     const LOG_WARNING = 'log_warning';
     const LOG_ERROR = 'log_error';
+
+    /** @var string 短信发送失败 */
+    const SMS_ERROR = 'sms_error';
 
     /**
      * @var array
      */
-    public static $defaultList = [
-        self::BEHAVIOR_INFO => 0,
-        self::BEHAVIOR_WARNING => 0,
-        self::BEHAVIOR_ERROR => 0,
-        self::LOG_INFO => 0,
-        self::LOG_WARNING => 0,
-        self::LOG_ERROR => 0,
+    public static $listExplain = [
+        self::BEHAVIOR_WARNING => '行为警告',
+        self::BEHAVIOR_ERROR => '行为异常',
+        self::SMS_ERROR => '短信发送异常',
+        self::LOG_WARNING => '请求警告',
+        self::LOG_ERROR => '请求错误',
     ];
 }

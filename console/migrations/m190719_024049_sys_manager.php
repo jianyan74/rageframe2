@@ -33,6 +33,7 @@ class m190719_024049_sys_manager extends Migration
             'visit_count' => "smallint(5) unsigned NULL DEFAULT '0' COMMENT '访问次数'",
             'last_time' => "int(10) NULL DEFAULT '0' COMMENT '最后一次登录时间'",
             'last_ip' => "varchar(16) NULL DEFAULT '' COMMENT '最后一次登录ip'",
+            'dingtalk_robot_token' => "varchar(100) NULL DEFAULT '' COMMENT '钉钉机器人token'",
             'role' => "smallint(6) NULL DEFAULT '10' COMMENT '权限'",
             'status' => "tinyint(4) NULL DEFAULT '1' COMMENT '状态[-1:删除;0:禁用;1启用]'",
             'created_at' => "int(10) unsigned NULL DEFAULT '0' COMMENT '创建时间'",

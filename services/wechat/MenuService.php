@@ -3,9 +3,9 @@
 namespace services\wechat;
 
 use Yii;
+use yii\web\UnprocessableEntityHttpException;
 use common\models\wechat\Menu;
 use common\components\Service;
-use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Class MenuService

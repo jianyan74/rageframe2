@@ -10,9 +10,7 @@ use backend\modules\member\forms\RechargeForm;
 
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-        </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h4 class="modal-title">充值</h4>
     </div>
     <div class="modal-body">
@@ -54,7 +52,7 @@ use backend\modules\member\forms\RechargeForm;
                                     ]
                                 ]); ?>
                                 <?= $form->field($rechargeForm, 'old_num')->textInput([
-                                    'value' => $model['user_integral'],
+                                    'value' => $model['account']['user_integral'],
                                     'readonly' => 'readonly'
                                 ]) ?>
                                 <?= $form->field($rechargeForm, 'change')->radioList(RechargeForm::$changeExplain) ?>
@@ -82,7 +80,7 @@ use backend\modules\member\forms\RechargeForm;
                                     ]
                                 ]); ?>
                                 <?= $form->field($rechargeForm, 'old_num')->textInput([
-                                    'value' => $model['user_money'],
+                                    'value' => $model['account']['user_money'],
                                     'readonly' => 'readonly'
                                 ]) ?>
                                 <?= $form->field($rechargeForm, 'change')->radioList(RechargeForm::$changeExplain) ?>

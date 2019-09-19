@@ -15,6 +15,9 @@ use common\helpers\FileHelper;
  */
 class FileController extends FileBaseController
 {
+    /**
+     * @var array
+     */
     protected $extend = [
         'images' => '.jpg',
         'videos' => '.mp4',
@@ -24,13 +27,12 @@ class FileController extends FileBaseController
     /**
      * 下载微信临时资源
      *
-     * string media_id 资源id
-     * string type images/videos/voices 资源类型
      * @return array
      * @throws \EasyWeChat\Kernel\Exceptions\HttpException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \yii\web\UnprocessableEntityHttpException
      */

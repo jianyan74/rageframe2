@@ -1,8 +1,10 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
 use common\helpers\Url;
+use common\helpers\Html;
 use backend\widgets\selector\Select;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
@@ -10,11 +12,14 @@ $this->params['breadcrumbs'][] = ['label' => '自动回复', 'url' => ['rule/ind
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<?= Html::cssFile('@web/resources/dist/css/checkbox.css'); ?>
+
 <?php $form = ActiveForm::begin([
     'id' => 'ruleForm',
     'enableAjaxValidation' => true,
     'validationUrl' => Url::to(['edit', 'id' => $model['id']]),
 ]); ?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
@@ -31,8 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-2 m-t-md">
-                            <div class="checkbox m-2 m-r-xs">
-                                <label><input type="checkbox" id="setting" class="adv"> 高级设置</label>
+                            <div class="checkbox">
+                                <?= Html::checkbox('setting', false, [
+                                    'class' => "styled adv",
+                                    'id' => 'setting',
+                                ]); ?>
+                                <label for="setting">高级设置</label>
                             </div>
                         </div>
                     </div>
@@ -100,21 +109,21 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     <div class="panel-heading" type="<?= RuleKeyword::TYPE_REGULAR?>">
                                                         <span class="btn btn-white addKeyword">添加正则表达式模式</span>
                                                         <span class="help-block ng-binding">
-                                                                用户进行交谈时，对话内容符合述关键字中定义的模式才会执行这条规则。<br>
-                                                                <strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br>
-                                                                <strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br>
-                                                                <strong>示例: </strong><br>
-                                                                <em>^微信</em>;;匹配以“微信”开头的语句<br>
-                                                                <em>微信$</em>;;匹配以“微信”结尾的语句<br>
-                                                                <em>^微信$</em>;;匹配等同“微信”的语句<br>
-                                                                <em>微信</em>;;匹配包含“微信”的语句<br>
-                                                                <em>[0-9.-]</em>;;匹配所有的数字，句号和减号<br>
-                                                                <em>^[a-zA-Z_]$</em>;;所有的字母和下划线<br>
-                                                                <em>^[[:alpha:]]{3}$</em>;;所有的3个字母的单词<br>
-                                                                <em>^a{4}$</em>;;aaaa<br>
-                                                                <em>^a{2,4}$</em>;;aa，aaa或aaaa<br>
-                                                                <em>^a{2,}$</em>;;匹配多于两个a的字符串
-                                                            </span>
+                                                            用户进行交谈时，对话内容符合述关键字中定义的模式才会执行这条规则。<br>
+                                                            <strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br>
+                                                            <strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br>
+                                                            <strong>示例: </strong><br>
+                                                            <label>^微信</label>  匹配以“微信”开头的语句<br>
+                                                            <label>微信$</label>  匹配以“微信”结尾的语句<br>
+                                                            <label>^微信$</label>  匹配等同“微信”的语句<br>
+                                                            <label>微信</label>  匹配包含“微信”的语句<br>
+                                                            <label>[0-9.-]</label>  匹配所有的数字，句号和减号<br>
+                                                            <label>^[a-zA-Z_]$</label>  匹配所有的字母和下划线<br>
+                                                            <label>^[[:alpha:]]{3}$</label>  匹配所有的3个字母的单词<br>
+                                                            <label>^a{4}$</label>  匹配aaaa<br>
+                                                            <label>^a{2,4}$</label>  匹配aa，aaa或aaaa<br>
+                                                            <label>^a{2,}$</label>  匹配多于两个a的字符串
+                                                        </span>
                                                     </div>
                                                 </div>
                                                 <div id="tab-13" class="tab-pane">
@@ -150,8 +159,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-2 m-t-md">
-                            <div class="checkbox m-2 m-r-xs">
-                                <label><input type="checkbox" id="trigger" class="adv"> 高级触发</label>
+                            <div class="checkbox">
+                                <?= Html::checkbox('trigger', false, [
+                                    'class' => "styled adv",
+                                    'id' => 'trigger',
+                                ]); ?>
+                                <label for="trigger">高级设置</label>
                             </div>
                         </div>
                     </div>

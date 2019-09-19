@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\sys;
 
 use Yii;
@@ -31,6 +32,7 @@ use common\models\common\AuthAssignment;
  * @property string $address 默认地址
  * @property string $mobile 手机号码
  * @property string $home_phone 家庭号码
+ * @property string $dingtalk_robot_token 机器人token
  * @property int $visit_count 访问次数
  * @property int $last_time 最后一次登录时间
  * @property string $last_ip 最后一次登录ip
@@ -63,6 +65,7 @@ class Manager extends User
             [['realname'], 'string', 'max' => 10],
             [['email'], 'string', 'max' => 60],
             [['address'], 'string', 'max' => 100],
+            [['dingtalk_robot_token'], 'string', 'max' => 200],
             [['last_ip'], 'string', 'max' => 16],
         ];
     }
@@ -92,6 +95,7 @@ class Manager extends User
             'address' => '地址',
             'mobile' => '手机号码',
             'home_phone' => '电话号码',
+            'dingtalk_robot_token' => '钉钉机器人Token',
             'visit_count' => '访问次数',
             'last_time' => '最后一次登录时间',
             'last_ip' => '最后一次登录IP',

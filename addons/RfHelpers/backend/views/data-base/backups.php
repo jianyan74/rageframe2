@@ -229,9 +229,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             if (this.checked) {
                 $("#list :checkbox").prop("checked", true);
             } else {
-                $("#list :checkbox").attr("checked", false);
+                $("#list :checkbox").prop("checked", false);
             }
         });
-
     })
 </script>

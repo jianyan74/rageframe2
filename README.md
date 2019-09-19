@@ -15,15 +15,15 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 - 极致的插件机制，系统内的系统，安装和卸载不会对原来的系统产生影响,强大的功能完全满足各阶段的需求，支持用户多端访问(后台、微信、Api、前台等)，系统中的系统。
 - 极完善的RBAC权限控制管理、无限父子级权限分组、可自由分配子级权限，且按钮/链接/自定义内容/插件等都可加入权限控制。
 - 只做基础底层内容，不会在上面开发过多的业务内容，满足绝大多数的系统二次开发。
-- 多入口模式，多入口分为 backend(后台)、frontend(PC前端)，wechat(微信)，api(对内接口)，oauth2 server(对外接口)，不同的业务，不同的设备，进入不同的入口。
+- 多入口模式，多入口分为 backend(后台)、frontend(PC前端)、wechat(微信)、console(控制台)、api(对内接口)、oauth2 server(对外接口)，不同的业务，不同的设备，进入不同的入口。
 - 对接微信公众号且支持小程序，使用了一款优秀的微信非官方SDK Easywechat 4.x，开箱即用，预置了绝大部分功能，大幅度的提升了微信开发效率。
 - 整合了第三方登录，目前有QQ、微信、微博、GitHub等等。
 - 整合了第三方支付，目前有微信支付、支付宝支付、银联支付，二次封装为网关多个支付一个入口一个出口。
 - 整合了RESTful API，支持前后端分离接口开发和app接口开发，可直接上手开发业务。
 - 一键切换云存储，本地存储、腾讯COS、阿里云OOS、七牛云存储都可一键切换，且增加其他第三方存储也非常方便。
-- 全面监控系统报错，报错日志写入数据库，方便定位错误信息。
+- 全面监控系统报错，报错日志写入数据库，方便定位错误信息。支持直接钉钉提醒。
 - 快速高效的Servises(服务层)，遵循Yii2的懒加载方式，只初始化使用到的组件服务。
-- 丰富的表单控件(时间、日期、时间日期、日期范围选择、颜色选择器、省市区三级联动、省市区勾选、单图上传、多图上传、单文件上传、多文件上传、百度编辑器、图表、多文本编辑框、地图经纬度选择器、图片裁剪上传、TreeGrid)和组件(二维码生成、Curl、IP地址转地区)，快速开发，不必在为基础组件而担忧。
+- 丰富的表单控件(时间、日期、时间日期、日期范围选择、颜色选择器、省市区三级联动、省市区勾选、单图上传、多图上传、单文件上传、多文件上传、百度编辑器、百度图表、多文本编辑框、地图经纬度选择器、图片裁剪上传、TreeGrid、JsTree)和组件(二维码生成、Curl、IP地址转地区)，快速开发，不必在为基础组件而担忧。
 - 完善的文档和辅助类，方便二次开发与集成。
 
 ### 思维导图
@@ -38,14 +38,18 @@ RageFrame创建于2016年4月16日，一个基于Yii2高级框架的快速开发
 ![image](docs/guide-zh-CN/images/sys-config.png)
 【系统 - 角色编辑】
 ![image](docs/guide-zh-CN/images/rbac-role.png)
+【系统 - 日志统计】
+![image](docs/guide-zh-CN/images/log-stat.png)
+【会员 - 信息】
+![image](docs/guide-zh-CN/images/member-info.png)
 【微信 - 自定义菜单】
 ![image](docs/guide-zh-CN/images/wechat-menu.png)
-【微信 - 关注统计】
-![image](docs/guide-zh-CN/images/wechat-stat.png)
 【插件模块 - 列表】
 ![image](docs/guide-zh-CN/images/addon-list.png)
 【插件模块 - 文章模块】
 ![image](docs/guide-zh-CN/images/addon-activity.png)
+【插件模块 - 系统监控】
+![image](docs/guide-zh-CN/images/system.png)
 
 ### 开始之前
 

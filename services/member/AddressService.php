@@ -1,4 +1,5 @@
 <?php
+
 namespace services\member;
 
 use common\enums\StatusEnum;

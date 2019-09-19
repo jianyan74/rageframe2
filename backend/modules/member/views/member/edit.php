@@ -25,16 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'nickname')->textInput() ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
                 <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'head_portrait')->widget('common\widgets\webuploader\Files', [
-                    'type' => 'images',
-                    'theme' => 'default',
-                    'themeConfig' => [],
-                    'config' => [
-                        'pick' => [
-                            'multiple' => false,
-                        ],
-                    ]
-                ]); ?>
+                <?= $form->field($model, 'head_portrait')->widget(\backend\widgets\cropper\Cropper::class, []); ?>
                 <?= $form->field($model, 'qq')->textInput() ?>
                 <?= $form->field($model, 'email')->textInput() ?>
                 <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [

@@ -46,7 +46,7 @@ class JWTAuth extends Behavior
         }
 
         $accessTokenRepository = new AccessTokenRepository(); // instance of AccessTokenRepositoryInterface
-        $publicKeyPath = 'file://' . Yii::$app->debris->config('oauth2_rsa_public');
+        $publicKeyPath = 'file://' . Yii::getAlias(Yii::$app->debris->config('oauth2_rsa_public'));
         $server = new \League\OAuth2\Server\ResourceServer(
             $accessTokenRepository,
             new CryptKey($publicKeyPath, null, !StringHelper::isWindowsOS())

@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="pull-right">
                     <?= Html::linkButton(['map'], '经纬度爬取', [
-                        'onclick' => "rfTwiceAffirm(this, '确认爬取经纬度吗？', '请确保省市区数据完整');return false;",
+                        'onclick' => "rfTwiceAffirm(this, '确认爬取经纬度吗？', '请确保省市区数据完整, 且配置了百度ak');return false;",
                         'class' => 'btn btn-primary btn-xs',
                     ]); ?>
                     <?= Html::create(['create'], '创建', [

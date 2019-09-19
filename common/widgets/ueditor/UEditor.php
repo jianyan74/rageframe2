@@ -1,6 +1,8 @@
 <?php
+
 namespace common\widgets\ueditor;
 
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Json;
@@ -54,26 +56,28 @@ class UEditor extends InputWidget
                     'customstyle', 'paragraph', 'fontfamily', 'fontsize'
                 ],
                 [
-                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat',
-                    'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|',
+                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript',
+                    'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|',
                     'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'directionalityltr', 'directionalityrtl', 'indent', '|'
                 ],
                 [
                     'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
-                    'link', 'unlink', '|','simpleupload',
-                    'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'insertcode', 'pagebreak', '|',
+                    'link', 'unlink', '|',
+                    'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'insertcode', 'pagebreak', '|',
                     'horizontal', 'inserttable', '|',
                     'print', 'preview', 'searchreplace', 'help'
                 ]
             ],
         ];
 
-        if (!empty($this->config['toolbars'])) unset($config['toolbars']);
+        if (!empty($this->config['toolbars'])) {
+            unset($config['toolbars']);
+        }
         $this->config = ArrayHelper::merge($config, $this->config);
         $this->formData = ArrayHelper::merge([
-            'drive' => 'local',
+            'drive' => Yii::$app->params['UEditorUploadDrive'],
         ], $this->formData);
     }
 
@@ -94,7 +98,7 @@ class UEditor extends InputWidget
         }
 
         $formData = Json::encode($this->formData);
-        
+
         //ready部分代码，是为了缩略图管理。UEditor本身就很大，在后台直接加载大文件图片会很卡。
         $script = <<<UEDITOR
         UE.delEditor('{$id}');
@@ -117,6 +121,7 @@ UEDITOR;
             return Html::activeTextarea($this->model, $this->attribute, ['id' => $id]);
         }
 
-        return Html::textarea(ArrayHelper::getValue($this->config, 'textarea', $this->name), $this->value, ['id' => $id]);
+        return Html::textarea(ArrayHelper::getValue($this->config, 'textarea', $this->name), $this->value,
+            ['id' => $id]);
     }
 }

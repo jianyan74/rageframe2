@@ -1,35 +1,56 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use common\enums\StatusEnum;
+use common\helpers\Html;
 
 $this->title = '提醒管理';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
+<?= Html::cssFile('@web/resources/dist/css/checkbox.css'); ?>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">基本信息</h3>
-            </div>
-            <?php $form = ActiveForm::begin([
-                'fieldConfig' => [
-                    'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
-                ]
-            ]); ?>
+            <?php $form = ActiveForm::begin(); ?>
             <div class="box-body">
-                <?= $form->field($model, 'behavior_warning')->radioList(StatusEnum::$listExplain) ?>
-                <?= $form->field($model, 'behavior_error')->radioList(StatusEnum::$listExplain) ?>
-                <?= $form->field($model, 'log_warning')->radioList(StatusEnum::$listExplain) ?>
-                <?= $form->field($model, 'log_error')->radioList(StatusEnum::$listExplain) ?>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="col-md-2"></th>
+                        <?php foreach ($typeExplain as $type) { ?>
+                            <th class="col-md-2 text-center"><?= Html::encode($type) ?></th>
+                        <?php } ?>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($valueExplain as $item => $value) { ?>
+                        <tr class="text-center">
+                            <td><?= Html::encode($value) ?></td>
+                            <?php foreach ($typeExplain as $key => $type) { ?>
+                                <td class="text-center">
+                                    <div class="checkbox checkbox-primary">
+                                        <?= Html::checkbox(
+                                            Html::getInputName($model, $key) . '[' . $item . ']',
+                                            (isset($model->$key[$item]) && !empty($model->$key[$item])) ? true : false,
+                                            [
+                                                'class' => "styled",
+                                                'id' => $item . $key,
+                                            ]) ?>
+                                        <label for="<?= $item . $key; ?>"></label>
+                                    </div>
+                                </td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
                 <div class="col-sm-12 text-center">
                     <button class="btn btn-primary" type="submit" onclick="SendForm()">保存</button>
-                    <span class="btn btn-white" onclick="history.go(-1)">返回</span>
                 </div>
             </div>
             <?php ActiveForm::end(); ?>

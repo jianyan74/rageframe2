@@ -8,6 +8,7 @@ use yii\web\UnauthorizedHttpException;
 use common\models\sys\Manager;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
+use common\helpers\StringHelper;
 use common\enums\AppEnum;
 
 /**
@@ -17,24 +18,38 @@ use common\enums\AppEnum;
  */
 class Init implements BootstrapInterface
 {
+    /**
+     * 应用ID
+     *
+     * @var
+     */
     protected $id;
+    /**
+     * 默认商户ID
+     *
+     * @var int
+     */
+    protected $default_merchant_id = 1;
 
     /**
      * @param \yii\base\Application $application
      * @throws UnauthorizedHttpException
+     * @throws \Exception
      */
     public function bootstrap($application)
     {
+        Yii::$app->params['uuid'] = StringHelper::uuid('uniqid');
+
         $this->id = $application->id;// 初始化变量
         // 商户信息
         if (Yii::$app->id == AppEnum::BACKEND) {
             /** @var Manager $identity */
             $identity = Yii::$app->user->identity;
-            $this->afreshLoad($identity->merchant_id ?? 1);
+            $this->afreshLoad($identity->merchant_id ?? $this->default_merchant_id);
         } elseif (Yii::$app->id == AppEnum::CONSOLE) {
-            $this->afreshLoad(1);
+            $this->afreshLoad($this->default_merchant_id);
         } else {
-            $this->afreshLoad(Yii::$app->request->get('merchant_id', 1));
+            $this->afreshLoad(Yii::$app->request->get('merchant_id', $this->default_merchant_id));
         }
     }
 
@@ -54,8 +69,6 @@ class Init implements BootstrapInterface
             $config = Yii::$app->debris->configAll();
             // 初始化配置
             $this->initParams($config);
-            // 初始化组件
-            $this->initComponents($config);
         } catch (\Exception $e) {
 
         }
@@ -78,6 +91,8 @@ class Init implements BootstrapInterface
         if (in_array($userIP, $ips)) {
             throw new UnauthorizedHttpException('你的访问被禁止');
         }
+
+        unset($userIP, $ips);
     }
 
     /**
@@ -88,7 +103,7 @@ class Init implements BootstrapInterface
     {
         $callbackUrl = $notifyUrl = '';
         if (!empty($this->id) && $this->id != AppEnum::CONSOLE) {
-            $callbackUrl = Yii::$app->request->getUrl();
+            $callbackUrl = Yii::$app->request->hostInfo . Yii::$app->request->getUrl();
             $notifyUrl = Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']);
         }
 
@@ -184,14 +199,6 @@ class Init implements BootstrapInterface
     }
 
     /**
-     * @param $config
-     */
-    protected function initComponents($config)
-    {
-        unset($config);
-    }
-
-    /**
      * 创建日志文件
      *
      * @param $path
@@ -199,10 +206,17 @@ class Init implements BootstrapInterface
      */
     private function createLogPath($catalogue)
     {
-        $logPath = Yii::getAlias('@runtime') . DIRECTORY_SEPARATOR . 'wechat-' . $catalogue . DIRECTORY_SEPARATOR . date('Y-m') . DIRECTORY_SEPARATOR;
+        $logPathArr = [];
+        $logPathArr[] = Yii::getAlias('@runtime');
+        $logPathArr[] = 'wechat-' . $catalogue;
+        $logPathArr[] = date('Y-m');
 
+        $logPath = implode(DIRECTORY_SEPARATOR, $logPathArr);;
         FileHelper::mkdirs($logPath);
+
+        $logPath .= DIRECTORY_SEPARATOR;
         $logPath .= date('d') . '.log';
+
         return $logPath;
     }
 }

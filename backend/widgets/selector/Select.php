@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\selector;
 
 use Yii;
@@ -45,7 +46,10 @@ class Select extends InputWidget
     public function run()
     {
         if ($this->type != Attachment::TYPE_NEWS) {
-            if (empty($this->value) || empty(($model = Attachment::findOne(['media_id' => $this->value, 'merchant_id' => Yii::$app->services->merchant->getId()])))) {
+            if (empty($this->value) || empty(($model = Attachment::findOne([
+                    'media_id' => $this->value,
+                    'merchant_id' => Yii::$app->services->merchant->getId()
+                ])))) {
                 $model = new Attachment();
                 $model = $model->loadDefaultValues();
             }

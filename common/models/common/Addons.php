@@ -167,6 +167,14 @@ class Addons extends BaseModel
         return $this->hasOne(AddonsConfig::class, ['addons_name' => 'name']);
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        // 写入缓存数据
+        Yii::$app->services->addons->findByNameWithBinding($this->name, true);
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
     /**
      * 卸载插件的时候清理安装的信息
      */
@@ -184,6 +192,9 @@ class Addons extends BaseModel
             Rule::deleteAll(['in', 'id', $ruleIds]);
             RuleKeyword::deleteAll(['in', 'rule_id', $ruleIds]);
         }
+
+        // 写入缓存数据
+        Yii::$app->services->addons->findByNameWithBinding($this->name, true);
 
         parent::afterDelete();
     }

@@ -12,6 +12,7 @@ use common\enums\StatusEnum;
 use common\components\Service;
 use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
+use common\enums\CacheKeyEnum;
 use Overtrue\Pinyin\Pinyin;
 
 /**
@@ -194,12 +195,19 @@ class AddonsService extends Service
      * @param $name
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function findByNameWithBinding($name)
+    public function findByNameWithBinding($name, $noCache = false)
     {
-        return Addons::find()
-            ->where(['name' => $name, 'status' => StatusEnum::ENABLED])
-            ->with(['binding'])
-            ->one();
+        $cacheKey = CacheKeyEnum::COMMON_ADDONS . $name;
+        if (!($data = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
+            $data = Addons::find()
+                ->where(['name' => $name, 'status' => StatusEnum::ENABLED])
+                ->with(['binding'])
+                ->one();
+
+            Yii::$app->cache->set($cacheKey, $data, 7200);
+        }
+
+        return $data;
     }
 
     /**

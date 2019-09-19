@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         'method' => 'get'
                     ]); ?>
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 p-r-no-away">
                             <div class="input-group drp-container">
                                 <?= DateRangePicker::widget([
                                     'name' => 'queryDate',
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 ]) . $addon;?>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-3 p-l-no-away">
                             <div class="input-group m-b">
                                 <?= Html::tag('span', '<button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>', ['class' => 'input-group-btn'])?>
                             </div>

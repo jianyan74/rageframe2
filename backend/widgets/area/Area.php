@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets\area;
 
 use Yii;
@@ -78,7 +79,7 @@ class Area extends Widget
     {
         parent::init();
 
-        $this->level = (int) $this->level;
+        $this->level = (int)$this->level;
         $this->level < 1 && $this->level = 1;
         $this->level > 3 && $this->level = 3;
     }
@@ -93,7 +94,7 @@ class Area extends Widget
         $areaName = $this->areaName;
 
         $provinceIds = StringHelper::parseAttr($this->model->$provincesName);
-        $cityIds = $this->level >= 2 ?  StringHelper::parseAttr($this->model->$cityName) : [];
+        $cityIds = $this->level >= 2 ? StringHelper::parseAttr($this->model->$cityName) : [];
         $areaIds = $this->level == 3 ? StringHelper::parseAttr($this->model->$areaName) : [];
 
         // 获取选中数据
@@ -114,4 +115,5 @@ class Area extends Widget
         ]);
     }
 }
+
 ?>

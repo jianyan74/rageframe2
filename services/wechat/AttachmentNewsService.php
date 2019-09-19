@@ -1,4 +1,5 @@
 <?php
+
 namespace services\wechat;
 
 use yii\helpers\Json;
@@ -93,7 +94,7 @@ class AttachmentNewsService extends Service
             foreach ($match_arr as $src) {
                 $url = Url::to(['analysis/image', 'attach' => $src]);
                 $url = urldecode($url);
-                $item['content'] =  str_replace($src,$url,$item['content']);
+                $item['content'] = str_replace($src, $url, $item['content']);
             }
         }
 

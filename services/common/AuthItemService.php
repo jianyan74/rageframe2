@@ -114,12 +114,14 @@ class AuthItemService extends Service
 
     /**
      * @param array $ids
+     * @param string $app_id
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getList($ids = [])
+    public function getList($app_id = AppEnum::BACKEND, $ids = [])
     {
         return AuthItem::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['app_id' => $app_id])
             ->andFilterWhere(['in', 'id', $ids])
             ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'type', 'addons_name', 'is_menu'])
             ->orderBy('sort asc, id asc')

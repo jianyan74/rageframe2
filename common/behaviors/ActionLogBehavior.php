@@ -17,11 +17,6 @@ use common\models\common\ActionBehavior;
 class ActionLogBehavior extends Behavior
 {
     /**
-     * @var bool
-     */
-    public $enabled = true;
-
-    /**
      * {@inheritdoc}
      */
     public function events()
@@ -39,10 +34,6 @@ class ActionLogBehavior extends Behavior
      */
     public function beforeAction($event)
     {
-        if (true !== $this->enabled) {
-            return;
-        }
-
         $this->record(ActionBehavior::ACTION_BEFORE, $event);
     }
 
@@ -52,10 +43,6 @@ class ActionLogBehavior extends Behavior
      */
     public function afterAction($event)
     {
-        if (true !== $this->enabled) {
-            return;
-        }
-
         $this->record(ActionBehavior::ACTION_AFTER, $event);
     }
 

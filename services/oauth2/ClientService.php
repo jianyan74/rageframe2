@@ -1,4 +1,5 @@
 <?php
+
 namespace services\oauth2;
 
 use common\components\Service;

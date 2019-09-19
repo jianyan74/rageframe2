@@ -38,6 +38,13 @@ return [
             ],
         ],
         [
+            'title' => '时间戳转换',
+            'route' => 'timestamp/index',
+            'icon' => '',
+            'params' => [
+            ],
+        ],
+        [
             'title' => 'PHP信息',
             'route' => 'php-info/index',
             'icon' => '',

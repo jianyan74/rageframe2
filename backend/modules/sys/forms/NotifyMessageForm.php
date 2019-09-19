@@ -21,6 +21,8 @@ class NotifyMessageForm extends Model
     public function init()
     {
         $this->data = Yii::$app->services->sysManager->getMapList();
+        unset($this->data[Yii::$app->user->id]);
+
         parent::init();
     }
 

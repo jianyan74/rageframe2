@@ -1,7 +1,8 @@
 <?php
+
 namespace services\member;
 
-use yii\web\NotFoundHttpException;
+use Yii;
 use common\enums\StatusEnum;
 use common\components\Service;
 use common\models\member\Member;
@@ -37,12 +38,33 @@ class MemberService extends Service
     public function get($id)
     {
         if (!$this->member || $this->member['id'] != $id) {
-            $this->member = Member::find()
-                ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
-                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-                ->one();
+            $this->member = $this->findById($id);
         }
 
         return $this->member;
+    }
+
+    /**
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findById($id)
+    {
+        return Member::find()
+            ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * @param Member $member
+     */
+    public function lastLogin(Member $member)
+    {
+        // 记录访问次数
+        $member->visit_count += 1;
+        $member->last_time = time();
+        $member->last_ip = Yii::$app->request->getUserIP();
+        $member->save();
     }
 }

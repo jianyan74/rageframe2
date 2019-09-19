@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\wechat\assets;
 
 use yii\web\AssetBundle;

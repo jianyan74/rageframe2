@@ -15,8 +15,18 @@ class Service extends Component
 {
     use BaseAction;
 
+    /**
+     * 子服务
+     *
+     * @var
+     */
     public $childService;
 
+    /**
+     * 已实例化的子服务
+     *
+     * @var
+     */
     protected $_childService;
 
     /**

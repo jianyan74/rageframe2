@@ -31,7 +31,7 @@ class IpBlacklistService extends Service
      * @param $ip
      * @param $remark
      */
-    public function create($ip, $remark)
+    public function create($ip, string $remark)
     {
         $model = new IpBlacklist();
         $model->ip = $ip;

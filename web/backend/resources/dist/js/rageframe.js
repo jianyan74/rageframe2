@@ -140,6 +140,7 @@ $(document).on("click", ".openIframe", function(e){
     var title = $(this).data('title');
     var width = $(this).data('width');
     var height = $(this).data('height');
+    var offset = $(this).data('offset');
     var href = $(this).attr('href');
 
     if (title == undefined) {
@@ -154,7 +155,11 @@ $(document).on("click", ".openIframe", function(e){
         height = '80%';
     }
 
-    openIframe(title, width, height, href);
+    if (offset == undefined) {
+        offset = "10%";
+    }
+
+    openIframe(title, width, height, href, offset);
     e.preventDefault();
     return false;
 });
@@ -164,12 +169,12 @@ layer.config({
 });
 
 // 打一个新窗口
-function openIframe(title, width, height, content){
+function openIframe(title, width, height, content, offset){
     layer.open({
         type: 2,
         title: title,
         shade: 0.3,
-        offset: "10%",
+        offset: offset,
         shadeClose : true,
         btn: ['保存', '关闭'],
         yes: function(index, layero) {

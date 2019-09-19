@@ -1,4 +1,4 @@
-## 组件调用
+## 系统组件
 
 目录
 
@@ -13,6 +13,7 @@
 - IP地址转地区
 - Curl
 - 中文转拼音
+- 爬虫
 - Glide
 
 ### 基本组件
@@ -173,6 +174,24 @@ $pinyin->convert('带着希望去旅行，比到达终点更美好', PINYIN_ASCI
 ```
 
 更多文档：https://github.com/overtrue/pinyin
+
+### 爬虫
+
+```
+use QL\QueryList;
+
+$data = QueryList::get('https://www.baidu.com/s?wd=QueryList')
+  // 设置采集规则
+  ->rules([ 
+      'title'=>array('h3','text'),
+      'link'=>array('h3>a','href')
+  ])
+  ->queryData();
+
+print_r($data);
+```
+
+更多文档：http://www.querylist.cc/docs/guide/v4/
 
 ### Glide
 

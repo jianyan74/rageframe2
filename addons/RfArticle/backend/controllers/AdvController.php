@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;

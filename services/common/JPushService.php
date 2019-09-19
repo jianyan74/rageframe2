@@ -42,10 +42,8 @@ class JPushService extends Service
         try {
             $pusher->send();
         } catch (\JPush\Exceptions\JPushException $e) {
-            Yii::$app->services->log->setStatusCode(500);
-            Yii::$app->services->log->setStatusText('JPush');
-            Yii::$app->services->log->setErrData($e->getMessage());
-            Yii::$app->services->log->insertLog();
+            Yii::$app->services->log->setErrorStatus(500, 'JPush', $e->getMessage());
+            Yii::$app->services->log->push();
         }
     }
 
@@ -89,10 +87,8 @@ class JPushService extends Service
                 ])
                 ->send();
         } catch (\Exception $e) {
-            Yii::$app->services->log->setStatusCode(500);
-            Yii::$app->services->log->setStatusText('JPush');
-            Yii::$app->services->log->setErrData($e->getMessage());
-            Yii::$app->services->log->insertLog();
+            Yii::$app->services->log->setErrorStatus(500, 'JPush', $e->getMessage());
+            Yii::$app->services->log->push();
         }
     }
 }

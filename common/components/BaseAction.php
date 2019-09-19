@@ -12,7 +12,7 @@ use yii\base\Model;
  */
 trait BaseAction
 {
-    private $merchant_id;
+    protected $merchant_id;
 
     /**
      * 默认分页

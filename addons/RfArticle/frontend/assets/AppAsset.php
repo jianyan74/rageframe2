@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfArticle\frontend\assets;
 
 use yii\web\AssetBundle;

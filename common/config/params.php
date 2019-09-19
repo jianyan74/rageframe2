@@ -3,16 +3,16 @@ return [
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
-
     // 是否在模块内
     'inAddon' => false,
-
     // 多商户开启
     'merchantOpen' => true,
-
     // 系统管理员账号id
     'adminAccount' => '',
-
+    // 请求全局唯一ID
+    'uuid' => '',
+    // 百度编辑器默认上传驱动
+    'UEditorUploadDrive' => 'local',
     // 全局上传配置
     'uploadConfig' => [
         // 图片

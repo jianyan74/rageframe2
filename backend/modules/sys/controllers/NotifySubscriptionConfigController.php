@@ -3,9 +3,10 @@
 namespace backend\modules\sys\controllers;
 
 use Yii;
-use yii\helpers\Json;
 use common\helpers\ArrayHelper;
 use common\models\sys\NotifySubscriptionConfig;
+use common\enums\SubscriptionActionEnum;
+use common\enums\SubscriptionAlertTypeEnum;
 use backend\modules\sys\forms\NotifySubscriptionActionForm;
 use backend\controllers\BaseController;
 
@@ -17,25 +18,33 @@ use backend\controllers\BaseController;
 class NotifySubscriptionConfigController extends BaseController
 {
     /**
-     * @return string
+     * @return mixed|string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
         $model = new NotifySubscriptionActionForm();
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
-            $data = ArrayHelper::toArray($model);
-            $configModel = $this->getConfigModel();
-            $configModel->action = Json::encode($data);
-            $configModel->save();
+        $model->attributes = $this->getConfigModel()->action;
 
-            return $this->message('修改成功', $this->redirect(['index']));
-        } else {
-            $data = $this->getConfigModel()->action;
-            $model->attributes = is_array($data) ? $data : Json::decode($data);
+        if (Yii::$app->request->isPost) {
+            $newData = Yii::$app->request->post($model->formName(), []);
+            $data = Yii::$app->services->sysNotifySubscriptionConfig->getData($newData);
+
+            if (($model->attributes = $data) && $model->validate()) {
+                $data = ArrayHelper::toArray($model);
+                $configModel = $this->getConfigModel();
+                $configModel->action = $data;
+                $configModel->save();
+                return $this->message('修改成功', $this->redirect(['index']));
+            }
+
+            return $this->message('修改失败', $this->redirect(['index']), 'error');
         }
 
         return $this->render('index', [
-            'model' => $model
+            'model' => $model,
+            'typeExplain' => SubscriptionAlertTypeEnum::$listExplain,
+            'valueExplain' => SubscriptionActionEnum::$listExplain,
         ]);
     }
 
@@ -51,7 +60,6 @@ class NotifySubscriptionConfigController extends BaseController
         if (!$config) {
             $config = new NotifySubscriptionConfig();
             $config->manager_id = Yii::$app->user->id;
-            $config->action = Json::encode(NotifySubscriptionConfig::$defaultSubscriptionConfig);
             $config->save();
         }
 

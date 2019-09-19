@@ -44,7 +44,7 @@ class RuleController extends BaseController
 
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
-            ->orderBy('sort asc,created_at desc')
+            ->orderBy('sort desc, created_at desc')
             ->with('ruleKeyword')
             ->limit($pages->limit)
             ->all();

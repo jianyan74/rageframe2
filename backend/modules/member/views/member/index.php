@@ -57,10 +57,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'label' => '账户金额',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return "余额：" . $model->user_money . '<br>' .
-                                    "累积金额：" . $model->accumulate_money . '<br>' .
-                                    "积分：" . $model->user_integral . '<br>' .
-                                    "累计积分：" . $model->accumulate_integral;
+                                return "余额：" . $model->account->user_money . '<br>' .
+                                    "累积金额：" . $model->account->accumulate_money . '<br>' .
+                                    "积分：" . $model->account->user_integral . '<br>' .
+                                    "累计积分：" . $model->account->accumulate_integral;
                             },
                             'format' => 'raw',
                         ],

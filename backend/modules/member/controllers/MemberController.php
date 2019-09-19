@@ -48,7 +48,8 @@ class MemberController extends BaseController
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->with('account');
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

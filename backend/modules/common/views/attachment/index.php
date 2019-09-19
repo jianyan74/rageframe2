@@ -4,6 +4,7 @@ use yii\grid\GridView;
 use yii\helpers\Html as BaseHtml;
 use common\helpers\Html;
 use common\helpers\ImageHelper;
+use common\helpers\DebrisHelper;
 
 $this->title = '文件列表';
 $this->params['breadcrumbs'][] = $this->title;
@@ -42,8 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'base_url',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                if (($model['upload_type'] == 'images' || preg_match("/^image/",
-                                            $model['specific_type'])) && $model['extension'] != 'psd') {
+                                if (($model['upload_type'] == 'images' || preg_match("/^image/", $model['specific_type'])) && $model['extension'] != 'psd') {
                                     return ImageHelper::fancyBox($model->base_url);
                                 }
 
@@ -81,14 +81,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'upload_ip',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return long2ip($model->upload_ip);
+                                return DebrisHelper::long2ip($model->upload_ip);
                             },
                         ],
                         [
                             'label' => 'ip解析',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return \common\helpers\DebrisHelper::analysisIp($model->upload_ip);
+                                return DebrisHelper::analysisIp($model->upload_ip);
                             },
                         ],
                         [

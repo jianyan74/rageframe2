@@ -14,6 +14,8 @@ use common\components\Service;
  * @property \services\sys\MenuService $sysMenu 菜单
  * @property \services\sys\MenuCateService $sysMenuCate 菜单分类
  * @property \services\sys\NotifyService $sysNotify 消息
+ * @property \services\sys\NotifyPullTimeService $sysNotifyPullTime 消息拉取日志
+ * @property \services\sys\NotifySubscriptionConfigService $sysNotifySubscriptionConfig 提醒配置
  * @property \services\api\AccessTokenService $apiAccessToken Api授权key
  * @property \services\wechat\SettingService $wechatSetting 参数设置
  * @property \services\wechat\FansService $wechatFans 粉丝
@@ -33,12 +35,11 @@ use common\components\Service;
  * @property \services\wechat\RuleKeywordService $wechatRuleKeyword 规则关键字
  * @property \services\wechat\RuleKeywordStatService $wechatRuleKeywordStat 规则关键字统计
  * @property \services\wechat\ReplyDefaultService $wechatReplyDefault 默认回复
- * @property \services\wechat\TemplateMsgService $wechatTemplateMsg 模板消息
  * @property \services\member\MemberService $member 会员
  * @property \services\member\AuthService $memberAuth 会员第三方授权
+ * @property \services\member\AccountService $memberAccount 会员账号
  * @property \services\member\AddressService $memberAddress 会员收货地址
  * @property \services\member\CreditsLogService $memberCreditsLog 会员积分/余额变动日志
- * @property \services\member\MoneyLogService $memberMoneyLog 会员金额日志
  * @property \services\common\ActionLogService $actionLog 行为日志
  * @property \services\common\ActionBehaviorService $actionBehavior 可被记录的行为
  * @property \services\common\AttachmentService $attachment 公用资源
@@ -47,6 +48,7 @@ use common\components\Service;
  * @property \services\common\MailerService $mailer 公用邮件
  * @property \services\common\SmsService $sms 公用短信
  * @property \services\common\AddonsService $addons 插件
+ * @property \services\common\AddonsConfigService $addonsConfig 插件配置
  * @property \services\common\AddonsBindingService $addonsBinding 插件菜单入口
  * @property \services\common\AuthItemService $authItem 权限
  * @property \services\common\AuthRoleService $authRole 角色
@@ -83,6 +85,8 @@ class Application extends Service
         'sysMenu' => 'services\sys\MenuService',
         'sysMenuCate' => 'services\sys\MenuCateService',
         'sysNotify' => 'services\sys\NotifyService',
+        'sysNotifyPullTime' => 'services\sys\NotifyPullTimeService',
+        'sysNotifySubscriptionConfig' => 'services\sys\NotifySubscriptionConfigService',
         'sysManager' => 'services\sys\ManagerService',
         /** ------ 微信 ------ **/
         'wechatSetting' => 'services\wechat\SettingService',
@@ -110,9 +114,9 @@ class Application extends Service
         /** ------ 用户 ------ **/
         'member' => 'services\member\MemberService',
         'memberAuth' => 'services\member\AuthService',
+        'memberAccount' => 'services\member\AccountService',
         'memberAddress' => 'services\member\AddressService',
         'memberCreditsLog' => 'services\member\CreditsLogService',
-        'memberMoneyLog' => 'services\member\MoneyLogService',
         /** ------ 公用部分 ------ **/
         'config' => 'services\common\ConfigService',
         'configCate' => 'services\common\ConfigCateService',
@@ -122,6 +126,7 @@ class Application extends Service
         'provinces' => 'services\common\ProvincesService',
         'attachment' => 'services\common\AttachmentService',
         'addons' => 'services\common\AddonsService',
+        'addonsConfig' => 'services\common\AddonsConfigService',
         'addonsBinding' => 'services\common\AddonsBindingService',
         'auth' => 'services\common\AuthService',
         'authItem' => 'services\common\AuthItemService',

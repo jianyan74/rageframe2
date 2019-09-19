@@ -6,7 +6,6 @@ use Yii;
 use common\enums\StatusEnum;
 use common\helpers\EchantsHelper;
 use common\enums\AppEnum;
-use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\models\common\Log;
@@ -14,6 +13,7 @@ use common\queues\LogJob;
 use common\models\api\AccessToken;
 use common\enums\SubscriptionActionEnum;
 use common\enums\SubscriptionReasonEnum;
+use common\enums\MessageLevelEnum;
 
 /**
  * Class LogService
@@ -51,13 +51,6 @@ class LogService extends Service
     private $errData = [];
 
     /**
-     * 唯一标识
-     *
-     * @var string
-     */
-    private $req_id;
-
-    /**
      * 不记录的状态码
      *
      * @var array
@@ -78,8 +71,6 @@ class LogService extends Service
     {
         // 判断是否记录日志
         if (Yii::$app->params['user.log'] && in_array($this->getLevel($response->statusCode), Yii::$app->params['user.log.level'])) {
-            $req_id = StringHelper::uuid('uniqid');
-
             // 检查是否报错
             if ($response->statusCode >= 300 && $exception = Yii::$app->getErrorHandler()->exception) {
                 $this->errData = [
@@ -90,35 +81,40 @@ class LogService extends Service
                     'stack-trace' => explode("\n", $exception->getTraceAsString()),
                 ];
 
-                $showReqId && $response->data['req_id'] = $req_id;
+                $showReqId && $response->data['req_id'] = Yii::$app->params['uuid'];
             }
 
             $this->statusCode = $response->statusCode;
             $this->statusText = $response->statusText;
-            $this->req_id = $req_id;
 
             // 排除状态码
-            !in_array($this->statusCode, ArrayHelper::merge($this->exceptCode, Yii::$app->params['user.log.except.code'])) && $this->insertLog();
+            !in_array($this->statusCode, ArrayHelper::merge(
+                $this->exceptCode,
+                Yii::$app->params['user.log.except.code'])
+            ) && $this->push();
         }
 
         return $this->errData;
     }
 
     /**
-     * 写入日志
+     * 推入日志
+     *
+     * 判断进入队列或直接写入数据库
      */
-    public function insertLog()
+    public function push()
     {
         try {
             // 判断是否开启队列
             if ($this->queueSwitch == true) {
-                $messageId = Yii::$app->queue->push(new LogJob([
+                $message_id = Yii::$app->queue->push(new LogJob([
                     'data' => $this->getData(),
                 ]));
             } else {
                 $this->realCreate($this->getData());
             }
         } catch (\Exception $e) {
+
         }
     }
 
@@ -136,86 +132,31 @@ class LogService extends Service
         // 创建订阅消息
         $action = $this->getLevel($log['error_code']);
         $actions = [
-            'info' => SubscriptionActionEnum::LOG_INFO,
-            'warning' => SubscriptionActionEnum::LOG_WARNING,
-            'error' => SubscriptionActionEnum::LOG_ERROR,
+            MessageLevelEnum::SUCCESS => SubscriptionActionEnum::LOG_SUCCESS,
+            MessageLevelEnum::INFO => SubscriptionActionEnum::LOG_INFO,
+            MessageLevelEnum::WARNING => SubscriptionActionEnum::LOG_WARNING,
+            MessageLevelEnum::ERROR => SubscriptionActionEnum::LOG_ERROR,
         ];
 
+        // 加入提醒池
         Yii::$app->services->sysNotify->createRemind(
             $log->id,
             SubscriptionReasonEnum::LOG_CREATE,
             $actions[$action],
             $log['user_id'],
-            "请求异常，报错信息：" . $log->error_msg
+            MessageLevelEnum::$listExplain[$action] . "请求：" . $log->error_msg
         );
     }
 
     /**
-     * 初始化默认日志数据
-     *
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function initData()
-    {
-        $user_id = Yii::$app->user->id;
-        if (Yii::$app->id == AppEnum::API && !Yii::$app->user->isGuest) {
-            /** @var AccessToken $identity */
-            $identity = Yii::$app->user->identity;
-            $user_id = $identity->member_id ?? 0;
-        }
-
-        $url = explode('?', Yii::$app->request->getUrl());
-
-        $data = [];
-        $data['user_id'] = $user_id ?? 0;
-        $data['app_id'] = Yii::$app->id;
-        $data['merchant_id'] = Yii::$app->services->merchant->getId();
-        $data['url'] = $url[0];
-        $data['get_data'] = Yii::$app->request->get();
-        $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
-
-        $module = $controller = $action = '';
-        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
-        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
-        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
-
-        $route = $module . '/' . $controller . '/' . $action;
-        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
-            $data['post_data'] = Yii::$app->request->post();
-        }
-
-        $data['device'] = Yii::$app->debris->detectVersion();
-        $data['method'] = Yii::$app->request->method;
-        $data['module'] = $module;
-        $data['controller'] = $controller;
-        $data['action'] = $action;
-        $data['ip'] = ip2long(Yii::$app->request->userIP);
-
-        return $data;
-    }
-
-    /**
      * @param int $code
-     */
-    public function setStatusCode(int $code)
-    {
-        $this->statusCode = $code;
-    }
-
-    /**
      * @param string $text
-     */
-    public function setStatusText(string $text)
-    {
-        $this->statusText = $text;
-    }
-
-    /**
      * @param $error_data
      */
-    public function setErrData($error_data)
+    public function setErrorStatus(int $code, string $text, $error_data)
     {
+        $this->statusCode = $code;
+        $this->statusText = $text;
         $this->errData = $error_data;
     }
 
@@ -258,10 +199,55 @@ class LogService extends Service
     private function getData()
     {
         $data = $this->initData();
-        $data['req_id'] = $this->req_id;
+        $data['req_id'] = Yii::$app->params['uuid'];
         $data['error_code'] = $this->statusCode;
         $data['error_data'] = $this->errData;
         $data['error_msg'] = isset($this->errData['errorMessage']) ? $this->errData['errorMessage'] : $this->statusText;
+
+        return $data;
+    }
+
+    /**
+     * 初始化默认日志数据
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function initData()
+    {
+        $user_id = Yii::$app->user->id;
+        if (Yii::$app->id == AppEnum::API && !Yii::$app->user->isGuest) {
+            /** @var AccessToken $identity */
+            $identity = Yii::$app->user->identity;
+            $user_id = $identity->member_id ?? 0;
+        }
+
+        $url = explode('?', Yii::$app->request->getUrl());
+
+        $data = [];
+        $data['user_id'] = $user_id ?? 0;
+        $data['app_id'] = Yii::$app->id;
+        $data['merchant_id'] = Yii::$app->services->merchant->getId();
+        $data['url'] = $url[0];
+        $data['get_data'] = Yii::$app->request->get();
+        $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
+
+        $module = $controller = $action = '';
+        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
+        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
+        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
+
+        $route = $module . '/' . $controller . '/' . $action;
+        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
+            $data['post_data'] = Yii::$app->request->post();
+        }
+
+        $data['device'] = Yii::$app->debris->detectVersion();
+        $data['method'] = Yii::$app->request->method;
+        $data['module'] = $module;
+        $data['controller'] = $controller;
+        $data['action'] = $action;
+        $data['ip'] = (int)ip2long(Yii::$app->request->userIP);
 
         return $data;
     }
@@ -275,17 +261,15 @@ class LogService extends Service
     private function getLevel($statusCode)
     {
         if ($statusCode < 300) {
-            return 'info';
+            return MessageLevelEnum::SUCCESS;
+        } elseif ($statusCode >= 300 && $statusCode < 400) {
+            return MessageLevelEnum::INFO;
+        } elseif ($statusCode >= 400 && $statusCode < 500) {
+            return MessageLevelEnum::WARNING;
+        } elseif ($statusCode >= 500) {
+            return MessageLevelEnum::ERROR;
         }
 
-        if ($statusCode >= 300 && $statusCode < 400) {
-            return 'warning';
-        }
-
-        if ($statusCode >= 400) {
-            return 'error';
-        }
-
-        return false;
+        return MessageLevelEnum::ERROR;
     }
 }

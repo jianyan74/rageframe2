@@ -110,6 +110,10 @@
     margin-top: 2px;
 }
 
+.desk-menu {
+    margin-bottom: 0;
+}
+
 /* ====== 替换AdminLTE样式 ====== */
 a {
     /*color: #589ffc;*/
@@ -884,7 +888,7 @@ div.required label:before {
 }
 
 /*列表 必填项 取消加星*/
-div.required input+div label:before {
+div.required input + div label:before {
     content: "";
     color: red;
 }
@@ -1060,6 +1064,14 @@ nav.page-tabs .page-tabs-content {
 }
 
 /* 内边距 & 外边距 */
+
+.p-r-no-away {
+    padding-right: 0;
+}
+
+.p-l-no-away {
+    padding-left: 0;
+}
 
 .p-xxs {
     padding: 5px;

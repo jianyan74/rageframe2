@@ -2,6 +2,7 @@
 
 namespace common\controllers;
 
+use common\helpers\StringHelper;
 use Yii;
 use yii\helpers\Json;
 use yii\web\Controller;
@@ -203,6 +204,8 @@ class FileBaseController extends Controller
     public function actionGetOssPath()
     {
         $url = Yii::$app->request->post('url');
+        $type = Yii::$app->request->post('type');
+
         $urlArr = parse_url($url);
         $base_url = $urlArr['path'];
         $drive = new UploadDrive(Attachment::DRIVE_OSS);
@@ -224,14 +227,22 @@ class FileBaseController extends Controller
 
         $baseInfo = [
             'drive' => Attachment::DRIVE_OSS,
-            'upload_type' => Yii::$app->request->post('type'),
+            'upload_type' => in_array($type, array_keys(Attachment::$uploadTypeExplain)) ? $type : Attachment::UPLOAD_TYPE_FILES,
             'specific_type' => $metadata['content-type'],
             'size' => $metadata['content-length'],
             'extension' => $extension,
             'name' => $name,
-            'base_url' => $metadata['info']['url'],
-            'path' => $path
+            'base_url' => urldecode($metadata['info']['url']),
+            'path' => urldecode($path),
+            'md5' => Yii::$app->request->post('md5'),
         ];
+
+        // 验证OSS CNAME
+        $user_url = Yii::$app->debris->config('storage_aliyun_user_url');
+        if (!empty($user_url)) {
+            $baseOssUrl = Yii::$app->debris->config('storage_aliyun_bucket') . '.' . Yii::$app->debris->config('storage_aliyun_endpoint');
+            $baseInfo['base_url'] = StringHelper::replace($baseOssUrl, $user_url, $baseInfo['base_url']);
+        }
 
         // 写入数据库
         $attachment_id = Yii::$app->services->attachment->create($baseInfo);

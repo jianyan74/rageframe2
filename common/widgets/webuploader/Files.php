@@ -2,7 +2,6 @@
 
 namespace common\widgets\webuploader;
 
-
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -135,7 +134,7 @@ class Files extends InputWidget
 
     /**
      * @return string
-     * @throws InvalidConfigException
+     * @throws \Exception
      */
     public function run()
     {
@@ -147,10 +146,14 @@ class Files extends InputWidget
             // 赋予默认值
             $name = $name . '[]';
 
-            if ($value && !is_array($value)) {
-                $value = json_decode($value, true);
-                empty($value) && $value = unserialize($value);
-                empty($value) && $value = [];
+            try {
+                if ($value && !is_array($value)) {
+                    $value = json_decode($value, true);
+                    empty($value) && $value = unserialize($value);
+                    empty($value) && $value = [];
+                }
+            } catch (\Exception $e) {
+                $value = [];
             }
         }
 
@@ -169,7 +172,7 @@ class Files extends InputWidget
             $oss = UploadDrive::getOssJsConfig(
                 $this->config['fileSingleSizeLimit'],
                 $path,
-                60 * 60 * 5
+                60 * 60 * 2
             );
 
             $this->config['server'] = $oss['host'];
