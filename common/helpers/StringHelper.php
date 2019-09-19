@@ -394,11 +394,7 @@ class StringHelper extends BaseStringHelper
                 $array[0] = self::hideStr($array[0], $bengin, $len, 1);
                 $string = implode($glue, $array);
                 break;
-            case 3 :
-                $array = explode($glue, $string);
-                $array[1] = self::hideStr($array[1], $bengin, $len, 0);
-                $string = implode($glue, $array);
-                break;
+            
             case 4 :
                 $left = $bengin;
                 $right = $len;
