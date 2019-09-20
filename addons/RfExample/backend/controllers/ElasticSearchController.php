@@ -17,6 +17,9 @@ class ElasticSearchController extends BaseController
 {
     use Curd;
 
+    /**
+     * @var ElasticSearchCurd
+     */
     public $modelClass = ElasticSearchCurd::class;
 
     /**
@@ -35,6 +38,7 @@ class ElasticSearchController extends BaseController
                 ['http_address' => '127.0.0.1:9200'],
                 // ['http_address' => '192.168.0.210:9200'],
             ],
+            'autodetectCluster' => false,
         ]);
 
         // 更新字段，每次修改字段都需执行该方法

@@ -34,7 +34,8 @@ class MenuService extends Service
             ->all();
 
         $models = ArrayHelper::itemsMerge($list);
-        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+        $data = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+        return ArrayHelper::merge([0 => '顶级菜单'], $data);
     }
 
     /**

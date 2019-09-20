@@ -110,6 +110,12 @@ class Menu extends \common\models\base\BaseModel
             // 修改父类
             if ($this->oldAttributes['pid'] != $this->pid) {
                 $parent = $this->parent;
+                if ($this->pid == 0) {
+                    $parent = new self();
+                    $parent = $parent->loadDefaultValues();
+                    $parent->cate_id = $this->cate_id;
+                }
+
                 $this->cate_id = $parent->cate_id;
                 $level = $parent->level + 1;
                 $tree = $parent->tree . TreeHelper::prefixTreeKey($parent->id);

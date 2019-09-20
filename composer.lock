@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "844b2c9b7f5cf2d65671aa4ce9813ff2",
+    "content-hash": "476c8a1e6f07fea879819eac4b2568da",
     "packages": [
         {
             "name": "2amigos/qrcode-library",
@@ -3753,16 +3753,16 @@
         },
         {
             "name": "overtrue/wechat",
-            "version": "4.2.2",
+            "version": "4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/wechat.git",
-                "reference": "e487edc44f9a3d26603bc3c153c087dd2cacd0b0"
+                "reference": "8271f1c693c3cc4f707a617d86d8eeb131afb926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/wechat/zipball/e487edc44f9a3d26603bc3c153c087dd2cacd0b0",
-                "reference": "e487edc44f9a3d26603bc3c153c087dd2cacd0b0",
+                "url": "https://api.github.com/repos/overtrue/wechat/zipball/8271f1c693c3cc4f707a617d86d8eeb131afb926",
+                "reference": "8271f1c693c3cc4f707a617d86d8eeb131afb926",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3777,7 +3777,7 @@
                 "ext-openssl": "*",
                 "ext-simplexml": "*",
                 "guzzlehttp/guzzle": "^6.2",
-                "monolog/monolog": "^1.22",
+                "monolog/monolog": "^1.22 || ^2.0",
                 "overtrue/socialite": "~2.0",
                 "php": ">=7.1",
                 "pimple/pimple": "^3.0",
@@ -3792,7 +3792,7 @@
                 "mikey179/vfsstream": "^1.6",
                 "mockery/mockery": "^1.0",
                 "phpstan/phpstan": "^0.11.12",
-                "phpunit/phpunit": "~6.5"
+                "phpunit/phpunit": "^7.5"
             },
             "type": "library",
             "autoload": {
@@ -3821,7 +3821,7 @@
                 "weixin",
                 "weixin-sdk"
             ],
-            "time": "2019-08-16T10:24:45+00:00"
+            "time": "2019-09-09T08:23:38+00:00"
         },
         {
             "name": "paragonie/random_compat",
