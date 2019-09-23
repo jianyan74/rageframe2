@@ -17,6 +17,7 @@
 - [表单控件](sys-widget.md)
 - [系统组件](sys-subassembly.md)
 - [系统JS](sys-js-method.md)
+- [Gii](sys-gii.md)
 - [权限控制](sys-auth.md)
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)

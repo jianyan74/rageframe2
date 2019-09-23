@@ -9,6 +9,11 @@
 
 > 各个小版本升级例如 2.1.x 升级到 2.2.x 以上不能完美升级最好重新安装
 
+### v2.3.128(待发布)
+updated 2019.9.20
+
+- 优化: 公用微信 js 支付，调用 easywechat 的 js 支付视图进行兼容 [@yiirise](https://github.com/yiirise)
+
 ### v2.3.127
 updated 2019.9.20
 
