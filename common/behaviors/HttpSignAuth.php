@@ -21,7 +21,7 @@ class HttpSignAuth extends Behavior
     /**
      * @var bool
      */
-    public $switch = false;
+    public $enabled = false;
 
     /**
      * @return array
@@ -38,7 +38,7 @@ class HttpSignAuth extends Behavior
      */
     public function beforeAction($event)
     {
-        if (false === $this->switch) {
+        if (false === $this->enabled) {
             return true;
         }
 

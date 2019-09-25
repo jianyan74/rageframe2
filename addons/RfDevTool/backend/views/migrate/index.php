@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <?php $form = ActiveForm::begin([]); ?>
             <div class="box-body">
                 <div class="col-sm-12">
-                    <?= $form->field($model, 'addon')->dropDownList($addonList)->hint('生成的数据迁移文件在 插件/console/migrations/ 下'); ?>
+                    <?= $form->field($model, 'addon')->dropDownList($addonList)->hint('默认在 根目录/console/migrations/, 选择插件则生成的数据迁移文件在 插件/console/migrations/'); ?>
                     <?= $form->field($model, 'tables')->checkboxList($tableList); ?>
                 </div>
             </div>

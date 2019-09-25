@@ -123,6 +123,7 @@ class NotifyService extends Service
         /** @var array $action 查询用户的配置文件SubscriptionConfig */
         $action = $subscriptionConfig->action;
         !is_array($action) && $action = [];
+
         $filt = [];
         foreach ($action as $key => $item) {
             // 默认拉取系统通知

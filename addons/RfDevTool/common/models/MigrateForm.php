@@ -32,7 +32,7 @@ class MigrateForm extends Model
     {
         return [
             'tables' => '表名',
-            'addon' => '插件',
+            'addon' => '系统/插件',
         ];
     }
 }

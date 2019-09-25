@@ -129,7 +129,7 @@ class ProvinceChildJob extends BaseObject implements JobInterface
             $datum['id'] = $datum['code'][1] . $codeSuffix;
             $datum['level'] = $this->parent['level'] + 1;
             $datum['pid'] = $this->parent['id'];
-            $datum['tree'] = $this->parent['tree'] . ' tr_' . $datum['pid'];
+            $datum['tree'] = $this->parent['tree'] . 'tr_' . $datum['pid'] . ' ';
             $datum['chlidPrefix'] = $datum['code'][0];
             $datum['chlidLink'] = $this->baseUrl . $datum['chlidPrefix'] . '/' . $datum['code'][1] . '.html';
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\modules\wechat;
 
 /**

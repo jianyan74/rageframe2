@@ -30,8 +30,12 @@ class MigrateController extends BaseController
         $addonList = Yii::$app->services->addons->getList();
 
         if ($model->load(Yii::$app->request->post())) {
-            $path = Yii::getAlias('@addons')  . '/' . $model->addon . '/console/migrations/';
-            FileHelper::mkdirs($path);
+            if ($model->addon == 0) {
+                $path = Yii::getAlias('@root')  . '/console/migrations/';
+            } else {
+                $path = Yii::getAlias('@addons')  . '/' . $model->addon . '/console/migrations/';
+                FileHelper::mkdirs($path);
+            }
 
             /** @var MigrateCreate $migrate */
             $migrate = Yii::createObject([
@@ -48,7 +52,7 @@ class MigrateController extends BaseController
 
         return $this->render($this->action->id, [
             'tableList' => ArrayHelper::map($tableList, 'name', 'name'),
-            'addonList' => ArrayHelper::map($addonList, 'name', 'title'),
+            'addonList' => ArrayHelper::merge(['0' => '默认系统'], ArrayHelper::map($addonList, 'name', 'title')),
             'model' => $model
         ]);
     }

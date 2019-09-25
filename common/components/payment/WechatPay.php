@@ -65,19 +65,17 @@ class WechatPay
         $gateway->setCertPath(Yii::getAlias($this->config['cert_client']));
         $gateway->setKeyPath(Yii::getAlias($this->config['cert_key']));
 
-         /**解决omnipay和easywechat衔接之间缺少配置的问题*/
-        if($type == 'WechatPay_Js')
-        {
-            Yii::$app->params['wechatPaymentConfig'] = [
-                'app_id'             => $this->config['app_id'],
-                'mch_id'             => $this->config['mch_id'],
-                'key'                => $this->config['api_key'],
-                'cert_path'          => Yii::getAlias($this->config['cert_client']), 
-                'key_path'           => Yii::getAlias($this->config['cert_key']),
-            ];
+        // EasyWechat 兼容
+        if ($type == self::JS) {
+            Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
+                'app_id' => $this->config['app_id'],
+                'mch_id' => $this->config['mch_id'],
+                'key' => $this->config['api_key'],
+                'cert_path' => Yii::getAlias($this->config['cert_client']),
+                'key_path' => Yii::getAlias($this->config['cert_key']),
+            ]);
         }
-        
-        
+
         return $gateway;
     }
 

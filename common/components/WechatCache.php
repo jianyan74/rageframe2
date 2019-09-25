@@ -100,6 +100,6 @@ class WechatCache implements CacheInterface
      */
     public function has($key)
     {
-        return (Yii::$app->cache->exists($key) || $this->setTime > time() - 1);
+        return (Yii::$app->cache->get($key) || $this->setTime > 0);
     }
 }
