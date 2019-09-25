@@ -2,6 +2,7 @@
 
 ```
 <?php
+
 namespaceStandard; // 顶部命名空间
 // 空一行
 use TestTestClass; //use引入类
@@ -52,6 +53,7 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
@@ -67,6 +69,7 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
@@ -81,6 +84,7 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
@@ -95,6 +99,7 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
@@ -120,6 +125,7 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
@@ -141,6 +147,7 @@ abstract class StandardExample
             // code...
             
         }
+        
         switch ($valueThree) {
             case 'value':
                 // code...
@@ -151,14 +158,17 @@ abstract class StandardExample
                 
             break;
         }
+        
         do {
             // code...
             
         } while ($valueFour <= 10);
+        
         while ($valueFive <= 10) {
             // code...
             
         }
+        
         for ($i = 0;$i < $valueSix;$i++) {
             // code...
             

@@ -60,7 +60,7 @@ class ProvinceJob extends BaseObject implements JobInterface
             $datum['code'] = explode('/', $code);
             $datum['id'] = $datum['code'][0] . '0000';
             $datum['pid'] = 0;
-            $datum['tree'] = 'tr_0';
+            $datum['tree'] = 'tr_0 ';
             $datum['level'] = 1;
             $datum['chlidPrefix'] = $datum['code'][0];
             $datum['chlidLink'] = $this->baseUrl . $datum['link'];

@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m190719_024048_common_auth_role extends Migration
+class m190924_045928_common_auth_role extends Migration
 {
     public function up()
     {
@@ -23,7 +23,7 @@ class m190719_024048_common_auth_role extends Migration
             'created_at' => "int(10) unsigned NULL DEFAULT '0' COMMENT '添加时间'",
             'updated_at' => "int(10) unsigned NULL DEFAULT '0' COMMENT '修改时间'",
             'PRIMARY KEY (`id`)'
-        ], "ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='公用_角色表'");
+        ], "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公用_角色表'");
         
         /* 索引设置 */
         

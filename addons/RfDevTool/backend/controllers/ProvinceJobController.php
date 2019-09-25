@@ -125,7 +125,7 @@ class ProvinceJobController extends BaseController
                     'title' => $datum,
                     'level' => 1,
                     'pid' => 0,
-                    'tree' => 'tr_0',
+                    'tree' => 'tr_0 ',
                 ];
             } elseif ($key > $Hongkong && $key < $Macao) {
                 // 香港
@@ -136,7 +136,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 2,
                             'pid' => $Hongkong,
-                            'tree' => 'tr_0 tr_' . $Hongkong,
+                            'tree' => "tr_0 tr_$Hongkong ",
                         ];
                     } elseif ($key < $i + 100 && $key > $i) {
                         $data[] = [
@@ -144,7 +144,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 3,
                             'pid' => $i,
-                            'tree' => 'tr_0 tr_' . $Hongkong . ' tr_' . $i,
+                            'tree' => "tr_0 tr_$Hongkong tr_$i ",
                         ];
                     }
                 }
@@ -158,7 +158,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 2,
                             'pid' => $Macao,
-                            'tree' => 'tr_0 tr_' . $Macao,
+                            'tree' => "tr_0 tr_$Macao ",
                         ];
                     } elseif ($key < $i + 100 && $key > $i) {
                         $data[] = [
@@ -166,7 +166,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 3,
                             'pid' => $i,
-                            'tree' => 'tr_0 tr_' . $Macao . ' tr_' . $i,
+                            'tree' => "tr_0 tr_$Macao tr_$i ",
                         ];
                     }
                 }
@@ -180,7 +180,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 2,
                             'pid' => $Taiwan,
-                            'tree' => 'tr_0 tr_' . $Taiwan,
+                            'tree' => "tr_0 tr_$Taiwan ",
                         ];
                     } elseif ($key < $i + 100 && $key > $i) {
                         $data[] = [
@@ -188,7 +188,7 @@ class ProvinceJobController extends BaseController
                             'title' => $datum,
                             'level' => 3,
                             'pid' => $i,
-                            'tree' => 'tr_0 tr_' . $Taiwan . ' tr_' . $i,
+                            'tree' => "tr_0 tr_$Taiwan tr_$i ",
                         ];
                     }
                 }
