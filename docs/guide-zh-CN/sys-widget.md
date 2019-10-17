@@ -12,12 +12,13 @@
 - 文件上传控件
 - 多文件上传控件
 - 图片裁剪上传
-- 多Input框控件
+- 多 Input 框控件
 - 地图经纬度选择
 - Select2
 - 省市区控件
 - 省市区控件(复选框)
 - 百度编辑器
+- Markdown 编辑器
 - TreeGrid
 
 ### 颜色选择器
@@ -361,6 +362,21 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 
 更多文档：http://fex.baidu.com/ueditor/#start-start
+
+### Markdown 编辑器
+
+
+```
+<?= $form->field($model, 'content')->widget(\common\widgets\markdown\Markdown::class); ?>
+```
+
+解析
+
+```
+<?= \common\helpers\MarkdownHelper::toHtml($content); ?>
+```
+
+更多文档：https://pandao.github.io/editor.md/examples/index.html
 
 ### TreeGrid
 

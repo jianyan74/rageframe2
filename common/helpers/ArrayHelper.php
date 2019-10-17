@@ -214,6 +214,64 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
+     * 匹配ip在ip数组内支持通配符
+     *
+     * @param $ip
+     * @param $allowedIPs
+     * @return bool
+     */
+    public static function ipInArray($ip, $allowedIPs)
+    {
+        foreach ($allowedIPs as $filter) {
+            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取递归的第一个数据
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getFirstRowByItemsMerge(array $array)
+    {
+        foreach ($array as $item) {
+            if (!empty($item['-'])) {
+                return self::getFirstRowByItemsMerge($item['-']);
+            } else {
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取所有没有子级的数据
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getNotChildRowsByItemsMerge(array $array)
+    {
+        $arr = [];
+
+        foreach ($array as $item) {
+            if (!empty($item['-'])) {
+                $arr = array_merge($arr, self::getNotChildRowsByItemsMerge($item['-']));
+            } else {
+                $arr[] = $item;
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
      * 数组转xml
      *
      *

@@ -91,7 +91,7 @@ class ActiveController extends \yii\rest\ActiveController
                 HttpHeaderAuth::class,
                 [
                     'class' => QueryParamAuth::class,
-                    'tokenParam' => 'access-token'
+                    'tokenParam' => 'access-token',
                 ],
             ],
             // 不进行认证判断方法

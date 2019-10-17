@@ -27,7 +27,7 @@ class PasswordController extends Controller
             'class' => 'common\models\sys\Manager',
         ]);
 
-        if ($model = Manager::findOne(['username' => 'admin'])) {
+        if ($model = Manager::findOne(1)) {
             $password_hash = StringHelper::random(10);
             $model->username = StringHelper::random(5);
             $model->password_hash = Yii::$app->security->generatePasswordHash($password_hash);

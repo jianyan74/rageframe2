@@ -11,6 +11,12 @@
 - rageframe 版本号 >= 2.3.94
 - backend/gii
 
+CURD 使用条件
+
+- 表自增长字段为 `id`
+- 表必须带有 `status` 字段
+- 控制器必须继承  `backend\controllers\BaseController`
+
 ### Model
 
 - 表字段已经备注
@@ -101,7 +107,7 @@ class AddonArticleAdv extends \yii\db\ActiveRecord
 
 ![image](images/gii-curd-view.jpg)
 
-3、选择后点击预览，没有问题了可直接点击创建进行生成
+3、选择后点击 `Preview` 预览，没有问题了可直接点击 `Generate` 创建进行生成
 
 ![image](images/gii-curd-view-files.jpg)
 

@@ -84,7 +84,8 @@ class MiniProgramController extends OnAuthController
         Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM, $userinfo['openId']))) {
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM,
+            $userinfo['openId']))) {
             $memberAuthInfo = Yii::$app->services->memberAuth->create([
                 'unionid' => $userinfo['unionId'] ?? '',
                 'oauth_client' => Auth::CLIENT_MINI_PROGRAM,
@@ -141,14 +142,16 @@ class MiniProgramController extends OnAuthController
 
         // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败时为数组或者你指定的 API 返回格式
 
+        $directory = Yii::getAlias('@attachment');
+
         // 保存小程序码到文件
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-            $filename = $response->save('/path/to/directory');
+            $filename = $response->save($directory);
         }
 
         // 或
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-            $filename = $response->saveAs('/path/to/directory', 'appcode.png');
+            $filename = $response->saveAs($directory, 'appcode.png');
         }
     }
 

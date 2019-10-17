@@ -57,7 +57,8 @@ class ActiveController extends \yii\rest\ActiveController
         // 进行签名验证
         $behaviors['signTokenValidate'] = [
             'class' => HttpSignAuth::class,
-            'switch' => Yii::$app->params['user.httpSignValidity'] // 验证开启状态
+            'optional' => [],
+            'enabled' => Yii::$app->params['user.httpSignValidity'] // 验证开启状态
         ];
 
         // 授权验证

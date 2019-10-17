@@ -111,7 +111,7 @@ class ExcelHelper
         unset($spreadsheet);
         ob_end_flush();
 
-        return true;
+        exit();
     }
 
     /**

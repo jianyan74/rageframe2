@@ -23,6 +23,7 @@ class Yii
  * @property \common\components\Pay $pay
  * @property \common\components\AddonsModule $addons
  * @property \addons\RfTinyShop\services\Application $shopServices
+ * @property \addons\RfOnlineDoc\services\Application $docServices
  * @property \Detection\MobileDetect $mobileDetect
  * @property \jianyan\easywechat\Wechat $wechat
  * @property \Da\QrCode\Component\QrCodeComponent $qr

@@ -1,25 +1,8 @@
-## 代码提示/线上性能优化
+## 线上性能优化
 
 目录
 
-- 代码提示
 - 性能优化
-
-### 代码提示
-
-可以在yii\base\Application;加入以下注释，来让IDE来智能提示
-
-```
- * @property \yii\redis\Connection $redis
- * @property \yii\queue\cli\Queue $queue
- * @property \jianyan\easywechat\Wechat $wechat
- * @property \common\components\Debris $debris
- * @property \common\components\Pay $pay
- * @property \Detection\MobileDetect $mobileDetect
- * @property \services\Application $services
- * @property \addons\RfTinyShop\services\Application $shopServices
- * @property \Da\QrCode\Component\QrCodeComponent $qr
- ```
  
  ### 性能优化
  

@@ -9,6 +9,17 @@
 
 > 各个小版本升级例如 2.1.x 升级到 2.2.x 以上不能完美升级最好重新安装
 
+### v2.3.137
+updated 2019.10.17
+
+- 增加: Markdown Widget
+- 增加: PhpStrom IDE 代码提示辅助类
+- 增加: 消息通知可全部设为已读
+- 优化: SearchModel 组件关联查询字段
+- 优化: rageframe.js 兼容 IE 11
+- 修复: Excel 导出文件打开有时候提示错误
+- 修复: OAuth2 授权码模式不传递 redirect_uri 会导致报错
+
 ### v2.3.130
 updated 2019.9.25
 

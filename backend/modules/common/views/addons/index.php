@@ -47,18 +47,23 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 // 'filter' => false, //不显示搜索框
                                 'value' => function ($model) {
                                     $str = '<h5> ' . $model['title'] . '</h5>';
-                                    $str .= "<small>标识 : " . $model['name'] . "</small>";
+                                    $str .= "<small>" . $model['name'] . "</small>";
                                     return $str;
                                 },
                                 'format' => 'raw'
                             ],
                             [
-                                'attribute' => 'version',
+                                'attribute' => 'author',
                                 'filter' => false, //不显示搜索框
                             ],
                             [
-                                'attribute' => 'author',
+                                'label' => '组别',
+                                'attribute' => 'group',
                                 'filter' => false, //不显示搜索框
+                                'value' => function ($model) use ($addonsGroup) {
+                                    return '<span class="label label-info">' . $addonsGroup[$model->group]['title'] . '</span> ';
+                                },
+                                'format' => 'raw'
                             ],
                             [
                                 'label' => '功能支持',
@@ -73,16 +78,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'format' => 'raw'
                             ],
                             [
-                                'label' => '组别',
-                                'attribute' => 'group',
+                                'attribute' => 'brief_introduction',
                                 'filter' => false, //不显示搜索框
-                                'value' => function ($model) use ($addonsGroup) {
-                                    return '<span class="label label-info">' . $addonsGroup[$model->group]['title'] . '</span> ';
-                                },
-                                'format' => 'raw'
                             ],
                             [
-                                'attribute' => 'brief_introduction',
+                                'attribute' => 'version',
                                 'filter' => false, //不显示搜索框
                             ],
                             [

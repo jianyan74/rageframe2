@@ -779,16 +779,16 @@
         },
         {
             "name": "easywechat-composer/easywechat-composer",
-            "version": "1.1.7",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mingyoung/easywechat-composer.git",
-                "reference": "e35f7b61b9d4a21eac07758e522ad56f800841fe"
+                "reference": "bebd2fee768c5e47449d0317067f43bab10fe1eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mingyoung/easywechat-composer/zipball/e35f7b61b9d4a21eac07758e522ad56f800841fe",
-                "reference": "e35f7b61b9d4a21eac07758e522ad56f800841fe",
+                "url": "https://api.github.com/repos/mingyoung/easywechat-composer/zipball/bebd2fee768c5e47449d0317067f43bab10fe1eb",
+                "reference": "bebd2fee768c5e47449d0317067f43bab10fe1eb",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -825,7 +825,7 @@
                 }
             ],
             "description": "The composer plugin for EasyWeChat",
-            "time": "2019-09-11T01:01:35+00:00"
+            "time": "2019-09-19T13:39:05+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -3753,16 +3753,16 @@
         },
         {
             "name": "overtrue/wechat",
-            "version": "4.2.3",
+            "version": "4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/wechat.git",
-                "reference": "8271f1c693c3cc4f707a617d86d8eeb131afb926"
+                "reference": "511f0fe01100b7ddb09302d2a86baa69ded1913e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/wechat/zipball/8271f1c693c3cc4f707a617d86d8eeb131afb926",
-                "reference": "8271f1c693c3cc4f707a617d86d8eeb131afb926",
+                "url": "https://api.github.com/repos/overtrue/wechat/zipball/511f0fe01100b7ddb09302d2a86baa69ded1913e",
+                "reference": "511f0fe01100b7ddb09302d2a86baa69ded1913e",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3790,7 +3790,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.15",
                 "mikey179/vfsstream": "^1.6",
-                "mockery/mockery": "^1.0",
+                "mockery/mockery": "^1.2.3",
                 "phpstan/phpstan": "^0.11.12",
                 "phpunit/phpunit": "^7.5"
             },
@@ -3821,7 +3821,7 @@
                 "weixin",
                 "weixin-sdk"
             ],
-            "time": "2019-09-09T08:23:38+00:00"
+            "time": "2019-09-25T07:05:54+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -4992,16 +4992,16 @@
         },
         {
             "name": "select2/select2",
-            "version": "4.0.8",
+            "version": "4.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/select2/select2.git",
-                "reference": "a389a6da47f613ea9de3efc7a6dcf5cbda167608"
+                "reference": "c4b730a0a014ea38641bfbcb245e4b7aa0ca5657"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/select2/select2/zipball/a389a6da47f613ea9de3efc7a6dcf5cbda167608",
-                "reference": "a389a6da47f613ea9de3efc7a6dcf5cbda167608",
+                "url": "https://api.github.com/repos/select2/select2/zipball/c4b730a0a014ea38641bfbcb245e4b7aa0ca5657",
+                "reference": "c4b730a0a014ea38641bfbcb245e4b7aa0ca5657",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -5032,7 +5032,7 @@
             ],
             "description": "Select2 is a jQuery based replacement for select boxes.",
             "homepage": "https://select2.org/",
-            "time": "2019-07-21T03:16:43+00:00"
+            "time": "2019-08-28T03:09:32+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

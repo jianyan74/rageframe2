@@ -19,6 +19,13 @@ use common\models\forms\SignAuthForm;
 class HttpSignAuth extends Behavior
 {
     /**
+     * 方法白名单
+     *
+     * @var array
+     */
+    public $optional = [];
+
+    /**
      * @var bool
      */
     public $enabled = false;
@@ -39,6 +46,10 @@ class HttpSignAuth extends Behavior
     public function beforeAction($event)
     {
         if (false === $this->enabled) {
+            return true;
+        }
+
+        if (in_array(Yii::$app->controller->action->id, $this->optional)) {
             return true;
         }
 

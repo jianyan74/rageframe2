@@ -54,7 +54,7 @@ $searchModel = new SearchModel([
      'model' => Topic::class,
      'scenario' => 'default',
      'relations' => ['member' => ['nickname']], // 关联 member 表的 nickname 字段
-     'partialMatchAttributes' => ['code', 'member_nickname'], // 模糊查询，注意 member_nickname 为关联表的别名 表名_字段
+     'partialMatchAttributes' => ['code', 'member.nickname'], // 模糊查询，注意 member_nickname 为关联表的别名 表名_字段
      'pageSize' => 15
 ]);
 
@@ -73,7 +73,7 @@ GridView 片段
 [
     'attribute' => 'member.nickname',
     'label'=> '昵称',
-    'filter' => Html::activeTextInput($searchModel, 'member_nickname', [
+    'filter' => Html::activeTextInput($searchModel, 'member.nickname', [
             'class' => 'form-control'
         ]
     ),

@@ -30,7 +30,7 @@ class MigrateController extends BaseController
         $addonList = Yii::$app->services->addons->getList();
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->addon == 0) {
+            if ($model->addon == "0") {
                 $path = Yii::getAlias('@root')  . '/console/migrations/';
             } else {
                 $path = Yii::getAlias('@addons')  . '/' . $model->addon . '/console/migrations/';

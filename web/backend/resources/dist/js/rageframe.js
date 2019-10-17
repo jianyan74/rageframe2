@@ -293,7 +293,7 @@ function rfTwiceAffirm(obj, title, text) {
         title: title,
         text: dialogText,
         // icon: "warning",
-    }).then((value) => {
+    }).then(function(value) {
         switch (value) {
             case "defeat":
                 window.location = $(obj).attr('href');

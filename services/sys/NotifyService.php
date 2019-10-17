@@ -203,4 +203,14 @@ class NotifyService extends Service
     {
         NotifyManager::updateAll(['is_read' => true, 'updated_at' => time()], ['and', ['manager_id' => $manager_id], ['in', 'notify_id', $notifyIds]]);
     }
+
+    /**
+     * 全部设为已读
+     *
+     * @param $manager_id
+     */
+    public function readAll($manager_id)
+    {
+        NotifyManager::updateAll(['is_read' => true, 'updated_at' => time()], ['manager_id' => $manager_id, 'is_read' => false]);
+    }
 }

@@ -71,12 +71,14 @@ class SmsService extends Service
      * 发送短信
      *
      * ```php
-     *       Yii::$app->services->sms->send($mobile, $code, $member_id)
+     *       Yii::$app->services->sms->send($mobile, $code, $usage, $member_id)
      * ```
      *
-     * @param $mobile
-     * @param $code
-     * @param int $member_id
+     * @param int $mobile 手机号码
+     * @param int $code 验证码
+     * @param string $usage 用途
+     * @param int $member_id 用户ID
+     * @return string|null
      * @throws UnprocessableEntityHttpException
      */
     public function send($mobile, $code, $usage, $member_id = 0)

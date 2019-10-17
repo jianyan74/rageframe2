@@ -16,12 +16,26 @@ use EasyDingTalk\Robot;
 class PullRemindController extends Controller
 {
     /**
+     * 系统提醒
+     */
+    public function actionSys()
+    {
+        // 获取订阅的管理员列表
+        $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
+        /** @var NotifySubscriptionConfig $item */
+        foreach ($list as $item) {
+            Yii::$app->services->sysNotify->pullRemind($item);
+        }
+    }
+
+    /**
      * 钉钉提醒
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function actionDingTalk()
     {
+        // 获取订阅的管理员列表
         $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
         /** @var NotifySubscriptionConfig $item */
         foreach ($list as $item) {
@@ -34,15 +48,13 @@ class PullRemindController extends Controller
                         $text[] = '#' . $value['id'] . ' ' . $value['content'];
                     }
 
-                    $text = implode("\n", $text);
-
                     try {
                         $robot = Robot::create($item->manager->dingtalk_robot_token);
                         $robot->send([
                             'msgtype' => 'markdown',
                             'markdown' => [
                                 'title' => '消息提醒',
-                                'text' => $text,
+                                'text' => implode("\n", $text),
                             ],
                             'at' => [
                                 'atMobiles' => [
@@ -59,14 +71,43 @@ class PullRemindController extends Controller
     }
 
     /**
-     * 系统提醒
+     * 微信消息模板提醒
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function actionSys()
+    public function wechat()
     {
+        // 获取订阅的管理员列表
         $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
         /** @var NotifySubscriptionConfig $item */
         foreach ($list as $item) {
-            Yii::$app->services->sysNotify->pullRemind($item);
+            if (!empty($item->manager)) {
+                $result = Yii::$app->services->sysNotify->pullRemind($item, SubscriptionAlertTypeEnum::WECHAT);
+
+                if ($result && !empty($item->manager->openid)) {
+                    $text = [];
+
+                    foreach ($result as $value) {
+                        $text[] = '#' . $value['id'] . ' ' . $value['content'];
+                    }
+
+                    $text = implode("\n", $text);
+
+                    try {
+                        // TODO 配置微信模板及通知人
+                        Yii::$app->wechat->app->template_message->send([
+                            'touser' => $item->manager->openid,
+                            'template_id' => 'template-id',
+                            'data' => [
+                                'key1' => 'VALUE',
+                                'key2' => 'VALUE2',
+                            ],
+                        ]);
+                    } catch (\Exception $e) {
+                        Yii::error($e->getMessage());
+                    }
+                }
+            }
         }
     }
 }

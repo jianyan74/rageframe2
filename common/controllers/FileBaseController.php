@@ -2,16 +2,17 @@
 
 namespace common\controllers;
 
-use common\helpers\StringHelper;
 use Yii;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\Response;
 use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultDataHelper;
 use common\models\common\Attachment;
 use common\components\UploadDrive;
+use common\helpers\StringHelper;
 
 /**
  * Class FileBaseController
@@ -138,6 +139,33 @@ class FileBaseController extends Controller
             $upload->save();
 
             return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultDataHelper::json(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * Markdown 图片上传
+     *
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionImagesMarkdown()
+    {
+        try {
+            $upload = new UploadHelper(Yii::$app->request->get(), Attachment::UPLOAD_TYPE_IMAGES);
+            $upload->uploadFileName = 'editormd-image-file';
+            $upload->verifyFile();
+            $upload->save();
+
+            $info = $upload->getBaseInfo();
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return [
+                'success' => 1,
+                'url' => $info['url'],
+            ];
         } catch (\Exception $e) {
             return ResultDataHelper::json(404, $e->getMessage());
         }

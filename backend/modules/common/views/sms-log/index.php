@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'use_time',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return empty($model->use_time) ? '---' : date('Y-m-d H:i:s');
+                                return empty($model->use_time) ? '---' : date('Y-m-d H:i:s', $model->use_time);
                             },
                         ],
                         [

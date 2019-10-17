@@ -16,6 +16,7 @@ class SendMessageController extends Controller
 {
     /**
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function actionIndex()
     {

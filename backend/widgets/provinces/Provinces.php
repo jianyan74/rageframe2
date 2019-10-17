@@ -36,6 +36,8 @@ class Provinces extends Widget
     /**
      * 显示类型
      *
+     * long/short
+     *
      * @var string
      */
     public $template = 'long';

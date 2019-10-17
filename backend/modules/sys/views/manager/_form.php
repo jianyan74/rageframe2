@@ -4,15 +4,11 @@ use common\helpers\Url;
 use yii\widgets\ActiveForm;
 use common\enums\GenderEnum;
 
-$actionLog = Yii::$app->services->actionLog->findByAppIdAndManagerId(Yii::$app->id, $model['id']);
+$actionLog = Yii::$app->services->actionLog->findByAppIdAndManagerId(Yii::$app->id, $model['id'], 10);
 
 ?>
 
-<?php $form = ActiveForm::begin([
-    'fieldConfig' => [
-        'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
-    ]
-]); ?>
+<?php $form = ActiveForm::begin(); ?>
 <div class="row">
     <div class="col-sm-3">
         <!-- Widget: user widget style 1 -->
@@ -41,52 +37,70 @@ $actionLog = Yii::$app->services->actionLog->findByAppIdAndManagerId(Yii::$app->
                         <a href="<?= Url::to(['/common/action-log/index']); ?>" class="openContab blue" data-title="行为日志">更多</a>
                     </div>
                 </div>
+            <?php } else { ?>
+                <div class="box-body">
+                    <div class="col-md-12 changelog-info">
+                        暂无行为记录...
+                    </div>
+                </div>
             <?php } ?>
         </div>
     </div>
     <div class="col-sm-9">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">基本信息</h3>
-            </div>
-            <div class="box-body">
-                <?= $form->field($model, 'head_portrait')->widget(\backend\widgets\cropper\Cropper::class, [
-                    // 'theme' => 'default',
-                    'config' => [
-                        // 可设置自己的上传地址, 不设置则默认地址
-                        // 'server' => '',
-                    ],
-                ]); ?>
-                <?= $form->field($model, 'realname')->textInput() ?>
-                <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'mobile')->textInput() ?>
-                <?= $form->field($model, 'dingtalk_robot_token')->textInput()->hint('配置后并开启钉钉消息提醒和定时任务即可进行提醒') ?>
-                <?= \backend\widgets\provinces\Provinces::widget([
-                    'form' => $form,
-                    'model' => $model,
-                    'provincesName' => 'province_id',// 省字段名
-                    'cityName' => 'city_id',// 市字段名
-                    'areaName' => 'area_id',// 区字段名
-                ]); ?>
-                <?= $form->field($model, 'email')->textInput() ?>
-                <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
-                    'language' => 'zh-CN',
-                    'layout' => '{picker}{input}',
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,// 今日高亮
-                        'autoclose' => true,// 选择后自动关闭
-                        'todayBtn' => true,// 今日按钮显示
-                    ],
-                    'options' => [
-                        'class' => 'form-control no_bor',
-                    ]
-                ]); ?>
-                <?= $form->field($model, 'address')->textarea() ?>
-            </div>
-            <div class="box-footer text-center">
-                <button class="btn btn-primary" type="submit" onclick="sendForm()">保存</button>
-                <?= $backBtn ?>
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#base" data-toggle="tab" aria-expanded="true">基本信息</a></li>
+                <li><a href="#oauth" data-toggle="tab" aria-expanded="false">第三方绑定</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane active" id="base">
+                    <div class="col-lg-12">
+                        <?= $form->field($model, 'head_portrait')->widget(\backend\widgets\cropper\Cropper::class, [
+                            // 'theme' => 'default',
+                            'config' => [
+                                // 可设置自己的上传地址, 不设置则默认地址
+                                // 'server' => '',
+                            ],
+                        ]); ?>
+                        <?= $form->field($model, 'realname')->textInput() ?>
+                        <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
+                        <?= $form->field($model, 'mobile')->textInput() ?>
+                        <?= \backend\widgets\provinces\Provinces::widget([
+                            'form' => $form,
+                            'model' => $model,
+                            'template' => 'short',
+                            'provincesName' => 'province_id',// 省字段名
+                            'cityName' => 'city_id',// 市字段名
+                            'areaName' => 'area_id',// 区字段名
+                        ]); ?>
+                        <?= $form->field($model, 'email')->textInput() ?>
+                        <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
+                            'language' => 'zh-CN',
+                            'layout' => '{picker}{input}',
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true,// 今日高亮
+                                'autoclose' => true,// 选择后自动关闭
+                                'todayBtn' => true,// 今日按钮显示
+                            ],
+                            'options' => [
+                                'class' => 'form-control no_bor',
+                            ]
+                        ]); ?>
+                        <?= $form->field($model, 'address')->textarea() ?>
+                    </div>
+                </div>
+                <div class="tab-pane" id="oauth">
+                    <div class="col-lg-12">
+                        <?= $form->field($model, 'dingtalk_robot_token')->textInput()->hint('配置后并开启钉钉消息提醒和定时任务即可进行提醒，'
+                            . '<a href="https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq" class="blue" target="_blank">文档</a>') ?>
+                    </div>
+                </div>
+
+                <div class="box-footer text-center">
+                    <button class="btn btn-primary" type="submit" onclick="sendForm()">保存</button>
+                    <?= $backBtn ?>
+                </div>
             </div>
         </div>
     </div>

@@ -18,7 +18,9 @@ use common\helpers\TreeHelper;
  * '''
  *
  * 和
+ *
  * id、pid、level、tree 字段
+ *
  * @package backend\components
  */
 trait Tree

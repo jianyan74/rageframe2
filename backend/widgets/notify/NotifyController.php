@@ -155,4 +155,14 @@ class NotifyController extends BaseController
             'searchModel' => $searchModel,
         ]);
     }
+
+    /**
+     * @return mixed
+     */
+    public function actionReadAll()
+    {
+        Yii::$app->services->sysNotify->readAll(Yii::$app->user->id);
+
+        return $this->message('全部设为已读成功', $this->redirect(['remind']));
+    }
 }
