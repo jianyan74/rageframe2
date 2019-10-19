@@ -143,6 +143,25 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
+     * 移除数组内某个key的值为传递的值
+     *
+     * @param array $array
+     * @param $value
+     * @param string $key
+     * @return array
+     */
+    public static function removeByValue(array $array, $value, $key = 'id')
+    {
+        foreach ($array as $index => $item) {
+            if ($item[$key] == $value) {
+                unset($array[$index]);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
      * 获取数字区间
      *
      * @param int $start
