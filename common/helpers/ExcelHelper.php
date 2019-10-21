@@ -44,7 +44,7 @@ class ExcelHelper
         // 写入头部
         $hk = 1;
         foreach ($header as $k => $v) {
-            $sheet->setCellValue(Coordinate::stringFromColumnIndex($hk) . '1', $v[0]);
+            $sheet->setCellValue(Coordinate::stringFromColumnIndex($hk) . '1', $v);
             $hk += 1;
         }
 
@@ -59,7 +59,8 @@ class ExcelHelper
 
                 foreach ($header as $key => $value) {
                     // 解析字段
-                    $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
+                    //$realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
+                    $realData = $row[$key];
                     // 写入excel
                     $sheet->setCellValue(Coordinate::stringFromColumnIndex($span) . $column, $realData);
                     $span++;
@@ -246,7 +247,7 @@ class ExcelHelper
      * @param array $array 头部规则
      * @return false|mixed|null|string 内容值
      */
-    protected static function formatting(array $array, $value, $row)
+    protected static function formatting( $array, $value, $row)
     {
         !isset($array[2]) && $array[2] = 'text';
 
