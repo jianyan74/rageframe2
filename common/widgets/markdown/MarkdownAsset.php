@@ -18,7 +18,7 @@ class MarkdownAsset extends AssetBundle
     ];
 
     public $js = [
-        'editormd.min.js',
+        'editormd.js',
     ];
 
     public $depends = [

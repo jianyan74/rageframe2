@@ -13,6 +13,7 @@ class Markdown2HtmlAsset extends AssetBundle
 {
     public $css = [
         'css/editormd.preview.css',
+        'lib/fancybox/jquery.fancybox.min.css', // 图片查看
     ];
 
     public $js = [
@@ -24,6 +25,7 @@ class Markdown2HtmlAsset extends AssetBundle
         'lib/raphael.min.js',
         'lib/underscore.min.js',
         'lib/sequence-diagram.min.js',
+        'lib/fancybox/jquery.fancybox.min.js',
     ];
 
     public function init()
