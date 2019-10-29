@@ -102,7 +102,7 @@ function autoChangeMenu(leftAuto = false) {
 }
 
 /* 导航标签切换 */
-$('.rfTopMenu').click(function(){
+$('.rfTopMenu').click(function () {
     var type = $(this).data('type');
     $('.rfTopMenu').removeClass('open');
     if (type) {
@@ -110,7 +110,14 @@ $('.rfTopMenu').click(function(){
         $('.rfLeftMenu').addClass('hide');
         $('.rfLeftMenu-' + type).removeClass('hide');
         $(this).addClass('rfTopMenuHover');
+
+        /** 保存状态 **/
+        window.sessionStorage.setItem("activeTopMenu", $(this).index());
     }
+});
+$('.sidebar-menu>.rfLeftMenu').click(function () {
+    /** 保存状态 **/
+    window.sessionStorage.setItem("openedLeftMenu", $(this).index()-1);
 });
 
 /* 提示报错弹出框配置 */
