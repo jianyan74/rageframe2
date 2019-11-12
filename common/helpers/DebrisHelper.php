@@ -166,6 +166,7 @@ class DebrisHelper
             $fullUrl .= implode('&', $getQueryParamArr);
             $pageConnector = '&';
         }
+        
         $fullUrl = Html::encode($fullUrl);
         $pageConnector = Html::encode($pageConnector);
         return [$fullUrl, $pageConnector];
