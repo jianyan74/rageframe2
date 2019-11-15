@@ -159,7 +159,7 @@ class AddonsController extends BaseController
                 }
             }
 
-            Yii::$app->services->authItem->createByAddons($allAuthItem, $allMenu, $name);
+            Yii::$app->services->authItem->createByAddons($allAuthItem, $allMenu, $removeAppIds, $name);
             // 移除
             foreach ($removeAppIds as $removeAppId) {
                 unset($allMenu[$removeAppId]);

@@ -28,7 +28,7 @@ class AuthItemService extends Service
      * @throws UnprocessableEntityHttpException
      * @throws \yii\db\Exception
      */
-    public function createByAddons($allAuthItem, $allMenu, $name)
+    public function createByAddons($allAuthItem, $allMenu, $removeAppIds, $name)
     {
         // 卸载权限
         $this->uninstallAddonsByName($name);
@@ -97,7 +97,13 @@ class AuthItemService extends Service
                 $menu = ArrayHelper::getColumn(ArrayHelper::getRowsByItemsMerge($menu, 'child'), 'route');
             }
 
-            $allAuth = ArrayHelper::merge($allAuth, $this->regroupByAddonsData($item, $menu, $name, $key));
+            $is_menu = 1;
+            // 是否菜单被移除
+            if (in_array($key, $removeAppIds)) {
+                $is_menu = 2;
+            }
+
+            $allAuth = ArrayHelper::merge($allAuth, $this->regroupByAddonsData($item, $menu, $is_menu, $name, $key));
         }
 
         // 创建权限
@@ -193,7 +199,7 @@ class AuthItemService extends Service
      * @param $app_id
      * @return array
      */
-    protected function regroupByAddonsData($item, $menu, $name, $app_id)
+    protected function regroupByAddonsData($item, $menu, $is_menu, $name, $app_id)
     {
         foreach ($item as &$value) {
             $value['app_id'] = $app_id;
@@ -202,11 +208,11 @@ class AuthItemService extends Service
 
             // 判断是否是菜单
             if (in_array($app_id, [AppEnum::BACKEND, AppEnum::MERCHANT]) && in_array($value['name'], $menu)) {
-                $value['is_menu'] = 1;
+                $value['is_menu'] = $is_menu;
             }
             // 组合子级
             if (isset($value['child']) && !empty($value['child'])) {
-                $value['child'] = $this->regroupByAddonsData($value['child'], $menu, $name, $app_id);
+                $value['child'] = $this->regroupByAddonsData($value['child'], $menu, $is_menu, $name, $app_id);
             }
         }
 
