@@ -271,6 +271,16 @@ return [
         [
             'title' => '参数配置',
             'name' => 'setting/history-stat',
+        ],
+        [
+            'title' => '公用',
+            'name' => 'other',
+            'child' => [
+                [
+                    'title' => '图片加载',
+                    'name' => 'analysis/image',
+                ],
+            ],
         ]
     ],
 
