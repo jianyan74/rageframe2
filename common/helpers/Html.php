@@ -89,6 +89,10 @@ class Html extends BaseHtml
      */
     public static function status($status = 1, $options = [])
     {
+        if (!self::beforVerify('ajax-update')) {
+            return '';
+        }
+
         $listBut = [
             StatusEnum::DISABLED => self::tag('span', '启用', array_merge(
                 [

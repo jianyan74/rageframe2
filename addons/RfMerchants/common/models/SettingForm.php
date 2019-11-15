@@ -1,12 +1,12 @@
 <?php
 
-namespace addons\RfMerchants\common\models;
+namespace addons\RfWechat\common\models;
 
 use yii\base\Model;
 
 /**
  * Class SettingForm
- * @package addons\RfMerchants\common\models
+ * @package addons\RfWechat\common\models
  */
 class SettingForm extends Model
 {
