@@ -5,7 +5,7 @@ namespace api\modules\v1\controllers;
 use Yii;
 use yii\web\NotFoundHttpException;
 use common\helpers\UploadHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\models\common\Attachment;
 use api\controllers\OnAuthController;
 
@@ -90,6 +90,24 @@ class FileController extends OnAuthController
     }
 
     /**
+     * oss直传配置
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function actionOssAccredit()
+    {
+        // 上传类型
+        $type = Yii::$app->request->get('type');
+        $typeConfig = Yii::$app->params['uploadConfig'][$type];
+
+        $path = $typeConfig['path'] . date($typeConfig['subName'], time()) . "/";
+        $oss = Yii::$app->uploadDrive->oss()->config($typeConfig['maxSize'], $path, 60 * 60 * 2, $type);
+
+        return $oss;
+    }
+
+    /**
      * base64编码的图片上传
      *
      * @return array
@@ -111,6 +129,25 @@ class FileController extends OnAuthController
     }
 
     /**
+     * 根据md5获取文件
+     *
+     * @return array
+     */
+    public function actionVerifyMd5()
+    {
+        $md5 = Yii::$app->request->post('md5');
+        if ($file = Yii::$app->services->attachment->findByMd5($md5)) {
+            $file['formatter_size'] = Yii::$app->formatter->asShortSize($file['size'], 2);
+            $file['url'] = $file['base_url'];
+            $file['upload_type'] = UploadHelper::formattingFileType($file['specific_type'], $file['extension'], $file['upload_type']);
+
+            return $file;
+        }
+
+        return ResultHelper::api(422, '找不到文件');
+    }
+
+    /**
      * 合并
      *
      * @return array|mixed
@@ -123,7 +160,7 @@ class FileController extends OnAuthController
         $guid = Yii::$app->request->post('guid');
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
         if (!$mergeInfo) {
-            return ResultDataHelper::api(404, '找不到文件信息, 合并文件失败');
+            return ResultHelper::api(404, '找不到文件信息, 合并文件失败');
         }
 
         $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type'], true);

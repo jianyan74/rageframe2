@@ -4,14 +4,13 @@ namespace addons\RfHelpers;
 
 use Yii;
 use yii\db\Migration;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 升级数据库
  *
  * Class Upgrade
- * @package addons\RfHelpers
- */
+ * @package addons\RfHelpers */
 class Upgrade extends Migration implements AddonWidget
 {
     /**

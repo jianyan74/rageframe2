@@ -34,13 +34,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{role} {manager} {ajax-edit} {status} {destroy}',
+                            'template'=> '{role} {member} {ajax-edit} {status} {destroy}',
                             'buttons' => [
                                 'role' => function ($url, $model, $key) {
                                     return Html::linkButton(['role/index', 'merchant_id' => $model->id], '角色管理');
                                 },
-                                'manager' => function ($url, $model, $key) {
-                                    return Html::linkButton(['manager/index', 'merchant_id' => $model->id], '用户管理');
+                                'member' => function ($url, $model, $key) {
+                                    return Html::linkButton(['member/index', 'merchant_id' => $model->id], '用户管理');
                                 },
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [

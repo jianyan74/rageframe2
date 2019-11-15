@@ -7,7 +7,7 @@ namespace common\enums;
  * @package common\enums
  * @author jianyan74 <751393839@qq.com>
  */
-class WechatEnum
+class WechatEnum extends BaseEnum
 {
     /**
      * 普通消息
@@ -40,25 +40,28 @@ class WechatEnum
     const TYPE_SHAKEAROUND_LOTTERY_BIND = "ShakearoundLotteryBind";// 摇一摇:摇到了红包消息
     const TYPE_WIFI_CONNECTED = "WifiConnected";// Wifi连接成功消息
 
+    // 发送消息
+    const SEND_TYPE_TEXT = 'text';
+
     /**
      * 特殊消息类型
      *
-     * @var array
+     * @return array
      */
-    public static $typeExplanation = [
-        self::TYPE_IMAGE => "图片消息",
-        self::TYPE_VOICE => "语音消息",
-        self::TYPE_VIDEO => "视频消息",
-        self::TYPE_SHORTVIDEO => "小视频消息",
-        self::TYPE_LOCATION => "位置消息",
-        self::TYPE_TRACE => "上报地理位置",
-        self::TYPE_LINK => "链接消息",
-        self::TYPE_MERCHANT_ORDER => "微小店消息",
-        self::TYPE_SHAKEAROUND_USER_SHAKE => "摇一摇：开始摇一摇消息",
-        self::TYPE_SHAKEAROUND_LOTTERY_BIND => "摇一摇：摇到了红包消息",
-        self::TYPE_WIFI_CONNECTED => "wifi连接成功消息",
-    ];
-
-    // 发送消息
-    const SEND_TYPE_TEXT = 'text';
+    public static function getMap(): array
+    {
+        return [
+            self::TYPE_IMAGE => "图片消息",
+            self::TYPE_VOICE => "语音消息",
+            self::TYPE_VIDEO => "视频消息",
+            self::TYPE_SHORTVIDEO => "小视频消息",
+            self::TYPE_LOCATION => "位置消息",
+            self::TYPE_TRACE => "上报地理位置",
+            self::TYPE_LINK => "链接消息",
+            self::TYPE_MERCHANT_ORDER => "微小店消息",
+            self::TYPE_SHAKEAROUND_USER_SHAKE => "摇一摇：开始摇一摇消息",
+            self::TYPE_SHAKEAROUND_LOTTERY_BIND => "摇一摇：摇到了红包消息",
+            self::TYPE_WIFI_CONNECTED => "wifi连接成功消息",
+        ];
+    }
 }

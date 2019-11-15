@@ -1,4 +1,5 @@
 <?php
+
 use common\helpers\Url;
 use common\helpers\Html;
 use jianyan\treegrid\TreeGrid;
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'dataProvider' => $dataProvider,
                     'keyColumnName' => 'id',
                     'parentColumnName' => 'pid',
-                    'parentRootValue' => $role['id'] ?? 0, // first parentId value
+                    'parentRootValue' => 0, // first parentId value
                     'pluginOptions' => [
                         // 'initialState' => 'collapsed',
                     ],
@@ -34,25 +35,27 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'format' => 'raw',
                             'value' => function ($model, $key, $index, $column) use ($merchant_id) {
                                 $str = Html::tag('span', $model['title'], [
-                                    'class' => 'm-l-sm'
+                                    'class' => 'm-l-sm',
                                 ]);
-                                $str .= Html::a(' <i class="icon ion-android-add-circle"></i>', ['edit', 'pid' => $model['id'], 'merchant_id' => $merchant_id]);
+                                $str .= Html::a(' <i class="icon ion-android-add-circle"></i>',
+                                    ['edit', 'pid' => $model['id'], 'merchant_id' => $merchant_id]);
+
                                 return $str;
-                            }
+                            },
                         ],
                         [
                             'attribute' => 'sort',
                             'label' => '排序',
                             'format' => 'raw',
                             'headerOptions' => ['class' => 'col-md-1'],
-                            'value' => function ($model, $key, $index, $column){
-                                return  Html::sort($model['sort']);
-                            }
+                            'value' => function ($model, $key, $index, $column) {
+                                return Html::sort($model['sort']);
+                            },
                         ],
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template'=> '{edit} {status} {delete}',
+                            'template' => '{edit} {status} {delete}',
                             'buttons' => [
                                 'edit' => function ($url, $model, $key) use ($merchant_id) {
                                     return Html::edit(['edit', 'id' => $model['id'], 'merchant_id' => $merchant_id]);
@@ -61,11 +64,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::status($model['status']);
                                 },
                                 'delete' => function ($url, $model, $key) use ($merchant_id) {
-                                    return Html::delete(['delete','id' => $model['id'], 'merchant_id' => $merchant_id]);
+                                    return Html::delete(['delete', 'id' => $model['id'], 'merchant_id' => $merchant_id,
+                                    ]);
                                 },
                             ],
                         ],
-                    ]
+                    ],
                 ]); ?>
             </div>
         </div>

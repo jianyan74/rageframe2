@@ -7,7 +7,7 @@ namespace addons\<?= $model->name;?>;
 
 use Yii;
 use yii\db\Migration;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 升级数据库

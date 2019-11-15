@@ -3,7 +3,7 @@ namespace addons\RfExample\backend\controllers;
 
 use Yii;
 use addons\RfExample\common\models\RedisCurd;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use common\helpers\StringHelper;
 use common\enums\StatusEnum;
 
@@ -14,7 +14,7 @@ use common\enums\StatusEnum;
  */
 class RedisCurdController extends BaseController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var RedisCurd

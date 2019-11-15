@@ -1,6 +1,6 @@
 ## RageFrame 2.0
 
-为二次开发而生，让开发变得更简单
+重量级全栖框架，为二次开发而生
 
 ### 前言
 
@@ -15,7 +15,7 @@ RageFrame 创建于 2016 年 4 月 16 日，一个基于 Yii2 高级框架的快
 - 极致的插件机制，系统内的系统，安装和卸载不会对原来的系统产生影响,强大的功能完全满足各阶段的需求，支持用户多端访问(后台、微信、Api、前台等)，系统中的系统。
 - 极完善的 RBAC 权限控制管理、无限父子级权限分组、可自由分配子级权限，且按钮/链接/自定义内容/插件等都可加入权限控制。
 - 只做基础底层内容，不会在上面开发过多的业务内容，满足绝大多数的系统二次开发。
-- 多入口模式，多入口分为 Backend (后台)、Frontend (PC前端)、Wechat (微信)、Console (控制台)、Api (对内接口)、OAuth2 Server (对外接口)、Storage (静态资源)，不同的业务，不同的设备，进入不同的入口。
+- 多入口模式，多入口分为 Backend (后台)、Merchant (商户端)、Frontend (PC前端)、Wechat (微信)、Console (控制台)、Api (对内接口)、OAuth2 Server (对外接口)、Storage (静态资源)，不同的业务，不同的设备，进入不同的入口。
 - 对接微信公众号且支持小程序，使用了一款优秀的微信非官方 SDK Easywechat 4.x，开箱即用，预置了绝大部分功能，大幅度的提升了微信开发效率。
 - 整合了第三方登录，目前有 QQ、微信、微博、GitHub 等等。
 - 整合了第三方支付，目前有微信支付、支付宝支付、银联支付，二次封装为网关多个支付一个入口一个出口。
@@ -76,6 +76,12 @@ http://www.rageframe.com
 ### 文档
 
 [安装文档](docs/guide-zh-CN/start-installation.md) · [本地文档](docs/guide-zh-CN/README.md) · [更新历史](docs/guide-zh-CN/start-update-log.md) · [常见问题](docs/guide-zh-CN/start-issue.md)
+
+### 插件
+
+- 微信公众号：https://github.com/jianyan74/RfWechat
+- 商家管理：https://github.com/jianyan74/RfMerchants
+- 在线文档：https://github.com/jianyan74/RfOnlineDoc
 
 ### 问题反馈
 

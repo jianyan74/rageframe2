@@ -25,7 +25,7 @@ class ArrayHelper extends BaseArrayHelper
         $arr = [];
         foreach ($items as $v) {
             if ($v[$pidField] == $pid) {
-                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
+                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField, $child);
                 $arr[] = $v;
             }
         }
@@ -224,8 +224,7 @@ class ArrayHelper extends BaseArrayHelper
             ];
 
             if (!empty($model['-'])) {
-                $arr = ArrayHelper::merge($arr,
-                    self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
+                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
             }
         }
 
@@ -251,7 +250,7 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
-     * 获取递归的第一个数据
+     * 获取递归的第一个没有子级的数据
      *
      * @param $array
      * @return mixed
@@ -282,6 +281,53 @@ class ArrayHelper extends BaseArrayHelper
         foreach ($array as $item) {
             if (!empty($item['-'])) {
                 $arr = array_merge($arr, self::getNotChildRowsByItemsMerge($item['-']));
+            } else {
+                $arr[] = $item;
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 递归转普通二维数组
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getRowsByItemsMerge(array $array, $childField = '-')
+    {
+        $arr = [];
+
+        foreach ($array as $item) {
+            if (!empty($item[$childField])) {
+                $arr = array_merge($arr, self::getRowsByItemsMerge($item[$childField]));
+            }
+
+            unset($item[$childField]);
+            $arr[] = $item;
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 重组 map 类型转为正常的数组
+     *
+     * @param array $array
+     * @param string $keyForField
+     * @param string $valueForField
+     * @return array
+     */
+    public static function regroupMapToArr($array = [], $keyForField = 'route', $valueForField = 'title')
+    {
+        $arr = [];
+        foreach ($array as $key => $item) {
+            if (!is_array($array[$key])) {
+                $arr[] = [
+                    $keyForField => $key,
+                    $valueForField => $item,
+                ];
             } else {
                 $arr[] = $item;
             }

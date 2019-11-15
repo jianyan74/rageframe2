@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 use Yii;
 
 /**
@@ -122,7 +122,7 @@ class ActionBehavior extends \common\models\base\BaseModel
     public function afterDelete()
     {
         Yii::$app->cache->set(
-            CacheKeyEnum::COMMON_ACTION_BEHAVIOR,
+            CacheEnum::getPrefix('actionBehavior'),
             Yii::$app->services->actionBehavior->getAllData(),
             3600 * 2
         );
@@ -137,7 +137,7 @@ class ActionBehavior extends \common\models\base\BaseModel
     public function afterSave($insert, $changedAttributes)
     {
         Yii::$app->cache->set(
-            CacheKeyEnum::COMMON_ACTION_BEHAVIOR,
+            CacheEnum::getPrefix('actionBehavior'),
             Yii::$app->services->actionBehavior->getAllData(),
             3600 * 2
         );

@@ -7,10 +7,8 @@ use api\controllers\OnAuthController;
 use api\modules\v1\forms\MiniProgramLoginForm;
 use common\models\member\Member;
 use common\models\api\AccessToken;
-use common\helpers\ArrayHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\models\member\Auth;
-use common\enums\CacheKeyEnum;
 
 /**
  * 小程序授权验证
@@ -30,58 +28,26 @@ class MiniProgramController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['decode', 'session-key'];
+    protected $authOptional = ['login'];
 
     /**
-     * 通过 Code 换取 SessionKey
-     *
-     * @param $code
-     * @return array|mixed
-     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws \yii\base\Exception
-     * @throws \yii\web\UnprocessableEntityHttpException
-     */
-    public function actionSessionKey($code)
-    {
-        if (!$code) {
-            return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
-        }
-
-        $oauth = Yii::$app->wechat->miniProgram->auth->session($code);
-        // 解析是否接口报错
-        Yii::$app->debris->getWechatError($oauth);
-
-        // 缓存数据
-        $auth_key = Yii::$app->security->generateRandomString() . '_' . time();
-        Yii::$app->cache->set(CacheKeyEnum::API_MINI_PROGRAM_LOGIN . $auth_key, ArrayHelper::toArray($oauth), 7195);
-
-        return [
-            'auth_key' => $auth_key // 临时缓存token
-        ];
-    }
-
-    /**
-     * 加密数据进行解密 || 进行登录认证
+     * 登录认证
      *
      * @return array|mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\DecryptException
      * @throws \yii\base\Exception
      * @throws \Exception
      */
-    public function actionDecode()
+    public function actionLogin()
     {
         $model = new MiniProgramLoginForm();
         $model->attributes = Yii::$app->request->post();
 
         if (!$model->validate()) {
-            return ResultDataHelper::api(422, $this->getError($model));
+            return ResultHelper::api(422, $this->getError($model));
         }
 
         $userinfo = $model->getUser();
-        Yii::$app->cache->delete($model->auth_key);
 
         // 插入到用户授权表
         if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM,

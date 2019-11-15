@@ -154,18 +154,6 @@ class PayService extends Service
     }
 
     /**
-     * @param $outTradeNo
-     * @return array|null|\yii\db\ActiveRecord|PayLog
-     */
-    public function findByOutTradeNo($outTradeNo)
-    {
-        return PayLog::find()
-            ->where(['out_trade_no' => $outTradeNo])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->one();
-    }
-
-    /**
      * 支付通知回调
      *
      * @param PayLog $log
@@ -187,5 +175,16 @@ class PayService extends Service
                 return true;
                 break;
         }
+    }
+
+    /**
+     * @param $outTradeNo
+     * @return array|null|\yii\db\ActiveRecord|PayLog
+     */
+    public function findByOutTradeNo($outTradeNo)
+    {
+        return PayLog::find()
+            ->where(['out_trade_no' => $outTradeNo])
+            ->one();
     }
 }

@@ -4,7 +4,7 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
-use common\models\sys\NotifySubscriptionConfig;
+use common\models\backend\NotifySubscriptionConfig;
 use common\enums\SubscriptionAlertTypeEnum;
 use EasyDingTalk\Robot;
 
@@ -21,10 +21,10 @@ class PullRemindController extends Controller
     public function actionSys()
     {
         // 获取订阅的管理员列表
-        $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
+        $list = Yii::$app->services->backendNotifySubscriptionConfig->findAllWithMember();
         /** @var NotifySubscriptionConfig $item */
         foreach ($list as $item) {
-            Yii::$app->services->sysNotify->pullRemind($item);
+            Yii::$app->services->backendNotify->pullRemind($item);
         }
     }
 
@@ -36,11 +36,11 @@ class PullRemindController extends Controller
     public function actionDingTalk()
     {
         // 获取订阅的管理员列表
-        $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
+        $list = Yii::$app->services->backendNotifySubscriptionConfig->findAllWithMember();
         /** @var NotifySubscriptionConfig $item */
         foreach ($list as $item) {
             if (!empty($item->manager)) {
-                $result = Yii::$app->services->sysNotify->pullRemind($item, SubscriptionAlertTypeEnum::DINGTALK);
+                $result = Yii::$app->services->backendNotify->pullRemind($item, SubscriptionAlertTypeEnum::DINGTALK);
 
                 if ($result && !empty($item->manager->dingtalk_robot_token)) {
                     $text = [];
@@ -78,11 +78,11 @@ class PullRemindController extends Controller
     public function wechat()
     {
         // 获取订阅的管理员列表
-        $list = Yii::$app->services->sysNotifySubscriptionConfig->getListWithManager();
+        $list = Yii::$app->services->backendNotifySubscriptionConfig->findAllWithMember();
         /** @var NotifySubscriptionConfig $item */
         foreach ($list as $item) {
             if (!empty($item->manager)) {
-                $result = Yii::$app->services->sysNotify->pullRemind($item, SubscriptionAlertTypeEnum::WECHAT);
+                $result = Yii::$app->services->backendNotify->pullRemind($item, SubscriptionAlertTypeEnum::WECHAT);
 
                 if ($result && !empty($item->manager->openid)) {
                     $text = [];

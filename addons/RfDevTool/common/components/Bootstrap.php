@@ -3,7 +3,7 @@
 namespace addons\RfDevTool\common\components;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 use yii\web\UnauthorizedHttpException;
 
 /**

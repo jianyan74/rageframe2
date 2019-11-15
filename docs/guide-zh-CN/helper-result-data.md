@@ -9,7 +9,7 @@
 引入
 
 ```
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 ```
 
 #### Json
@@ -22,7 +22,7 @@ use common\helpers\ResultDataHelper;
 * @param string $message 返回的报错信息
 * @param array|object $data 返回的数据结构
 */
-ResultDataHelper::json($code, $message, $data)
+ResultHelper::json($code, $message, $data)
 ```
 
 #### Api
@@ -35,7 +35,7 @@ ResultDataHelper::json($code, $message, $data)
  * @param string $message 返回的报错信息
  * @param array|object $data 返回的数据结构
  */
-ResultDataHelper::api($code, $message, $data)
+ResultHelper::api($code, $message, $data)
 ```
 
 #### 返回示例

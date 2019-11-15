@@ -3,7 +3,7 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use addons\RfArticle\common\models\ArticleCate;
 use yii\data\ActiveDataProvider;
 
@@ -16,7 +16,7 @@ use yii\data\ActiveDataProvider;
  */
 class ArticleCateController extends BaseController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var ArticleCate
@@ -63,7 +63,7 @@ class ArticleCateController extends BaseController
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'cateDropDownList' => ArticleCate::getEditDropDownList($id),
+            'cateDropDownList' => ArticleCate::getDropDownForEdit($id),
         ]);
     }
 }

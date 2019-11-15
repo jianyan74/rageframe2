@@ -31,7 +31,7 @@ $form = ActiveForm::begin([
             </div>
         </div>
         <!-- 地区选择工具 -->
-        <?= \backend\widgets\area\Area::widget([
+        <?= \common\widgets\area\Area::widget([
             'model' => $model,
             'form' => $form,
             'provincesName' => 'province_ids',

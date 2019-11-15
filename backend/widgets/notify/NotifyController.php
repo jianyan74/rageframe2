@@ -5,13 +5,13 @@ namespace backend\widgets\notify;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
-use common\models\sys\Notify;
-use common\models\sys\NotifyManager;
+use common\models\backend\Notify;
+use common\models\backend\NotifyMember;
 use backend\controllers\BaseController;
 
 /**
  * Class NotifyController
- * @package backend\widgets\notify
+ * @package common\widgets\notify
  * @author jianyan74 <751393839@qq.com>
  */
 class NotifyController extends BaseController
@@ -27,7 +27,7 @@ class NotifyController extends BaseController
     public function actionAnnounce()
     {
         $searchModel = new SearchModel([
-            'model' => NotifyManager::class,
+            'model' => NotifyMember::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['title'], // 模糊查询
             'defaultOrder' => [
@@ -40,9 +40,9 @@ class NotifyController extends BaseController
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['manager_id' => Yii::$app->user->id])
+            ->andWhere(['member_id' => Yii::$app->user->id])
             ->andWhere(['type' => Notify::TYPE_ANNOUNCE])
-            ->with(['notifySenderForManager']);
+            ->with(['notifySenderForMember']);
 
         return $this->render($this->view . $this->action->id, [
             'dataProvider' => $dataProvider,
@@ -58,7 +58,7 @@ class NotifyController extends BaseController
      */
     public function actionAnnounceView($id)
     {
-        if (empty($id) || empty(($model = NotifyManager::find()->where([
+        if (empty($id) || empty(($model = NotifyMember::find()->where([
                 'id' => $id,
                 'status' => StatusEnum::ENABLED
             ])->one()))) {
@@ -66,7 +66,7 @@ class NotifyController extends BaseController
         }
 
         // 设置公告为已读
-        Yii::$app->services->sysNotify->read(Yii::$app->user->id, [$model->notify_id]);
+        Yii::$app->services->backendNotify->read(Yii::$app->user->id, [$model->notify_id]);
 
         return $this->render($this->view . $this->action->id, [
             'model' => $model,
@@ -82,7 +82,7 @@ class NotifyController extends BaseController
     public function actionMessage()
     {
         $searchModel = new SearchModel([
-            'model' => NotifyManager::class,
+            'model' => NotifyMember::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['content'], // 模糊查询
             'defaultOrder' => [
@@ -94,9 +94,9 @@ class NotifyController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->with(['notifySenderForManager'])
+            ->with(['notifySenderForMember'])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['type' => Notify::TYPE_MESSAGE, 'manager_id' => Yii::$app->user->id])
+            ->andWhere(['type' => Notify::TYPE_MESSAGE, 'member_id' => Yii::$app->user->id])
             ->with('notify');
 
         if ($data = $dataProvider->getModels()) {
@@ -106,7 +106,7 @@ class NotifyController extends BaseController
             }
 
             // 设置消息为已读
-            !empty($ids) && Yii::$app->services->sysNotify->read(Yii::$app->user->id, $ids);
+            !empty($ids) && Yii::$app->services->backendNotify->read(Yii::$app->user->id, $ids);
         }
 
         return $this->render($this->view . $this->action->id, [
@@ -124,7 +124,7 @@ class NotifyController extends BaseController
     public function actionRemind()
     {
         $searchModel = new SearchModel([
-            'model' => NotifyManager::class,
+            'model' => NotifyMember::class,
             'scenario' => 'default',
             'partialMatchAttributes' => ['content'], // 模糊查询
             'defaultOrder' => [
@@ -136,9 +136,9 @@ class NotifyController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->with(['notifySenderForManager', 'notify'])
+            ->with(['notifySenderForMember', 'notify'])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['type' => Notify::TYPE_REMIND, 'manager_id' => Yii::$app->user->id]);
+            ->andWhere(['type' => Notify::TYPE_REMIND, 'member_id' => Yii::$app->user->id]);
 
         if ($data = $dataProvider->getModels()) {
             $ids = [];
@@ -147,7 +147,7 @@ class NotifyController extends BaseController
             }
 
             // 设置消息为已读
-            !empty($ids) && Yii::$app->services->sysNotify->read(Yii::$app->user->id, $ids);
+            !empty($ids) && Yii::$app->services->backendNotify->read(Yii::$app->user->id, $ids);
         }
 
         return $this->render($this->view . $this->action->id, [
@@ -161,7 +161,7 @@ class NotifyController extends BaseController
      */
     public function actionReadAll()
     {
-        Yii::$app->services->sysNotify->readAll(Yii::$app->user->id);
+        Yii::$app->services->backendNotify->readAll(Yii::$app->user->id);
 
         return $this->message('全部设为已读成功', $this->redirect(['remind']));
     }

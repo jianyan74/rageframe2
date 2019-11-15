@@ -23,7 +23,7 @@ class ArticleCateController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index'];
+    protected $authOptional = ['index'];
 
     /**
      * 权限验证

@@ -22,14 +22,14 @@ use common\helpers\Url;
         <div class="box">
             <div class="box-body">
                 <div class="mailbox-read-info">
-                    <h3><?= $model['notifySenderForManager']['title']; ?></h3>
-                    <h5>来自: <?= $model->notifySenderForManager->senderForManager->username ?? ''; ?>
+                    <h3><?= $model['notifySenderForMember']['title']; ?></h3>
+                    <h5>来自: <?= $model->notifySenderForMember->senderForManager->username ?? ''; ?>
                         <span class="mailbox-read-time pull-right"><?= Yii::$app->formatter->asDatetime($model['created_at']); ?></span>
                     </h5>
                 </div>
                 <!-- /.mailbox-controls -->
                 <div class="mailbox-read-message">
-                    <p><?= \common\helpers\Html::decode($model['notifySenderForManager']['content']); ?></p>
+                    <p><?= \common\helpers\Html::decode($model['notifySenderForMember']['content']); ?></p>
                 </div>
             </div>
             <div class="box-footer text-center">

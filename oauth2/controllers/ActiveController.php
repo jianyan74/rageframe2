@@ -25,21 +25,16 @@ class ActiveController extends \yii\rest\ActiveController
      *
      * @var array
      */
-    protected $optional = [];
+    protected $authOptional = [];
 
     /**
-     * 启始位移
+     * 不用进行签名验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
      *
-     * @var int
+     * @var array
      */
-    protected $offset = 0;
-
-    /**
-     * 实际每页数量
-     *
-     * @var
-     */
-    protected $limit;
+    protected $signOptional = [];
 
     /**
      * 行为验证
@@ -55,17 +50,18 @@ class ActiveController extends \yii\rest\ActiveController
         ];
 
         // 进行签名验证
-        $behaviors['signTokenValidate'] = [
-            'class' => HttpSignAuth::class,
-            'optional' => [],
-            'enabled' => Yii::$app->params['user.httpSignValidity'] // 验证开启状态
-        ];
+        if (Yii::$app->params['user.httpSignValidity'] == true) {
+            $behaviors['signTokenValidate'] = [
+                'class' => HttpSignAuth::class,
+                'optional' => $this->signOptional, // 不进行认证判断方法
+            ];
+        }
 
         // 授权验证
         $behaviors['jwtAuth'] = [
             'class' => JWTAuth::class,
             // 不进行认证判断方法
-            'optional' => $this->optional,
+            'optional' => $this->authOptional,
         ];
 
         return $behaviors;
@@ -84,11 +80,9 @@ class ActiveController extends \yii\rest\ActiveController
         // 权限方法检查，如果用了rbac，请注释掉
         $this->checkAccess($action->id, $this->modelClass, Yii::$app->request->get());
 
-        // 分页
-        $page = Yii::$app->request->get('page', 1);
-        $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
-        $this->limit > 50 && $this->limit = 50;
-        $this->offset = ($page - 1) * $this->pageSize;
+        // 每页数量
+        $this->pageSize = Yii::$app->request->get('per-page', 10);
+        $this->pageSize > 50 && $this->pageSize = 50;
 
         return true;
     }

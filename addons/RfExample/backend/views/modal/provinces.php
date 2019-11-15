@@ -12,7 +12,7 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
-        <?= \backend\widgets\provinces\Provinces::widget([
+        <?= \common\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,
             'provincesName' => 'provinces',// 省字段名

@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'id') ?>
     <?= $form->field($model, 'title') ?>
     <?= $form->field($model, 'cate_id') ?>
-    <?= $form->field($model, 'manager_id') ?>
+    <?= $form->field($model, 'member_id') ?>
     <?= $form->field($model, 'sort') ?>
     <?php // echo $form->field($model, 'position') ?>
     <?php // echo $form->field($model, 'sex') ?>

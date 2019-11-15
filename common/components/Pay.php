@@ -8,7 +8,6 @@ use common\components\payment\AliPay;
 use common\components\payment\UnionPay;
 use common\components\payment\WechatPay;
 use common\helpers\ArrayHelper;
-use common\helpers\Url;
 
 /**
  * 支付组件

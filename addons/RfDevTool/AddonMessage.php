@@ -3,14 +3,13 @@
 namespace addons\RfDevTool;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 微信消息处理
  *
  * Class AddonMessage
- * @package addons\RfDevTool
- */
+ * @package addons\RfDevTool */
 class AddonMessage implements AddonWidget
 {
     /**

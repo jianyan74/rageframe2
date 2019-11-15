@@ -6,7 +6,7 @@ echo "<?php\n";
 namespace addons\<?= $model->name;?>;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 微信消息处理

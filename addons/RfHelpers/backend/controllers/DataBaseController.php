@@ -4,7 +4,7 @@ namespace addons\RfHelpers\backend\controllers;
 
 use Yii;
 use common\helpers\ArrayHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use addons\RfHelpers\common\models\Database;
 
 /**
@@ -75,7 +75,7 @@ class DataBaseController extends BaseController
     {
         $tables = Yii::$app->request->post('tables');
         if (empty($tables)) {
-            return ResultDataHelper::json(404, '请选择要备份的表');
+            return ResultHelper::json(404, '请选择要备份的表');
         }
 
         // 读取备份配置
@@ -83,13 +83,13 @@ class DataBaseController extends BaseController
 
         // 检查备份目录是否可写
         if (!is_writeable($config['path'])) {
-            return ResultDataHelper::json(404, '备份目录不存在或不可写，请检查后重试！');
+            return ResultHelper::json(404, '备份目录不存在或不可写，请检查后重试！');
         }
 
         // 检查是否有正在执行的任务
         $lock = $config['path'] . $config['lock'];
         if (is_file($lock)) {
-            return ResultDataHelper::json(404, '检测到有一个备份任务正在执行，请稍后或清理缓存后再试');
+            return ResultHelper::json(404, '检测到有一个备份任务正在执行，请稍后或清理缓存后再试');
         }
 
         // 创建锁文件
@@ -113,13 +113,13 @@ class DataBaseController extends BaseController
 
             $tab = ['id' => 0, 'start' => 0];
 
-            return ResultDataHelper::json(200, '初始化成功！', [
+            return ResultHelper::json(200, '初始化成功！', [
                 'tables' => $tables,
                 'tab' => $tab
             ]);
         }
 
-        return ResultDataHelper::json(404, '初始化失败，备份文件创建失败！');
+        return ResultHelper::json(404, '初始化失败，备份文件创建失败！');
     }
 
     /**
@@ -141,12 +141,12 @@ class DataBaseController extends BaseController
         $database = new Database($file, $config);
         $start = $database->backup($tables[$id], $start);
         if ($start === false) {
-            return ResultDataHelper::json(404, '备份出错！');
+            return ResultHelper::json(404, '备份出错！');
         } elseif ($start === 0) {
             // 下一表
             if (isset($tables[++$id])) {
                 $tab = ['id' => $id, 'start' => 0];
-                return ResultDataHelper::json(200, '备份完成', [
+                return ResultHelper::json(200, '备份完成', [
                     'tablename' => $tables[--$id],
                     'achieveStatus' => 0,
                     'tab' => $tab,
@@ -158,7 +158,7 @@ class DataBaseController extends BaseController
             Yii::$app->session->set('backup_tables', null);
             Yii::$app->session->set('backup_file', null);
             Yii::$app->session->set('backup_config', null);
-            return ResultDataHelper::json(200, '备份完成', [
+            return ResultHelper::json(200, '备份完成', [
                 'tablename' => $tables[--$id],
                 'achieveStatus' => 1
             ]);
@@ -166,7 +166,7 @@ class DataBaseController extends BaseController
             $tab = ['id' => $id, 'start' => $start[0]];
             $rate = floor(100 * ($start[0] / $start[1]));
             // 对下一个表进行备份
-            return ResultDataHelper::json(200, "正在备份...({$rate}%)", [
+            return ResultHelper::json(200, "正在备份...({$rate}%)", [
                 'tablename' => $tables[$id],
                 'achieveStatus' => 0,
                 'tab' => $tab,
@@ -185,26 +185,26 @@ class DataBaseController extends BaseController
     {
         $tables = Yii::$app->request->post('tables', '');
         if (!$tables) {
-            return ResultDataHelper::json(404, '请指定要优化的表！');
+            return ResultHelper::json(404, '请指定要优化的表！');
         }
 
         // 判断是否是数组
         if (is_array($tables)) {
             $tables = implode('`,`', $tables);
             if (Yii::$app->db->createCommand("OPTIMIZE TABLE `{$tables}`")->queryAll()) {
-                return ResultDataHelper::json(200, '数据表优化完成');
+                return ResultHelper::json(200, '数据表优化完成');
             }
 
-            return ResultDataHelper::json(404, '数据表优化出错请重试！');
+            return ResultHelper::json(404, '数据表优化出错请重试！');
         }
 
         $list = Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryOne();
         // 判断是否成功
         if ($list['Msg_text'] == "OK") {
-            return ResultDataHelper::json(200, "数据表'{$tables}'优化完成！");
+            return ResultHelper::json(200, "数据表'{$tables}'优化完成！");
         }
 
-        return ResultDataHelper::json(404, "数据表'{$tables}'优化出错！错误信息:" . $list['Msg_text']);
+        return ResultHelper::json(404, "数据表'{$tables}'优化出错！错误信息:" . $list['Msg_text']);
     }
 
     /**
@@ -218,25 +218,25 @@ class DataBaseController extends BaseController
     {
         $tables = Yii::$app->request->post('tables', '');
         if (!$tables) {
-            return ResultDataHelper::json(404, '请指定要修复的表！');
+            return ResultHelper::json(404, '请指定要修复的表！');
         }
 
         // 判断是否是数组
         if (is_array($tables)) {
             $tables = implode('`,`', $tables);
             if (Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryAll()) {
-                return ResultDataHelper::json(200, '数据表修复化完成');
+                return ResultHelper::json(200, '数据表修复化完成');
             }
 
-            return ResultDataHelper::json(404, '数据表修复出错请重试！');
+            return ResultHelper::json(404, '数据表修复出错请重试！');
         }
 
         $list = Yii::$app->db->createCommand("REPAIR TABLE `{$tables}`")->queryOne();
         if ($list['Msg_text'] == "OK") {
-            return ResultDataHelper::json(200, "数据表'{$tables}'修复完成！");
+            return ResultHelper::json(200, "数据表'{$tables}'修复完成！");
         }
 
-        return ResultDataHelper::json(404, "数据表'{$tables}'修复出错！错误信息:" . $list['Msg_text']);
+        return ResultHelper::json(404, "数据表'{$tables}'修复出错！错误信息:" . $list['Msg_text']);
     }
 
     /********************************************************************************/
@@ -319,13 +319,13 @@ class DataBaseController extends BaseController
         if (count($list) === $last[0]) {
             // 缓存备份列表
             Yii::$app->session->set('backup_list', $list);
-            return ResultDataHelper::json(200, '初始化完成', [
+            return ResultHelper::json(200, '初始化完成', [
                 'part' => 1,
                 'start' => 0,
             ]);
         }
 
-        return ResultDataHelper::json(200, "备份文件可能已经损坏，请检查！");
+        return ResultHelper::json(200, "备份文件可能已经损坏，请检查！");
     }
 
     /**
@@ -352,11 +352,11 @@ class DataBaseController extends BaseController
         $start = $db->import($start);
 
         if ($start === false) {
-            return ResultDataHelper::json(200, "备份文件可能已经损坏，请检查！");
+            return ResultHelper::json(200, "备份文件可能已经损坏，请检查！");
         } elseif ($start === 0) {
             // 下一卷
             if (isset($list[++$part])) {
-                return ResultDataHelper::json(200, "正在还原...#{$part}", [
+                return ResultHelper::json(200, "正在还原...#{$part}", [
                     'part' => $part,
                     'start1' => $start,
                     'start' => 0,
@@ -365,18 +365,18 @@ class DataBaseController extends BaseController
             }
 
             Yii::$app->session->set('backup_list', null);
-            return ResultDataHelper::json(200, "还原完成");
+            return ResultHelper::json(200, "还原完成");
         } else {
             if ($start[1]) {
                 $rate = floor(100 * ($start[0] / $start[1]));
-                return ResultDataHelper::json(200, "正在还原...#{$part} ({$rate}%)", [
+                return ResultHelper::json(200, "正在还原...#{$part} ({$rate}%)", [
                     'part' => $part,
                     'start' => $start[0],
                     'achieveStatus' => 0,
                 ]);
             }
 
-            return ResultDataHelper::json(200, "正在还原...#{$part}", [
+            return ResultHelper::json(200, "正在还原...#{$part}", [
                 'part' => $part,
                 'start' => $start[0],
                 'gz' => 1,
@@ -464,6 +464,6 @@ class DataBaseController extends BaseController
             $i++;
         }
 
-        return ResultDataHelper::json(200, '返回成功', ['str' => $str]);
+        return ResultHelper::json(200, '返回成功', ['str' => $str]);
     }
 }

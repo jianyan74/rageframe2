@@ -3,7 +3,7 @@ namespace addons\RfExample\backend\controllers;
 
 use yii;
 use common\helpers\ArrayHelper;
-use backend\interfaces\AddonsSetting;
+use common\interfaces\AddonsSetting;
 use addons\RfExample\common\models\SettingForm;
 
 /**

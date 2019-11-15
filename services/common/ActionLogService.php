@@ -21,23 +21,6 @@ use Zhuzhichao\IpLocationZh\Ip;
 class ActionLogService extends Service
 {
     /**
-     * @param $app_id
-     * @param $user_id
-     * @param int $limit
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function findByAppIdAndManagerId($app_id, $user_id, $limit = 12)
-    {
-        return ActionLog::find()
-            ->where(['app_id' => $app_id, 'user_id' => $user_id, 'status' => StatusEnum::ENABLED])
-            ->andWhere(['in', 'behavior', ['login', 'logout']])
-            ->limit($limit)
-            ->orderBy('id desc')
-            ->asArray()
-            ->all();
-    }
-
-    /**
      * 行为日志
      *
      * @param $behavior
@@ -85,13 +68,30 @@ class ActionLogService extends Service
                 MessageLevelEnum::ERROR => SubscriptionActionEnum::BEHAVIOR_ERROR,
             ];
 
-            Yii::$app->services->sysNotify->createRemind(
+            Yii::$app->services->backendNotify->createRemind(
                 $model->id,
                 SubscriptionReasonEnum::BEHAVIOR_CREATE,
                 $actions[$level],
                 $model['user_id'],
-                MessageLevelEnum::$listExplain[$level] . "行为：$url"
+                MessageLevelEnum::getValue($level) . "行为：$url"
             );
         }
+    }
+
+    /**
+     * @param $app_id
+     * @param $user_id
+     * @param int $limit
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findByAppId($app_id, $user_id, $limit = 12)
+    {
+        return ActionLog::find()
+            ->where(['app_id' => $app_id, 'user_id' => $user_id, 'status' => StatusEnum::ENABLED])
+            ->andWhere(['in', 'behavior', ['login', 'logout']])
+            ->limit($limit)
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
     }
 }

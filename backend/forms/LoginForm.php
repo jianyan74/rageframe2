@@ -4,7 +4,7 @@ namespace backend\forms;
 
 use Yii;
 use common\helpers\StringHelper;
-use common\models\sys\Manager;
+use common\models\backend\Member;
 
 /**
  * Class LoginForm
@@ -13,6 +13,11 @@ use common\models\sys\Manager;
  */
 class LoginForm extends \common\models\forms\LoginForm
 {
+    /**
+     * 校验验证码
+     *
+     * @var
+     */
     public $verifyCode;
 
     /**
@@ -68,7 +73,7 @@ class LoginForm extends \common\models\forms\LoginForm
                 // 记录行为日志
                 Yii::$app->services->actionLog->create('login', '限制IP登录', false);
 
-                $this->addError($attribute, '登录失败');
+                $this->addError($attribute, '登录失败，请联系管理员');
             }
         }
     }
@@ -79,7 +84,7 @@ class LoginForm extends \common\models\forms\LoginForm
     public function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = Manager::findByUsername($this->username);
+            $this->_user = Member::findByUsername($this->username);
         }
 
         return $this->_user;

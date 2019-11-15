@@ -22,7 +22,7 @@ class AuthController extends BaseController
             try {
                 $file = $_FILES['excelFile'];
                 $data = ExcelHelper::import($file['tmp_name'], 2);
-                ImportHelper::auth($data);
+                ImportHelper::auth($data, Yii::$app->request->post('app_id'));
             } catch (\Exception $e) {
                 return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
             }
@@ -40,7 +40,13 @@ class AuthController extends BaseController
      */
     public function actionDownload()
     {
-        $path = Yii::getAlias('@addons') . '/RfDevTool/common/file/auth-data.xls';
+        $file = 'auth-default.xls';
+        if (Yii::$app->request->get('type') == 'merchant') {
+            $file = 'auth-merchant.xls';
+        }
+
+        $path = Yii::getAlias('@addons') . '/RfDevTool/common/file/' . $file;
+
         Yii::$app->response->sendFile($path, '权限数据_' . time() . '.xls');
     }
 }

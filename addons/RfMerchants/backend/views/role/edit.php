@@ -19,27 +19,27 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <?php $form = ActiveForm::begin([
                 'fieldConfig' => [
                     'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
-                ]
+                ],
             ]); ?>
             <div class="box-body">
                 <?= $form->field($model, 'pid')->dropDownList($dropDownList) ?>
                 <?= $form->field($model, 'title')->textInput(); ?>
-                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()); ?>
                 <?= $form->field($model, 'sort')->textInput(); ?>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-5">
-                    <?= \backend\widgets\jstree\JsTree::widget([
+                    <?= \common\widgets\jstree\JsTree::widget([
                         'name' => "userTree",
                         'defaultData' => $defaultFormAuth,
                         'selectIds' => $defaultCheckIds,
-                    ])?>
+                    ]) ?>
                 </div>
                 <div class="col-sm-5">
-                    <?= \backend\widgets\jstree\JsTree::widget([
+                    <?= \common\widgets\jstree\JsTree::widget([
                         'name' => "plugTree",
                         'defaultData' => $addonsFormAuth,
                         'selectIds' => $addonsCheckIds,
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 plugTreeIds: plugTreeIds
             },
             success: function (data) {
-                if (data.code == 200) {
+                if (parseInt(data.code) === 200) {
                     window.location = "<?= Url::to(['index', 'merchant_id' => $merchant_id])?>";
                 } else {
                     rfError(data.message);

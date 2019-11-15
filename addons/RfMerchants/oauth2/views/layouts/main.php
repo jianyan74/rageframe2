@@ -1,8 +1,10 @@
 <?php
+
 use addons\RfMerchants\oauth2\assets\AppAsset;
 use common\helpers\Html;
 
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

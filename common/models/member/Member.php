@@ -115,10 +115,10 @@ class Member extends User
      */
     public function scenarios()
     {
-        return [
-            'backendCreate' => ['username', 'password_hash'],
-            'default' => array_keys($this->attributeLabels()),
-        ];
+        $scenarios = parent::scenarios();
+        $scenarios['backendCreate'] = ['username', 'password_hash'];
+
+        return $scenarios;
     }
 
     /**

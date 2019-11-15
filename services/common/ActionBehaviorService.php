@@ -14,24 +14,13 @@ use common\models\common\ActionBehavior;
 class ActionBehaviorService extends Service
 {
     /**
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getList()
-    {
-        return ActionBehavior::find()
-            ->andWhere(['status' => StatusEnum::ENABLED])
-            ->asArray()
-            ->all();
-    }
-
-    /**
      * 重组数据列表
      *
      * @return array
      */
     public function getAllData()
     {
-        $list = $this->getList();
+        $list = $this->findAll();
         $data = [];
         foreach ($list as $item) {
             $key = [];
@@ -42,5 +31,16 @@ class ActionBehaviorService extends Service
         }
 
         return $data;
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findAll()
+    {
+        return ActionBehavior::find()
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->asArray()
+            ->all();
     }
 }

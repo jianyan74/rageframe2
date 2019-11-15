@@ -16,6 +16,13 @@ use common\helpers\ArrayHelper;
 class Markdown extends yii\widgets\InputWidget
 {
     /**
+     * 上传路径 + 驱动
+     *
+     * @var
+     */
+    public $server;
+
+    /**
      * @var string
      */
     public $id = 'markdown-editor';
@@ -25,6 +32,13 @@ class Markdown extends yii\widgets\InputWidget
      */
     public function init()
     {
+        if (!$this->server) {
+            $this->server = Url::toRoute([
+                '/file/images-markdown',
+                'drive' => Yii::$app->params['uploadConfig']['images']['drive'],
+            ]);
+        }
+
         $this->options = ArrayHelper::merge([
             'width' => "100%",
             'height' => 500,
@@ -34,10 +48,7 @@ class Markdown extends yii\widgets\InputWidget
             'sequenceDiagram' => true, // 序列图
             'tex' => true, // 科学公式
             'imageUpload' => true,
-            'imageUploadURL' => Url::toRoute([
-                '/file/images-markdown',
-                'drive' => Yii::$app->params['uploadConfig']['images']['drive'],
-            ]),
+            'imageUploadURL' => $this->server,
         ], $this->options);
 
         parent::init();
@@ -120,6 +131,18 @@ class Markdown extends yii\widgets\InputWidget
              editor.CodeAutoSaveEmptyCacheContent(); 
              // 自定义设置缓存 
              // editor.CodeAutoSaveSetCache('缓存内容');
+        });
+        
+        // 模板插入
+        $('.editorTemplate').click(function () {
+            var content = $(this).data('content');
+            content = content.toString();
+            if (content.length === 0) {
+                return;
+            }
+            
+            editor.insertValue(content);
+            editor.focus();
         });
         
         $('.editormd-preview-close-btn').attr('style', 'display: none;')

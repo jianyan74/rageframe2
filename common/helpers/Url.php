@@ -41,10 +41,10 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function toFront(array $url, $scheme = false)
+    public static function toFront(array $url, $absolute = false, $scheme = false)
     {
         $domainName = Yii::getAlias('@frontendUrl');
-        return static::create($url, $scheme, $domainName, '', 'urlManagerFront');
+        return static::create($url, $absolute, $scheme, $domainName, '', 'urlManagerFront');
     }
 
     /**
@@ -55,10 +55,10 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function toWechat(array $url, $scheme = false)
+    public static function toHtml5(array $url, $absolute = false, $scheme = false)
     {
-        $domainName = Yii::getAlias('@wechatUrl');
-        return static::create($url, $scheme, $domainName, '/wechat', 'urlManagerWechat');
+        $domainName = Yii::getAlias('@html5Url');
+        return static::create($url, $absolute, $scheme, $domainName, '/html5', 'urlManagerHtml5');
     }
 
     /**
@@ -69,10 +69,10 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function toOAuth2(array $url, $scheme = false)
+    public static function toOAuth2(array $url, $absolute = false, $scheme = false)
     {
         $domainName = Yii::getAlias('@oauth2Url');
-        return static::create($url, $scheme, $domainName, '/oauth2', 'urlManagerOAuth2');
+        return static::create($url, $absolute, $scheme, $domainName, '/oauth2', 'urlManagerOAuth2');
     }
 
     /**
@@ -83,10 +83,10 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function toStorage(array $url, $scheme = false)
+    public static function toStorage(array $url, $absolute = false, $scheme = false)
     {
         $domainName = Yii::getAlias('@storageUrl');
-        return static::create($url, $scheme, $domainName, '/storage', 'urlManagerStorage');
+        return static::create($url, $absolute, $scheme, $domainName, '/storage', 'urlManagerStorage');
     }
 
     /**
@@ -97,10 +97,10 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function toApi(array $url, $scheme = false)
+    public static function toApi(array $url, $absolute = false, $scheme = false)
     {
         $domainName = Yii::getAlias('@apiUrl');
-        return static::create($url, $scheme, $domainName, '/api', 'urlManagerApi');
+        return static::create($url, $absolute, $scheme, $domainName, '/api', 'urlManagerApi');
     }
 
     /**
@@ -144,10 +144,12 @@ class Url extends BaseUrl
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function create($url, $scheme, $domainName, $appId, $key)
+    protected static function create($url, $absolute, $scheme, $domainName, $appId, $key)
     {
         $url = static::isMerchant($url);
-        Yii::$app->params['inAddon'] && $url = self::regroupUrl($url);
+        if ($absolute == false && Yii::$app->params['inAddon']) {
+            $url = self::regroupUrl($url);
+        }
 
         if (!Yii::$app->has($key)) {
             Yii::$app->set($key, [

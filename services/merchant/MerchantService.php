@@ -14,10 +14,8 @@ use common\components\Service;
 class MerchantService extends Service
 {
     /**
-     * @var array
+     * @var int
      */
-    protected $info = [];
-
     protected $merchant_id = 1;
 
     /**
@@ -34,24 +32,5 @@ class MerchantService extends Service
     public function setId($merchant_id)
     {
         $this->merchant_id = $merchant_id;
-        $this->setInfo($merchant_id);
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    /**
-     * @param $merchant_id
-     */
-    public function setInfo($merchant_id)
-    {
-        // TODO 查询商户是否存在,目前已经全部移动到插件
-
-        $this->info = [];
     }
 }

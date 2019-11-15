@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use backend\components\Tree;
+use common\components\Tree;
 use common\helpers\ArrayHelper;
 use common\helpers\TreeHelper;
 
@@ -43,7 +43,7 @@ class AuthItem extends \common\models\base\BaseModel
     {
         return [
             [['title', 'name'], 'required'],
-            [['name'], 'uniquName'],
+            [['name'], 'uniquName', 'on' => 'default'],
             [['is_menu', 'pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 64],
             [['app_id', 'type'], 'string', 'max' => 20],
@@ -77,6 +77,19 @@ class AuthItem extends \common\models\base\BaseModel
     }
 
     /**
+     * 场景
+     *
+     * @return array
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['addonsBatchCreate'] = array_keys($this->attributeLabels());
+
+        return $scenarios;
+    }
+
+    /**
      * @param $attribute
      */
     public function uniquName($attribute)
@@ -97,6 +110,14 @@ class AuthItem extends \common\models\base\BaseModel
     public function getParent()
     {
         return $this->hasOne(self::class, ['id' => 'pid']);
+    }
+
+    /**
+     * @param AuthItem $parent
+     */
+    public function setParent(AuthItem $parent)
+    {
+        $this->parent = $parent;
     }
 
     /**

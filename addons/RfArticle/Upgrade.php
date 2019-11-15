@@ -4,15 +4,13 @@ namespace addons\RfArticle;
 
 use Yii;
 use yii\db\Migration;
-use common\models\common\Addons;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 升级数据库
  *
  * Class Upgrade
- * @package addons\RfArticle
- */
+ * @package addons\RfArticle */
 class Upgrade extends Migration implements AddonWidget
 {
     /**
@@ -25,10 +23,10 @@ class Upgrade extends Migration implements AddonWidget
     ];
 
     /**
-     * @param Addons $addon
-     * @return mixed|void
-     * @throws \yii\db\Exception
-     */
+    * @param $addon
+    * @return mixed|void
+    * @throws \yii\db\Exception
+    */
     public function run($addon)
     {
         switch ($addon->version) {

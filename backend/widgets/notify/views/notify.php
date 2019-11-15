@@ -24,6 +24,13 @@ use common\helpers\Url;
                         </a>
                     </li>
                 <?php } ?>
+                <?php if (empty($notify)) { ?>
+                    <li class="text-center">
+                        <a href="javascript:void (0);" style="color: #ccc">
+                            暂无消息...
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
         </li>
         <!-- 验证权限 -->

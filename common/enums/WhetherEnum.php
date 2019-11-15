@@ -7,16 +7,19 @@ namespace common\enums;
  * @package common\enums
  * @author jianyan74 <751393839@qq.com>
  */
-class WhetherEnum
+class WhetherEnum extends BaseEnum
 {
     const ENABLED = 1;
     const DISABLED = 0;
 
     /**
-     * @var array
+     * @return array
      */
-    public static $listExplain = [
-        self::ENABLED => '是',
-        self::DISABLED => '否',
-    ];
+    public static function getMap(): array
+    {
+        return [
+            self::ENABLED => '是',
+            self::DISABLED => '否',
+        ];
+    }
 }

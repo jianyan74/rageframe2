@@ -1,7 +1,7 @@
 <?php
 return [
     'name' => 'RageFrame',
-    'version' => '2.3.137',
+    'version' => '2.4.21',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -62,6 +62,10 @@ return [
         /** ------ 公用支付 ------ **/
         'pay' => [
             'class' => 'common\components\Pay',
+        ],
+        /** ------ 上传组件 ------ **/
+        'uploadDrive' => [
+            'class' => 'common\components\UploadDrive',
         ],
         /** ------ 二维码 ------ **/
         'qr' => [

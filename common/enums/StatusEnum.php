@@ -9,18 +9,21 @@ namespace common\enums;
  * @package common\enums
  * @author jianyan74 <751393839@qq.com>
  */
-class StatusEnum
+class StatusEnum extends BaseEnum
 {
     const ENABLED = 1;
     const DISABLED = 0;
     const DELETE = -1;
 
     /**
-     * @var array
+     * @return array
      */
-    public static $listExplain = [
-        self::ENABLED => '启用',
-        self::DISABLED => '禁用',
-        // self::DELETE => '已删除',
-    ];
+    public static function getMap(): array
+    {
+        return [
+            self::ENABLED => '启用',
+            self::DISABLED => '禁用',
+            // self::DELETE => '已删除',
+        ];
+    }
 }

@@ -118,7 +118,10 @@ class Attachment extends \common\models\base\BaseModel
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
-            $this->upload_ip = ip2long(Yii::$app->request->userIP);
+            if (!$this->upload_ip) {
+                $this->upload_ip = ip2long(Yii::$app->request->userIP);
+            }
+
             $this->year = date('Y');
             $this->month = date('m');
             $this->day = date('d');

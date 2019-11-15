@@ -4,7 +4,7 @@ namespace addons\RfExample\backend\controllers;
 use Yii;
 USE yii\data\Pagination;
 use common\enums\StatusEnum;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use common\helpers\StringHelper;
 use addons\RfExample\common\models\ElasticSearchCurd;
 
@@ -15,7 +15,7 @@ use addons\RfExample\common\models\ElasticSearchCurd;
  */
 class ElasticSearchController extends BaseController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var ElasticSearchCurd

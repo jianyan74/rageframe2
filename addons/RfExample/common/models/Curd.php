@@ -1,10 +1,11 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
 use common\behaviors\MerchantBehavior;
-use common\models\sys\Manager;
 use common\helpers\StringHelper;
+use common\models\backend\Member;
 
 /**
  * This is the model class for table "{{%addon_example_curd}}".
@@ -12,7 +13,7 @@ use common\helpers\StringHelper;
  * @property string $id ID
  * @property string $title 标题
  * @property string $cate_id 分类ID(单选)
- * @property string $manager_id 管理员ID
+ * @property string $member_id 管理员ID
  * @property int $sort 排序
  * @property int $position 推荐位
  * @property int $sex 性别1男2女
@@ -59,7 +60,21 @@ class Curd extends \common\models\base\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [
+                [
+                    'member_id',
+                    'cate_id',
+                    'member_id',
+                    'sort',
+                    'position',
+                    'sex',
+                    'views',
+                    'status',
+                    'created_at',
+                    'updated_at'
+                ],
+                'integer'
+            ],
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
             [['content'], 'string'],
             [['price'], 'number'],
@@ -84,7 +99,7 @@ class Curd extends \common\models\base\BaseModel
             'id' => 'ID',
             'title' => '标题',
             'cate_id' => '分类ID',
-            'manager_id' => '创建者ID',
+            'member_id' => '创建者ID',
             'sort' => '排序',
             'position' => '推荐位',
             'sex' => '性别',
@@ -121,9 +136,9 @@ class Curd extends \common\models\base\BaseModel
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getManager()
+    public function getMember()
     {
-        return $this->hasOne(Manager::class, ['id' => 'manager_id']);
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**
@@ -135,7 +150,7 @@ class Curd extends \common\models\base\BaseModel
         //创建时候插入
         if ($this->isNewRecord) {
             $this->ip = Yii::$app->request->userIP;
-            $this->manager_id = Yii::$app->user->id;
+            $this->member_id = Yii::$app->user->id;
         }
 
         $this->start_time = StringHelper::dateToInt(($this->start_time));

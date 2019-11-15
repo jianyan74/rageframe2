@@ -5,7 +5,7 @@ namespace oauth2\controllers;
 use Yii;
 use common\models\oauth2\repository\UserRepository;
 use common\models\oauth2\repository\RefreshTokenRepository;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use GuzzleHttp\Psr7\ServerRequest;
 use oauth2\components\Response;
 
@@ -27,7 +27,7 @@ class PasswordController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['create'];
+    protected $authOptional = ['create'];
 
     /**
      * @throws \Exception
@@ -63,9 +63,9 @@ class PasswordController extends OnAuthController
         try {
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         }
     }
 

@@ -26,11 +26,6 @@ class HttpSignAuth extends Behavior
     public $optional = [];
 
     /**
-     * @var bool
-     */
-    public $enabled = false;
-
-    /**
      * @return array
      */
     public function events()
@@ -45,10 +40,6 @@ class HttpSignAuth extends Behavior
      */
     public function beforeAction($event)
     {
-        if (false === $this->enabled) {
-            return true;
-        }
-
         if (in_array(Yii::$app->controller->action->id, $this->optional)) {
             return true;
         }

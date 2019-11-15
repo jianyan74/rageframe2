@@ -32,12 +32,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'visible' => false, // 不显示#
                         ],
                         'id',
-                        'notifySenderForManager.title',
+                        'notifySenderForMember.title',
                         [
                             'label' => '来自',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return $model->notifySenderForManager->senderForManager->username ?? '';
+                                return $model->notifySenderForMember->senderForManager->username ?? '';
                             }
                         ],
                         [

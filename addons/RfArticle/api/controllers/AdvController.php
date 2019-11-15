@@ -24,7 +24,7 @@ class AdvController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index'];
+    protected $authOptional = ['index'];
 
     /**
      * @return ActiveDataProvider

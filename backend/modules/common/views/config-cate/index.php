@@ -4,8 +4,8 @@ use common\helpers\Url;
 use common\helpers\Html;
 use jianyan\treegrid\TreeGrid;
 
-$this->title = '菜单管理';
-$this->params['breadcrumbs'][] = ['label' =>  $this->title];
+$this->title = '配置分类';
+$this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
 <div class="row">
@@ -36,14 +36,15 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             [
                                 'attribute' => 'title',
                                 'format' => 'raw',
-                                'value' => function ($model, $key, $index, $column){
+                                'value' => function ($model, $key, $index, $column) {
                                     $str = Html::tag('span', $model->title, [
                                         'class' => 'm-l-sm'
                                     ]);
-                                    $str .= Html::a(' <i class="icon ion-android-add-circle"></i>', ['ajax-edit', 'pid' => $model['id']], [
-                                        'data-toggle' => 'modal',
-                                        'data-target' => '#ajaxModal',
-                                    ]);
+                                    $str .= Html::a(' <i class="icon ion-android-add-circle"></i>',
+                                        ['ajax-edit', 'pid' => $model['id']], [
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#ajaxModal',
+                                        ]);
                                     return $str;
                                 }
                             ],
@@ -51,17 +52,17 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                 'attribute' => 'sort',
                                 'format' => 'raw',
                                 'headerOptions' => ['class' => 'col-md-1'],
-                                'value' => function ($model, $key, $index, $column){
-                                    return  Html::sort($model->sort);
+                                'value' => function ($model, $key, $index, $column) {
+                                    return Html::sort($model->sort);
                                 }
                             ],
                             [
                                 'header' => "操作",
                                 'class' => 'yii\grid\ActionColumn',
-                                'template'=> '{edit} {status} {delete}',
+                                'template' => '{edit} {status} {delete}',
                                 'buttons' => [
                                     'edit' => function ($url, $model, $key) {
-                                        return Html::edit(['ajax-edit','id' => $model->id], '编辑', [
+                                        return Html::edit(['ajax-edit', 'id' => $model->id], '编辑', [
                                             'data-toggle' => 'modal',
                                             'data-target' => '#ajaxModal',
                                         ]);
@@ -70,7 +71,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                         return Html::status($model->status);
                                     },
                                     'delete' => function ($url, $model, $key) {
-                                        return Html::delete(['delete','id' => $model->id]);
+                                        return Html::delete(['delete', 'id' => $model->id]);
                                     },
                                 ],
                             ],
