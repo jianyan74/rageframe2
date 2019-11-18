@@ -4,6 +4,7 @@ namespace common\helpers;
 
 use Exception;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Html;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -61,7 +62,8 @@ class ExcelHelper
                     // 解析字段
                     $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
                     // 写入excel
-                    $sheet->setCellValue(Coordinate::stringFromColumnIndex($span) . $column, $realData);
+                    $sheet->setCellValueExplicit(Coordinate::stringFromColumnIndex($span) . $column, $realData, DataType::TYPE_STRING);
+                    // $sheet->setCellValue(Coordinate::stringFromColumnIndex($span) . $column, $realData);
                     $span++;
                 }
 
@@ -111,7 +113,7 @@ class ExcelHelper
         unset($spreadsheet);
         ob_end_flush();
 
-        return true;
+        exit();
     }
 
     /**

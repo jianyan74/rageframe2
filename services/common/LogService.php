@@ -3,14 +3,14 @@
 namespace services\common;
 
 use Yii;
-use common\enums\StatusEnum;
 use common\helpers\EchantsHelper;
-use common\enums\AppEnum;
 use common\helpers\ArrayHelper;
 use common\components\Service;
-use common\models\common\Log;
 use common\queues\LogJob;
+use common\models\common\Log;
 use common\models\api\AccessToken;
+use common\enums\AppEnum;
+use common\enums\StatusEnum;
 use common\enums\SubscriptionActionEnum;
 use common\enums\SubscriptionReasonEnum;
 use common\enums\MessageLevelEnum;
@@ -139,12 +139,12 @@ class LogService extends Service
         ];
 
         // 加入提醒池
-        Yii::$app->services->sysNotify->createRemind(
+        Yii::$app->services->backendNotify->createRemind(
             $log->id,
             SubscriptionReasonEnum::LOG_CREATE,
             $actions[$action],
             $log['user_id'],
-            MessageLevelEnum::$listExplain[$action] . "请求：" . $log->error_msg
+            MessageLevelEnum::getValue($action) . "请求：" . $log->error_msg
         );
     }
 
@@ -232,17 +232,19 @@ class LogService extends Service
         $data['get_data'] = Yii::$app->request->get();
         $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
 
-        $module = $controller = $action = '';
-        isset(Yii::$app->controller->module->id) && $module = Yii::$app->controller->module->id;
-        isset(Yii::$app->controller->id) && $controller = Yii::$app->controller->id;
-        isset(Yii::$app->controller->action->id) && $action = Yii::$app->controller->action->id;
-
+        $module = Yii::$app->controller->module->id ?? '';
+        $controller = Yii::$app->controller->id ?? '';
+        $action = Yii::$app->controller->action->id ?? '';
         $route = $module . '/' . $controller . '/' . $action;
         if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
             $data['post_data'] = Yii::$app->request->post();
         }
 
-        $data['device'] = Yii::$app->debris->detectVersion();
+        $data['user_agent'] = Yii::$app->debris->detectVersion();
+        $data['device'] = Yii::$app->request->headers->get('device', '');
+        $data['device_uuid'] = Yii::$app->request->headers->get('device-uuid', '');
+        $data['device_version'] = Yii::$app->request->headers->get('device-version', '');
+        $data['device_app_version'] = Yii::$app->request->headers->get('device-app-version', '');
         $data['method'] = Yii::$app->request->method;
         $data['module'] = $module;
         $data['controller'] = $controller;

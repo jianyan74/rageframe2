@@ -15,11 +15,11 @@ yii pull-remind/ding-talk
 // 定时拉取系统提醒
 yii pull-remind/sys
 
-// 定时清理微信历史消息
-yii msg-history/index
+// 定时清理微信历史消息(需安装微信插件)
+yii addons/rf-wechat/msg-history/index
 
-// 定时群发微信消息
-yii send-message
+// 定时群发微信消息(需安装微信插件)
+yii addons/rf-wechat/send-message
 ```
 
 ### 数据迁移
@@ -77,14 +77,14 @@ Linux
  *
  * 每天凌晨执行一次
  */
-$schedule->command('msg-history/index')->cron('0 0 * * *');
+$schedule->command('test/index')->cron('0 0 * * *');
 
 /**
  * 定时群发微信消息
  *
  * 每分钟执行一次
  */
-$schedule->command('send-message/index')->cron('* * * * *');
+$schedule->command('test/index')->cron('* * * * *');
 ```
 
 4、具体例子

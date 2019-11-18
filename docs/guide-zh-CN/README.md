@@ -76,7 +76,7 @@
 - RegularHelper - 正则验证辅助类
 - HashidsHelper - ID加密辅助类
 - UploadHelper - 上传辅助类
-- [ResultDataHelper](helper-result-data.md) - 格式化数据返回辅助类
+- [ResultHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
 - ...
 
@@ -84,11 +84,11 @@
 
 - [安全防范](php-safety.md)
 - [SearchModel](component-search-model.md)
-- Curd
 - [应用配置独立域名](independent-app-domain-name.md)
 - [代码模板](system-code-template.md)
-- [代码提示/线上性能优化](system-optimize.md)
-- [扩展依赖安装使用](system-relyon.md)
+- [线上性能优化](system-optimize.md)
+- [团队编辑器代码规范](php-by-team.md)
 - [PHP编程规范](php-standard.md)
 - [Yii2核心框架代码风格](core-code-style.md)
+- [扩展依赖安装使用](system-relyon.md)
 - [网址收录](append-website.md)

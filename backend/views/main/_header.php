@@ -1,7 +1,6 @@
 <?php
 use common\helpers\ImageHelper;
 use common\helpers\Url;
-use common\helpers\Auth;
 use common\enums\StatusEnum;
 use backend\widgets\notify\Notify;
 ?>
@@ -28,18 +27,29 @@ use backend\widgets\notify\Notify;
                 </li>
                 <!-- Notifications: style can be found in dropdown.less -->
                 <?php foreach ($menuCates as $cate){ ?>
-                    <?php if (Auth::verify('cate:' . $cate['id'])) { ?>
-                        <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>" data-is_addon="<?= $cate['is_addon']; ?>">
-                            <a class="dropdown-toggle">
-                                <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
-                            </a>
-                        </li>
-                    <?php } ?>
+                    <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>" data-is_addon="<?= $cate['is_addon']; ?>">
+                        <a class="dropdown-toggle">
+                            <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
+                        </a>
+                    </li>
                 <?php } ?>
             </ul>
         </div>
-        <div class="navbar-custom-menu">
+        <div class="navbar-custom-menu top-right">
             <ul class="nav navbar-nav">
+                <!-- 自动隐藏菜单 -->
+                <li class="dropdown tasks-menu hide-menu hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <i class="icon ion-navicon-round"></i>
+                        <i class="icon ion-arrow-down-b"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <!-- inner menu: contains the actual data -->
+                            <ul class="menu"></ul>
+                        </li>
+                    </ul>
+                </li>
                 <?= Notify::widget(); ?>
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
@@ -60,10 +70,10 @@ use backend\widgets\notify\Notify;
                         <li class="user-body">
                             <div class="row">
                                 <div class="col-xs-4 text-center">
-                                    <a href="<?= Url::to(['/sys/manager/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
+                                    <a href="<?= Url::to(['/base/member/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="<?= Url::to(['/sys/manager/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
+                                    <a href="<?= Url::to(['/base/member/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a href="<?= Url::to(['/main/clear-cache']); ?>" class="J_menuItem" onclick="$('body').click();">清理缓存</a>

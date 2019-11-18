@@ -25,7 +25,7 @@ class ArrayHelper extends BaseArrayHelper
         $arr = [];
         foreach ($items as $v) {
             if ($v[$pidField] == $pid) {
-                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField);
+                $v[$child] = self::itemsMerge($items, $v[$idField], $idField, $pidField, $child);
                 $arr[] = $v;
             }
         }
@@ -143,6 +143,25 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
+     * 移除数组内某个key的值为传递的值
+     *
+     * @param array $array
+     * @param $value
+     * @param string $key
+     * @return array
+     */
+    public static function removeByValue(array $array, $value, $key = 'id')
+    {
+        foreach ($array as $index => $item) {
+            if ($item[$key] == $value) {
+                unset($array[$index]);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
      * 获取数字区间
      *
      * @param int $start
@@ -205,8 +224,112 @@ class ArrayHelper extends BaseArrayHelper
             ];
 
             if (!empty($model['-'])) {
-                $arr = ArrayHelper::merge($arr,
-                    self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
+                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 匹配ip在ip数组内支持通配符
+     *
+     * @param $ip
+     * @param $allowedIPs
+     * @return bool
+     */
+    public static function ipInArray($ip, $allowedIPs)
+    {
+        foreach ($allowedIPs as $filter) {
+            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取递归的第一个没有子级的数据
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getFirstRowByItemsMerge(array $array)
+    {
+        foreach ($array as $item) {
+            if (!empty($item['-'])) {
+                return self::getFirstRowByItemsMerge($item['-']);
+            } else {
+                return $item;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取所有没有子级的数据
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getNotChildRowsByItemsMerge(array $array)
+    {
+        $arr = [];
+
+        foreach ($array as $item) {
+            if (!empty($item['-'])) {
+                $arr = array_merge($arr, self::getNotChildRowsByItemsMerge($item['-']));
+            } else {
+                $arr[] = $item;
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 递归转普通二维数组
+     *
+     * @param $array
+     * @return mixed
+     */
+    public static function getRowsByItemsMerge(array $array, $childField = '-')
+    {
+        $arr = [];
+
+        foreach ($array as $item) {
+            if (!empty($item[$childField])) {
+                $arr = array_merge($arr, self::getRowsByItemsMerge($item[$childField]));
+            }
+
+            unset($item[$childField]);
+            $arr[] = $item;
+        }
+
+        return $arr;
+    }
+
+    /**
+     * 重组 map 类型转为正常的数组
+     *
+     * @param array $array
+     * @param string $keyForField
+     * @param string $valueForField
+     * @return array
+     */
+    public static function regroupMapToArr($array = [], $keyForField = 'route', $valueForField = 'title')
+    {
+        $arr = [];
+        foreach ($array as $key => $item) {
+            if (!is_array($array[$key])) {
+                $arr[] = [
+                    $keyForField => $key,
+                    $valueForField => $item,
+                ];
+            } else {
+                $arr[] = $item;
             }
         }
 

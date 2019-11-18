@@ -1,6 +1,5 @@
 <?php
 
-use common\enums\AppEnum;
 use common\helpers\DebrisHelper;
 use common\helpers\Html;
 
@@ -11,7 +10,7 @@ use common\helpers\Html;
     <h4 class="modal-title">基本信息</h4>
 </div>
 <div class="modal-body">
-    <table class="table">
+    <table class="table table-striped table-bordered detail-view">
         <tbody>
         <tr>
             <td>设备/浏览器</td>
@@ -31,17 +30,7 @@ use common\helpers\Html;
         </tr>
         <tr>
             <td>用户</td>
-            <td>
-                <?php
-                if (empty($model->user_id)) {
-                    echo '游客';
-                } elseif (AppEnum::BACKEND == $model->app_id) {
-                    echo $model->manager->username;
-                } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])) {
-                    echo $model->member->username;
-                }
-                ?>
-            </td>
+            <td><?= Yii::$app->services->backend->getUserName($model); ?></td>
         </tr>
         <tr>
             <td>模块</td>

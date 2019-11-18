@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => function ($model, $key, $index, $column){
                                 return $model->sex == 1 ? '男' : '女';
                             },
-                            'filter' => Html::activeDropDownList($searchModel, 'sex', GenderEnum::$listExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'sex', GenderEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

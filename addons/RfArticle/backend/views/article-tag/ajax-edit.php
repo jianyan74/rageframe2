@@ -20,7 +20,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'title')->textInput(); ?>
         <?= $form->field($model, 'sort')->textInput(); ?>
-        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()); ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

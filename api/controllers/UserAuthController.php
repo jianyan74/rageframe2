@@ -50,7 +50,7 @@ class UserAuthController extends OnAuthController
         if (empty($id) || !($model = $this->modelClass::find()->where([
                 'id' => $id,
                 'status' => StatusEnum::ENABLED,
-                'member_id' => Yii::$app->user->identity->member_id
+                'member_id' => Yii::$app->user->identity->member_id,
             ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one())) {
             throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');
         }

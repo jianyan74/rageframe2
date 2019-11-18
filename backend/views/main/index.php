@@ -15,7 +15,6 @@ AppAsset::register($this);
         <meta name="renderer" content="webkit">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode(Yii::$app->params['adminTitle']);?></title>
-        <?= Html::cssFile('@web/resources/dist/css/skins/_all-skins.min.css'); ?>
         <?php $this->head() ?>
     </head>
     <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -24,7 +23,7 @@ AppAsset::register($this);
         <!-- 头部区域 -->
         <?= $this->render('_header', [
             'manager' => Yii::$app->user->identity,
-            'menuCates' => Yii::$app->services->sysMenuCate->getOnAuthList()
+            'menuCates' => Yii::$app->services->menuCate->getOnAuthList()
         ]); ?>
         <!-- 左侧菜单栏 -->
         <?= $this->render('_left', [
@@ -44,8 +43,7 @@ AppAsset::register($this);
         <!-- 右侧区域 -->
         <div class="control-sidebar-bg"></div>
     </div>
-    <?= Html::jsFile('@web/resources/bower_components/jquery-slimscroll/jquery.slimscroll.min.js'); ?>
-    <?= Html::jsFile('@web/resources/dist/js/contabs.js'); ?>
+    <?= Html::jsFile('@web/resources/js/contabs.js'); ?>
     <script>
         // 配置
         let config = {

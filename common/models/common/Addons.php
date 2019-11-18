@@ -1,12 +1,12 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
 use common\models\base\BaseModel;
-use common\models\wechat\Rule;
-use common\models\wechat\RuleKeyword;
-use common\enums\AppEnum;
 use common\enums\StatusEnum;
+use addons\RfWechat\common\models\Rule;
+use addons\RfWechat\common\models\RuleKeyword;
 
 /**
  * This is the model class for table "{{%sys_addons}}".
@@ -65,8 +65,11 @@ class Addons extends BaseModel
         return [
             ['name', 'unique', 'message' => '模块名已经占用'],
             [['name', 'title', 'group', 'version', 'author'], 'required'],
-            ['name','match','pattern'=>'/^[_a-zA-Z]+$/','message' => '标识由英文和下划线组成'],
-            [['is_setting', 'is_hook', 'is_rule', 'status', 'created_at', 'updated_at'], 'integer'],
+            ['name', 'match', 'pattern' => '/^[_a-zA-Z]+$/', 'message' => '标识由英文和下划线组成'],
+            [
+                ['is_setting', 'is_hook', 'is_rule', 'is_merchant_route_map', 'status', 'created_at', 'updated_at'],
+                'integer',
+            ],
             [['title', 'group', 'version'], 'string', 'max' => 20],
             [['name', 'author'], 'string', 'max' => 40],
             [['title_initial'], 'string', 'max' => 1],
@@ -97,6 +100,7 @@ class Addons extends BaseModel
             'wechat_message' => '接收微信消息',
             'is_hook' => '钩子',
             'is_rule' => '嵌入规则',
+            'is_merchant_route_map' => '商户路由映射',
             'is_setting' => '全局设置项',
             'is_mini_program' => 'Api/小程序',
             'bootstrap' => '启动',
@@ -113,7 +117,8 @@ class Addons extends BaseModel
      */
     public function getBindingMenu()
     {
-        return $this->hasMany(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::class,
+            ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
     }
 
     /**
@@ -123,7 +128,10 @@ class Addons extends BaseModel
      */
     public function getBindingIndexMenu()
     {
-        return $this->hasOne(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'menu'])->asArray()->orderBy('id asc');
+        return $this->hasOne(AddonsBinding::class, ['addons_name' => 'name'])
+            ->where(['entry' => 'menu', 'app_id' => Yii::$app->id])
+            ->asArray()
+            ->orderBy('id asc');
     }
 
     /**
@@ -131,11 +139,12 @@ class Addons extends BaseModel
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAuthChildMenuByBackend()
+    public function getAuthChildMenu()
     {
         $role = Yii::$app->services->authRole->getRole();
+
         return $this->hasOne(AuthItemChild::class, ['addons_name' => 'name'])
-            ->where(['is_menu' => StatusEnum::ENABLED, 'app_id' => AppEnum::BACKEND, 'role_id' => $role['id'] ?? -1])
+            ->where(['is_menu' => StatusEnum::ENABLED, 'app_id' => Yii::$app->id, 'role_id' => $role['id'] ?? -1])
             ->orderBy('item_id asc');
     }
 
@@ -146,7 +155,8 @@ class Addons extends BaseModel
      */
     public function getBindingCover()
     {
-        return $this->hasMany(AddonsBinding::class, ['addons_name' => 'name'])->where(['entry' => 'cover'])->orderBy('id asc');
+        return $this->hasMany(AddonsBinding::class,
+            ['addons_name' => 'name'])->where(['entry' => 'cover'])->orderBy('id asc');
     }
 
     /**
@@ -185,12 +195,23 @@ class Addons extends BaseModel
         AddonsConfig::deleteAll(['addons_name' => $this->name]);
         // 卸载权限
         Yii::$app->services->authItem->uninstallAddonsByName($this->name);
+        // 卸载菜单分类
+        Yii::$app->services->menuCate->delByAddonsName($this->name);
+        // 卸载菜单
+        Yii::$app->services->menu->delByAddonsName($this->name);
 
         // 移除关键字
-        if ($replys = Rule::find()->where(['module' => Rule::RULE_MODULE_ADDON, 'data' => $this->name])->asArray()->all()) {
-            $ruleIds = array_column($replys, 'rule_id');
-            Rule::deleteAll(['in', 'id', $ruleIds]);
-            RuleKeyword::deleteAll(['in', 'rule_id', $ruleIds]);
+        try {
+            if ($replys = Rule::find()->where([
+                'module' => Rule::RULE_MODULE_ADDON,
+                'data' => $this->name,
+            ])->asArray()->all()) {
+                $ruleIds = array_column($replys, 'rule_id');
+                Rule::deleteAll(['in', 'id', $ruleIds]);
+                RuleKeyword::deleteAll(['in', 'rule_id', $ruleIds]);
+            }
+        } catch (\Exception $exception) {
+
         }
 
         // 写入缓存数据

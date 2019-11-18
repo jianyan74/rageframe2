@@ -12,11 +12,11 @@
 /oauth2/v1/default
 ```
 
-参数
+Header 参数
 
 参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-authorization | string| 是 | 无 | Bearer + 空格 + access_token | 注意写入header头
+authorization | string| 是 | 无 | Bearer + 空格 + access_token |
 
 返回
 

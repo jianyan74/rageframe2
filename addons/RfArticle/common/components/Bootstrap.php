@@ -3,7 +3,7 @@
 namespace addons\RfArticle\common\components;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * Bootstrap

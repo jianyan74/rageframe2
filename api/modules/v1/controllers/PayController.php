@@ -7,7 +7,7 @@ use api\controllers\OnAuthController;
 use common\enums\PayEnum;
 use common\helpers\Url;
 use common\models\forms\PayForm;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 
 /**
  * 公用支付生成
@@ -42,7 +42,7 @@ class PayController extends OnAuthController
             $model->notifyUrl = Url::removeMerchantIdUrl('toFront', ['notify/' . PayEnum::$payTypeAction[$model->payType]]);
         }
         if (!$model->validate()) {
-            return ResultDataHelper::api(422, $this->getError($model));
+            return ResultHelper::api(422, $this->getError($model));
         }
 
         return $model->getConfig();

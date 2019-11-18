@@ -5,7 +5,7 @@ namespace addons\RfArticle\backend\controllers;
 use Yii;
 use yii\data\Pagination;
 use common\enums\StatusEnum;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use common\models\base\SearchModel;
 use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\ArticleTag;
@@ -21,7 +21,7 @@ use addons\RfArticle\common\models\Article;
  */
 class ArticleController extends BaseController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var Article

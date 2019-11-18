@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]
                     ]);?>
                     <?= $form->field($model, 'jump_link')->textInput(); ?>
-                    <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain); ?>
+                    <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::getMap()); ?>
                 </div>
             </div>
             <div class="box-footer text-center">

@@ -8,7 +8,7 @@ namespace addons\<?= $model->name;?>;
 use Yii;
 use yii\db\Migration;
 use common\helpers\MigrateHelper;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 安装

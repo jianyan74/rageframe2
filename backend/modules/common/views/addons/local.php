@@ -24,9 +24,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         <tr>
                             <th>图标</th>
                             <th>模块名称</th>
-                            <th>版本</th>
                             <th>作者</th>
                             <th>简介</th>
+                            <th>版本</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -38,11 +38,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 </td>
                                 <td>
                                     <h5><?= Html::encode($vo['title']) ?></h5>
-                                    <small>标识 : <?= Html::encode($vo['name']) ?></small>
+                                    <small><?= Html::encode($vo['name']) ?></small>
                                 </td>
-                                <td><?= Html::encode($vo['version']) ?></td>
                                 <td><?= Html::encode($vo['author']) ?></td>
                                 <td><?= Html::encode($vo['brief_introduction']) ?></td>
+                                <td><?= Html::encode($vo['version']) ?></td>
                                 <td>
                                     <a href="<?= Url::to(['install', 'name' => $vo['name']]) ?>"><span class="btn btn-primary btn-sm">安装插件</span></a>
                                 </td>

@@ -28,7 +28,7 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'extra')->textarea()->hint('如果是枚举型 需要配置该项') ?>
         <?= $form->field($model, 'remark')->textarea() ?>
         <?= $form->field($model, 'is_hide_remark')->checkbox() ?>
-        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

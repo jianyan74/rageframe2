@@ -14,7 +14,7 @@ use common\helpers\Html;
         <tr>
             <td style="min-width: 100px">具体信息</td>
             <td style="max-width: 700px">
-                <?php Yii::$app->debris->p(Html::encode($model['error_data'])) ?>
+                <?php $model['error_data'] ? Yii::$app->debris->p(Html::encode($model['error_data'])) : '' ?>
             </td>
         </tr>
         </tbody>

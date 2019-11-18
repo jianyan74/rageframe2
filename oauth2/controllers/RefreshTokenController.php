@@ -5,7 +5,7 @@ namespace oauth2\controllers;
 use Yii;
 use GuzzleHttp\Psr7\ServerRequest;
 use oauth2\components\Response;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\models\oauth2\repository\RefreshTokenRepository;
 
 /**
@@ -26,7 +26,7 @@ class RefreshTokenController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['create'];
+    protected $authOptional = ['create'];
 
     /**
      * @throws \Exception
@@ -57,9 +57,9 @@ class RefreshTokenController extends OnAuthController
         try {
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         }
     }
 

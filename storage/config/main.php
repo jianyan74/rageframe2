@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'id' => 'app-storage',
+    'id' => 'storage',
     'basePath' => dirname(__DIR__),
     'defaultRoute' => 'glide/index',
     'controllerNamespace' => 'storage\controllers',

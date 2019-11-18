@@ -77,6 +77,7 @@ return [
                         'v1/site',
                         'v1/mini-program',
                         'v1/pay',
+                        'v1/common/provinces',
                         'v1/member/member',
                         'v1/member/address',
                         'v1/member/auth',
@@ -93,8 +94,6 @@ return [
                         'POST up-pwd' => 'up-pwd', // 重置密码
                         // 测试查询可删除 例如：http://www.rageframe.com/api/v1/default/search
                         'GET search' => 'search',
-                        'GET session-key' => 'session-key', // 小程序获取session key
-                        'POST decode' => 'decode', // 解密获取小程序用户信息数据
                         'GET qr-code' => 'qr-code', // 获取小程序码
                     ]
                 ],
@@ -107,8 +106,10 @@ return [
                         'POST videos' => 'videos', // 视频上传
                         'POST voices' => 'voices', // 语音上传
                         'POST files' => 'files', // 文件上传
-                        'POST base64' => 'base64', // base64上传 其他上传权限自己添加
+                        'POST base64' => 'base64', // base64上传
                         'POST merge' => 'merge', // 合并分片
+                        'POST verify-md5' => 'verify-md5', // md5文件校验
+                        'GET oss-accredit' => 'oss-accredit', // oss js 直传配置
                     ],
                 ],
                 [

@@ -12,7 +12,7 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
-        <?= $form->field($model, 'cover')->widget(\backend\widgets\cropper\Cropper::class, [
+        <?= $form->field($model, 'cover')->widget(\common\widgets\cropper\Cropper::class, [
             'config' => [
                 'multiple' => true
             ],

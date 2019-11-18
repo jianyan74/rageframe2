@@ -5,7 +5,7 @@ namespace common\models\common;
 use Yii;
 use common\behaviors\MerchantBehavior;
 use common\helpers\TreeHelper;
-use backend\components\Tree;
+use common\components\Tree;
 
 /**
  * This is the model class for table "{{%common_auth_role}}".

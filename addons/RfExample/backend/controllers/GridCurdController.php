@@ -1,11 +1,11 @@
 <?php
 namespace addons\RfExample\backend\controllers;
 
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use Yii;
 use addons\RfExample\common\models\Curd as CurdModel;
 use common\models\base\SearchModel;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use common\enums\StatusEnum;
 use common\controllers\AddonsController;
 
@@ -16,7 +16,7 @@ use common\controllers\AddonsController;
  */
 class GridCurdController extends AddonsController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var string
@@ -65,10 +65,10 @@ class GridCurdController extends AddonsController
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                return ResultDataHelper::json(200, '保存成功');
+                return ResultHelper::json(200, '保存成功');
             }
 
-            return ResultDataHelper::json(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $this->render($this->action->id, [

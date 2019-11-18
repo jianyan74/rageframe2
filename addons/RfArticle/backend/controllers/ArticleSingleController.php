@@ -3,7 +3,7 @@
 namespace addons\RfArticle\backend\controllers;
 
 use Yii;
-use common\components\Curd;
+use common\components\MerchantCurd;
 use addons\RfArticle\common\models\ArticleSingle;
 
 /**
@@ -15,7 +15,7 @@ use addons\RfArticle\common\models\ArticleSingle;
  */
 class ArticleSingleController extends BaseController
 {
-    use Curd;
+    use MerchantCurd;
 
     /**
      * @var ArticleSingle

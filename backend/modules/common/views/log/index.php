@@ -3,7 +3,6 @@
 use yii\grid\GridView;
 use common\enums\AppEnum;
 use common\helpers\Html;
-use common\helpers\Url;
 use common\helpers\DebrisHelper;
 
 $this->title = '全局日志';
@@ -19,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                     <?= Html::linkButton(['stat'], '<i class="fa fa-area-chart"></i> 异常请求报表统计', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModalMax',
-                    ])?>
+                    ]) ?>
                 </div>
             </div>
             <div class="box-body table-responsive">
@@ -36,35 +35,45 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         ],
                         [
                             'attribute' => 'app_id',
+                            'filter' => Html::activeDropDownList($searchModel, 'app_id', AppEnum::getMap(), [
+                                'prompt' => '全部',
+                                'class' => 'form-control'
+                            ]),
+                            'value' => function ($model) {
+                                return AppEnum::getValue($model->app_id);
+                            },
                             'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
                             'label' => '用户',
                             'value' => function ($model) {
-                                if (empty($model->user_id)) {
-                                    return '游客';
-                                } elseif (AppEnum::BACKEND == $model->app_id){
-                                    return $model->manager->username;
-                                } elseif (in_array($model->app_id, [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])){
-                                    return $model->member->username;
-                                }
+                                return Yii::$app->services->backend->getUserName($model);
                             },
                             'filter' => false, //不显示搜索框
                         ],
                         'url',
                         [
-                            'label' => 'ip',
-                            'attribute' => 'ip',
+                            'label' => '位置信息',
                             'value' => function ($model) {
-                                return DebrisHelper::long2ip($model->ip);
+                                $str = [];
+                                $str[] = DebrisHelper::analysisIp($model->ip);
+                                $str[] = DebrisHelper::long2ip($model->ip);
+                                return implode($str, '</br>');
                             },
-                            'filter' => false, //不显示搜索框
+                            'format' => 'raw',
                         ],
                         [
-                            'label' => '地区',
+                            'label' => '设备信息',
                             'value' => function ($model) {
-                                return DebrisHelper::analysisIp($model->ip);
+                                $str = [];
+                                $str[] = '类型：' . $model->device;
+                                $str[] = '唯一码：' . $model->device_uuid;
+                                $str[] = '系统版本：' . $model->device_version;
+                                $str[] = 'App版本：' . $model->device_app_version;
+                                return implode($str, '</br>');
                             },
+                            'format' => 'raw',
+                            'filter' => false,
                         ],
                         [
                             'attribute' => 'error_code',

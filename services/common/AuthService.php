@@ -3,6 +3,7 @@
 namespace services\common;
 
 use Yii;
+use common\enums\AppEnum;
 use common\components\Service;
 
 /**
@@ -19,6 +20,10 @@ class AuthService extends Service
      */
     public function isSuperAdmin()
     {
+        if (!in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
+            return false;
+        }
+
         return Yii::$app->user->id == Yii::$app->params['adminAccount'];
     }
 }

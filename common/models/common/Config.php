@@ -3,6 +3,7 @@
 namespace common\models\common;
 
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "{{%common_config}}".
@@ -43,7 +44,9 @@ class Config extends \common\models\base\BaseModel
             [['type'], 'string', 'max' => 30],
             [['extra', 'remark'], 'string', 'max' => 1000],
             [['default_value'], 'string', 'max' => 500],
-            [['name'], 'unique'],
+            [['name'], 'unique', 'filter' => function(ActiveQuery $query) {
+                return $query->andWhere(['app_id' => $this->app_id]);
+            }],
         ];
     }
 
@@ -82,8 +85,7 @@ class Config extends \common\models\base\BaseModel
      */
     public function getValue()
     {
-        return $this->hasOne(ConfigValue::class, ['config_id' => 'id'])
-            ->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
+        return $this->hasOne(ConfigValue::class, ['config_id' => 'id']);
     }
 
     /**

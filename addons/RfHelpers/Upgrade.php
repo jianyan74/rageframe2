@@ -4,14 +4,13 @@ namespace addons\RfHelpers;
 
 use Yii;
 use yii\db\Migration;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 升级数据库
  *
  * Class Upgrade
- * @package addons\RfHelpers
- */
+ * @package addons\RfHelpers */
 class Upgrade extends Migration implements AddonWidget
 {
     /**
@@ -33,11 +32,11 @@ class Upgrade extends Migration implements AddonWidget
         switch ($addon->version) {
             case '1.0.1' :
                 // 增加测试 - 冗余的字段
-                // $migration->addColumn('{{%addon_example_curd}}', 'redundancy_field', 'varchar(48)');
+                // $this->addColumn('{{%addon_example_curd}}', 'redundancy_field', 'varchar(48)');
                 break;
             case '1.0.2' :
                 // 删除测试 - 冗余的字段
-                // $migration->dropColumn('{{%addon_example_curd}}', 'redundancy_field');
+                // $this->dropColumn('{{%addon_example_curd}}', 'redundancy_field');
                 break;
         }
     }

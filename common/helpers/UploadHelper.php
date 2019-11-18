@@ -8,7 +8,7 @@ use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
 use common\models\common\Attachment;
-use common\components\UploadDrive;
+use common\components\uploaddrive\DriveInterface;
 
 /**
  * 上传辅助类
@@ -96,7 +96,7 @@ class UploadHelper
     protected $isCut = false;
 
     /**
-     * @var UploadDrive
+     * @var DriveInterface
      */
     protected $uploadDrive;
 
@@ -126,8 +126,11 @@ class UploadHelper
             $this->isCut = true;
         }
 
-        $this->uploadDrive = new UploadDrive($this->drive, $superaddition);
-        $this->filesystem = $this->uploadDrive->getEntity();
+        $drive = $this->drive;
+        $this->uploadDrive = Yii::$app->uploadDrive->$drive([
+            'superaddition' => $superaddition
+        ]);
+        $this->filesystem = $this->uploadDrive->entity();
     }
 
     /**

@@ -19,7 +19,7 @@ class BaseController extends AddonsController
     /**
     * @var string
     */
-<?php if ($appID == 'backend'){ ?>
+<?php if ($appID == 'merchant'){ ?>
     // public $layout = "@addons/<?= $model->name;?>/<?= $appID ?>/views/layouts/main";
 <?php } else { ?>
     public $layout = "@addons/<?= $model->name;?>/<?= $appID ?>/views/layouts/main";

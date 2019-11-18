@@ -21,15 +21,16 @@ $form = ActiveForm::begin([
         <h4 class="modal-title">基本信息</h4>
     </div>
     <div class="modal-body">
+        <?= $form->field($model, 'app_id')->dropDownList(\common\enums\AppEnum::getMap()) ?>
         <?= $form->field($model, 'url')->textInput()->hint('例如：site/logout') ?>
         <?= $form->field($model, 'behavior')->textInput()->hint('方便查找的别名，例如：logout') ?>
         <?= $form->field($model, 'remark')->textInput() ?>
         <?= $form->field($model, 'method')->dropDownList($methodExplain) ?>
-        <?= $form->field($model, 'is_record_post')->radioList(\common\enums\WhetherEnum::$listExplain) ?>
-        <?= $form->field($model, 'level')->dropDownList(\common\enums\MessageLevelEnum::$listExplain) ?>
+        <?= $form->field($model, 'is_record_post')->radioList(\common\enums\WhetherEnum::getMap()) ?>
+        <?= $form->field($model, 'level')->dropDownList(\common\enums\MessageLevelEnum::getMap()) ?>
         <?= $form->field($model, 'action')->radioList($actionExplain) ?>
         <?= $form->field($model, 'is_ajax')->radioList($ajaxExplain) ?>
-        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()); ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

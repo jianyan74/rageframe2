@@ -7,18 +7,19 @@ use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
+use yii\web\UnprocessableEntityHttpException;
 use common\helpers\Url;
 use common\enums\AppEnum;
 use common\helpers\Auth;
 use common\models\common\Addons;
 use common\helpers\AddonHelper;
-use common\models\wechat\Rule;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\helpers\StringHelper;
-use common\models\wechat\RuleKeyword;
-use backend\modules\wechat\forms\RuleForm;
+use addons\RfWechat\common\models\Rule;
+use addons\RfWechat\common\models\RuleKeyword;
+use addons\RfWechat\backend\forms\RuleForm;
 
 /**
  * Class AddonsController
@@ -46,11 +47,19 @@ class AddonsController extends Controller
      */
     public $addonName;
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
         $this->addonName = Yii::$app->request->get('addon', Yii::$app->request->post('addon', ''));
         $this->addonName = StringHelper::strUcwords($this->addonName);
+
+        // 动态注入服务
+        Yii::$app->set('wechatServices', [
+            'class' => 'addons\RfWechat\services\Application',
+        ]);
 
         Yii::$app->params['inAddon'] = true;
     }
@@ -100,7 +109,7 @@ class AddonsController extends Controller
         $baseCover = Yii::$app->params['addonBinding']['cover'];
 
         foreach ($baseCover as $value) {
-            $key = AppEnum::$listExplain[$value['app_id']] . '入口';
+            $key = AppEnum::getValue($value['app_id']) . '入口';
             $value['url'] = '';
 
             !is_array($value['params']) && $value['params'] = [];
@@ -112,8 +121,8 @@ class AddonsController extends Controller
                 case AppEnum::FRONTEND :
                     $value['url'] = Url::toFront($route);
                     break;
-                case AppEnum::WECHAT :
-                    $value['url'] = Url::toWechat($route);
+                case AppEnum::HTML5 :
+                    $value['url'] = Url::toHtml5($route);
                     break;
                 case AppEnum::OAUTH2 :
                     $value['url'] = Url::toOAuth2($route);
@@ -135,10 +144,15 @@ class AddonsController extends Controller
      * 规则
      *
      * @return string
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
+     * @throws UnprocessableEntityHttpException
      */
     public function actionRule()
     {
+        if (AddonHelper::has('RfWechat') == false) {
+            throw new UnprocessableEntityHttpException('请先安装微信插件或者联系管理员');
+        }
+
         // 初始化模块
         AddonHelper::initAddon($this->addonName, $this->route);
 
@@ -169,10 +183,15 @@ class AddonsController extends Controller
      *
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException
+     * @throws UnprocessableEntityHttpException
      * @throws \yii\base\ExitException
      */
     public function actionRuleEdit()
     {
+        if (AddonHelper::has('RfWechat') == false) {
+            throw new UnprocessableEntityHttpException('请先安装微信插件或者联系管理员');
+        }
+
         // 初始化模块
         AddonHelper::initAddon($this->addonName, $this->route);
 
@@ -181,7 +200,7 @@ class AddonsController extends Controller
         $model = $this->findModel($id);
         $model->module = Rule::RULE_MODULE_ADDON;
         $model->data = $this->addonName;
-        $defaultRuleKeywords = Yii::$app->services->wechatRuleKeyword->getType($model->ruleKeyword);
+        $defaultRuleKeywords = Yii::$app->wechatServices->ruleKeyword->getType($model->ruleKeyword);
 
         // ajax校验
         if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
@@ -205,7 +224,7 @@ class AddonsController extends Controller
                 $ruleKey = $postData['ruleKey'] ?? [];
                 $ruleKey[RuleKeyword::TYPE_MATCH] = explode(',', $model->keyword);
                 // 更新关键字
-                Yii::$app->services->wechatRuleKeyword->update($model, $ruleKey, $defaultRuleKeywords);
+                Yii::$app->wechatServices->ruleKeyword->update($model, $ruleKey, $defaultRuleKeywords);
                 $transaction->commit();
 
                 return $this->redirect(['/addons/rule', 'addon' => $this->addonName]);
@@ -250,15 +269,15 @@ class AddonsController extends Controller
     public function actionAjaxUpdate($id)
     {
         if (!($model = Rule::find()->where(['id' => $id])->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])->one())) {
-            return ResultDataHelper::json(404, '找不到数据');
+            return ResultHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save()) {
-            return ResultDataHelper::json(422, Yii::$app->debris->analyErr($model->getFirstErrors()));
+            return ResultHelper::json(422, Yii::$app->debris->analyErr($model->getFirstErrors()));
         }
 
-        return ResultDataHelper::json(200, '修改成功');
+        return ResultHelper::json(200, '修改成功');
     }
 
     /**

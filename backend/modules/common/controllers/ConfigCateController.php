@@ -5,6 +5,7 @@ namespace backend\modules\common\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 use common\components\Curd;
+use common\enums\AppEnum;
 use common\models\common\ConfigCate;
 use backend\controllers\BaseController;
 
@@ -30,6 +31,7 @@ class ConfigCateController extends BaseController
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $this->modelClass::find()
+                ->where(['app_id' => AppEnum::BACKEND])
                 ->orderBy('sort asc, created_at asc'),
             'pagination' => false
         ]);
@@ -51,6 +53,7 @@ class ConfigCateController extends BaseController
         $id = $request->get('id', '');
         $model = $this->findModel($id);
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
+        $model->app_id = AppEnum::BACKEND;
 
         // ajax 校验
         $this->activeFormValidate($model);
@@ -62,24 +65,7 @@ class ConfigCateController extends BaseController
 
         return $this->renderAjax('ajax-edit', [
             'model' => $model,
-            'cateDropDownList' => Yii::$app->services->configCate->getEditDropDownList($id),
+            'cateDropDownList' => Yii::$app->services->configCate->getDropDownForEdit(AppEnum::BACKEND, $id),
         ]);
-    }
-
-    /**
-     * 返回模型
-     *
-     * @param $id
-     * @return \yii\db\ActiveRecord
-     */
-    protected function findModel($id)
-    {
-        /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::findOne($id)))) {
-            $model = new $this->modelClass;
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
     }
 }

@@ -4,12 +4,13 @@ namespace addons\RfMerchants\backend\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
+use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\components\Curd;
 use common\models\common\AuthRole;
 use common\enums\AppEnum;
-use common\enums\AuthTypeEnum;
-use common\helpers\ResultDataHelper;
+use common\enums\TypeEnum;
+use common\helpers\ResultHelper;
 
 /**
  * Class RoleController
@@ -30,7 +31,7 @@ class RoleController extends BaseController
      *
      * @var string
      */
-    public $appId = AppEnum::BACKEND;
+    public $appId = AppEnum::MERCHANT;
 
     public $merchant_id;
 
@@ -39,28 +40,27 @@ class RoleController extends BaseController
         parent::init();
 
         $this->merchant_id = Yii::$app->request->get('merchant_id');
-        Yii::$app->services->merchant->setId($this->merchant_id);
+        Yii::$app->services->merchant->setId(Yii::$app->request->get('merchant_id'));
     }
 
     /**
-     * Lists all Tree models.
-     * @return mixed
+     * @return string
      */
     public function actionIndex()
     {
-        $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->appId, $role);
-
         $dataProvider = new ActiveDataProvider([
+            'query' => AuthRole::find()
+                ->where(['app_id' => $this->appId])
+                ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+                ->andWhere(['merchant_id' => $this->merchant_id])
+                ->orderBy('sort asc, created_at asc')
+                ->asArray(),
             'pagination' => false
         ]);
 
-        $dataProvider->setModels($childRoles);
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'role' => $role,
-            'merchant_id' => $this->merchant_id,
+            'merchant_id' => $this->merchant_id
         ]);
     }
 
@@ -81,18 +81,19 @@ class RoleController extends BaseController
             $model->attributes = $data;
 
             if (!$model->save()) {
-                return ResultDataHelper::json(422, $this->getError($model));
+                return ResultHelper::json(422, $this->getError($model));
             }
 
             // 创建角色关联的权限信息
-            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], AuthTypeEnum::TYPE_DEFAULT, $this->appId);
-            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], AuthTypeEnum::TYPE_ADDONS, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], TypeEnum::TYPE_DEFAULT, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], TypeEnum::TYPE_ADDONS, $this->appId);
 
-            return ResultDataHelper::json(200, '提交成功');
+            return ResultHelper::json(200, '提交成功');
         }
 
-        // 获取当前角色权限
-        list($defaultFormAuth, $defaultCheckIds, $addonsFormAuth, $addonsCheckIds) = Yii::$app->services->authRole->getJsTreeData($id, $this->appId);
+        // 所有权限信息
+        $allAuth = Yii::$app->services->authItem->findAllByAppId($this->appId);
+        list($defaultFormAuth, $defaultCheckIds, $addonsFormAuth, $addonsCheckIds) = Yii::$app->services->authRole->getJsTreeData($id, $allAuth);
 
         return $this->render($this->action->id, [
             'model' => $model,
@@ -100,7 +101,7 @@ class RoleController extends BaseController
             'defaultCheckIds' => $defaultCheckIds,
             'addonsFormAuth' => $addonsFormAuth,
             'addonsCheckIds' => $addonsCheckIds,
-            'dropDownList' => $this->getDropDownList($id),
+            'dropDownList' => $this->getDropDown($id),
             'merchant_id' => $this->merchant_id
         ]);
     }
@@ -113,39 +114,17 @@ class RoleController extends BaseController
      * @param $id
      * @return array
      */
-    protected function getDropDownList($id)
+    protected function getDropDown($id)
     {
-        // 获取父级
         $role = Yii::$app->services->authRole->getRole();
-        $childRoles = Yii::$app->services->authRole->getChildList($this->appId, $role);
+        $childRoles = Yii::$app->services->authRole->getChilds($this->appId, $role);
         !empty($role) && $childRoles = ArrayHelper::merge([$role], $childRoles);
-        foreach ($childRoles as $k => $childRole) {
-            if ($childRole['id'] == $id) {
-                unset($childRoles[$k]);
-            }
-        }
+        $childRoles = ArrayHelper::removeByValue($childRoles, $id);
 
         $dropDownList = ArrayHelper::itemsMerge($childRoles, $role['pid'] ?? 0);
-        $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList, 'id', 'title', $role['level'] ?? 1), 'id', 'title');
-        Yii::$app->services->auth->isSuperAdmin() && $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
+        $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList), 'id', 'title');
+        $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
 
         return $dropDownList;
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return mixed
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDelete($id)
-    {
-        if ($this->findModel($id)->delete()) {
-            return $this->message("删除成功", $this->redirect(['index', 'merchant_id' => $this->merchant_id]));
-        }
-
-        return $this->message("删除失败", $this->redirect(['index', 'merchant_id' => $this->merchant_id]), 'error');
     }
 }

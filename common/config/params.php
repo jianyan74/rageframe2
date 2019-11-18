@@ -8,7 +8,7 @@ return [
     // 多商户开启
     'merchantOpen' => true,
     // 系统管理员账号id
-    'adminAccount' => '',
+    'adminAccount' => '0',
     // 请求全局唯一ID
     'uuid' => '',
     // 百度编辑器默认上传驱动
@@ -100,9 +100,48 @@ return [
     // 微信企业微信开放平台 具体可参考EasyWechat
     'wechatOpenWorkConfig' => [],
 
-    /** ------ 微信自定义接口配置------------------- **/
+    /** ------ 微信自定义接口配置------ **/
 
-    'userApiPath' => Yii::getAlias('@root') . '/backend/modules/wechat/userapis', // 自定义接口路径
-    'userApiNamespace' => '\backend\modules\wechat\userapis', // 命名空间
+    'userApiPath' => Yii::getAlias('@root') . '/addons/RfWechat/backend/userapis', // 自定义接口路径
+    'userApiNamespace' => '\addons\RfWechat\backend\userapis', // 命名空间
     'userApiCachePrefixKey' => 'wechat:reply:user-api:', // 缓存前缀
+
+    /** ------ 插件类型 ------ **/
+    'addonsGroup' => [
+        'plug' => [
+            'name' => 'plug',
+            'title' => '功能扩展',
+            'icon' => 'fa fa-puzzle-piece',
+        ],
+        'business' => [
+            'name' => 'business',
+            'title' => '主要业务',
+            'icon' => 'fa fa-random',
+        ],
+        'customer' => [
+            'name' => 'customer',
+            'title' => '客户关系',
+            'icon' => 'fa fa-rocket',
+        ],
+        'activity' => [
+            'name' => 'activity',
+            'title' => '营销及活动',
+            'icon' => 'fa fa-tachometer',
+        ],
+        'services' => [
+            'name' => 'services',
+            'title' => '常用服务及工具',
+            'icon' => 'fa fa-magnet',
+        ],
+        'biz' => [
+            'name' => 'biz',
+            'title' => '行业解决方案',
+            'icon' => 'fa fa-diamond',
+        ],
+        'h5game' => [
+            'name' => 'h5game',
+            'title' => 'H5游戏',
+            'icon' => 'fa fa-gamepad',
+        ],
+    ],
 ];

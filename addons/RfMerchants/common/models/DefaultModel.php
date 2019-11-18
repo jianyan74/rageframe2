@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfMerchants\common\models;
 
 use Yii;

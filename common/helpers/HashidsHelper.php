@@ -22,6 +22,8 @@ class HashidsHelper
     public static $lenght = 10;
 
     /**
+     * 为安全起见需要修改为自己的秘钥
+     *
      * @var string
      */
     public static $secretKey = 'AWBG9zgAEfgwVv3ghsj6n4vKS9gMtTbu';

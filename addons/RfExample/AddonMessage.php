@@ -1,11 +1,12 @@
 <?php
+
 namespace addons\RfExample;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
- * AddonMessage
+ * 微信消息处理
  *
  * Class AddonMessage
  * @package addons\RfExample */

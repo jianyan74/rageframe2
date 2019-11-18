@@ -3,7 +3,7 @@
 namespace addons\RfArticle;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 微信消息处理

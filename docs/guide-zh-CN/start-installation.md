@@ -86,9 +86,12 @@ php composer.phar update
 应用 | Url
 ---|---
 后台 | 当前域名/backend
-微信 | 当前域名/wechat
+商户 | 当前域名/merchant
+Html5 | 当前域名/html5
 Api | 当前域名/api
 OAuth2 | 当前域名/oauth2
+
+> 安装成功后如果需要微信公众号管理、商户管理等等功能，请到 系统管理->应用管理 进行安装插件
 
 
 

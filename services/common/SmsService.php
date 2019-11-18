@@ -71,12 +71,14 @@ class SmsService extends Service
      * 发送短信
      *
      * ```php
-     *       Yii::$app->services->sms->send($mobile, $code, $member_id)
+     *       Yii::$app->services->sms->send($mobile, $code, $usage, $member_id)
      * ```
      *
-     * @param $mobile
-     * @param $code
-     * @param int $member_id
+     * @param int $mobile 手机号码
+     * @param int $code 验证码
+     * @param string $usage 用途
+     * @param int $member_id 用户ID
+     * @return string|null
      * @throws UnprocessableEntityHttpException
      */
     public function send($mobile, $code, $usage, $member_id = 0)
@@ -157,12 +159,12 @@ class SmsService extends Service
             ]);
 
             // 加入提醒池
-            Yii::$app->services->sysNotify->createRemind(
+            Yii::$app->services->backendNotify->createRemind(
                 $log->id,
                 SubscriptionReasonEnum::SMS_CREATE,
                 SubscriptionActionEnum::SMS_ERROR,
                 $log['member_id'],
-                MessageLevelEnum::$listExplain[MessageLevelEnum::ERROR] . "短信：$log->error_data"
+                MessageLevelEnum::getValue(MessageLevelEnum::ERROR) . "短信：$log->error_data"
             );
 
             throw new UnprocessableEntityHttpException('短信发送失败');

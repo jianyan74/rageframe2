@@ -23,7 +23,7 @@ class DefaultController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index', 'search'];
+    protected $authOptional = ['index', 'search'];
 
     /**
      * @return string|\yii\data\ActiveDataProvider

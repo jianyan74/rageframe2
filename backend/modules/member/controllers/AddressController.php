@@ -5,7 +5,7 @@ namespace backend\modules\member\controllers;
 use Yii;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\enums\StatusEnum;
 use common\models\member\Address;
 use backend\controllers\BaseController;
@@ -104,15 +104,15 @@ class AddressController extends BaseController
     public function actionAjaxUpdate($id)
     {
         if (!($model = Address::findOne($id))) {
-            return ResultDataHelper::json(404, '找不到数据');
+            return ResultHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save()) {
-            return ResultDataHelper::json(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
-        return ResultDataHelper::json(200, '修改成功');
+        return ResultHelper::json(200, '修改成功');
     }
 
     /**

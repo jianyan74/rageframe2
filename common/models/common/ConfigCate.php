@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use backend\components\Tree;
+use common\components\Tree;
 use common\enums\StatusEnum;
 
 /**
@@ -66,9 +66,9 @@ class ConfigCate extends \common\models\base\BaseModel
      */
     public function getConfig()
     {
-        return $this->hasMany(Config::class, ['cate_id' => 'id'])->with('value')
-            ->orderBy('sort asc')
-            ->where(['status' => StatusEnum::ENABLED]);
+        return $this->hasMany(Config::class, ['cate_id' => 'id'])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->orderBy('sort asc');
     }
 
     /**

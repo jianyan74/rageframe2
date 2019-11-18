@@ -5,7 +5,7 @@ namespace common\components;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\UnauthorizedHttpException;
-use common\models\sys\Manager;
+use common\models\backend\Member;
 use common\helpers\ArrayHelper;
 use common\helpers\FileHelper;
 use common\helpers\StringHelper;
@@ -42,12 +42,12 @@ class Init implements BootstrapInterface
 
         $this->id = $application->id;// 初始化变量
         // 商户信息
-        if (Yii::$app->id == AppEnum::BACKEND) {
-            /** @var Manager $identity */
+        if (in_array(Yii::$app->id, [AppEnum::CONSOLE, AppEnum::BACKEND])) {
+            $this->afreshLoad($this->default_merchant_id);
+        } elseif (Yii::$app->id == AppEnum::MERCHANT) {
+            /** @var Member $identity */
             $identity = Yii::$app->user->identity;
             $this->afreshLoad($identity->merchant_id ?? $this->default_merchant_id);
-        } elseif (Yii::$app->id == AppEnum::CONSOLE) {
-            $this->afreshLoad($this->default_merchant_id);
         } else {
             $this->afreshLoad(Yii::$app->request->get('merchant_id', $this->default_merchant_id));
         }
@@ -63,8 +63,6 @@ class Init implements BootstrapInterface
     {
         try {
             Yii::$app->services->merchant->setId($merchant_id);
-            // 设置缓存前缀
-            Yii::$app->cache->keyPrefix = $merchant_id;
             // 获取配置
             $config = Yii::$app->debris->configAll();
             // 初始化配置
@@ -87,7 +85,7 @@ class Init implements BootstrapInterface
     protected function verifyIp()
     {
         $userIP = Yii::$app->request->userIP;
-        $ips = Yii::$app->services->ipBlacklist->getList();
+        $ips = Yii::$app->services->ipBlacklist->findIps();
         if (in_array($userIP, $ips)) {
             throw new UnauthorizedHttpException('你的访问被禁止');
         }

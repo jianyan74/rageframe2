@@ -5,7 +5,7 @@ namespace common\behaviors;
 use Yii;
 use yii\base\Behavior;
 use yii\web\Controller;
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 use common\helpers\DebrisHelper;
 use common\models\common\ActionBehavior;
 
@@ -61,7 +61,6 @@ class ActionLogBehavior extends Behavior
         $nowKey = implode('|', $nowKey);
 
         $data = $this->getActionBehavior();
-
         if (isset($data[$nowKey])) {
             $row = $data[$nowKey];
 
@@ -82,7 +81,7 @@ class ActionLogBehavior extends Behavior
      */
     protected function getActionBehavior()
     {
-        $key = CacheKeyEnum::COMMON_ACTION_BEHAVIOR;
+        $key = CacheEnum::getPrefix('actionBehavior');
         if (!($data = Yii::$app->cache->get($key))) {
             $data = Yii::$app->services->actionBehavior->getAllData();
             Yii::$app->cache->set($key, $data, 60 * 60 * 2);

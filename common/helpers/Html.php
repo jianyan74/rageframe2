@@ -2,11 +2,11 @@
 
 namespace common\helpers;
 
-use common\enums\MessageLevelEnum;
 use Yii;
 use yii\helpers\BaseHtml;
 use common\enums\StatusEnum;
 use common\enums\WhetherEnum;
+use common\enums\MessageLevelEnum;
 
 /**
  * Class Html
@@ -89,6 +89,10 @@ class Html extends BaseHtml
      */
     public static function status($status = 1, $options = [])
     {
+        if (!self::beforVerify('ajax-update')) {
+            return '';
+        }
+
         $listBut = [
             StatusEnum::DISABLED => self::tag('span', '启用', array_merge(
                 [
@@ -179,13 +183,13 @@ class Html extends BaseHtml
     public static function messageLevel($level)
     {
         $listBut = [
-            MessageLevelEnum::INFO => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::INFO], [
+            MessageLevelEnum::INFO => self::tag('span', MessageLevelEnum::getValue(MessageLevelEnum::INFO), [
                 'class' => "label label-info label-sm",
             ]),
-            MessageLevelEnum::WARNING => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::WARNING], [
+            MessageLevelEnum::WARNING => self::tag('span', MessageLevelEnum::getValue(MessageLevelEnum::WARNING), [
                 'class' => "label label-warning label-sm",
             ]),
-            MessageLevelEnum::ERROR => self::tag('span', MessageLevelEnum::$listExplain[MessageLevelEnum::ERROR], [
+            MessageLevelEnum::ERROR => self::tag('span', MessageLevelEnum::getValue(MessageLevelEnum::ERROR), [
                 'class' => "label label-danger label-sm",
             ]),
         ];
@@ -223,8 +227,7 @@ class Html extends BaseHtml
      */
     public static function modelBaseCss()
     {
-        echo Html::cssFile(Yii::getAlias('@web') . '/resources/dist/css/AdminLTE.min.css?v=' . time());
-        echo Html::cssFile(Yii::getAlias('@web') . '/resources/dist/css/rageframe.css?v=' . time());
+        echo Html::cssFile(Yii::getAlias('@web') . '/resources/css/rageframe.css?v=' . time());
 
         Yii::$app->controller->view->registerCss(<<<Css
 .modal {

@@ -7,7 +7,7 @@ use common\helpers\EncryptionHelper;
 use common\helpers\StringHelper;
 
 /**
- * 签名加密测试控制器
+ * 签名加密控制器 - Test
  *
  * Class SignSecretKeyController
  * @package api\controllers
@@ -23,6 +23,7 @@ class SignSecretKeyController extends OnAuthController
      * @var string
      */
     protected $appId = 'doormen';
+
     /**
      * 密钥
      *

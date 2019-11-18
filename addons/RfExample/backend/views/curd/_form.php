@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);?>
             </div>
         </div>
-        <?= \backend\widgets\provinces\Provinces::widget([
+        <?= \common\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,
             'provincesName' => 'provinces',// 省字段名
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'areaName' => 'area',// 区字段名
             'template' => 'short'
         ]); ?>
-        <?= $form->field($model, 'address')->widget(\backend\widgets\selectmap\Map::class, [
+        <?= $form->field($model, 'address')->widget(\common\widgets\selectmap\Map::class, [
             'type' => 'amap', // amap高德;tencent:腾讯;baidu:百度
         ])->hint('点击地图某处才会获取到经纬度，否则默认北京'); ?>
         <?= $form->field($model, 'cover')->widget(Files::class, [
@@ -146,6 +146,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
         ]) ?>
-        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::$listExplain); ?>
+        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::getMap()); ?>
     </div>
 </div>

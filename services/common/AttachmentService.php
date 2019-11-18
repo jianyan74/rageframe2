@@ -18,24 +18,19 @@ use common\helpers\UploadHelper;
 class AttachmentService extends Service
 {
     /**
-     * @param $md5
-     * @return array|bool
+     * @param $data
+     * @return int
+     * @throws NotFoundHttpException
      */
-    public function findByMd5($md5)
+    public function create($data)
     {
-        $model = Attachment::find()
-            ->where(['md5' => $md5])
-            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->one();
-
-        if ($model) {
-            $model->updated_at = time();
-            $model->save();
-            return $model->toArray();
+        $model = new Attachment();
+        $model->attributes = $data;
+        if (!$model->save()) {
+            throw new NotFoundHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
         }
 
-        return false;
+        return $model->id;
     }
 
     /**
@@ -63,7 +58,7 @@ class AttachmentService extends Service
         foreach ($models as $model) {
             $files[] = [
                 'url' => $model['base_url'],
-                'mtime' => $model['created_at']
+                'mtime' => $model['created_at'],
             ];
         }
 
@@ -103,18 +98,24 @@ class AttachmentService extends Service
     }
 
     /**
-     * @param $data
-     * @return int
-     * @throws NotFoundHttpException
+     * @param $md5
+     * @return array|bool
      */
-    public function create($data)
+    public function findByMd5($md5)
     {
-        $model = new Attachment();
-        $model->attributes = $data;
-        if (!$model->save()) {
-            throw new NotFoundHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
+        $model = Attachment::find()
+            ->where(['md5' => $md5])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+
+        if ($model) {
+            $model->updated_at = time();
+            $model->save();
+
+            return $model->toArray();
         }
 
-        return $model->id;
+        return false;
     }
 }

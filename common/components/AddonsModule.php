@@ -53,14 +53,17 @@ class AddonsModule extends \yii\base\Module
         unset($arr[0], $arr[1]);
         $this->_route = implode('/', $arr);
 
-
         // 初始化模块
         AddonHelper::initAddon($name, $this->_route);
+        // 映射商户路由到总后台
+        if ($appId == AppEnum::MERCHANT && Yii::$app->params['addon']['is_merchant_route_map'] == true) {
+            $appId = AppEnum::BACKEND;
+        }
         // 解析路由
         AddonHelper::analysisRoute($this->_route, $appId);
         // 后台校验权限
-        $appId == AppEnum::BACKEND && $this->verify();
-        // 引导执行
+        in_array($appId, [AppEnum::BACKEND, AppEnum::MERCHANT]) && $this->verify();
+        // 执行引导
         $this->bootstrap();
 
         $controllerNamespace = [];
@@ -113,6 +116,7 @@ class AddonsModule extends \yii\base\Module
     public function createController($route)
     {
         $route = $this->_route;
+
         return parent::createController($route);
     }
 }

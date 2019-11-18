@@ -1,9 +1,9 @@
 <?php
 
+use common\enums\AppEnum;
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
-use common\enums\MessageLevelEnum;
 
 $this->title = '行为监控';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -30,6 +30,17 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
+                        ],
+                        [
+                            'attribute' => 'app_id',
+                            'filter' => Html::activeDropDownList($searchModel, 'app_id', AppEnum::getMap(), [
+                                'prompt' => '全部',
+                                'class' => 'form-control'
+                            ]),
+                            'value' => function ($model) {
+                                return AppEnum::getValue($model->app_id);
+                            },
+                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         'url',
                         [
@@ -72,7 +83,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'is_record_post',
-                                WhetherEnum::$listExplain, [
+                                WhetherEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -85,7 +96,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'level',
-                                MessageLevelEnum::$listExplain, [
+                                WhetherEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

@@ -3,7 +3,7 @@
 namespace services\common;
 
 use Yii;
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 use common\models\common\Provinces;
 use common\components\Service;
 use common\helpers\ArrayHelper;
@@ -16,27 +16,6 @@ use common\helpers\ArrayHelper;
 class ProvincesService extends Service
 {
     /**
-     * @return array|mixed|\yii\db\ActiveRecord[]
-     */
-    public function all()
-    {
-        // 获取缓存
-        if (!($data = Yii::$app->cache->get(CacheKeyEnum::COMMON_PROVINCES))) {
-            $data = Provinces::find()
-                ->select(['id', 'title', 'pid', 'level'])
-                ->where(['<=', 'level', 4])
-                ->orderBy('id asc')
-                ->asArray()
-                ->all();
-
-            Yii::$app->cache->set(CacheKeyEnum::COMMON_PROVINCES, $data, 60 * 60 * 24 * 30);
-        }
-
-        return $data;
-    }
-
-
-    /**
      * 获取省市区禁用状态
      *
      * @param array $provinceIds
@@ -46,7 +25,7 @@ class ProvincesService extends Service
      */
     public function getAreaTree(array $provinceIds, array $cityIds, array $areaIds)
     {
-        $address = $this->all();
+        $address = $this->findAllInCache();
 
         $allIds = [];
         foreach ($address as &$item) {
@@ -100,6 +79,123 @@ class ProvincesService extends Service
 
         unset($address, $regionalAll, $allIds);
         return $regroupAddress;
+    }
+
+    /**
+     * @param int $pid
+     * @return int|string
+     */
+    public function getCountByPid($pid = 0)
+    {
+        return Provinces::find()
+            ->select(['id'])
+            ->where(['pid' => $pid])
+            ->count();
+    }
+
+    /**
+     * @param $ids
+     * @return array|\yii\db\ActiveRecord[]
+     *
+     */
+    public function findByIds($ids)
+    {
+        return Provinces::find()
+            ->select(['id', 'title', 'pid', 'level'])
+            ->orderBy('id asc')
+            ->where(['in', 'id', $ids])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * @param int $pid
+     * @param string $level
+     * @return array
+     */
+    public function getCityMapByPid($pid = 0, $level = '')
+    {
+        return ArrayHelper::map($this->getCityByPid($pid, $level), 'id', 'title');
+    }
+
+    /**
+     * 根据父级ID返回信息
+     *
+     * @param int $pid
+     * @return array
+     */
+    public function getCityByPid($pid = 0, $level = '')
+    {
+        if ($pid === '') {
+            return [];
+        }
+
+       return Provinces::find()
+            ->where(['pid' => $pid])
+            ->orderBy('id asc')
+            ->select(['id', 'title', 'pid'])
+            ->andFilterWhere(['level' => $level])
+            ->cache(600)
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * 根据id获取区域名称
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getName($id)
+    {
+        if ($provinces = Provinces::findOne($id)) {
+            return $provinces['title'] ?? '';
+        }
+
+        return false;
+    }
+
+    /**
+     * 根据id数组获取区域名称
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getCityListName(array $ids)
+    {
+        if ($provinces = Provinces::find()->where(['in', 'id', $ids])->orderBy('id asc')->all()) {
+            $address = '';
+
+            foreach ($provinces as $province) {
+                $address .= $province['title'] . ' ';
+            }
+
+            return $address;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array|mixed|\yii\db\ActiveRecord[]
+     */
+    public function findAllInCache()
+    {
+        $cacheKey = CacheEnum::getPrefix('provinces');
+
+        // 获取缓存
+        if (!($data = Yii::$app->cache->get($cacheKey))) {
+            $data = Provinces::find()
+                ->select(['id', 'title', 'pid', 'level'])
+                ->where(['<=', 'level', 4])
+                ->orderBy('id asc')
+                ->asArray()
+                ->all();
+
+            Yii::$app->cache->set($cacheKey, $data, 60 * 60 * 24 * 30);
+        }
+
+        return $data;
     }
 
     /**
@@ -163,106 +259,5 @@ class ProvincesService extends Service
         ];
 
         return $region;
-    }
-
-    /**
-     * @param int $pid
-     * @return int|string
-     */
-    public function getCountByPid($pid = 0)
-    {
-        return Provinces::find()
-            ->select(['id'])
-            ->where(['pid' => $pid])
-            ->count();
-    }
-
-    /**
-     * @param $ids
-     * @return array|\yii\db\ActiveRecord[]
-     *
-     */
-    public function getAllByIds($ids)
-    {
-        return Provinces::find()
-            ->select(['id', 'title', 'pid', 'level'])
-            ->orderBy('id asc')
-            ->where(['in', 'id', $ids])
-            ->asArray()
-            ->all();
-    }
-
-    /**
-     * @param $titles
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getListByTitles($titles)
-    {
-        return Provinces::find()
-            ->select(['id', 'title', 'lng', 'lat'])
-            ->orderBy('id asc')
-            ->where(['in', 'title', $titles])
-            ->asArray()
-            ->all();
-    }
-
-    /**
-     * 根据父级ID返回信息
-     *
-     * @param int $pid
-     * @return array
-     */
-    public function getCityList($pid = 0, $level = '')
-    {
-        if ($pid === '') {
-            return [];
-        }
-
-        $model = Provinces::find()
-            ->where(['pid' => $pid])
-            ->orderBy('id asc')
-            ->select(['id', 'title', 'pid'])
-            ->andFilterWhere(['level' => $level])
-            ->cache(600)
-            ->asArray()
-            ->all();
-
-        return ArrayHelper::map($model, 'id', 'title');
-    }
-
-    /**
-     * 根据id获取区域名称
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function getName($id)
-    {
-        if ($provinces = Provinces::findOne($id)) {
-            return $provinces['title'];
-        }
-
-        return false;
-    }
-
-    /**
-     * 根据id数组获取区域名称
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function getCityListName(array $ids)
-    {
-        if ($provinces = Provinces::find()->where(['in', 'id', $ids])->orderBy('id asc')->all()) {
-            $address = '';
-
-            foreach ($provinces as $province) {
-                $address .= $province['title'] . ' ';
-            }
-
-            return $address;
-        }
-
-        return false;
     }
 }

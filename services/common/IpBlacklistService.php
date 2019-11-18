@@ -14,20 +14,6 @@ use common\models\common\IpBlacklist;
 class IpBlacklistService extends Service
 {
     /**
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getList()
-    {
-        return IpBlacklist::find()
-            ->select('ip')
-            ->where(['status' => StatusEnum::ENABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->cache(180)
-            ->asArray()
-            ->column();
-    }
-
-    /**
      * @param $ip
      * @param $remark
      */
@@ -37,5 +23,19 @@ class IpBlacklistService extends Service
         $model->ip = $ip;
         $model->remark = $remark;
         $model->save();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findIps()
+    {
+        return IpBlacklist::find()
+            ->select('ip')
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->cache(180)
+            ->asArray()
+            ->column();
     }
 }

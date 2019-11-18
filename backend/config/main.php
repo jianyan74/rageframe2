@@ -17,13 +17,9 @@ return [
         'common' => [
             'class' => 'backend\modules\common\Module',
         ],
-        /** ------ 系统模块 ------ **/
-        'sys' => [
-            'class' => 'backend\modules\sys\Module',
-        ],
-        /** ------ 微信模块 ------ **/
-        'wechat' => [
-            'class' => 'backend\modules\wechat\Module',
+        /** ------ 基础模块 ------ **/
+        'base' => [
+            'class' => 'backend\modules\base\Module',
         ],
         /** ------ 会员模块 ------ **/
         'member' => [
@@ -39,11 +35,13 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\sys\Manager',
+            'identityClass' => 'common\models\backend\Member',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
             'idParam' => '__backend',
-            'as afterLogin' => 'backend\behaviors\AfterLogin',
+            'on afterLogin' => function($event) {
+                Yii::$app->services->backendMember->lastLogin($event->identity);
+            },
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
@@ -73,8 +71,16 @@ return [
             // 'linkAssets' => true,
             'bundles' => [
                 'yii\web\JqueryAsset' => [
+                    'js' => [],
                     'sourcePath' => null,
-                    'js' => []
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],  // 去除 bootstrap.css
+                    'sourcePath' => null,
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => [],  // 去除 bootstrap.js
+                    'sourcePath' => null,
                 ],
             ],
         ],
@@ -101,11 +107,10 @@ return [
     'controllerMap' => [
         'file' => 'common\controllers\FileBaseController', // 文件上传公共控制器
         'ueditor' => 'common\widgets\ueditor\UeditorController', // 百度编辑器
-        'provinces' => 'backend\widgets\provinces\ProvincesController', // 省市区
+        'provinces' => 'common\widgets\provinces\ProvincesController', // 省市区
+        'select-map' => 'common\widgets\selectmap\MapController', // 经纬度选择
+        'cropper' => 'common\widgets\cropper\CropperController', // 图片裁剪
         'notify' => 'backend\widgets\notify\NotifyController', // 消息
-        'selector' => 'backend\widgets\selector\SelectorController', // 微信资源选择
-        'select-map' => 'backend\widgets\selectmap\MapController', // 经纬度选择
-        'cropper' => 'backend\widgets\cropper\CropperController', // 图片裁剪
     ],
     'params' => $params,
 ];

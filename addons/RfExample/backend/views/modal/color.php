@@ -9,14 +9,6 @@ $form = ActiveForm::begin([
     ]
 ]);
 ?>
-    <style>
-        .sp-replacer {
-            background: #fff;
-        }
-        .spectrum-group > .input-group-addon {
-            padding: 0;
-        }
-    </style>
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -24,7 +24,7 @@ class IndexController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index', 'test'];
+    protected $authOptional = ['index', 'test'];
 
     /**
      * Demo访问地址

@@ -2,9 +2,7 @@
 
 namespace common\models\common;
 
-use common\enums\AppEnum;
 use common\models\member\Member;
-use common\models\sys\Manager;
 
 /**
  * This is the model class for table "{{%common_log}}".
@@ -23,15 +21,32 @@ use common\models\sys\Manager;
  * @property string $header_data
  * @property string $ip ip地址
  * @property int $error_code 报错code
+ * @property int $user_agent
  * @property string $error_msg 报错信息
  * @property string $error_data 报错日志
  * @property string $req_id 对外id
+ * @property string $device 设备
+ * @property string $device_uuid 设备唯一号
+ * @property string $device_version 设备版本
  * @property int $status 状态(-1:已删除,0:禁用,1:正常)
  * @property int $created_at 创建时间
  * @property string $updated_at 修改时间
  */
 class Log extends \common\models\base\BaseModel
 {
+    const DEVICE_IOS = 'ios';
+    const DEVICE_ANDROID = 'android';
+    const DEVICE_OTHER = 'other';
+
+    /**
+     * @var array
+     */
+    public static $deviceExplain = [
+        self::DEVICE_IOS => '苹果系统',
+        self::DEVICE_ANDROID => '安卓系统',
+        self::DEVICE_OTHER => '其他',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -48,10 +63,11 @@ class Log extends \common\models\base\BaseModel
         return [
             [['merchant_id', 'user_id', 'error_code', 'status', 'created_at', 'updated_at', 'ip'], 'integer'],
             [['get_data', 'post_data', 'error_data', 'header_data'], 'safe'],
-            [['method'], 'string', 'max' => 20],
-            [['module', 'action', 'req_id', 'app_id'], 'string', 'max' => 50],
+            [['method', 'device_version', 'device_app_version'], 'string', 'max' => 20],
+            [['module', 'action', 'req_id', 'app_id', 'device_uuid'], 'string', 'max' => 50],
             [['controller'], 'string', 'max' => 100],
-            [['device'], 'string', 'max' => 200],
+            [['user_agent'], 'string', 'max' => 200],
+            [['device'], 'string', 'max' => 30],
             [['url', 'error_msg'], 'string', 'max' => 1000],
         ];
     }
@@ -80,6 +96,10 @@ class Log extends \common\models\base\BaseModel
             'error_msg' => '报错信息',
             'error_data' => '报错内容',
             'status' => '状态',
+            'device' => '设备类型',
+            'device_uuid' => '设备唯一码',
+            'device_version' => '设备系统版本',
+            'device_app_version' => '设备app版本',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
@@ -96,8 +116,16 @@ class Log extends \common\models\base\BaseModel
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getManager()
+    public function getBackendMember()
     {
-        return $this->hasOne(Manager::class, ['id' => 'user_id']);
+        return $this->hasOne(\common\models\backend\Member::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMerchantMember()
+    {
+        return $this->hasOne(\common\models\merchant\Member::class, ['id' => 'user_id']);
     }
 }

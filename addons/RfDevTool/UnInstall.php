@@ -4,7 +4,7 @@ namespace addons\RfDevTool;
 
 use Yii;
 use common\helpers\MigrateHelper;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 卸载

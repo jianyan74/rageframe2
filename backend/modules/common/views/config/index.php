@@ -1,5 +1,6 @@
 <?php
 
+use common\enums\ConfigTypeEnum;
 use common\helpers\Url;
 use common\helpers\Html;
 use yii\grid\GridView;
@@ -56,10 +57,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'label' => '属性',
                                 'attribute' => 'type',
                                 'value' => function ($model, $key, $index, $column) {
-                                    return Yii::$app->params['configTypeList'][$model->type];
+                                    return ConfigTypeEnum::getValue($model->type);
                                 },
                                 'filter' => Html::activeDropDownList($searchModel, 'type',
-                                    Yii::$app->params['configTypeList'], [
+                                    ConfigTypeEnum::getMap(), [
                                         'prompt' => '全部',
                                         'class' => 'form-control'
                                     ]

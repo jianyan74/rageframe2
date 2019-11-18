@@ -37,9 +37,9 @@ class CreditsLogController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['credit_type' => $credit_type])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->with('member');
 
         return $this->render($this->action->id, [

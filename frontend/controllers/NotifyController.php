@@ -105,8 +105,8 @@ class NotifyController extends Controller
         ])->notify();
 
         try {
+            /** @var \Omnipay\Alipay\Responses\AopCompletePurchaseResponse $response */
             $response = $request->send();
-
             if ($response->isPaid()) {
                 $message = Yii::$app->request->post();
                 $message['pay_fee'] = $message['total_amount'] * 100;

@@ -14,5 +14,5 @@ use common\helpers\Url;
             'server' => Url::to(['stat']),
             'height' => '400px'
         ]
-    ])?>
+    ]) ?>
 </div>

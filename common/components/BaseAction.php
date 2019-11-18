@@ -4,6 +4,7 @@ namespace common\components;
 
 use Yii;
 use yii\base\Model;
+use common\enums\AppEnum;
 
 /**
  * trait BaseAction
@@ -28,6 +29,11 @@ trait BaseAction
      */
     public function getMerchantId($constraint = false)
     {
+        // 总后台不允许开启多商户
+        if (Yii::$app->id == AppEnum::BACKEND) {
+            return '';
+        }
+
         if (false === $constraint && false === Yii::$app->params['merchantOpen']) {
             return '';
         }

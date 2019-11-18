@@ -17,7 +17,7 @@ class ImageHelper
      *
      * @param $imgSrc
      */
-    public static function defaultHeaderPortrait($imgSrc, $defaultImgSre = '/resources/dist/img/profile_small.jpg')
+    public static function defaultHeaderPortrait($imgSrc, $defaultImgSre = '/resources/img/profile_small.jpg')
     {
         return !empty($imgSrc) ? $imgSrc : Yii::getAlias('@web') . $defaultImgSre;
     }

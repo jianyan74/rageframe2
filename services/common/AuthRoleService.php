@@ -3,8 +3,7 @@
 namespace services\common;
 
 use Yii;
-use common\enums\AppEnum;
-use common\enums\AuthTypeEnum;
+use common\enums\TypeEnum;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\common\AuthRole;
@@ -28,18 +27,26 @@ class AuthRoleService extends Service
     protected $roles = [];
 
     /**
+     * 当前的角色所有权限
+     *
+     * @var array
+     */
+    protected $allAuthNames = [];
+
+    /**
      * 获取当前用户权限的下面的所有用户id
      *
+     * @param $app_id
      * @return array
      */
-    public function getChildIds($app_id = AppEnum::BACKEND)
+    public function getChildIds($app_id)
     {
         if (Yii::$app->services->auth->isSuperAdmin()) {
             return [];
         }
 
         $role = $this->getRole();
-        $childRoles = $this->getChildList($app_id, $role);
+        $childRoles = $this->getChilds($app_id, $role);
         $childRoleIds = ArrayHelper::getColumn($childRoles, 'id');
         if (!$childRoleIds) {
             return [-1];
@@ -60,7 +67,7 @@ class AuthRoleService extends Service
      *
      * @return array
      */
-    public function getChildList($app_id, array $role): array
+    public function getChilds($app_id, array $role): array
     {
         $where = [];
         if (!empty($role)) {
@@ -79,13 +86,14 @@ class AuthRoleService extends Service
     }
 
     /**
-     * @param int $id
-     * @param string $app_id 应用id
+     * 获取编辑的数据
+     *
+     * @param $id
+     * @param $allAuth
      * @return array
      */
-    public function getJsTreeData($id, $app_id)
+    public function getJsTreeData($id, $allAuth)
     {
-        $allAuth = $this->getAuth($app_id);
         $auth = $this->getAuthById($id);
 
         $addonNames = [];
@@ -93,10 +101,13 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限
         foreach ($allAuth as $item) {
-            if ($item['type'] == AuthTypeEnum::TYPE_DEFAULT) {
+            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
                 $formAuth[] = $item;
             } else {
-                $item['pid'] = $item['addons_name'];
+                if ($item['pid'] == 0) {
+                    $item['pid'] = $item['addons_name'];
+                }
+
                 $addonsFormAuth[] = $item;
                 $addonNames[$item['addons_name']] = $item['addons_name'];
             }
@@ -114,7 +125,7 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限ID
         foreach ($auth as $value) {
-            if ($value['type'] == AuthTypeEnum::TYPE_DEFAULT) {
+            if ($value['type'] == TypeEnum::TYPE_DEFAULT) {
                 $checkIds[] = $value['id'];
             } else {
                 $addonsCheckIds[] = $value['id'];
@@ -125,42 +136,13 @@ class AuthRoleService extends Service
     }
 
     /**
-     * 获取登录用户所有权限
-     *
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getAuth($app_id)
-    {
-        if ($app_id != AppEnum::BACKEND) {
-            return Yii::$app->services->authItem->getList($app_id);
-        }
-
-        if (Yii::$app->services->auth->isSuperAdmin()) {
-            return Yii::$app->services->authItem->getList();
-        }
-
-        if (!$role = $this->getRole()) {
-            return [];
-        }
-
-        // 获取当前角色的权限
-        $auth = AuthItemChild::find()
-            ->where(['in', 'role_id', $role['id']])
-            ->with(['item'])
-            ->asArray()
-            ->all();
-
-        return array_column($auth, 'item');
-    }
-
-    /**
      * 基于角色获取权限信息
      *
      * @param $role
      * @param string $addons_name
      * @return array
      */
-    public function getAuthByRole($role, $type = AuthTypeEnum::TYPE_DEFAULT, $addons_name = '')
+    public function getAuthByRole($role, $type = TypeEnum::TYPE_DEFAULT, $addons_name = '')
     {
         // 获取当前角色的权限
         $auth = AuthItemChild::find()
@@ -175,6 +157,39 @@ class AuthRoleService extends Service
     }
 
     /**
+     * 获取用户所有的权限 - 包含插件
+     *
+     * @param $role
+     * @return array
+     */
+    public function getAllAuthByRole($role)
+    {
+        if (!empty($this->allAuthNames)) {
+            return $this->allAuthNames;
+        }
+
+        // 获取当前角色的权限
+        $allAuth = AuthItemChild::find()
+            ->where(['role_id' => $role['id']])
+            ->andWhere(['app_id' => Yii::$app->id])
+            ->asArray()
+            ->all();
+
+        $addonsName = [];
+        foreach ($allAuth as $item) {
+            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
+                $this->allAuthNames[] = $item['name'];
+            } else {
+                !isset($addonsName[$item['addons_name']]) && $this->allAuthNames[] = $item['addons_name'];
+                $this->allAuthNames[] = $item['addons_name'] . ':' . $item['name'];
+                $addonsName[$item['addons_name']] = true;
+            }
+        }
+
+        return $this->allAuthNames;
+    }
+
+    /**
      * 获取角色名称
      *
      * @return array|mixed|string
@@ -182,11 +197,12 @@ class AuthRoleService extends Service
     public function getTitle()
     {
         $role = Yii::$app->services->authRole->getRole();
+
         return $role['title'] ?? '游客';
     }
 
     /**
-     * 获取权限
+     * 获取某角色的所有权限
      *
      * @param $id
      * @return array
@@ -209,7 +225,6 @@ class AuthRoleService extends Service
      * @param array $data 数据
      * @param string $type 类型
      * @param string $app_id 应用ID
-     * @return bool
      * @throws \yii\db\Exception
      */
     public function accredit($role_id, array $data, $type, $app_id)
@@ -218,11 +233,11 @@ class AuthRoleService extends Service
         AuthItemChild::deleteAll(['role_id' => $role_id, 'type' => $type]);
 
         if (empty($data)) {
-            return true;
+            return;
         }
 
         $rows = [];
-        $items = Yii::$app->services->authItem->getList($app_id, $data);
+        $items = Yii::$app->services->authItem->findAllByAppId($app_id, $data);
 
         foreach ($items as $value) {
             $rows[] = [
@@ -232,12 +247,13 @@ class AuthRoleService extends Service
                 $value['app_id'],
                 $value['type'],
                 $value['addons_name'],
-                $value['is_menu']
+                $value['is_menu'],
             ];
         }
 
         $field = ['role_id', 'item_id', 'name', 'app_id', 'type', 'addons_name', 'is_menu'];
-        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field, $rows)->execute();
+        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field,
+            $rows)->execute();
     }
 
     /**
@@ -267,15 +283,67 @@ class AuthRoleService extends Service
     }
 
     /**
+     * @param $app_id
+     * @return array
+     */
+    public function getLoginRoleChildUsers($app_id)
+    {
+        $role = $this->getRole();
+        $childRoles = $this->getChilds($app_id, $role);
+        $roles = ArrayHelper::itemsMerge($childRoles, $role['id'] ?? 0);
+        $level = isset($role['level']) ? $role['level'] + 1 : 1;
+
+        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($roles, 'id', 'title', $level), 'id', 'title');
+    }
+
+    /**
+     * 获取上级角色
+     *
+     * 注意:如果是其他应用则需要自行获取上级
+     *
+     * @param $id
+     * @return array
+     */
+    public function getDropDown($id, $app_id)
+    {
+        // 获取父级
+        $role = $this->getRole();
+        $childRoles = $this->getChilds($app_id, $role);
+        !empty($role) && $childRoles = ArrayHelper::merge([$role], $childRoles);
+        $childRoles = ArrayHelper::removeByValue($childRoles, $id);
+
+        $dropDownList = ArrayHelper::itemsMerge($childRoles, $role['pid'] ?? 0);
+        $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList, 'id', 'title', $role['level'] ?? 1), 'id', 'title');
+        Yii::$app->services->auth->isSuperAdmin() && $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
+
+        return $dropDownList;
+    }
+
+    /**
      * @param $id
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function getRoleById($id)
+    public function findById($id)
     {
         return AuthRole::find()
             ->where(['id' => $id])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->asArray()
             ->one();
+    }
+
+    /**
+     * 获取当前角色的子角色
+     *
+     * @return array
+     */
+    public function findAll($app_id, $merchant_id): array
+    {
+        return AuthRole::find()
+            ->where(['app_id' => $app_id])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $merchant_id])
+            ->orderBy('sort asc, created_at asc')
+            ->asArray()
+            ->all();
     }
 }

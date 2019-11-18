@@ -4,7 +4,7 @@ namespace addons\RfHelpers\common\components;
 
 use Yii;
 use yii\web\UnauthorizedHttpException;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * Bootstrap

@@ -24,7 +24,7 @@ class MemberController extends \yii\rest\ActiveController
      *
      * @var array
      */
-    protected $optional = [];
+    protected $authOptional = [];
 
     /**
      * 启始位移
@@ -56,7 +56,7 @@ class MemberController extends \yii\rest\ActiveController
         // 授权验证
         $behaviors['jwtAuth'] = [
             'class' => JWTAuth::class,
-            'optional' => $this->optional, // 不进行认证判断方法
+            'optional' => $this->authOptional, // 不进行认证判断方法
         ];
 
         return $behaviors;

@@ -169,12 +169,7 @@ class Files extends InputWidget
         // 阿里云js直传
         if (Attachment::DRIVE_OSS_JS == $this->config['formData']['drive']) {
             $path = $this->typeConfig['path'] . date($this->typeConfig['subName'], time()) . "/";
-            $oss = UploadDrive::getOssJsConfig(
-                $this->config['fileSingleSizeLimit'],
-                $path,
-                60 * 60 * 2
-            );
-
+            $oss = Yii::$app->uploadDrive->oss()->config($this->config['fileSingleSizeLimit'], $path, 60 * 60 * 2, $this->type);
             $this->config['server'] = $oss['host'];
             $this->config['formData'] = ArrayHelper::merge($this->config['formData'] , $oss);
         }

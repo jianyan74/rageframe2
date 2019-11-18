@@ -6,11 +6,12 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 
 /**
  * Class OnAuthController
  * @package oauth2\controllers
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass
  * @author jianyan74 <751393839@qq.com>
  */
 class OnAuthController extends ActiveController
@@ -79,7 +80,7 @@ class OnAuthController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         $model->client_id = Yii::$app->user->identity->client_id;
         if (!$model->save()) {
-            return ResultDataHelper::api(422, $this->getError($model));
+            return ResultHelper::api(422, $this->getError($model));
         }
 
         return $model;
@@ -97,7 +98,7 @@ class OnAuthController extends ActiveController
         $model = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
         if (!$model->save()) {
-            return ResultDataHelper::api(422, $this->getError($model));
+            return ResultHelper::api(422, $this->getError($model));
         }
 
         return $model;

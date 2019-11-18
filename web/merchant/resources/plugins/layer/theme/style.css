@@ -1,0 +1,20 @@
+.layui-layer-btn .layui-layer-btn0{
+    background-color: #62a8ea;
+    border-color: #62a8ea;
+}
+
+.layui-layer-btn a {
+    height: 28px;
+    margin: 5px 5px 0;
+    padding: 15px 12px;
+    line-height: 0;
+    border: 1px solid #dedede;
+    border-radius: 3px;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.layui-layer-btn a{
+    color: #76838f;
+}

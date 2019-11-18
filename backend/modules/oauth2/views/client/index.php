@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 use common\helpers\Html;
 
-$this->title = '客户授权';
+$this->title = '开放授权 - OAuth2';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 
 ?>

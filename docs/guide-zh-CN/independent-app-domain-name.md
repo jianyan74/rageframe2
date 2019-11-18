@@ -15,7 +15,8 @@
 backend/web
 frontend/web
 api/web
-wechat/web
+html5/web
+merchant/web
 oauth2/web
 ```
 
@@ -24,7 +25,8 @@ oauth2/web
 ```
 web/resources => frontend/web/resources
 web/backend/resources => backend/web/resources
-web/wechat/resources => wechat/web/resources
+web/html5/resources => html5/web/resources
+web/merchant/resources => merchant/web/resources
 web/oauth2/resources => oauth2/web/resources
 ```
 
@@ -36,7 +38,8 @@ web/oauth2/resources => oauth2/web/resources
 ```
 127.0.0.1       rageframe.local
 127.0.0.1       backend.rageframe.local
-127.0.0.1       wechat.rageframe.local
+127.0.0.1       html5.rageframe.local
+127.0.0.1       merchant.rageframe.local
 127.0.0.1       api.rageframe.local
 127.0.0.1       oauth2.rageframe.local
 127.0.0.1       storage.rageframe.local
@@ -63,7 +66,8 @@ Yii::setAlias('@attachurl', 'http://storage.rageframe.local/attachment');
 ```
 Yii::setAlias('@backendUrl', 'http://backend.rageframe.local');
 Yii::setAlias('@frontendUrl', 'http://frontend.rageframe.local');
-Yii::setAlias('@wechatUrl', 'http://wechat.rageframe.local');
+Yii::setAlias('@html5Url', 'http://html5.rageframe.local');
+Yii::setAlias('@merchantUrl', 'http://merchant.rageframe.local');
 Yii::setAlias('@apiUrl', 'http://api.rageframe.local');
 Yii::setAlias('@oauth2Url', 'http://oauth2.rageframe.local');
 ```
