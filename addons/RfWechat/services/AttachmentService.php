@@ -136,7 +136,7 @@ class AttachmentService extends Service
             $listTmp['type'] = $model['media_type'];
             $listTmp['imgUrl'] = '';
             if ($media_type == Attachment::TYPE_IMAGE) {
-                $listTmp['imgUrl'] = Url::to(['addons/rf-wechat/analysis/image', 'attach' => $model['media_url']]);
+                $listTmp['imgUrl'] = Url::to(['analysis/image', 'attach' => $model['media_url']]);
             }
 
             $list[] = $listTmp;
@@ -160,7 +160,7 @@ class AttachmentService extends Service
     {
         $wechatArticleList = [];
         // 获取图片的链接地址
-        $localImageUrl = Url::to(['addons/rf-wechat/analysis/image']) . "?attach=";
+        $localImageUrl = Url::to(['analysis/image']) . "?attach=";
         foreach ($list as $key => &$item) {
             $item['content'] = StringHelper::replace($localImageUrl, '', trim($item['content']));
             $item['thumb_url'] = StringHelper::replace($localImageUrl, '', trim($item['thumb_url']));
