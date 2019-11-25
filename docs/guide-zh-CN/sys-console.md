@@ -19,7 +19,7 @@ yii pull-remind/sys
 yii addons/rf-wechat/msg-history/index
 
 // 定时群发微信消息(需安装微信插件)
-yii addons/rf-wechat/send-message
+yii addons/rf-wechat/send-message/index
 ```
 
 ### 数据迁移

@@ -65,11 +65,18 @@ class SiteController extends BaseController
     }
 
     /**
-     * 生成微信JSAPI支付的Demo方法 默认禁止外部访问 测试请修改方法类型
+     * 生成微信JSAPI支付的Demo方法
+     *
+     * 默认禁止外部访问
+     * 测试请修改方法类型
+     *
+     * 注意：请开启微信的安全支付路径
+     * 域名/html5/site
      *
      * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \yii\base\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function actionWechatPay()
     {

@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <tr>
-                        <td width="150px">系统全称</td>
+                        <td>系统全称</td>
                         <td><?= Yii::$app->params['exploitFullName']; ?></td>
                     </tr>
                     <tr>
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         <td><?= Yii::$app->version; ?></td>
                     </tr>
                     <tr>
-                        <td width="150px">Yii2版本</td>
+                        <td>Yii2版本</td>
                         <td><?= Yii::getVersion(); ?><?php if (YII_DEBUG) echo ' (开发模式)'; ?></td>
                     </tr>
                     <tr>

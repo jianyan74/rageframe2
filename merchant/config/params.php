@@ -8,6 +8,8 @@ return [
 
     // 多商户开启
     'merchantOpen' => true,
+    // 登陆后的当前商户信息
+    'merchant' => '',
 
     /** ------ 总管理员配置 ------ **/
     'adminAccount' => '0',// 系统管理员账号id

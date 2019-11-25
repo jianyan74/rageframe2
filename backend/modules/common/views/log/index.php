@@ -50,6 +50,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 return Yii::$app->services->backend->getUserName($model);
                             },
                             'filter' => false, //不显示搜索框
+                            'format' => 'raw',
                         ],
                         'url',
                         [

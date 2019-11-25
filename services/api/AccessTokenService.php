@@ -113,8 +113,10 @@ class AccessTokenService extends Service
 
         if ($model = $this->findByAccessToken($access_token)) {
             $model->status = StatusEnum::DISABLED;
-            $model->save();
+            return $model->save();
         }
+
+        return false;
     }
 
     /**

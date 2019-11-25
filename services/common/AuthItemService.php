@@ -2,6 +2,7 @@
 
 namespace services\common;
 
+use common\enums\AuthMenuEnum;
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
@@ -97,12 +98,8 @@ class AuthItemService extends Service
                 $menu = ArrayHelper::getColumn(ArrayHelper::getRowsByItemsMerge($menu, 'child'), 'route');
             }
 
-            $is_menu = 1;
-            // 是否菜单被移除
-            if (in_array($key, $removeAppIds)) {
-                $is_menu = 2;
-            }
-
+            // 菜单类型
+            $is_menu = in_array($key, $removeAppIds) ? AuthMenuEnum::TOP : AuthMenuEnum::LEFT;
             $allAuth = ArrayHelper::merge($allAuth, $this->regroupByAddonsData($item, $menu, $is_menu, $name, $key));
         }
 

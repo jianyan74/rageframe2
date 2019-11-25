@@ -49,7 +49,12 @@ class Init implements BootstrapInterface
             $identity = Yii::$app->user->identity;
             $this->afreshLoad($identity->merchant_id ?? $this->default_merchant_id);
         } else {
-            $this->afreshLoad(Yii::$app->request->get('merchant_id', $this->default_merchant_id));
+            $merchant_id = Yii::$app->request->headers->get('merchant-id', '');
+            if (empty($merchant_id)) {
+                $merchant_id = Yii::$app->request->get('merchant_id', $this->default_merchant_id);
+            }
+
+            $this->afreshLoad($merchant_id);
         }
     }
 

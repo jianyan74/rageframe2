@@ -77,7 +77,7 @@ class AuthItemController extends BaseController
 
         return $this->renderAjax($this->viewPrefix . 'auth-item/ajax-edit', [
             'model' => $model,
-            'dropDownList' => Yii::$app->services->authItem->getDropDownForEdit($id),
+            'dropDownList' => Yii::$app->services->authItem->getDropDownForEdit(AppEnum::MERCHANT, $id),
         ]);
     }
 }

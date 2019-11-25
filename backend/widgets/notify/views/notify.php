@@ -34,6 +34,6 @@ use common\helpers\Url;
             </ul>
         </li>
         <!-- 验证权限 -->
-        <li class="footer"><a href="<?= Url::to(['/notify/announce']); ?>" class="J_menuItem" onclick="$('body').click();">查看消息</a></li>
+        <li class="footer"><a href="<?= Url::to(['/notify/remind']); ?>" class="J_menuItem" onclick="$('body').click();">查看消息</a></li>
     </ul>
 </li>

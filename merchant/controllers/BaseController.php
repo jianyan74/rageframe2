@@ -2,6 +2,7 @@
 
 namespace merchant\controllers;
 
+use common\enums\StatusEnum;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -51,6 +52,15 @@ class BaseController extends Controller
         if (!parent::beforeAction($action)) {
             return false;
         }
+
+        // 判断商户的有效性
+        if (!($merchant = Yii::$app->services->merchant->findByLogin()) || $merchant->status != StatusEnum::ENABLED) {
+            Yii::$app->user->logout();
+
+            throw new UnauthorizedHttpException('对不起，您还无法登陆请联系管理员');
+        }
+
+        Yii::$app->params['merchant'] = $merchant;
 
         // 每页数量
         $this->pageSize = Yii::$app->request->get('per-page', 10);

@@ -1,5 +1,7 @@
 <?php
 
+use common\enums\AppEnum;
+
 echo "<?php\n";
 ?>
 
@@ -19,7 +21,7 @@ class BaseController extends AddonsController
     /**
     * @var string
     */
-<?php if ($appID == 'merchant'){ ?>
+<?php if ($appID == AppEnum::MERCHANT || $appID == AppEnum::BACKEND ){ ?>
     // public $layout = "@addons/<?= $model->name;?>/<?= $appID ?>/views/layouts/main";
 <?php } else { ?>
     public $layout = "@addons/<?= $model->name;?>/<?= $appID ?>/views/layouts/main";

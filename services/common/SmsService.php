@@ -109,7 +109,7 @@ class SmsService extends Service
     public function realSend($mobile, $code, $usage, $member_id = 0)
     {
         $template = Yii::$app->debris->config('sms_aliyun_template');
-        !empty($template) && $template = ArrayHelper::map(unserialize($template), 'group', 'template');
+        !empty($template) && $template = ArrayHelper::map(Json::decode($template), 'group', 'template');
         $templateID = $template[$usage] ?? '';
 
         try {
