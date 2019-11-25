@@ -13,7 +13,7 @@ use common\models\common\AuthAssignment;
  * This is the model class for table "{{%merchant_member}}".
  *
  * @property int $id
- * @property string $merchant_id 商户id
+ * @property int $merchant_id 商户id
  * @property string $username 帐号
  * @property string $password_hash 密码
  * @property string $auth_key 授权令牌

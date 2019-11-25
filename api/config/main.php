@@ -80,6 +80,7 @@ return [
                         'v1/common/provinces',
                         'v1/member/member',
                         'v1/member/address',
+                        'v1/member/invoice',
                         'v1/member/auth',
                         // 版本2
                         'v2/default', // 默认测试入口

@@ -2,9 +2,11 @@
 
 namespace merchant\forms;
 
+use common\enums\StatusEnum;
 use Yii;
 use common\helpers\StringHelper;
 use common\models\merchant\Member;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Class LoginForm
@@ -37,6 +39,7 @@ class LoginForm extends \common\models\forms\LoginForm
             ['rememberMe', 'boolean'],
             ['password', 'validatePassword'],
             ['password', 'validateIp'],
+            ['password', 'validateMerchant'],
             ['verifyCode', 'captcha', 'on' => 'captchaRequired'],
         ];
     }
@@ -69,6 +72,19 @@ class LoginForm extends \common\models\forms\LoginForm
                 Yii::$app->services->actionLog->create('login', '限制IP登录', false);
 
                 $this->addError($attribute, '登录失败');
+            }
+        }
+    }
+
+    /**
+     * @param $attribute
+     */
+    public function validateMerchant($attribute)
+    {
+        /** @var Member $user */
+        if ($user = $this->getUser()) {
+            if (!($merchant = Yii::$app->services->merchant->findById($user->merchant_id)) || $merchant->status != StatusEnum::ENABLED) {
+                $this->addError($attribute, '无法登陆请联系管理员');
             }
         }
     }

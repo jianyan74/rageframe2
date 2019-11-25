@@ -20,6 +20,7 @@ use common\components\Service;
  * @property \services\member\AuthService $memberAuth 会员第三方授权
  * @property \services\member\AccountService $memberAccount 会员账号
  * @property \services\member\AddressService $memberAddress 会员收货地址
+ * @property \services\member\InvoiceService $memberInvoice 会员发票
  * @property \services\member\CreditsLogService $memberCreditsLog 会员积分/余额变动日志
  * @property \services\common\ActionLogService $actionLog 行为日志
  * @property \services\common\ActionBehaviorService $actionBehavior 可被记录的行为
@@ -66,6 +67,7 @@ class Application extends Service
         'memberAuth' => 'services\member\AuthService',
         'memberAccount' => 'services\member\AccountService',
         'memberAddress' => 'services\member\AddressService',
+        'memberInvoice' => 'services\member\InvoiceService',
         'memberCreditsLog' => 'services\member\CreditsLogService',
         /** ------ 商户 ------ **/
         'merchant' => 'services\merchant\MerchantService',

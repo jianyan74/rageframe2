@@ -3,6 +3,7 @@
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 use common\enums\GenderEnum;
+use common\helpers\Html;
 
 $actionLog = Yii::$app->services->actionLog->findByAppId(Yii::$app->id, $model['id'], 10);
 

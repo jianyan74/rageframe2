@@ -192,7 +192,7 @@ class ProvincesService extends Service
                 ->asArray()
                 ->all();
 
-            Yii::$app->cache->set($cacheKey, $data, 60 * 60 * 24 * 30);
+            Yii::$app->cache->set($cacheKey, $data, 60 * 60 * 24 * 24);
         }
 
         return $data;

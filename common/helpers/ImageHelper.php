@@ -13,6 +13,18 @@ use yii\helpers\Html;
 class ImageHelper
 {
     /**
+     * 默认图片
+     *
+     * @param $imgSrc
+     * @param string $defaultImgSre
+     * @return string
+     */
+    public static function default($imgSrc, $defaultImgSre = '/resources/img/error.png')
+    {
+        return !empty($imgSrc) ? $imgSrc : Yii::getAlias('@web') . $defaultImgSre;
+    }
+
+    /**
      * 默认头像
      *
      * @param $imgSrc

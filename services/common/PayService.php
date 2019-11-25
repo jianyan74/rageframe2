@@ -44,6 +44,7 @@ class PayService extends Service
 
         // 交易类型
         $tradeType = $payForm->tradeType;
+
         return Yii::$app->pay->wechat->$tradeType($order);
     }
 
@@ -58,7 +59,7 @@ class PayService extends Service
         $config = [
             'notify_url' => $payForm->notifyUrl, // 支付通知回调地址
             'return_url' => $payForm->returnUrl, // 买家付款成功跳转地址
-            'sandbox' => false
+            'sandbox' => false,
         ];
 
         // 生成订单
@@ -70,8 +71,9 @@ class PayService extends Service
 
         // 交易类型
         $tradeType = $payForm->tradeType;
+
         return [
-            'config' => Yii::$app->pay->alipay($config)->$tradeType($order)
+            'config' => Yii::$app->pay->alipay($config)->$tradeType($order),
         ];
     }
 
@@ -98,20 +100,23 @@ class PayService extends Service
 
         // 交易类型
         $tradeType = $payForm->tradeType;
+
         return Yii::$app->pay->union($config)->$tradeType($order);
     }
 
     /**
      * @param PayForm $payForm
+     * @param $baseOrder
      * @return array
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \yii\base\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function miniProgram(PayForm $payForm, $baseOrder)
     {
         // 设置appid
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
-            'app_id' => Yii::$app->debris->config('miniprogram_appid')
+            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
         ]);
 
         $orderData = [
@@ -126,6 +131,7 @@ class PayService extends Service
 
         $payment = Yii::$app->wechat->payment;
         $result = $payment->order->unify($orderData);
+
         return $payment->jssdk->sdkConfig($result['prepay_id']);
     }
 

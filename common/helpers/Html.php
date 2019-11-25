@@ -248,11 +248,15 @@ Css
      */
     protected static function beforVerify($route)
     {
+        // 未登录直接放行
+        if (Yii::$app->user->isGuest) {
+            return true;
+        }
+
         is_array($route) && $route = $route[0];
 
-        $prefix = '';
-        substr("$route", 0, 1) != '/' && $prefix = '/';
-        $route = $prefix . Url::getAuthUrl($route);
+        $route = Url::getAuthUrl($route);
+        substr("$route", 0, 1) != '/' && $route = '/' . $route;
 
         // 判断是否在模块内容
         if (true === Yii::$app->params['inAddon']) {

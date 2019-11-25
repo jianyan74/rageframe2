@@ -87,7 +87,7 @@ class ActiveController extends \yii\rest\ActiveController
                  * yii\filters\auth\HttpHeaderAuth::class,
                  */
                 // HttpBasicAuth::class,
-                // HttpBearerAuth::class,
+                HttpBearerAuth::class,
                 HttpHeaderAuth::class,
                 [
                     'class' => QueryParamAuth::class,
@@ -119,6 +119,20 @@ class ActiveController extends \yii\rest\ActiveController
         // ];
 
         return $behaviors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET', 'HEAD', 'OPTIONS'],
+            'view' => ['GET', 'HEAD', 'OPTIONS'],
+            'create' => ['POST', 'OPTIONS'],
+            'update' => ['PUT', 'PATCH', 'OPTIONS'],
+            'delete' => ['DELETE', 'OPTIONS'],
+        ];
     }
 
     /**

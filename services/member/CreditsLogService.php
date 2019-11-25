@@ -17,7 +17,7 @@ use common\models\member\Account;
 class CreditsLogService extends Service
 {
     /**
-     * 类型
+     * 字段类型
      *
      * @var
      */
@@ -34,6 +34,13 @@ class CreditsLogService extends Service
     protected $newNum;
 
     /**
+     * 累计字段
+     *
+     * @var string
+     */
+    protected $accumulate;
+
+    /**
      * 增加积分
      *
      * @param CreditsLogForm $creditsLogForm
@@ -41,24 +48,31 @@ class CreditsLogService extends Service
      */
     public function incrInt(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num <= 0) {
+        if ($creditsLogForm->num < 0) {
+            return;
+        }
+
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        if ($creditsLogForm->num == 0) {
+            $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
+            $this->oldNum = $account->user_integral;
+            $this->newNum = $account->user_integral;
+            $this->create($creditsLogForm);
+
             return;
         }
 
         $creditsLogForm->num = abs($creditsLogForm->num);
-
-        /** @var Account $account */
-        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
         $this->oldNum = $account->user_integral;
         $account->user_integral += $creditsLogForm->num;
-        $account->accumulate_integral += $creditsLogForm->num;
+        $this->accumulate = 'accumulate_integral';
         $this->newNum = $account->user_integral;
 
-        if (!$account->save()) {
-            throw new NotFoundHttpException($this->getError($account));
-        }
-
+        // 更新账户
+        $this->updateAccount($account);
+        // 记录日志
         $this->create($creditsLogForm);
     }
 
@@ -71,13 +85,22 @@ class CreditsLogService extends Service
      */
     public function decrInt(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num <= 0) {
+        if ($creditsLogForm->num < 0) {
             return;
         }
 
-        $creditsLogForm->num = - abs($creditsLogForm->num);
         /** @var Account $account */
         $account = $creditsLogForm->member->account;
+        if ($creditsLogForm->num == 0) {
+            $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
+            $this->oldNum = $account->user_integral;
+            $this->newNum = $account->user_integral;
+            $this->create($creditsLogForm);
+
+            return;
+        }
+
+        $creditsLogForm->num = -abs($creditsLogForm->num);
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
         $this->oldNum = $account->user_integral;
         $account->user_integral += $creditsLogForm->num;
@@ -87,10 +110,9 @@ class CreditsLogService extends Service
             throw new NotFoundHttpException('积分不足');
         }
 
-        if (!$account->save()) {
-            throw new NotFoundHttpException($this->getError($account));
-        }
-
+        // 更新账户
+        $this->updateAccount($account);
+        // 记录日志
         $this->create($creditsLogForm);
     }
 
@@ -102,23 +124,32 @@ class CreditsLogService extends Service
      */
     public function incrMoney(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num <= 0) {
+        if ($creditsLogForm->num < 0) {
+            return;
+        }
+
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 增加金额为0不变更
+        if ($creditsLogForm->num == 0) {
+            $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
+            $this->oldNum = $account->user_money;
+            $this->newNum = $account->user_money;
+            $this->create($creditsLogForm);
+
             return;
         }
 
         $creditsLogForm->num = abs($creditsLogForm->num);
-        /** @var Account $account */
-        $account = $creditsLogForm->member->account;
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
         $this->oldNum = $account->user_money;
         $account->user_money += $creditsLogForm->num;
-        $account->accumulate_money += $creditsLogForm->num;
+        $this->accumulate = 'accumulate_money';
         $this->newNum = $account->user_money;
 
-        if (!$account->save()) {
-            throw new NotFoundHttpException($this->getError($account));
-        }
-
+        // 更新账户
+        $this->updateAccount($account);
+        // 记录日志
         $model = $this->create($creditsLogForm);
         $creditsLogForm->map_id = $model->id;
     }
@@ -131,13 +162,23 @@ class CreditsLogService extends Service
      */
     public function decrMoney(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num <= 0) {
+        if ($creditsLogForm->num < 0) {
             return;
         }
 
-        $creditsLogForm->num = - abs($creditsLogForm->num);
         /** @var Account $account */
         $account = $creditsLogForm->member->account;
+        // 消费金额为0不变更
+        if ($creditsLogForm->num == 0) {
+            $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
+            $this->oldNum = $account->user_money;
+            $this->newNum = $account->user_money;
+            $this->create($creditsLogForm);
+
+            return;
+        }
+
+        $creditsLogForm->num = -abs($creditsLogForm->num);
         $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
         $this->oldNum = $account->user_money;
         $account->user_money += $creditsLogForm->num;
@@ -147,12 +188,32 @@ class CreditsLogService extends Service
             throw new NotFoundHttpException('余额不足');
         }
 
-        if (!$account->save()) {
-            throw new NotFoundHttpException($this->getError($account));
-        }
-
+        // 更新账户
+        $this->updateAccount($account);
+        // 记录日志
         $model = $this->create($creditsLogForm);
         $creditsLogForm->map_id = $model->id;
+    }
+
+    /**
+     * 更新账户，尽量不拒绝，宁可记录不正确
+     *
+     * @param Account $account
+     * @throws NotFoundHttpException
+     */
+    protected function updateAccount(Account $account)
+    {
+        $amount = $this->newNum - $this->oldNum;
+
+        if ($amount > 0) {
+            if (!$account->updateAllCounters([$this->creditType => $amount, $this->accumulate => $amount], ['id' => $account->id])) {
+                throw new NotFoundHttpException('系统繁忙');
+            }
+        } else {
+            if (!$account->updateAllCounters([$this->creditType => $amount], ['and', ['id' => $account->id], ['>=', $this->creditType, $amount]])) {
+                throw new NotFoundHttpException('余额不足');
+            }
+        }
     }
 
     /**

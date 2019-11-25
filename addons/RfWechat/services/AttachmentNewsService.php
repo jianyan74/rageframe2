@@ -46,7 +46,7 @@ class AttachmentNewsService extends Service
             $listTmp['key'] = $model['attachment_id'];
             $listTmp['title'] = $model['title'];
             $listTmp['type'] = Attachment::TYPE_IMAGE;
-            $listTmp['imgUrl'] = Url::to(['addons/rf-wechat/analysis/image', 'attach' => $model['thumb_url']]);
+            $listTmp['imgUrl'] = Url::to(['analysis/image', 'attach' => $model['thumb_url']]);
 
             $list[] = $listTmp;
             unset($listTmp);
@@ -83,7 +83,7 @@ class AttachmentNewsService extends Service
             ->all();
 
         foreach ($list as &$item) {
-            $item['thumb_url'] = urldecode(Url::to(['addons/rf-wechat/analysis/image', 'attach' => $item['thumb_url']]));
+            $item['thumb_url'] = urldecode(Url::to(['analysis/image', 'attach' => $item['thumb_url']]));
             preg_match_all('/<img[^>]*src\s*=\s*([\'"]?)([^\'" >]*)\1/isu', $item['content'], $match);
 
             $match_arr = [];
@@ -92,7 +92,7 @@ class AttachmentNewsService extends Service
             }
 
             foreach ($match_arr as $src) {
-                $url = Url::to(['addons/rf-wechat/analysis/image', 'attach' => $src]);
+                $url = Url::to(['analysis/image', 'attach' => $src]);
                 $url = urldecode($url);
                 $item['content'] = str_replace($src, $url, $item['content']);
             }

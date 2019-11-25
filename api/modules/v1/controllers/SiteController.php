@@ -66,7 +66,7 @@ class SiteController extends OnAuthController
             return ResultHelper::api(200, '退出成功');
         }
 
-        return ResultHelper::api(200, '退出失败');
+        return ResultHelper::api(422, '退出失败');
     }
 
     /**
