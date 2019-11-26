@@ -53,6 +53,11 @@ class UploadHelper
     protected $drive = 'local';
 
     /**
+     * 是否写表，默认为true
+     * @var bool
+     */
+    protected $ifWriteTable = true;
+    /**
      * 拿取需要的数据
      *
      * @var array
@@ -125,7 +130,9 @@ class UploadHelper
             $this->drive = 'local';
             $this->isCut = true;
         }
-
+        if(isset($config['ifWriteTable'])){
+            $this->ifWriteTable = $config['ifWriteTable']=="false"?false:true;
+        }
         $drive = $this->drive;
         $this->uploadDrive = Yii::$app->uploadDrive->$drive([
             'superaddition' => $superaddition
@@ -645,22 +652,25 @@ class UploadHelper
         // 获取上传路径
         $this->baseInfo = $this->uploadDrive->getUrl($this->baseInfo, $this->config['fullPath']);
 
-        // 写入数据库
-        $attachment_id = Yii::$app->services->attachment->create([
-            'drive' => $this->drive,
-            'upload_type' => $this->type,
-            'specific_type' => $this->baseInfo['type'],
-            'size' => $this->baseInfo['size'],
-            'width' => $this->baseInfo['width'],
-            'height' => $this->baseInfo['height'],
-            'extension' => $this->baseInfo['extension'],
-            'name' => $this->baseInfo['name'],
-            'md5' => $this->config['md5'] ?? '',
-            'base_url' => $this->baseInfo['url'],
-            'path' => $path
-        ]);
+        if($this->ifWriteTable == false){
 
-        $this->baseInfo['id'] = $attachment_id;
+        }else{
+            // 写入数据库
+            $attachment_id = Yii::$app->services->attachment->create([
+                'drive' => $this->drive,
+                'upload_type' => $this->type,
+                'specific_type' => $this->baseInfo['type'],
+                'size' => $this->baseInfo['size'],
+                'width' => $this->baseInfo['width'],
+                'height' => $this->baseInfo['height'],
+                'extension' => $this->baseInfo['extension'],
+                'name' => $this->baseInfo['name'],
+                'md5' => $this->config['md5'] ?? '',
+                'base_url' => $this->baseInfo['url'],
+                'path' => $path
+            ]);
+            $this->baseInfo['id'] = $attachment_id;
+        }
         $this->baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($this->baseInfo['size'], 2);
         $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'], $this->type);
 

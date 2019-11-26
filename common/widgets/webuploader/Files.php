@@ -41,7 +41,11 @@ class Files extends InputWidget
      * @var string
      */
     public $theme = 'default';
-
+    /**
+     * 是否写表，默认为true
+     * @var bool
+     */
+    protected $ifWriteTable = true;
     /**
      * 默认主题配置
      *
@@ -85,6 +89,10 @@ class Files extends InputWidget
             'sortable' => true, // 是否开启排序
         ], $this->themeConfig);
 
+        if(isset($this->config["ifWriteTable"])){
+            $this->ifWriteTable = $this->config["ifWriteTable"];
+        }
+
         $this->config = ArrayHelper::merge([
             'compress' => false, // 压缩
             'auto' => false, // 自动上传
@@ -92,6 +100,7 @@ class Files extends InputWidget
                 'guid' => null,
                 'md5' => null,
                 'drive' => $this->typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
+                'ifWriteTable' => $this->ifWriteTable,
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,

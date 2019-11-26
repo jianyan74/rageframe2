@@ -169,6 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'callback' => 'setUploadedImg',
                 'independentUrl' => true,
+                'ifWriteTable'=>false, // 不写表
             ],
         ])?>
     </div>
