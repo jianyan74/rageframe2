@@ -10,7 +10,7 @@ $value = isset($row['value']['data']) ? Json::decode($row['value']['data']) : $r
 <div class="form-group">
     <?= Html::label($row['title'], $row['name'], ['class' => 'control-label demo']); ?>
     <?php if ($row['is_hide_remark'] != StatusEnum::ENABLED) { ?>
-        <small><?= Html::decode(Html::encode($row['remark'])) ?></small>
+        <small><?= \yii\helpers\HtmlPurifier::process($row['remark']) ?></small>
     <?php } ?>
     <div class="col-sm-push-10">
         <?= Html::checkboxList('config[' . $row['name'] . ']', $value, $option); ?>

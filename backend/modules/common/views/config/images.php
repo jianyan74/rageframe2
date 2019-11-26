@@ -9,7 +9,7 @@ use common\enums\StatusEnum;
 <div class="form-group" style="padding-left: -15px">
     <?= Html::label($row['title'], $row['name'], ['class' => 'control-label demo']); ?>
     <?php if ($row['is_hide_remark'] != StatusEnum::ENABLED) { ?>
-        <small><?= Html::decode(Html::encode($row['remark'])) ?></small>
+        <small><?= \yii\helpers\HtmlPurifier::process($row['remark']) ?></small>
     <?php } ?>
     <div class="col-sm-push-10">
         <?= \common\widgets\webuploader\Files::widget([
