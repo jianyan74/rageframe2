@@ -99,6 +99,7 @@ class Files extends InputWidget
             'formData' => [
                 'guid' => null,
                 'md5' => null,
+                'writeTable' => true,   // 写表
                 'drive' => $this->typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
                 'ifWriteTable' => $this->ifWriteTable,
             ], // 表单参数

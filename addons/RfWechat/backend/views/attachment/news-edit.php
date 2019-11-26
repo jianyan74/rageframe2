@@ -94,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 'value' => '',
                                                 'formData' => [
                                                     'drive' => 'local',
+                                                    'writeTable' => false,
                                                     'showDrive' => 'WechatAttachment',
                                                 ],
                                                 'config' => [
@@ -166,6 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'formData' => [
                     'drive' => 'local',
+                    'writeTable'=>false, // 不写表
                 ],
                 'callback' => 'setUploadedImg',
                 'independentUrl' => true,
