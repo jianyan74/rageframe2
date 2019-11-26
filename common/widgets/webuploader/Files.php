@@ -41,7 +41,11 @@ class Files extends InputWidget
      * @var string
      */
     public $theme = 'default';
-
+    /**
+     * 是否写表，默认为true
+     * @var bool
+     */
+    protected $ifWriteTable = true;
     /**
      * 默认主题配置
      *
@@ -97,6 +101,7 @@ class Files extends InputWidget
                 'md5' => null,
                 'writeTable' => true,   // 写表
                 'drive' => $this->typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
+                'ifWriteTable' => $this->ifWriteTable,
             ], // 表单参数
             'pick' => [
                 'id' => '.upload-album-' . $this->boxId,

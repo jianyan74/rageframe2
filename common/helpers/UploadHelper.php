@@ -54,6 +54,11 @@ class UploadHelper
     protected $drive = 'local';
 
     /**
+     * 是否写表，默认为true
+     * @var bool
+     */
+    protected $ifWriteTable = true;
+    /**
      * 拿取需要的数据
      *
      * @var array
@@ -127,6 +132,7 @@ class UploadHelper
             $this->drive = 'local';
             $this->isCut = true;
         }
+
         $drive = $this->drive;
         $this->uploadDrive = Yii::$app->uploadDrive->$drive([
             'superaddition' => $superaddition
