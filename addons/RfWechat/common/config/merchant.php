@@ -216,6 +216,10 @@ return [
                     'title' => '同步',
                     'name' => 'attachment/sync',
                 ],
+                [
+                    'title' => '选择',
+                    'name' => 'selector/list',
+                ],
             ],
         ],
         [
