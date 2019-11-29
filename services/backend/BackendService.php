@@ -41,11 +41,11 @@ class BackendService extends Service
             case AppEnum::BACKEND :
                 if (!empty($model->backendMember)) {
                     $str = [];
-                    $str[] = 'ID：' . $model->backendMember->id;
-                    $str[] = '账号：' . $model->backendMember->username;
-                    $str[] = '姓名：' . $model->backendMember->realname;
+                    $str[] = "ID：" . $model->backendMember->id;
+                    $str[] = "账号：" . $model->backendMember->username;
+                    $str[] = "姓名：" . $model->backendMember->realname;
 
-                    return implode($str, '<br>');
+                    return implode("<br>", $str);
                 }
 
                 return '游客';
@@ -57,7 +57,7 @@ class BackendService extends Service
                     $str[] = '账号：' . $model->merchantMember->username;
                     $str[] = '姓名：' . $model->merchantMember->realname;
 
-                    return implode($str, '<br>');
+                    return implode("<br>", $str);
                 }
 
                 return '游客';
@@ -71,7 +71,7 @@ class BackendService extends Service
                     $str[] = '昵称：' . $model->oauth2Member->nickname;
                     $str[] = '姓名：' . $model->oauth2Member->realname;
 
-                    return implode($str, '<br>');
+                    return implode("<br>", $str);
                 }
 
                 return '游客';
@@ -85,7 +85,7 @@ class BackendService extends Service
                     $str[] = '昵称：' . $model->member->nickname;
                     $str[] = '姓名：' . $model->member->realname;
 
-                    return implode($str, '<br>');
+                    return implode("<br>", $str);
                 }
 
                 return '游客';

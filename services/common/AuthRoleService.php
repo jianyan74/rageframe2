@@ -101,7 +101,7 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限
         foreach ($allAuth as $item) {
-            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
+            if ($item['type'] == TypeEnum::DEFAULT) {
                 $formAuth[] = $item;
             } else {
                 if ($item['pid'] == 0) {
@@ -125,7 +125,7 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限ID
         foreach ($auth as $value) {
-            if ($value['type'] == TypeEnum::TYPE_DEFAULT) {
+            if ($value['type'] == TypeEnum::DEFAULT) {
                 $checkIds[] = $value['id'];
             } else {
                 $addonsCheckIds[] = $value['id'];
@@ -142,7 +142,7 @@ class AuthRoleService extends Service
      * @param string $addons_name
      * @return array
      */
-    public function getAuthByRole($role, $type = TypeEnum::TYPE_DEFAULT, $addons_name = '')
+    public function getAuthByRole($role, $type = TypeEnum::DEFAULT, $addons_name = '')
     {
         // 获取当前角色的权限
         $auth = AuthItemChild::find()
@@ -177,7 +177,7 @@ class AuthRoleService extends Service
 
         $addonsName = [];
         foreach ($allAuth as $item) {
-            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
+            if ($item['type'] == TypeEnum::DEFAULT) {
                 $this->allAuthNames[] = $item['name'];
             } else {
                 !isset($addonsName[$item['addons_name']]) && $this->allAuthNames[] = $item['addons_name'];

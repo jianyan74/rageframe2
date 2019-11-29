@@ -37,7 +37,7 @@ class MenuCateService extends Service
         $model = new MenuCate();
         $model->app_id = $appId;
         $model->addons_name = $info['name'];
-        $model->type = TypeEnum::TYPE_ADDONS;
+        $model->type = TypeEnum::ADDONS;
         $model->title = $info['title'];
         $model->icon = $icon;
         $model->save();
@@ -60,11 +60,11 @@ class MenuCateService extends Service
 
         $models = $this->findAll();
         foreach ($models as $key => $model) {
-            if ($model['type'] == TypeEnum::TYPE_DEFAULT && !Auth::verify('cate:' . $model['id'], $auth)) {
+            if ($model['type'] == TypeEnum::DEFAULT && !Auth::verify('cate:' . $model['id'], $auth)) {
                 unset($models[$key]);
             }
 
-            if ($model['type'] == TypeEnum::TYPE_ADDONS && !Auth::verify($model['addons_name'], $auth)) {
+            if ($model['type'] == TypeEnum::ADDONS && !Auth::verify($model['addons_name'], $auth)) {
                 unset($models[$key]);
             }
         }

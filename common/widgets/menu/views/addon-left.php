@@ -20,21 +20,21 @@ $addonName = StringHelper::toUnderScore($addonName);
             <ul class="nav nav-pills nav-stacked">
                 <?php if ($addon['is_cover'] == StatusEnum::ENABLED) { ?>
                     <li class="border-bottom-none">
-                        <a href="<?= BaseUrl::to(['/addons/cover', 'addon' => $addonName]) ?>" title="应用入口">
+                        <a href="<?= BaseUrl::to(['/addons/cover', 'addon' => $addonName]) ?>">
                             <i class="fa fa-arrow-circle-right rf-i"></i>应用入口
                         </a>
                     </li>
                 <?php } ?>
                 <?php if ($addon['is_rule'] == StatusEnum::ENABLED) { ?>
                     <li>
-                        <a href="<?= BaseUrl::to(['/addons/rule', 'addon' => $addonName]) ?>" title="规则回复">
+                        <a href="<?= BaseUrl::to(['/addons/rule', 'addon' => $addonName]) ?>">
                             <i class="fa fa-comments rf-i"></i>规则回复
                         </a>
                     </li>
                 <?php } ?>
                 <?php if ($addon['is_setting'] == StatusEnum::ENABLED) { ?>
                     <li>
-                        <a href="<?= Url::to(['setting/display']) ?>" title="参数设置">
+                        <a href="<?= Url::to(['setting/display']) ?>">
                             <i class="fa fa-cog rf-i"></i>参数设置
                         </a>
                     </li>
@@ -50,8 +50,7 @@ $addonName = StringHelper::toUnderScore($addonName);
             <ul class="nav nav-pills nav-stacked">
                 <?php foreach ($menus as $vo) { ?>
                     <li>
-                        <a href="<?= Url::to(ArrayHelper::merge([$vo['route']], $vo['params'])); ?>"
-                           title="<?= $vo['title']; ?>">
+                        <a href="<?= Url::to(ArrayHelper::merge([$vo['route']], $vo['params'])); ?>">
                             <i class="<?= $vo['icon'] ? $vo['icon'] : 'fa fa-puzzle-piece'; ?> rf-i"></i><?= $vo['title']; ?>
                         </a>
                     </li>

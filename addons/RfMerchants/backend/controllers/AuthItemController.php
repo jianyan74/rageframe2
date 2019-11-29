@@ -38,7 +38,7 @@ class AuthItemController extends BaseController
     public function actionIndex()
     {
         $query = $this->modelClass::find()
-            ->where(['app_id' => $this->appId, 'type' => TypeEnum::TYPE_DEFAULT])
+            ->where(['app_id' => $this->appId, 'type' => TypeEnum::DEFAULT])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->orderBy('sort asc, created_at asc');
         $dataProvider = new ActiveDataProvider([
@@ -65,7 +65,7 @@ class AuthItemController extends BaseController
         $model = $this->findModel($id);
         $model->pid = $request->get('pid', null) ?? $model->pid; // 父id
         $model->app_id = $this->appId;
-        $model->type = TypeEnum::TYPE_DEFAULT;
+        $model->type = TypeEnum::DEFAULT;
 
         // ajax 校验
         $this->activeFormValidate($model);

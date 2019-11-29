@@ -3,6 +3,7 @@
 use yii\widgets\ActiveForm;
 use common\helpers\Url;
 use common\enums\StatusEnum;
+use common\enums\MethodEnum;
 
 $form = ActiveForm::begin([
     'id' => $model->formName(),
@@ -25,7 +26,7 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'url')->textInput()->hint('例如：site/logout') ?>
         <?= $form->field($model, 'behavior')->textInput()->hint('方便查找的别名，例如：logout') ?>
         <?= $form->field($model, 'remark')->textInput() ?>
-        <?= $form->field($model, 'method')->dropDownList($methodExplain) ?>
+        <?= $form->field($model, 'method')->dropDownList(MethodEnum::getMap()) ?>
         <?= $form->field($model, 'is_record_post')->radioList(\common\enums\WhetherEnum::getMap()) ?>
         <?= $form->field($model, 'level')->dropDownList(\common\enums\MessageLevelEnum::getMap()) ?>
         <?= $form->field($model, 'action')->radioList($actionExplain) ?>

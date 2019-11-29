@@ -9,8 +9,8 @@ namespace common\enums;
  */
 class TypeEnum extends BaseEnum
 {
-    const TYPE_DEFAULT = 'default';
-    const TYPE_ADDONS = 'addons';
+    const DEFAULT = 'default';
+    const ADDONS = 'addons';
 
     /**
      * @return array
@@ -18,8 +18,8 @@ class TypeEnum extends BaseEnum
     public static function getMap(): array
     {
         return [
-            self::TYPE_DEFAULT => '默认',
-            self::TYPE_ADDONS => '插件',
+            self::DEFAULT => '默认',
+            self::ADDONS => '插件',
         ];
     }
 }

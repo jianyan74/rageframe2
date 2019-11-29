@@ -55,6 +55,7 @@ class ActiveController extends \yii\rest\ActiveController
             'class' => Cors::class,
         ];
 
+        // var_dump(1);die();
         // 移除行为的权限验证的优先级
         unset($behaviors['authenticator']);
 
@@ -146,7 +147,9 @@ class ActiveController extends \yii\rest\ActiveController
      */
     public function beforeAction($action)
     {
-        parent::beforeAction($action);
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
 
         // 权限方法检查，如果用了rbac，请注释掉
         $this->checkAccess($action->id, $this->modelClass, Yii::$app->request->get());

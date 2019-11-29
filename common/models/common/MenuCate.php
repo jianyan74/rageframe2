@@ -89,7 +89,7 @@ class MenuCate extends \common\models\base\BaseModel
 
         if ($this->isNewRecord) {
             !$this->app_id && $this->app_id = Yii::$app->id;
-            !$this->type && $this->type = TypeEnum::TYPE_DEFAULT;
+            !$this->type && $this->type = TypeEnum::DEFAULT;
             $this->pid == 0 && $this->tree = TreeHelper::defaultTreeKey();
         }
 

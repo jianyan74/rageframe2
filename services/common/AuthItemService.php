@@ -43,7 +43,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_COVER,
                 'title' => '应用入口',
                 'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -51,7 +51,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_RULE,
                 'title' => '规则回复',
                 'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -59,7 +59,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_SETTING,
                 'title' => '参数设置',
                 'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -68,7 +68,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_COVER,
                 'title' => '应用入口',
                 'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -76,7 +76,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_RULE,
                 'title' => '规则回复',
                 'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -84,7 +84,7 @@ class AuthItemService extends Service
                 'name' => Addons::AUTH_SETTING,
                 'title' => '参数设置',
                 'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::TYPE_ADDONS,
+                'type' => TypeEnum::ADDONS,
                 'addons_name' => $name,
                 'sort' => 1,
             ],
@@ -119,8 +119,8 @@ class AuthItemService extends Service
      */
     public function uninstallAddonsByName($name)
     {
-        AuthItem::deleteAll(['type' => TypeEnum::TYPE_ADDONS, 'addons_name' => $name]);
-        AuthItemChild::deleteAll(['type' => TypeEnum::TYPE_ADDONS, 'addons_name' => $name]);
+        AuthItem::deleteAll(['type' => TypeEnum::ADDONS, 'addons_name' => $name]);
+        AuthItemChild::deleteAll(['type' => TypeEnum::ADDONS, 'addons_name' => $name]);
     }
 
     /**
@@ -134,7 +134,7 @@ class AuthItemService extends Service
     {
         $list = AuthItem::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['app_id' => $app_id, 'type' => TypeEnum::TYPE_DEFAULT])
+            ->andWhere(['app_id' => $app_id, 'type' => TypeEnum::DEFAULT])
             ->andFilterWhere(['<>', 'id', $id])
             ->select(['id', 'title', 'pid', 'level'])
             ->orderBy('sort asc')
@@ -200,7 +200,7 @@ class AuthItemService extends Service
     {
         foreach ($item as &$value) {
             $value['app_id'] = $app_id;
-            $value['type'] = TypeEnum::TYPE_ADDONS;
+            $value['type'] = TypeEnum::ADDONS;
             $value['addons_name'] = $name;
 
             // 判断是否是菜单

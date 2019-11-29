@@ -57,10 +57,9 @@ $perPage = (int)Yii::$app->request->get('per-page', 10);
 
 $perPageSelect = Html::dropDownList('rf-per-page', $perPage, [
     10 => '10条/页',
-    20 => '20条/页',
-    30 => '30条/页',
+    15 => '15条/页',
+    25 => '25条/页',
     40 => '40条/页',
-    50 => '50条/页',
 ], [
     'class' => 'form-control rf-per-page',
     'style' => 'width:100px'
@@ -167,9 +166,13 @@ $this->registerJs($script);
                 if (parseInt(data.code) === 200) {
                     if (self.hasClass("btn-success")) {
                         self.removeClass("btn-success").addClass("btn-default");
+                        self.attr("data-toggle", 'tooltip');
+                        self.attr("data-original-title", '点击禁用');
                         self.text('禁用');
                     } else {
                         self.removeClass("btn-default").addClass("btn-success");
+                        self.attr("data-toggle", 'tooltip');
+                        self.attr("data-original-title", '点击启用');
                         self.text('启用');
                     }
                 } else {

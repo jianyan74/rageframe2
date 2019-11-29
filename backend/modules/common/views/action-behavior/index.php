@@ -4,6 +4,7 @@ use common\enums\AppEnum;
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
+use common\enums\MethodEnum;
 
 $this->title = '行为监控';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -45,11 +46,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'url',
                         [
                             'attribute' => 'method',
-                            'value' => function ($model, $key, $index, $column) use ($methodExplain) {
-                                return $methodExplain[$model->method];
+                            'value' => function ($model, $key, $index, $column) {
+                                return Html::method($model->method);
                             },
                             'format' => 'raw',
-                            'filter' => Html::activeDropDownList($searchModel, 'method', $methodExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'method', MethodEnum::getMap(), [
                                 'prompt' => '全部',
                                 'class' => 'form-control'
                             ])

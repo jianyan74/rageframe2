@@ -2,12 +2,12 @@
 
 namespace common\helpers;
 
-use common\enums\StatusEnum;
 use Yii;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
+use common\enums\StatusEnum;
 use common\models\common\Attachment;
 use common\components\uploaddrive\DriveInterface;
 
@@ -54,11 +54,6 @@ class UploadHelper
     protected $drive = 'local';
 
     /**
-     * 是否写表，默认为true
-     * @var bool
-     */
-    protected $ifWriteTable = true;
-    /**
      * 拿取需要的数据
      *
      * @var array
@@ -75,7 +70,7 @@ class UploadHelper
         'height',
         'md5',
         'poster',
-        'writeTable'    // 是否写表
+        'writeTable',
     ];
 
     /**
@@ -652,7 +647,7 @@ class UploadHelper
         // 获取上传路径
         $this->baseInfo = $this->uploadDrive->getUrl($this->baseInfo, $this->config['fullPath']);
 
-        $insertAttachment = [
+        $data = [
             'drive' => $this->drive,
             'upload_type' => $this->type,
             'specific_type' => $this->baseInfo['type'],
@@ -666,13 +661,12 @@ class UploadHelper
             'path' => $path
         ];
 
-        if(!isset($this->config["writeTable"])){
-            // 如果没有配置，默认写表
-            $attachment_id = Yii::$app->services->attachment->create($insertAttachment);
+        // 写入数据库
+        if (!isset($this->config['writeTable'])) {
+            $attachment_id = Yii::$app->services->attachment->create($data);
             $this->baseInfo['id'] = $attachment_id;
-        }else if(isset($this->config["writeTable"]) && $this->config["writeTable"]==StatusEnum::ENABLED){
-            // 如果配置写表，并且值为1或true
-            $attachment_id = Yii::$app->services->attachment->create($insertAttachment);
+        } elseif (isset($this->config['writeTable']) && $this->config['writeTable'] == StatusEnum::ENABLED) {
+            $attachment_id = Yii::$app->services->attachment->create($data);
             $this->baseInfo['id'] = $attachment_id;
         }
 

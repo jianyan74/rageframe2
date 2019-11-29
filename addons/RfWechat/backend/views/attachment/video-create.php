@@ -33,6 +33,7 @@ $form = ActiveForm::begin([
                     // 保留原名称
                     'originalName' => true,
                     'drive' => 'local',
+                    'writeTable' => false, // 不写表
                 ],
                 'fileSingleSizeLimit' => 10240 * 1024 * 2,// 大小限制
                 'independentUrl' => true, // 不受接管上传Url

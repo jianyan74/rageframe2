@@ -8,7 +8,6 @@ use common\models\base\SearchModel;
 use common\models\common\MenuCate;
 use common\enums\StatusEnum;
 use common\enums\AppEnum;
-use common\enums\TypeEnum;
 
 /**
  * Class MenuCateController
@@ -66,7 +65,6 @@ class MenuCateController extends BaseController
         $id = Yii::$app->request->get('id');
         $model = $this->findModel($id);
         $model->app_id = AppEnum::MERCHANT;
-        $model->type = TypeEnum::TYPE_DEFAULT;
 
         // ajax 校验
         $this->activeFormValidate($model);

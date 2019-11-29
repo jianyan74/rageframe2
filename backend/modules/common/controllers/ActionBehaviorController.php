@@ -49,7 +49,6 @@ class ActionBehaviorController extends BaseController
             'searchModel' => $searchModel,
             'actionExplain' => ActionBehavior::$actionExplain,
             'ajaxExplain' => ActionBehavior::$ajaxExplain,
-            'methodExplain' => ActionBehavior::$methodExplain,
         ]);
     }
 
@@ -73,7 +72,6 @@ class ActionBehaviorController extends BaseController
         return $this->renderAjax($this->action->id, [
             'model' => $model,
             'actionExplain' => ActionBehavior::$actionExplain,
-            'methodExplain' => ActionBehavior::$methodExplain,
             'ajaxExplain' => ActionBehavior::$ajaxExplain,
         ]);
     }

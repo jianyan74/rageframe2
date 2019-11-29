@@ -92,7 +92,7 @@ class ImportHelper
                     'title' => $datum[0],
                     'name' => $datum[1],
                     'app_id' => $app_id,
-                    'type' => TypeEnum::TYPE_DEFAULT,
+                    'type' => TypeEnum::DEFAULT,
                     'pid' => $pid,
                     'sort' => $sortArr[$datum[2]]['id'],
                     'level' => $level,

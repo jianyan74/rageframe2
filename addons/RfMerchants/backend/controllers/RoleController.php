@@ -85,8 +85,8 @@ class RoleController extends BaseController
             }
 
             // 创建角色关联的权限信息
-            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], TypeEnum::TYPE_DEFAULT, $this->appId);
-            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], TypeEnum::TYPE_ADDONS, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], TypeEnum::DEFAULT, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], TypeEnum::ADDONS, $this->appId);
 
             return ResultHelper::json(200, '提交成功');
         }

@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
-                            <?= $form->field($model, 'keyword')->textInput(['value'=> implode(',',$ruleKeywords[RuleKeyword::TYPE_MATCH])])->hint('多个关键字请使用逗号隔开，如天气，今日天气。')->label('关键字') ?>
+                            <?= $form->field($model, 'keyword')->textInput(['value'=> implode(',', $ruleKeywords[RuleKeyword::TYPE_MATCH])])->hint('多个关键字请使用逗号隔开，如天气，今日天气。')->label('关键字') ?>
                             <div class="trigger" style="display: none">
                                 <div class="form-group">
                                     <label class="control-label">高级触发列表</label>

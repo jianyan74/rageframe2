@@ -113,7 +113,7 @@ class MenuService extends Service
             if (!empty($model['url'])) {
                 $params = Json::decode($model['params']);
                 (empty($params) || !is_array($params)) && $params = [];
-                $model['fullUrl'][] = $model['type'] == TypeEnum::TYPE_ADDONS
+                $model['fullUrl'][] = $model['type'] == TypeEnum::ADDONS
                     ? 'addons/' . StringHelper::toUnderScore($model['addons_name']) . '/' . $model['url']
                     : $model['url'];
 
@@ -127,12 +127,12 @@ class MenuService extends Service
             }
 
             // 系统菜单校验
-            if ($model['type'] == TypeEnum::TYPE_DEFAULT && Auth::verify($model['url'], $auth) === false) {
+            if ($model['type'] == TypeEnum::DEFAULT && Auth::verify($model['url'], $auth) === false) {
                 unset($models[$key]);
             }
 
             // 插件菜单校验
-            if ($model['type'] == TypeEnum::TYPE_ADDONS) {
+            if ($model['type'] == TypeEnum::ADDONS) {
                 $tmpUrl = $model['addons_name'] . ':' . $model['url'];
                 if (Auth::verify($tmpUrl, $auth) === false) {
                     unset($models[$key]);

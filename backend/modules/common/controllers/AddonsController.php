@@ -146,7 +146,7 @@ class AddonsController extends BaseController
                     $allMenu[$appId] = $appConfig['menu'];
                 }
                 // 菜单配置
-                if (isset($appConfig['menuConfig']['location']) && $appConfig['menuConfig']['location'] == TypeEnum::TYPE_DEFAULT) {
+                if (isset($appConfig['menuConfig']['location']) && $appConfig['menuConfig']['location'] == TypeEnum::DEFAULT) {
                     $cate = Yii::$app->services->menuCate->createByAddons($appId, $config->info, $appConfig['menuConfig']['icon']);
                     Yii::$app->services->menu->delByCate($cate);
                     Yii::$app->services->menu->createByAddons($appConfig['menu'], $cate);

@@ -64,7 +64,8 @@
         "yiisoft/yii2-faker": "~2.0.0",
         "codeception/base": "^2.4.0",
         "phpunit/phpunit": "~6.5.5",
-        "codeception/verify": "~1.0.0"
+        "codeception/verify": "~1.0.0",
+        "swoole/ide-helper": "@dev"
     },
     "config": {
         "process-timeout": 1800,

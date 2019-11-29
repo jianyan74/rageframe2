@@ -94,7 +94,7 @@ class Auth
         if (true === Yii::$app->params['inAddon']) {
             $name = Yii::$app->params['addonInfo']['name'] ?? Yii::$app->request->get('addon');
             $name = StringHelper::strUcwords($name);
-            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, TypeEnum::TYPE_ADDONS, $name);
+            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, TypeEnum::ADDONS, $name);
         } else {
             self::$auth = Yii::$app->services->authRole->getAuthByRole($role);
         }

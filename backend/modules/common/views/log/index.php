@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 $str = [];
                                 $str[] = DebrisHelper::analysisIp($model->ip);
                                 $str[] = DebrisHelper::long2ip($model->ip);
-                                return implode($str, '</br>');
+                                return implode("</br>", $str);
                             },
                             'format' => 'raw',
                         ],
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 $str[] = '唯一码：' . $model->device_uuid;
                                 $str[] = '系统版本：' . $model->device_version;
                                 $str[] = 'App版本：' . $model->device_app_version;
-                                return implode($str, '</br>');
+                               return implode("</br>", $str);
                             },
                             'format' => 'raw',
                             'filter' => false,

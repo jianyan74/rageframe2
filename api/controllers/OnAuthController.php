@@ -43,7 +43,9 @@ class OnAuthController extends ActiveController
      */
     public function beforeAction($action)
     {
-        parent::beforeAction($action);
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
 
         if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null)) {
             throw new NotFoundHttpException('权限不足.');

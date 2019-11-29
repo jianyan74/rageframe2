@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td></td>
-                        <td>为二次开发而生，让开发变得更简单。</td>
+                        <td>重量级全栖框架，为二次开发而生。</td>
                     </tr>
                     <tr>
                         <td>系统版本</td>

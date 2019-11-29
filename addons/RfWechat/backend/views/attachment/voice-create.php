@@ -32,6 +32,7 @@ $form = ActiveForm::begin([
                     // 保留原名称
                     'originalName' => true,
                     'drive' => 'local',
+                    'writeTable' => false, // 不写表
                 ],
                 'fileSingleSizeLimit' => 5120 * 1024,// 大小限制
                 'independentUrl' => true,

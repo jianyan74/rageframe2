@@ -29,6 +29,7 @@ $form = ActiveForm::begin([
                 ],
                 'formData' => [
                     'drive' => 'local',
+                    'writeTable' => false, // 不写表
                 ],
                 'fileSingleSizeLimit' => 2048 * 1024,// 图片大小限制
                 'independentUrl' => true,

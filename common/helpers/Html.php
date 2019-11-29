@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use common\enums\MethodEnum;
 use Yii;
 use yii\helpers\BaseHtml;
 use common\enums\StatusEnum;
@@ -97,6 +98,8 @@ class Html extends BaseHtml
             StatusEnum::DISABLED => self::tag('span', '启用', array_merge(
                 [
                     'class' => "btn btn-success btn-sm",
+                    'data-toggle' => 'tooltip',
+                    'data-original-title' => '点击启用',
                     'onclick' => "rfStatus(this)"
                 ],
                 $options
@@ -104,6 +107,8 @@ class Html extends BaseHtml
             StatusEnum::ENABLED => self::tag('span', '禁用', array_merge(
                 [
                     'class' => "btn btn-default btn-sm",
+                    'data-toggle' => 'tooltip',
+                    'data-original-title' => '点击禁用',
                     'onclick' => "rfStatus(this)"
                 ],
                 $options
@@ -195,6 +200,35 @@ class Html extends BaseHtml
         ];
 
         return $listBut[$level] ?? '';
+    }
+
+    /**
+     * 方法判断标签
+     *
+     * @param $method
+     * @return mixed|string
+     */
+    public static function method($method)
+    {
+        $listBut = [
+            MethodEnum::GET => self::tag('span', MethodEnum::getValue(MethodEnum::GET), [
+                'class' => "label label-success label-sm",
+            ]),
+            MethodEnum::POST => self::tag('span', MethodEnum::getValue(MethodEnum::POST), [
+                'class' => "label label-info label-sm",
+            ]),
+            MethodEnum::PUT => self::tag('span', MethodEnum::getValue(MethodEnum::PUT), [
+                'class' => "label label-primary label-sm",
+            ]),
+            MethodEnum::DELETE => self::tag('span', MethodEnum::getValue(MethodEnum::DELETE), [
+                'class' => "label label-danger label-sm",
+            ]),
+            MethodEnum::ALL => self::tag('span', MethodEnum::getValue(MethodEnum::ALL), [
+                'class' => "label label-warning label-sm",
+            ]),
+        ];
+
+        return $listBut[$method] ?? '';
     }
 
     /**
