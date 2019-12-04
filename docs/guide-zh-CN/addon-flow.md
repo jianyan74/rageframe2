@@ -44,6 +44,11 @@
 
     // ----------------------- 菜单配置 ----------------------- //
 
+    'menuConfig' => [
+         'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
+         'icon' => 'fa fa-puzzle-piece',
+    ],
+
     'menu' => [
         [
             'title' => 'Curd',

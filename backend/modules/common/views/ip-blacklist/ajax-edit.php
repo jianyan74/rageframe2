@@ -23,7 +23,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'ip')->textInput() ?>
         <?= $form->field($model, 'remark')->textarea()->hint('加入黑名单的IP用户将无法访问所有应用') ?>
-        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()); ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

@@ -42,11 +42,15 @@ class AddonsController extends Controller
     {
         parent::init();
 
+        // 每页数量
+        $this->pageSize = Yii::$app->request->get('per-page', 10);
+        $this->pageSize > 50 && $this->pageSize = 50;
+
         // 后台视图默认载入模块视图
         if (!$this->layout) {
             $this->layout = '@' . Yii::$app->id . '/views/layouts/main';
 
-            if (Yii::$app->id == AppEnum::BACKEND) {
+            if (in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
                 $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
             }
         }
@@ -113,7 +117,16 @@ class AddonsController extends Controller
             $controller = StringHelper::toUnderScore(Yii::$app->params['addonInfo']['controller']) . '/';
         }
 
-        $appId = $this->isHook == true ? 'backend' : Yii::$app->id;
+        $appId = Yii::$app->id;
+        if ($this->isHook == true) {
+            $appId = AppEnum::BACKEND;
+        }
+
+        // 开启了商户映射
+        if ($appId == AppEnum::MERCHANT && Yii::$app->params['addon']['is_merchant_route_map'] == true) {
+            $appId = AppEnum::BACKEND;
+        }
+
         return "@addons" . '/' . Yii::$app->params['addonInfo']['name'] . '/' . $appId . '/views/' . $controller . $view;
     }
 

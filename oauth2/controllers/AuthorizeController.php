@@ -4,7 +4,7 @@ namespace oauth2\controllers;
 
 use Yii;
 use oauth2\components\Response;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\models\oauth2\repository\AuthCodeRepository;
 use common\models\oauth2\repository\RefreshTokenRepository;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -28,7 +28,7 @@ class AuthorizeController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['create'];
+    protected $authOptional = ['create'];
 
     /**
      * @throws \Exception
@@ -63,9 +63,9 @@ class AuthorizeController extends OnAuthController
             // 这里只需要这一行就可以，具体的判断在 Repositories 中
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         }
     }
 

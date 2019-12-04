@@ -1,0 +1,2 @@
+suite_namespace: merchant\tests\unit
+actor: UnitTester

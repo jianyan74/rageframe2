@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 use Yii;
 
 /**
@@ -23,23 +23,6 @@ use Yii;
  */
 class ActionBehavior extends \common\models\base\BaseModel
 {
-    const METHOD_POST = 'POST';
-    const METHOD_GET = 'GET';
-    const METHOD_PUT = 'PUT';
-    const METHOD_DELETE = 'DELETE';
-    const METHOD = '*';
-
-    /**
-     * @var array
-     */
-    public static $methodExplain = [
-        self::METHOD => '不限',
-        self::METHOD_POST => 'Post',
-        self::METHOD_GET => 'Get',
-        self::METHOD_PUT => 'Put',
-        self::METHOD_DELETE => 'Delete',
-    ];
-
     const ACTION_BEFORE = 1;
     const ACTION_AFTER = 2;
 
@@ -122,7 +105,7 @@ class ActionBehavior extends \common\models\base\BaseModel
     public function afterDelete()
     {
         Yii::$app->cache->set(
-            CacheKeyEnum::COMMON_ACTION_BEHAVIOR,
+            CacheEnum::getPrefix('actionBehavior'),
             Yii::$app->services->actionBehavior->getAllData(),
             3600 * 2
         );
@@ -137,7 +120,7 @@ class ActionBehavior extends \common\models\base\BaseModel
     public function afterSave($insert, $changedAttributes)
     {
         Yii::$app->cache->set(
-            CacheKeyEnum::COMMON_ACTION_BEHAVIOR,
+            CacheEnum::getPrefix('actionBehavior'),
             Yii::$app->services->actionBehavior->getAllData(),
             3600 * 2
         );

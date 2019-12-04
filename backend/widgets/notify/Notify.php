@@ -19,14 +19,14 @@ class Notify extends Widget
     public function run()
     {
         // 拉取公告
-        Yii::$app->services->sysNotify->pullAnnounce(Yii::$app->user->id, Yii::$app->user->identity->created_at);
+        Yii::$app->services->backendNotify->pullAnnounce(Yii::$app->user->id, Yii::$app->user->identity->created_at);
         // 拉取订阅
-        if ($config = Yii::$app->services->sysNotifySubscriptionConfig->findByManagerId(Yii::$app->user->id)) {
-            Yii::$app->services->sysNotify->pullRemind($config);
+        if ($config = Yii::$app->services->backendNotifySubscriptionConfig->findByMemberId(Yii::$app->user->id)) {
+            Yii::$app->services->backendNotify->pullRemind($config);
         }
 
         // 获取当前通知
-        list($notify, $notifyPage) = Yii::$app->services->sysNotify->getUserNotify(Yii::$app->user->id);
+        list($notify, $notifyPage) = Yii::$app->services->backendNotify->getUserNotify(Yii::$app->user->id);
 
         return $this->render('notify', [
             'notify' => $notify,

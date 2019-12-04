@@ -5,7 +5,7 @@ namespace common\components;
 use Yii;
 use yii\data\Pagination;
 use yii\base\InvalidConfigException;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
@@ -36,8 +36,7 @@ trait Curd
     public function actionIndex()
     {
         $data = $this->modelClass::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
+            ->where(['>=', 'status', StatusEnum::DISABLED]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('id desc')
@@ -114,15 +113,15 @@ trait Curd
     public function actionAjaxUpdate($id)
     {
         if (!($model = $this->modelClass::findOne($id))) {
-            return ResultDataHelper::json(404, '找不到数据');
+            return ResultHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save()) {
-            return ResultDataHelper::json(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
-        return ResultDataHelper::json(200, '修改成功');
+        return ResultHelper::json(200, '修改成功');
     }
 
     /**
@@ -158,7 +157,7 @@ trait Curd
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::find()->where(['id' => $id])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one()))) {
+        if (empty($id) || empty(($model = $this->modelClass::findOne($id)))) {
             $model = new $this->modelClass;
             return $model->loadDefaultValues();
         }

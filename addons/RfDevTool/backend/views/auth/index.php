@@ -13,7 +13,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header with-border">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="pull-right">
-                    <?= Html::linkButton(['download'], '权限默认表格下载'); ?>
+                    <?= Html::linkButton(['download', 'type' => 'default'], '<i class="fa fa-cloud-download"></i> 权限默认表格下载'); ?>
+                    <?= Html::linkButton(['download', 'type' => 'merchant'], '<i class="fa fa-cloud-download"></i> 权限商家表格下载'); ?>
                 </div>
             </div>
             <?php $form = ActiveForm::begin([
@@ -22,13 +23,20 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 ]
             ]); ?>
             <div class="box-body">
+                <div class="form-group field-provincejob-max_level">
+                    <label class="control-label" for="provincejob-max_level">权限类别</label>
+                    <?= Html::dropDownList('app_id', '', \common\enums\AppEnum::getMap(), [
+                        'class' => 'form-control',
+                    ])?>
+                    <div class="help-block"></div>
+                </div>
                 <div class="form-group">
                     <div class="input-group m-b">
                         <input id="excel-file" type="file" name="excelFile" style="display:none">
                         <input type="text" class="form-control" id="fileName" name="fileName" readonly>
                         <span class="input-group-btn">
-                                <a class="btn btn-white" onclick="$('#excel-file').click();">选择文件</a>
-                            </span>
+                            <a class="btn btn-white" onclick="$('#excel-file').click();">选择文件</a>
+                        </span>
                     </div>
                 </div>
             </div>

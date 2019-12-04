@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use common\components\BaseAction;
+use common\behaviors\ActionLogBehavior;
 
 /**
  * Class BaseController
@@ -14,6 +15,18 @@ use common\components\BaseAction;
 class BaseController extends Controller
 {
     use BaseAction;
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'actionLog' => [
+                'class' => ActionLogBehavior::class
+            ]
+        ];
+    }
 
     /**
      * @throws \yii\base\InvalidConfigException

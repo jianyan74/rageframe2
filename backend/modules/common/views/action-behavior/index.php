@@ -1,9 +1,10 @@
 <?php
 
+use common\enums\AppEnum;
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
-use common\enums\MessageLevelEnum;
+use common\enums\MethodEnum;
 
 $this->title = '行为监控';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
@@ -31,14 +32,25 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'class' => 'yii\grid\SerialColumn',
                         ],
+                        [
+                            'attribute' => 'app_id',
+                            'filter' => Html::activeDropDownList($searchModel, 'app_id', AppEnum::getMap(), [
+                                'prompt' => '全部',
+                                'class' => 'form-control'
+                            ]),
+                            'value' => function ($model) {
+                                return AppEnum::getValue($model->app_id);
+                            },
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
                         'url',
                         [
                             'attribute' => 'method',
-                            'value' => function ($model, $key, $index, $column) use ($methodExplain) {
-                                return $methodExplain[$model->method];
+                            'value' => function ($model, $key, $index, $column) {
+                                return Html::method($model->method);
                             },
                             'format' => 'raw',
-                            'filter' => Html::activeDropDownList($searchModel, 'method', $methodExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'method', MethodEnum::getMap(), [
                                 'prompt' => '全部',
                                 'class' => 'form-control'
                             ])
@@ -72,7 +84,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'is_record_post',
-                                WhetherEnum::$listExplain, [
+                                WhetherEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -85,7 +97,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'level',
-                                MessageLevelEnum::$listExplain, [
+                                WhetherEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

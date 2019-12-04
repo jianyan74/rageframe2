@@ -12,8 +12,14 @@ use yii\base\Model;
  */
 class ClearCache extends Model
 {
+    /**
+     * @var int
+     */
     public $cache = 1;
 
+    /**
+     * @var bool
+     */
     protected $status = true;
 
     public function rules()

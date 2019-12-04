@@ -5,7 +5,7 @@ use common\enums\GenderEnum;
 use common\enums\StatusEnum;
 
 $this->title = '编辑';
-$this->params['breadcrumbs'][] = ['label' => '第三方用户', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '第三方授权', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'oauth_client')->textInput([
                     'readonly' => 'readonly'
                 ]) ?>
-                <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
+                <?= $form->field($model, 'gender')->radioList(GenderEnum::getMap()) ?>
                 <?= $form->field($model, 'head_portrait')->widget(common\widgets\webuploader\Files::class, [
                     'type' => 'images',
                     'theme' => 'default',
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'class' => 'form-control no_bor',
                     ]
                 ]); ?>
-                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">

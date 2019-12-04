@@ -4,7 +4,6 @@ namespace common\models\common;
 
 use common\behaviors\MerchantBehavior;
 use common\models\member\Member;
-use common\models\sys\Manager;
 
 /**
  * This is the model class for table "rf_sys_action_log".
@@ -102,8 +101,16 @@ class ActionLog extends \common\models\base\BaseModel
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getManager()
+    public function getBackendMember()
     {
-        return $this->hasOne(Manager::class, ['id' => 'user_id']);
+        return $this->hasOne(\common\models\backend\Member::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMerchantMember()
+    {
+        return $this->hasOne(\common\models\merchant\Member::class, ['id' => 'user_id']);
     }
 }

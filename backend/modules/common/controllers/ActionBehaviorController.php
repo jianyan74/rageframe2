@@ -34,9 +34,9 @@ class ActionBehaviorController extends BaseController
             'scenario' => 'default',
             'partialMatchAttributes' => ['behavior', 'url'], // 模糊查询
             'defaultOrder' => [
-                'id' => SORT_DESC
+                'id' => SORT_DESC,
             ],
-            'pageSize' => $this->pageSize
+            'pageSize' => $this->pageSize,
         ]);
 
         $dataProvider = $searchModel
@@ -49,7 +49,6 @@ class ActionBehaviorController extends BaseController
             'searchModel' => $searchModel,
             'actionExplain' => ActionBehavior::$actionExplain,
             'ajaxExplain' => ActionBehavior::$ajaxExplain,
-            'methodExplain' => ActionBehavior::$methodExplain,
         ]);
     }
 
@@ -73,25 +72,7 @@ class ActionBehaviorController extends BaseController
         return $this->renderAjax($this->action->id, [
             'model' => $model,
             'actionExplain' => ActionBehavior::$actionExplain,
-            'methodExplain' => ActionBehavior::$methodExplain,
             'ajaxExplain' => ActionBehavior::$ajaxExplain,
         ]);
-    }
-
-    /**
-     * 返回模型
-     *
-     * @param $id
-     * @return \yii\db\ActiveRecord
-     */
-    protected function findModel($id)
-    {
-        /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::findOne($id)))) {
-            $model = new $this->modelClass;
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
     }
 }

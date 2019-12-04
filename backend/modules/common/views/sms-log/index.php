@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 return Html::whether($model->used);
                             },
                             'format' => 'raw',
-                            'filter' => Html::activeDropDownList($searchModel, 'used', WhetherEnum::$listExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'used', WhetherEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'use_time',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
-                                return empty($model->use_time) ? '---' : date('Y-m-d H:i:s');
+                                return empty($model->use_time) ? '---' : date('Y-m-d H:i:s', $model->use_time);
                             },
                         ],
                         [
@@ -67,18 +67,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             'filter' => false, //不显示搜索框
                         ],
                         [
-                            'label' => 'ip',
-                            'attribute' => 'ip',
+                            'label' => '位置信息',
                             'value' => function ($model) {
-                                return DebrisHelper::long2ip($model->ip);
+                                $str = [];
+                                $str[] = DebrisHelper::analysisIp($model->ip);
+                                $str[] = DebrisHelper::long2ip($model->ip);
+                                return implode('</br>', $str);
                             },
-                            'filter' => false, //不显示搜索框
-                        ],
-                        [
-                            'label' => 'ip地区',
-                            'value' => function ($model) {
-                                return DebrisHelper::analysisIp($model->ip);
-                            },
+                            'format' => 'raw',
                         ],
                         [
                             'label' => '创建时间',

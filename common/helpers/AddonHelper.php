@@ -5,7 +5,7 @@ namespace common\helpers;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 use common\models\common\AddonsConfig;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
@@ -100,7 +100,7 @@ class AddonHelper
             return '/backend' . $newPath;
         }
 
-        return Yii::getAlias('@web') . '/resources/dist/img/icon.jpg';
+        return Yii::getAlias('@web') . '/resources/img/icon.jpg';
     }
 
     /**
@@ -140,16 +140,42 @@ class AddonHelper
     }
 
     /**
+     * @param $path
+     * @param array $options
+     * @param string $assets
+     * @return string
+     */
+    public static function jsFile($path, $options = [], $assets = '')
+    {
+        return Html::jsFile(self::filePath($assets) . $path, $options);
+    }
+
+    /**
+     * @param $path
+     * @param array $options
+     * @param string $assets
+     * @return string
+     */
+    public static function cssFile($path, $options = [], $assets = '')
+    {
+        return Html::cssFile(self::filePath($assets) . $path, $options);
+    }
+
+    /**
      * 获取配置信息
      *
      * @return array|mixed
      */
-    public static function getConfig($noCache = false)
+    public static function getConfig($noCache = false, $merchant_id = '')
     {
+        if (!$merchant_id) {
+            $merchant_id = Yii::$app->services->merchant->getId();
+        }
+
         $name = Yii::$app->params['addon']['name'];
-        $cacheKey = CacheKeyEnum::COMMON_ADDONS_CONFIG . $name;
-        if (!($configModel = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
-            if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name))) {
+        $cacheKey = CacheEnum::getPrefix('addonsConfig', $name . ':' . $merchant_id);
+        if ($noCache == true || !($configModel = Yii::$app->cache->get($cacheKey))) {
+            if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name, $merchant_id))) {
                 return [];
             }
 
@@ -167,6 +193,7 @@ class AddonHelper
      */
     public static function setConfig(array $config)
     {
+        $merchant_id = Yii::$app->services->merchant->getId();
         $name = Yii::$app->params['addon']['name'];
         if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name))) {
             $configModel = new AddonsConfig();
@@ -177,7 +204,7 @@ class AddonHelper
         $configModel->data = ArrayHelper::merge($configModel->data, $config);
         $configModel->save();
 
-        return self::getConfig(true);
+        return self::getConfig(true, $merchant_id);
     }
 
     /**
@@ -201,26 +228,15 @@ class AddonHelper
         // 当前模块实例
         Yii::$app->params['addon'] = $addon;
         // 菜单
-        Yii::$app->params['addonBinding']['menu'] = [];
+        Yii::$app->params['addonBinding']['menu'] = !empty($addon['bindingMenu']) ? ArrayHelper::toArray($addon['bindingMenu']) : [];
         // 导航
-        Yii::$app->params['addonBinding']['cover'] = [];
+        Yii::$app->params['addonBinding']['cover'] = !empty($addon['bindingCover']) ? ArrayHelper::toArray($addon['bindingCover']) : [];
         // 模块路由及配置信息
         Yii::$app->params['addonInfo'] = [
             'name' => $name,
             'oldRoute' => $route,
         ];
         Yii::$app->params['inAddon'] = true;
-
-        // 获取关联的菜单和导航
-        if (!empty($addon->binding)) {
-            $binding = ArrayHelper::toArray($addon->binding);
-
-            foreach ($binding as $item) {
-                Yii::$app->params['addonBinding'][$item['entry']][] = $item;
-            }
-
-            unset($binding);
-        }
 
         return true;
     }

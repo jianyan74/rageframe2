@@ -7,8 +7,10 @@ use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
 use common\models\common\Config;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\components\Curd;
+use common\enums\ConfigTypeEnum;
+use common\enums\AppEnum;
 use backend\controllers\BaseController;
 
 /**
@@ -21,7 +23,7 @@ class ConfigController extends BaseController
     use Curd;
 
     /**
-     * @var \yii\db\ActiveRecord
+     * @var Config
      */
     public $modelClass = Config::class;
 
@@ -47,12 +49,13 @@ class ConfigController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
+            ->andWhere(['app_id' => AppEnum::BACKEND])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            'cateDropDownList' => Yii::$app->services->configCate->getDropDownList()
+            'cateDropDownList' => Yii::$app->services->configCate->getDropDown(AppEnum::BACKEND)
         ]);
     }
 
@@ -66,6 +69,7 @@ class ConfigController extends BaseController
     {
         $id = Yii::$app->request->get('id');
         $model = $this->findModel($id);
+        $model->app_id = AppEnum::BACKEND;
 
         // ajax 校验
         $this->activeFormValidate($model);
@@ -77,8 +81,8 @@ class ConfigController extends BaseController
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'configTypeList' => Yii::$app->params['configTypeList'],
-            'cateDropDownList' => Yii::$app->services->configCate->getDropDownList()
+            'configTypeList' => ConfigTypeEnum::getMap(),
+            'cateDropDownList' => Yii::$app->services->configCate->getDropDown(AppEnum::BACKEND)
         ]);
     }
 
@@ -90,7 +94,7 @@ class ConfigController extends BaseController
     public function actionEditAll()
     {
         return $this->render($this->action->id, [
-            'cates' => Yii::$app->services->configCate->getItemsMergeListWithConfig()
+            'cates' => Yii::$app->services->configCate->getItemsMergeForConfig(AppEnum::BACKEND)
         ]);
     }
 
@@ -106,27 +110,10 @@ class ConfigController extends BaseController
         $request = Yii::$app->request;
         if ($request->isAjax) {
             $config = $request->post('config', []);
-            Yii::$app->services->config->updateAll($config);
-            return ResultDataHelper::json(200, "修改成功");
+            Yii::$app->services->config->updateAll(Yii::$app->id, $config);
+            return ResultHelper::json(200, "修改成功");
         }
 
         throw new NotFoundHttpException('请求出错!');
-    }
-
-    /**
-     * 返回模型
-     *
-     * @param $id
-     * @return \yii\db\ActiveRecord
-     */
-    protected function findModel($id)
-    {
-        /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty(($model = $this->modelClass::findOne($id)))) {
-            $model = new $this->modelClass;
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
     }
 }

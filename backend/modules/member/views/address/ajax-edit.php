@@ -17,7 +17,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'realname')->textInput() ?>
         <?= $form->field($model, 'mobile')->textInput() ?>
-        <?= \backend\widgets\provinces\Provinces::widget([
+        <?= \common\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,
             'provincesName' => 'province_id',// 省字段名
@@ -27,7 +27,7 @@ $form = ActiveForm::begin([
         ]); ?>
         <?= $form->field($model, 'address_details')->textarea() ?>
         <?= $form->field($model, 'is_default')->checkbox() ?>
-        <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
+        <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>

@@ -21,6 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-sm-10">
         <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"><?= $this->title; ?></h3>
+                <div class="box-tools">
+                    <?= Html::a('全部设为已读', ['read-all'], [
+                        'onclick' => "rfTwiceAffirm(this, '确认全部设为已读么？', '可能会漏看一些关键信息，请谨慎操作');return false;"
+                    ]) ?>
+                </div>
+            </div>
             <div class="box-body table-responsive">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,

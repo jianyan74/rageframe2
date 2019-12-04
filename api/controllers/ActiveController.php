@@ -31,21 +31,16 @@ class ActiveController extends \yii\rest\ActiveController
      *
      * @var array
      */
-    protected $optional = [];
+    protected $authOptional = [];
 
     /**
-     * 启始位移
+     * 不用进行签名验证的方法
+     * 例如： ['index', 'update', 'create', 'view', 'delete']
+     * 默认全部需要验证
      *
-     * @var int
+     * @var array
      */
-    protected $offset = 0;
-
-    /**
-     * 实际每页数量
-     *
-     * @var
-     */
-    protected $limit;
+    protected $signOptional = [];
 
     /**
      * 行为验证
@@ -60,11 +55,17 @@ class ActiveController extends \yii\rest\ActiveController
             'class' => Cors::class,
         ];
 
+        // var_dump(1);die();
+        // 移除行为的权限验证的优先级
+        unset($behaviors['authenticator']);
+
         // 进行签名验证
-        $behaviors['signTokenValidate'] = [
-            'class' => HttpSignAuth::class,
-            'enabled' => Yii::$app->params['user.httpSignValidity'] // 验证开启状态
-        ];
+        if (Yii::$app->params['user.httpSignValidity'] == true) {
+            $behaviors['signTokenValidate'] = [
+                'class' => HttpSignAuth::class,
+                'optional' => $this->signOptional, // 不进行认证判断方法
+            ];
+        }
 
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::class,
@@ -83,19 +84,19 @@ class ActiveController extends \yii\rest\ActiveController
                  * http://rageframe.com/user/index/index?access-token=123
                  *
                  * 4.请求参数 access token 当作API header请求参数发送
-                 * header格式: X-Api-Key: access-token
+                 * header格式: x-api-key: access-token
                  * yii\filters\auth\HttpHeaderAuth::class,
                  */
-                HttpBasicAuth::class,
+                // HttpBasicAuth::class,
                 HttpBearerAuth::class,
                 HttpHeaderAuth::class,
                 [
                     'class' => QueryParamAuth::class,
-                    'tokenParam' => 'access-token'
+                    'tokenParam' => 'access-token',
                 ],
             ],
             // 不进行认证判断方法
-            'optional' => $this->optional,
+            'optional' => $this->authOptional,
         ];
 
         /**
@@ -122,6 +123,20 @@ class ActiveController extends \yii\rest\ActiveController
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET', 'HEAD', 'OPTIONS'],
+            'view' => ['GET', 'HEAD', 'OPTIONS'],
+            'create' => ['POST', 'OPTIONS'],
+            'update' => ['PUT', 'PATCH', 'OPTIONS'],
+            'delete' => ['DELETE', 'OPTIONS'],
+        ];
+    }
+
+    /**
      * 前置操作验证token有效期和记录日志和检查curd权限
      *
      * @param $action
@@ -132,16 +147,16 @@ class ActiveController extends \yii\rest\ActiveController
      */
     public function beforeAction($action)
     {
-        parent::beforeAction($action);
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
 
         // 权限方法检查，如果用了rbac，请注释掉
         $this->checkAccess($action->id, $this->modelClass, Yii::$app->request->get());
 
-        // 分页
-        $page = Yii::$app->request->get('page', 1);
-        $this->limit = Yii::$app->request->get('per-page', $this->pageSize);
-        $this->limit > 50 && $this->limit = 50;
-        $this->offset = ($page - 1) * $this->limit;
+        // 每页数量
+        $this->pageSize = Yii::$app->request->get('per-page', 10);
+        $this->pageSize > 50 && $this->pageSize = 50;
 
         return true;
     }

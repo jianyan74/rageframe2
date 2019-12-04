@@ -23,7 +23,7 @@ class ExecuteHelper
             throw new NotFoundHttpException($classPath . '未找到');
         }
 
-        /* @var $class \backend\interfaces\AddonWidget */
+        /* @var $class \common\interfaces\AddonWidget */
         $class = new $classPath;
         if (!method_exists($class, $method)) {
             throw new NotFoundHttpException($classPath . '/' . $method . ' 方法未找到');

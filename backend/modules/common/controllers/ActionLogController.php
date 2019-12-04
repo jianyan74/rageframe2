@@ -26,9 +26,9 @@ class ActionLogController extends BaseController
             'scenario' => 'default',
             'partialMatchAttributes' => ['behavior', 'method', 'url', 'remark'], // 模糊查询
             'defaultOrder' => [
-                'id' => SORT_DESC
+                'id' => SORT_DESC,
             ],
-            'pageSize' => $this->pageSize
+            'pageSize' => $this->pageSize,
         ]);
 
         $dataProvider = $searchModel
@@ -36,7 +36,7 @@ class ActionLogController extends BaseController
         $dataProvider->query
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->with(['manager', 'member']);
+            ->with(['backendMember', 'merchantMember', 'member']);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
@@ -52,12 +52,8 @@ class ActionLogController extends BaseController
      */
     public function actionView($id)
     {
-        $model = ActionLog::find()
-            ->where(['id' => $id])
-            ->one();
-
         return $this->renderAjax($this->action->id, [
-            'model' => $model,
+            'model' => ActionLog::findOne($id),
         ]);
     }
 }

@@ -2,9 +2,8 @@
 
 use common\helpers\StringHelper;
 
-$menus = $bindings['menu'] ?? [];
-$appID != \common\enums\AppEnum::BACKEND && $menus = [];
 $menuCount = 0;
+$menus = $bindings['menu'][$appID] ?? [];
 if (isset($menus['title'])) {
     $menuCount = count($menus['title']);
 }
@@ -19,12 +18,6 @@ echo "<?php\n";
 ?>
 
 return [
-    // ----------------------- 权限配置 ----------------------- //
-
-    'authItem' => [
-
-    ],
-
     // ----------------------- 快捷入口 ----------------------- //
 
     'cover' => [
@@ -49,6 +42,10 @@ return [
     ],
 
     // ----------------------- 菜单配置 ----------------------- //
+    'menuConfig' => [
+         'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
+         'icon' => 'fa fa-puzzle-piece',
+    ],
 
     'menu' => [
 <?php for ($i = 0; $i < $menuCount; $i++){
@@ -65,10 +62,19 @@ return [
             <?php } ?>
 
             ],
+            'child' => [
+
+            ],
         ],
     <?php }
 }
 ?>
+
+    ],
+
+    // ----------------------- 权限配置 ----------------------- //
+
+    'authItem' => [
 
     ],
 ];

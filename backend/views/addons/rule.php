@@ -3,7 +3,7 @@ use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use common\models\wechat\RuleKeyword;
+use addons\RfWechat\common\models\RuleKeyword;
 use common\enums\StatusEnum;
 
 $this->title = '规则回复';
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
                                     <span class="label label-info">优先级：<?= $model->sort; ?></span>
-                                    <?php if(Yii::$app->services->wechatRuleKeyword->verifyTake($model->ruleKeyword)){ ?>
+                                    <?php if(Yii::$app->wechatServices->ruleKeyword->verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
                                     <?php if($model->status == StatusEnum::ENABLED){ ?>

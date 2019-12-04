@@ -5,7 +5,7 @@ use yii;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
 use common\enums\StatusEnum;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\helpers\ExcelHelper;
 use addons\RfExample\common\models\Curd;
 
@@ -90,15 +90,15 @@ class CurdController extends BaseController
     public function actionAjaxUpdate($id)
     {
         if (!($model = Curd::findOne($id))) {
-            return ResultDataHelper::json(404, '找不到数据');
+            return ResultHelper::json(404, '找不到数据');
         }
 
         $model->attributes = ArrayHelper::filter(Yii::$app->request->get(), ['sort', 'status']);
         if (!$model->save()) {
-            return ResultDataHelper::json(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
-        return ResultDataHelper::json(200, '修改成功');
+        return ResultHelper::json(200, '修改成功');
     }
 
     /**

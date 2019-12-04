@@ -5,7 +5,7 @@ namespace oauth2\controllers;
 use Yii;
 use GuzzleHttp\Psr7\ServerRequest;
 use oauth2\components\Response;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 
 /**
  * 客户端模式(无用户,用户向客户端注册,然后客户端以自己的名义向’服务端’获取资源)
@@ -25,7 +25,7 @@ class ClientCredentialsController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['create'];
+    protected $authOptional = ['create'];
 
     /**
      * @throws \Exception
@@ -53,9 +53,9 @@ class ClientCredentialsController extends OnAuthController
         try {
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultDataHelper::api(422, $exception->getMessage());
+            return ResultHelper::api(422, $exception->getMessage());
         }
     }
 

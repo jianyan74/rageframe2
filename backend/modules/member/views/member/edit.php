@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <?= $form->field($model, 'realname')->textInput() ?>
                 <?= $form->field($model, 'nickname')->textInput() ?>
                 <?= $form->field($model, 'mobile')->textInput() ?>
-                <?= $form->field($model, 'gender')->radioList(GenderEnum::$listExplain) ?>
-                <?= $form->field($model, 'head_portrait')->widget(\backend\widgets\cropper\Cropper::class, []); ?>
+                <?= $form->field($model, 'gender')->radioList(GenderEnum::getMap()) ?>
+                <?= $form->field($model, 'head_portrait')->widget(\common\widgets\cropper\Cropper::class, []); ?>
                 <?= $form->field($model, 'qq')->textInput() ?>
                 <?= $form->field($model, 'email')->textInput() ?>
                 <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'class' => 'form-control no_bor',
                     ]
                 ]); ?>
-                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain) ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit">保存</button>

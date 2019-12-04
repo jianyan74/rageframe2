@@ -14,6 +14,23 @@ use common\components\Service;
 class AuthService extends Service
 {
     /**
+     * @param $data
+     * @return Auth
+     * @throws \Exception
+     */
+    public function create($data)
+    {
+        $model = new Auth();
+        $model->attributes = $data;
+        if (!$model->save()) {
+            $error = Yii::$app->debris->analyErr($model->getFirstErrors());
+            throw new \Exception($error);
+        }
+
+        return $model;
+    }
+
+    /**
      * @param $oauthClient
      * @param $oauthClientUserId
      * @return array|\yii\db\ActiveRecord|null
@@ -38,22 +55,5 @@ class AuthService extends Service
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->with('member')
             ->one();
-    }
-
-    /**
-     * @param $data
-     * @return Auth
-     * @throws \Exception
-     */
-    public function create($data)
-    {
-        $model = new Auth();
-        $model->attributes = $data;
-        if (!$model->save()) {
-            $error = Yii::$app->debris->analyErr($model->getFirstErrors());
-            throw new \Exception($error);
-        }
-
-        return $model;
     }
 }

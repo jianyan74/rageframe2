@@ -4,7 +4,7 @@ namespace addons\RfHelpers\backend\controllers;
 
 use Yii;
 use addons\RfHelpers\backend\components\SystemInfo;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 
 /**
  * Class SystemController
@@ -28,7 +28,7 @@ class SystemController extends BaseController
     {
         $info = $this->getProbeInfo();
         if (Yii::$app->request->isAjax) {
-            return ResultDataHelper::json(200, '获取成功', $info);
+            return ResultHelper::json(200, '获取成功', $info);
         }
 
         return $this->render('probe', [

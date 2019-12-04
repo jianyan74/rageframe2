@@ -47,18 +47,23 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 // 'filter' => false, //不显示搜索框
                                 'value' => function ($model) {
                                     $str = '<h5> ' . $model['title'] . '</h5>';
-                                    $str .= "<small>标识 : " . $model['name'] . "</small>";
+                                    $str .= "<small>" . $model['name'] . "</small>";
                                     return $str;
                                 },
                                 'format' => 'raw'
                             ],
                             [
-                                'attribute' => 'version',
+                                'attribute' => 'author',
                                 'filter' => false, //不显示搜索框
                             ],
                             [
-                                'attribute' => 'author',
+                                'label' => '组别',
+                                'attribute' => 'group',
                                 'filter' => false, //不显示搜索框
+                                'value' => function ($model) use ($addonsGroup) {
+                                    return '<span class="label label-primary">' . $addonsGroup[$model->group]['title'] . '</span> ';
+                                },
+                                'format' => 'raw'
                             ],
                             [
                                 'label' => '功能支持',
@@ -67,22 +72,18 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     $str = '';
                                     $model['is_setting'] == true && $str .= '<span class="label label-info">全局设置</span> ';
                                     $model['is_rule'] == true && $str .= '<span class="label label-info">嵌入规则</span> ';
-                                    $model['is_hook'] == true && $str .= '<span class="label label-info">钩子</span>';
+                                    $model['is_hook'] == true && $str .= '<span class="label label-info">钩子</span> ';
+                                    $model['is_merchant_route_map'] == true && $str .= '<span class="label label-info">商户路由映射</span>';
                                     return $str;
                                 },
                                 'format' => 'raw'
                             ],
                             [
-                                'label' => '组别',
-                                'attribute' => 'group',
+                                'attribute' => 'brief_introduction',
                                 'filter' => false, //不显示搜索框
-                                'value' => function ($model) use ($addonsGroup) {
-                                    return '<span class="label label-info">' . $addonsGroup[$model->group]['title'] . '</span> ';
-                                },
-                                'format' => 'raw'
                             ],
                             [
-                                'attribute' => 'brief_introduction',
+                                'attribute' => 'version',
                                 'filter' => false, //不显示搜索框
                             ],
                             [

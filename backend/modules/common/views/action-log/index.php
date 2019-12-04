@@ -25,42 +25,34 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         'id',
                         [
                             'attribute' => 'app_id',
+                            'filter' => Html::activeDropDownList($searchModel, 'app_id', AppEnum::getMap(), [
+                                'prompt' => '全部',
+                                'class' => 'form-control'
+                            ]),
+                            'value' => function ($model) {
+                                return AppEnum::getValue($model->app_id);
+                            },
                             'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
                             'label' => '用户',
                             'value' => function ($model) {
-                                if (AppEnum::BACKEND == $model->app_id) {
-                                    return $model->manager->username ?? '游客';
-                                } elseif (in_array($model->app_id,
-                                    [AppEnum::API, AppEnum::FRONTEND, AppEnum::WECHAT])) {
-                                    return $model->member->username ?? '游客';
-                                }
+                                return Yii::$app->services->backend->getUserName($model);
                             },
                             'filter' => false, //不显示搜索框
+                            'format' => 'raw',
                         ],
                         'behavior',
                         'url',
                         [
-                            'attribute' => 'ip',
+                            'label' => '位置信息',
                             'value' => function ($model) {
-                                return DebrisHelper::long2ip($model->ip);
+                                $str = [];
+                                $str[] = DebrisHelper::analysisIp($model->ip);
+                                $str[] = DebrisHelper::long2ip($model->ip);
+                                return implode('</br>', $str);
                             },
-                            'filter' => false, //不显示搜索框
-                        ],
-                        [
-                            'label' => '地区',
-                            'value' => function ($model) {
-                                if ($model->ip == ip2long('127.0.0.1')) {
-                                    return '本地';
-                                } else {
-                                    $data = [];
-                                    !empty($model->country) && $data[] = $model->country;
-                                    !empty($model->provinces) && $data[] = $model->provinces;
-                                    !empty($model->city) && $data[] = $model->city;
-                                    return implode('·', $data);
-                                }
-                            },
+                            'format' => 'raw',
                         ],
                         'remark',
                         [

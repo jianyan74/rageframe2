@@ -39,9 +39,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <?= $form->field($model, 'author')->textInput() ?>
                                 <?= $form->field($model, 'is_setting')->checkbox()->hint('勾选后会开启该功能') ?>
                                 <?= $form->field($model, 'is_hook')->checkbox()->hint('勾选后会开启该功能') ?>
+                                <?= $form->field($model, 'is_merchant_route_map')->checkbox()->hint('开启后会将商户端的url直接映射到后台来，节省相同代码，请了解后再使用') ?>
                                 <div class="hr-line-dashed"></div>
-                                <?= $form->field($model,
-                                    'wechat_message')->checkboxList(WechatEnum::$typeExplanation)->hint('当前插件能够直接处理的消息类型(没有上下文的对话语境, 能直接处理消息并返回数据). 如果公众平台传递过来的消息类型不在设定的类型列表中, 那么系统将不会把此消息路由至此插件') ?>
+                                <?= $form->field($model, 'wechat_message')->checkboxList(WechatEnum::getMap())->hint('当前插件能够直接处理的消息类型(没有上下文的对话语境, 能直接处理消息并返回数据). 如果公众平台传递过来的消息类型不在设定的类型列表中, 那么系统将不会把此消息路由至此插件') ?>
                                 <div class="alert-warning alert">
                                     注意: 关键字路由只能针对文本消息有效, 文本消息最为重要. 其他类型的消息并不能被直接理解, 多数情况需要使用文本消息来进行语境分析, 再处理其他相关消息类型<br>
                                     需要在非文字回复的插件中添加才能生效
@@ -51,47 +51,50 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     注意: 如果需要嵌入规则, 那么此插件必须能够处理文本类型消息 (WechatMessage)<br>
                                 </div>
                                 <div class="hr-line-dashed"></div>
-                                <div class="form-group desk-menu">
-                                    <label class="control-label">后台菜单</label>
-                                </div>
-                                <div class="well well-sm">
-                                    <div class="col-sm-12">
-                                        <div class="col-md-2">
-                                            <div class="input-group rfAddonAddMenu">
-                                                <span class="input-group-addon">名称</span>
-                                                <input class="form-control" name="bindings[menu][title][]" placeholder="首页管理" type="text">
+                                <?php foreach ($menuTypes as $key => $menuType) { ?>
+                                    <div class="form-group desk-menu">
+                                        <label class="control-label"><?= $menuType ?>菜单</label>
+                                    </div>
+                                    <div class="well well-sm">
+                                        <div class="col-sm-12">
+                                            <div class="col-md-2">
+                                                <div class="input-group rfAddonAddMenu">
+                                                    <span class="input-group-addon">名称</span>
+                                                    <input class="form-control" name="bindings[menu][<?= $key ?>][title][]" placeholder="首页管理" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group rfAddonAddMenu">
+                                                    <span class="input-group-addon">路由</span>
+                                                    <input class="form-control" name="bindings[menu][<?= $key ?>][route][]" placeholder="test/index" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="input-group rfAddonAddMenu">
+                                                    <span class="input-group-addon">图标</span>
+                                                    <input class="form-control" name="bindings[menu][<?= $key ?>][icon][]" placeholder="fa fa-wechat" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group rfAddonAddMenu">
+                                                    <span class="input-group-addon">参数</span>
+                                                    <input class="form-control" name="bindings[menu][<?= $key ?>][params][]" type="text" readonly>
+                                                    <span class="input-group-addon editValue" data-toggle="modal" data-target="#ajaxModalLgForAttribute">编辑</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div style="margin-left:-15px;margin-top:7px">
+                                                    <a class="icon ion-android-cancel" href="javascript:void(0);" onclick="$(this).parent().parent().parent().remove()"></a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <div class="input-group rfAddonAddMenu">
-                                                <span class="input-group-addon">路由</span>
-                                                <input class="form-control" name="bindings[menu][route][]" placeholder="test/index" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="input-group rfAddonAddMenu">
-                                                <span class="input-group-addon">图标</span>
-                                                <input class="form-control" name="bindings[menu][icon][]" placeholder="fa fa-wechat" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="input-group rfAddonAddMenu">
-                                                <span class="input-group-addon">参数</span>
-                                                <input class="form-control" name="bindings[menu][params][]" type="text" readonly>
-                                                <span class="input-group-addon editValue" data-toggle="modal" data-target="#ajaxModalLgForAttribute">编辑</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div style="margin-left:-15px;margin-top:7px">
-                                                <a class="icon ion-android-cancel" href="javascript:void(0);" onclick="$(this).parent().parent().parent().remove()"></a>
-                                            </div>
+                                        <div class="add">
+                                            <a href="javascript:void(0);" class="m-l" onclick="addOption('menu',this, '<?= $key ?>');">添加菜单 <i class="icon ion-android-add-circle" title="添加菜单"></i></a>
                                         </div>
                                     </div>
-                                    <div class="add">
-                                        <a href="javascript:;" class="m-l" onclick="addOption('menu',this);">添加菜单 <i class="icon ion-android-add-circle" title="添加菜单"></i></a>
-                                    </div>
-                                </div>
-                                <div class="help-block">后台菜单将会在管理中心生成一个导航入口(管理后台操作), 用于对插件定义的内容进行管理.</div>
+                                <?php } ?>
+                                <div class="hint-block">会在顶部导航菜单或者应用中心入口创建菜单列表</div>
+                                <div class="hr-line-dashed"></div>
                                 <?php foreach ($coverTypes as $key => $coverType) { ?>
                                     <div class="form-group desk-menu">
                                         <label class="control-label"><?= $coverType ?>入口</label>

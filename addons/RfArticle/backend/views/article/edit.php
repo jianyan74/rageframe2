@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
                 <?= $form->field($model, 'link')->textInput(); ?>
-                <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain); ?>
+                <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()); ?>
             </div>
             <div class="box-footer text-center">
                 <button class="btn btn-primary" type="submit">保存</button>

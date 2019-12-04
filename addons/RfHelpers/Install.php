@@ -5,14 +5,13 @@ namespace addons\RfHelpers;
 use Yii;
 use yii\db\Migration;
 use common\helpers\MigrateHelper;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 安装
  *
  * Class Install
- * @package addons\RfHelpers
- */
+ * @package addons\RfHelpers */
 class Install extends Migration implements AddonWidget
 {
     /**

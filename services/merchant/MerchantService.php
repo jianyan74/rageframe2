@@ -3,6 +3,8 @@
 namespace services\merchant;
 
 use common\components\Service;
+use common\enums\StatusEnum;
+use common\models\merchant\Merchant;
 
 /**
  * 商户
@@ -14,10 +16,8 @@ use common\components\Service;
 class MerchantService extends Service
 {
     /**
-     * @var array
+     * @var int
      */
-    protected $info = [];
-
     protected $merchant_id = 1;
 
     /**
@@ -34,24 +34,24 @@ class MerchantService extends Service
     public function setId($merchant_id)
     {
         $this->merchant_id = $merchant_id;
-        $this->setInfo($merchant_id);
     }
 
     /**
-     * @return array
+     * @return array|\yii\db\ActiveRecord|null
      */
-    public function getInfo()
+    public function findByLogin()
     {
-        return $this->info;
+        return $this->findById($this->getId());
     }
 
     /**
-     * @param $merchant_id
+     * @return array|\yii\db\ActiveRecord|null
      */
-    public function setInfo($merchant_id)
+    public function findById($id)
     {
-        // TODO 查询商户是否存在,目前已经全部移动到插件
-
-        $this->info = [];
+        return Merchant::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['id' => $id])
+            ->one();
     }
 }

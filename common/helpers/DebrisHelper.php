@@ -13,97 +13,6 @@ use yii\helpers\Json;
 class DebrisHelper
 {
     /**
-     * 获取水印坐标
-     *
-     * @param $imgUrl
-     * @param $watermarkImgUrl
-     * @param $point
-     * @return array|bool
-     */
-    public static function getWatermarkLocation($imgUrl, $watermarkImgUrl, $point)
-    {
-        if (empty($imgUrl) || empty($watermarkImgUrl)) {
-            return false;
-        }
-
-        if (!file_exists($watermarkImgUrl) || !file_exists($imgUrl)) {
-            return false;
-        }
-
-        $imgSize = getimagesize($imgUrl);
-        $watermarkImgSize = getimagesize($watermarkImgUrl);
-        if (empty($imgSize) || empty($watermarkImgSize)) {
-            return false;
-        }
-
-        $imgWidth = $imgSize[0];
-        $imgHeight = $imgSize[1];
-        $imgMime = $imgSize['mime'];
-        $watermarkImgWidth = $watermarkImgSize[0];
-        $watermarkImgHeight = $watermarkImgSize[1];
-        $watermarkImgMime = $watermarkImgSize['mime'];
-
-        switch ($point) {
-            case 1 : // 左上角
-                $porintLeft = 20;
-                $pointTop = 20;
-
-                break;
-            case 2 : // 上中部
-                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
-                $pointTop = 20;
-
-                break;
-            case 3 : // 右上部
-                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
-                $pointTop = 20;
-
-                break;
-            case 4 : // 左中部
-                $porintLeft = 20;
-                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
-
-                break;
-            case 5 : // 正中部
-                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
-                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
-
-                break;
-            case 6 : // 右中部
-                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
-                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
-
-                break;
-            case 7 : // 左下部
-                $porintLeft = 20;
-                $pointTop = $imgHeight - $watermarkImgHeight - 20;
-
-                break;
-            case 8 : // 中下部
-                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
-                $pointTop = $imgHeight - $watermarkImgHeight - 20;
-
-                break;
-            case 9 : // 右下部
-                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
-                $pointTop = $imgHeight - $watermarkImgHeight - 20;
-
-                break;
-            default :
-                return [0, 0];
-
-                break;
-        }
-
-        // 太小就不生成水印坐标
-        if (($imgWidth - $porintLeft) < $watermarkImgWidth || ($imgHeight - $pointTop) < $watermarkImgHeight) {
-            return false;
-        }
-
-        return [$porintLeft, $pointTop];
-    }
-
-    /**
      * @throws \yii\base\InvalidConfigException
      */
     public static function getUrl()
@@ -112,6 +21,10 @@ class DebrisHelper
         $matching = '/' . Yii::$app->id . '/';
         if (substr($url, 0, strlen($matching)) == $matching) {
             $url = substr($url, strlen($matching), strlen($url));
+        }
+
+        if (substr($url, 0, 1) === '/') {
+            $url = substr($url, 1, strlen($url));
         }
 
         return $url;
@@ -154,7 +67,7 @@ class DebrisHelper
 
         // 查询字符串是否有page
         foreach ($getQueryParamArr as $key => $value) {
-            if (StringHelper::strExists($value, 'page=') && !StringHelper::strExists($value, 'per-page=')) {
+            if (StringHelper::strExists($value, 'page=') || !StringHelper::strExists($value, 'per-page=')) {
                 unset($getQueryParamArr[$key]);
             }
         }
@@ -166,6 +79,9 @@ class DebrisHelper
             $fullUrl .= implode('&', $getQueryParamArr);
             $pageConnector = '&';
         }
+
+        $fullUrl = Html::encode($fullUrl);
+        $pageConnector = Html::encode($pageConnector);
 
         return [$fullUrl, $pageConnector];
     }
@@ -258,5 +174,96 @@ class DebrisHelper
         $calculatedDistance = $earthRadius * $stepTwo;
 
         return round($calculatedDistance);
+    }
+
+    /**
+     * 获取水印坐标
+     *
+     * @param $imgUrl
+     * @param $watermarkImgUrl
+     * @param $point
+     * @return array|bool
+     */
+    public static function getWatermarkLocation($imgUrl, $watermarkImgUrl, $point)
+    {
+        if (empty($imgUrl) || empty($watermarkImgUrl)) {
+            return false;
+        }
+
+        if (!file_exists($watermarkImgUrl) || !file_exists($imgUrl)) {
+            return false;
+        }
+
+        $imgSize = getimagesize($imgUrl);
+        $watermarkImgSize = getimagesize($watermarkImgUrl);
+        if (empty($imgSize) || empty($watermarkImgSize)) {
+            return false;
+        }
+
+        $imgWidth = $imgSize[0];
+        $imgHeight = $imgSize[1];
+        $imgMime = $imgSize['mime'];
+        $watermarkImgWidth = $watermarkImgSize[0];
+        $watermarkImgHeight = $watermarkImgSize[1];
+        $watermarkImgMime = $watermarkImgSize['mime'];
+
+        switch ($point) {
+            case 1 : // 左上角
+                $porintLeft = 20;
+                $pointTop = 20;
+
+                break;
+            case 2 : // 上中部
+                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
+                $pointTop = 20;
+
+                break;
+            case 3 : // 右上部
+                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
+                $pointTop = 20;
+
+                break;
+            case 4 : // 左中部
+                $porintLeft = 20;
+                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
+
+                break;
+            case 5 : // 正中部
+                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
+                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
+
+                break;
+            case 6 : // 右中部
+                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
+                $pointTop = floor(($imgHeight - $watermarkImgHeight) / 2);
+
+                break;
+            case 7 : // 左下部
+                $porintLeft = 20;
+                $pointTop = $imgHeight - $watermarkImgHeight - 20;
+
+                break;
+            case 8 : // 中下部
+                $porintLeft = floor(($imgWidth - $watermarkImgWidth) / 2);
+                $pointTop = $imgHeight - $watermarkImgHeight - 20;
+
+                break;
+            case 9 : // 右下部
+                $porintLeft = $imgWidth - $watermarkImgWidth - 20;
+                $pointTop = $imgHeight - $watermarkImgHeight - 20;
+
+                break;
+            default :
+                return [0, 0];
+
+                break;
+        }
+
+        // 太小就不生成水印坐标
+        if (($imgWidth - $porintLeft) < $watermarkImgWidth || ($imgHeight - $pointTop) < $watermarkImgHeight) {
+            return false;
+        }
+
+        return [$porintLeft, $pointTop];
     }
 }

@@ -52,6 +52,10 @@ class BaseController extends Controller
             return false;
         }
 
+        // 每页数量
+        $this->pageSize = Yii::$app->request->get('per-page', 10);
+        $this->pageSize > 50 && $this->pageSize = 50;
+
         // 判断当前模块的是否为主模块, 模块+控制器+方法
         $permissionName = '/' . Yii::$app->controller->route;
         // 判断是否忽略校验

@@ -42,13 +42,13 @@ class AuthorizationCodeService extends Service
     }
 
     /**
-     * @param $tokenId
+     * @param $authorization_code
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function findByAuthorizationCode($tokenId)
+    public function findByAuthorizationCode($authorization_code)
     {
         return AuthorizationCode::find()
-            ->where(['authorization_code' => $tokenId])
+            ->where(['authorization_code' => $authorization_code])
             ->one();
     }
 

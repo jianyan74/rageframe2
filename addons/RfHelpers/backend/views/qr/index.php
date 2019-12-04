@@ -8,19 +8,6 @@ $this->title = '二维码生成';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<style>
-    .sp-replacer {
-        background: #fff;
-    }
-    .has-success .sp-krajee.sp-replacer {
-        background-color: #fff;
-    }
-
-    .spectrum-group > .input-group-addon {
-        padding: 0;
-    }
-</style>
-
 <?php $form = ActiveForm::begin([
     'id' => 'qr',
     'fieldConfig' => [

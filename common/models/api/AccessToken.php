@@ -59,7 +59,7 @@ class AccessToken extends RateLimit
         return [
             [['merchant_id', 'member_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['refresh_token', 'access_token'], 'string', 'max' => 60],
-            [['group'], 'string', 'max' => 30],
+            [['group'], 'string', 'max' => 100],
             [['access_token'], 'unique'],
             [['refresh_token'], 'unique'],
         ];

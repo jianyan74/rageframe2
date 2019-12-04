@@ -5,7 +5,7 @@ use common\helpers\Html;
 use common\enums\GenderEnum;
 use common\helpers\ImageHelper;
 
-$this->title = '第三方用户';
+$this->title = '第三方授权';
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
 
 ?>
@@ -41,9 +41,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'attribute' => 'gender',
                             'value' => function ($model, $key, $index, $column) {
-                                return GenderEnum::$listExplain[$model->gender];
+                                return GenderEnum::getValue($model->gender);
                             },
-                            'filter' => Html::activeDropDownList($searchModel, 'gender', GenderEnum::$listExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'gender', GenderEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

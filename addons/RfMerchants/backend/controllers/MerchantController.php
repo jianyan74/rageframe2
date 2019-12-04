@@ -1,11 +1,12 @@
 <?php
+
 namespace addons\RfMerchants\backend\controllers;
 
 use Yii;
 use common\enums\StatusEnum;
-use common\components\Curd;
 use common\models\base\SearchModel;
-use addons\RfMerchants\common\models\Merchant;
+use common\components\Curd;
+use common\models\merchant\Merchant;
 
 /**
  * Class MerchantController
@@ -46,22 +47,5 @@ class MerchantController extends BaseController
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
         ]);
-    }
-
-    /**
-     * 返回模型
-     *
-     * @param $id
-     * @return \yii\db\ActiveRecord
-     */
-    protected function findModel($id)
-    {
-        /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || empty($model = $this->modelClass::findOne($id))) {
-            $model = new $this->modelClass;
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
     }
 }

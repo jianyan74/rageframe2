@@ -45,8 +45,7 @@ class AuthController extends BaseController
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['>', 'member_id', 0])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
+            ->andWhere(['>', 'member_id', 0]);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

@@ -24,7 +24,7 @@ class MemberController extends \yii\rest\ActiveController
      *
      * @var array
      */
-    protected $optional = [];
+    protected $authOptional = [];
 
     /**
      * 启始位移
@@ -56,7 +56,7 @@ class MemberController extends \yii\rest\ActiveController
         // 授权验证
         $behaviors['jwtAuth'] = [
             'class' => JWTAuth::class,
-            'optional' => $this->optional, // 不进行认证判断方法
+            'optional' => $this->authOptional, // 不进行认证判断方法
         ];
 
         return $behaviors;
@@ -88,14 +88,15 @@ class MemberController extends \yii\rest\ActiveController
     }
 
     /**
-     * @param $action
-     * @return bool|void
-     * @throws BadRequestHttpException
+     * 权限验证
+     *
+     * @param string $action 当前的方法
+     * @param null $model 当前的模型类
+     * @param array $params $_GET变量
+     * @throws \yii\web\BadRequestHttpException
      */
-    public function beforeAction($action)
+    public function checkAccess($action, $model = null, $params = [])
     {
-        parent::beforeAction($action);
-
         // 方法名称
         if (in_array($action, ['view', 'update', 'create', 'delete'])) {
             throw new \yii\web\BadRequestHttpException('您的权限不足，如需要请联系管理员');

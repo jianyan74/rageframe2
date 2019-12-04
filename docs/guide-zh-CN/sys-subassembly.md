@@ -9,6 +9,7 @@
   - 行为日志记录
   - 微信接口验证及报错获取
   - 解析 model 报错
+- 文件上传
 - 生成二维码
 - IP地址转地区
 - Curl
@@ -26,6 +27,9 @@ Yii::$app->debris->config($fildName);
 
 // 强制不从缓存读取
 Yii::$app->debris->config($fildName, true);
+
+// 从缓存中强制读取商户 ID 为 1 配置(注意: 1 为总后台的 ID)
+Yii::$app->debris->config($fildName, false, 1);
 ```
 
 ##### 获取全部配置信息
@@ -36,6 +40,9 @@ Yii::$app->debris->configAll();
 
 // 强制不从缓存读取
 Yii::$app->debris->configAll(true);
+
+// 从缓存中强制读取商户 ID 为 1 全部配置(注意: 1 为总后台的 ID)
+Yii::$app->debris->configAll(false, 1);
 ```
 
 ##### 打印调试
@@ -74,6 +81,28 @@ $error = Yii::$app->debris->getWechatError($message, false);
 // 注意 $firstErrors 为 $model->getFirstErrors();
 Yii::$app->debris->analyErr($firstErrors);
 ```
+
+### 文件上传
+
+获取组件全部实现 `League\Flysystem\Filesystem` 接口
+
+```
+// 支持 oss/cos/qiniu/local, 配置不传默认使用总后台
+$entity = Yii::$app->uploadDrive->local($config)->entity()；
+```
+
+使用案例
+
+```
+$entity = Yii::$app->uploadDrive->local()->entity()；
+$stream = fopen('文件绝对路径', 'r+');
+$result = $entity->writeStream('存储相对路径', $stream);
+
+// 直接写入base64数据
+$entity->write('存储相对路径', $base64Data);
+```
+
+更多说明：新增驱动请放入 `common\components\uploaddrive` 目录, 并在 `common\components\UploadDrive` 类内实现可实例化的方法
 
 ### 生成二维码
 

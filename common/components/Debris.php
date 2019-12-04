@@ -4,7 +4,7 @@ namespace common\components;
 
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
-use common\enums\CacheKeyEnum;
+use common\enums\CacheEnum;
 
 /**
  * Class Debris
@@ -18,12 +18,13 @@ class Debris
      *
      * @param string $name 字段名称
      * @param bool $noCache true 不从缓存读取 false 从缓存读取
-     * @return bool|string
+     * @param string $merchant_id
+     * @return string|null
      */
-    public function config($name, $noCache = false)
+    public function config($name, $noCache = false, $merchant_id = '')
     {
         // 获取缓存信息
-        $info = $this->getConfigInfo($noCache);
+        $info = $this->getConfigInfo($noCache, $merchant_id);
         return isset($info[$name]) ? trim($info[$name]) : null;
     }
 
@@ -33,25 +34,27 @@ class Debris
      * @param bool $noCache true 不从缓存读取 false 从缓存读取
      * @return array|bool|mixed
      */
-    public function configAll($noCache = false)
+    public function configAll($noCache = false, $merchant_id = '')
     {
-        $info = $this->getConfigInfo($noCache);
+        $info = $this->getConfigInfo($noCache, $merchant_id);
         return $info ? $info : [];
     }
 
     /**
      * 获取全部配置信息
      *
-     * @param bool $noCache true 不从缓存读取 false 从缓存读取
+     * @param $noCache true 不从缓存读取 false 从缓存读取
+     * @param int $merchant_id 强制从某个商户读取
      * @return array|mixed
      */
-    protected function getConfigInfo($noCache)
+    protected function getConfigInfo($noCache, $merchant_id)
     {
         // 获取缓存信息
-        $cacheKey = CacheKeyEnum::SYS_CONFIG;
+        $cacheKey = CacheEnum::getPrefix('config', $merchant_id);
         if (!($info = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
-            $config = Yii::$app->services->config->getListWithValue();
+            $config = Yii::$app->services->config->findAllWithValue($merchant_id);
             $info = [];
+
             foreach ($config as $row) {
                 $info[$row['name']] = $row['value']['data'] ?? $row['default_value'];
             }

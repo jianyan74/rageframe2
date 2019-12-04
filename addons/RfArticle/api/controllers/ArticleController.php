@@ -26,7 +26,7 @@ class ArticleController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index', 'view'];
+    protected $authOptional = ['index', 'view'];
 
     /**
      * 首页

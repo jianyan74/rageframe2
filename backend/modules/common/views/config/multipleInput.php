@@ -1,9 +1,10 @@
 <?php
 
+use yii\helpers\Json;
 use common\helpers\Html;
 use common\enums\StatusEnum;
 
-$value = isset($row['value']['data']) ? unserialize($row['value']['data']) : [];
+$value = isset($row['value']['data']) ? Json::decode($row['value']['data']) : [];
 
 $columns = [];
 foreach ($option as $key => $v) {
@@ -21,7 +22,7 @@ foreach ($option as $key => $v) {
 <div class="form-group">
     <?= Html::label($row['title'], $row['name'], ['class' => 'control-label demo']); ?>
     <?php if ($row['is_hide_remark'] != StatusEnum::ENABLED) { ?>
-        (<?= $row['remark'] ?>)
+        <small><?= \yii\helpers\HtmlPurifier::process($row['remark']) ?></small>
     <?php } ?>
     <div class="col-sm-push-10">
         <?= unclead\multipleinput\MultipleInput::widget([

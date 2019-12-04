@@ -3,15 +3,15 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use common\helpers\Html;
-use common\models\wechat\RuleKeyword;
 use common\enums\StatusEnum;
+use addons\RfWechat\common\models\RuleKeyword;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '规则回复', 'url' => ['/addons/rule', 'addon' => $model['data']]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= Html::cssFile('@web/resources/dist/css/checkbox.css'); ?>
+<?= Html::cssFile('@web/resources/css/checkbox.css'); ?>
 
 <?php $form = ActiveForm::begin([
     'id' => 'ruleForm',
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
-                            <?= $form->field($model, 'keyword')->textInput(['value'=> implode(',',$ruleKeywords[RuleKeyword::TYPE_MATCH])])->hint('多个关键字请使用逗号隔开，如天气，今日天气。')->label('关键字') ?>
+                            <?= $form->field($model, 'keyword')->textInput(['value'=> implode(',', $ruleKeywords[RuleKeyword::TYPE_MATCH])])->hint('多个关键字请使用逗号隔开，如天气，今日天气。')->label('关键字') ?>
                             <div class="trigger" style="display: none">
                                 <div class="form-group">
                                     <label class="control-label">高级触发列表</label>
@@ -168,7 +168,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="col-sm-12">
                         <div class="col-sm-9">
-                            <?= $form->field($model, 'status')->radioList(StatusEnum::$listExplain)->hint('您可以临时禁用这条回复') ?>
+                            <?= $form->field($model, 'status')->radioList(StatusEnum::getMap())->hint('您可以临时禁用这条回复') ?>
                         </div>
                     </div>
                     <div class="form-group">　

@@ -6,7 +6,7 @@ echo "<?php\n";
 namespace addons\<?= $model->name;?>\common\components;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * Bootstrap

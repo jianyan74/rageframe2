@@ -3,7 +3,7 @@
 namespace addons\RfDevTool;
 
 use common\helpers\MigrateHelper;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 安装

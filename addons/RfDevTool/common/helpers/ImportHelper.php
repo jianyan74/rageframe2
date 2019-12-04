@@ -7,7 +7,8 @@ use yii\helpers\Json;
 use common\enums\AppEnum;
 use common\models\common\Provinces;
 use common\models\common\AuthItem;
-use common\enums\AuthTypeEnum;
+use common\enums\TypeEnum;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class ImportHelper
@@ -57,15 +58,20 @@ class ImportHelper
     }
 
     /**
-     * 导入权限
-     *
      * @param $data
+     * @param $app_id
+     * @return bool
+     * @throws NotFoundHttpException
      */
-    public static function auth($data)
+    public static function auth($data, $app_id)
     {
+        if (!in_array($app_id, AppEnum::getKeys())) {
+            throw new NotFoundHttpException('找不到应用id');
+        }
+
         ini_set('max_execution_time', '0');
 
-        AuthItem::deleteAll();
+        AuthItem::deleteAll(['app_id' => $app_id]);
         $allData = [];
         $sortArr = [];
         foreach ($data as $datum) {
@@ -85,8 +91,8 @@ class ImportHelper
                 $tmp = [
                     'title' => $datum[0],
                     'name' => $datum[1],
-                    'app_id' => AppEnum::BACKEND,
-                    'type' => AuthTypeEnum::TYPE_DEFAULT,
+                    'app_id' => $app_id,
+                    'type' => TypeEnum::DEFAULT,
                     'pid' => $pid,
                     'sort' => $sortArr[$datum[2]]['id'],
                     'level' => $level,

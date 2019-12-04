@@ -78,18 +78,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
-                            'attribute' => 'upload_ip',
-                            'filter' => false, //不显示搜索框
+                            'label' => '位置信息',
                             'value' => function ($model) {
-                                return DebrisHelper::long2ip($model->upload_ip);
+                                $str = [];
+                                $str[] = DebrisHelper::analysisIp($model->upload_ip);
+                                $str[] = DebrisHelper::long2ip($model->upload_ip);
+                                return implode('</br>', $str);
                             },
-                        ],
-                        [
-                            'label' => 'ip解析',
-                            'filter' => false, //不显示搜索框
-                            'value' => function ($model) {
-                                return DebrisHelper::analysisIp($model->upload_ip);
-                            },
+                            'format' => 'raw',
                         ],
                         [
                             'label' => '创建时间',

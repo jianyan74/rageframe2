@@ -22,18 +22,28 @@ v1
 
 #### 北京时间格式
 
-YYYYmmddHHiiss
+YYYY-mm-dd HH:ii:ss
 
 #### 公共入参说明
 
 > 注意是通过Url传递
-> 例如 `http://www.example.com/api/v1/member/info?access-token=[access-token]`
+> 例如 `http://www.example.com/api/v1/member/info
 
-入参说明
+Query 入参说明
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-access-token | string | 否 | 无 | 授权秘钥 | 需登录验证(出现401错误)必传
+access-token | string | 否 | 无 | 授权秘钥 | 需登录验证(出现401错误)必传,与下面的x-api-key 2选1即可
+
+Header 入参说明
+
+参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
+---|---|---|---|---|---
+x-api-key | string | 否 |  | 授权秘钥 | 与上面的access-token 2选1即可
+device | string | 否 |  | 设备类型 | ios/android
+device-uuid | string | 否 |  | 设备唯一码 | ios: IDFA码;android:IMEI码;
+device-version | string | 否 |  | 设备系统版本号 | 
+device-app-version | string | 否 |  | 设备上当前app版本号 | 
 
 #### 公共出参说明
 

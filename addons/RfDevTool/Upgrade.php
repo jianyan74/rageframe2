@@ -3,7 +3,7 @@
 namespace addons\RfDevTool;
 
 use Yii;
-use backend\interfaces\AddonWidget;
+use common\interfaces\AddonWidget;
 
 /**
  * 升级数据库

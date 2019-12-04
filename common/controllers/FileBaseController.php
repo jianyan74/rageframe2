@@ -2,16 +2,16 @@
 
 namespace common\controllers;
 
-use common\helpers\StringHelper;
 use Yii;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\Response;
 use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 use common\models\common\Attachment;
-use common\components\UploadDrive;
+use common\helpers\StringHelper;
 
 /**
  * Class FileBaseController
@@ -80,9 +80,9 @@ class FileBaseController extends Controller
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -99,9 +99,9 @@ class FileBaseController extends Controller
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -118,9 +118,9 @@ class FileBaseController extends Controller
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -137,9 +137,36 @@ class FileBaseController extends Controller
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * Markdown 图片上传
+     *
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionImagesMarkdown()
+    {
+        try {
+            $upload = new UploadHelper(Yii::$app->request->get(), Attachment::UPLOAD_TYPE_IMAGES);
+            $upload->uploadFileName = 'editormd-image-file';
+            $upload->verifyFile();
+            $upload->save();
+
+            $info = $upload->getBaseInfo();
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return [
+                'success' => 1,
+                'url' => $info['url'],
+            ];
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -160,9 +187,9 @@ class FileBaseController extends Controller
             $upload->verifyBase64($data, $extend);
             $upload->save(base64_decode($data));
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -177,7 +204,7 @@ class FileBaseController extends Controller
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
 
         if (!$mergeInfo) {
-            return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
+            return ResultHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
         try {
@@ -188,71 +215,28 @@ class FileBaseController extends Controller
 
             Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
-            return ResultDataHelper::json(200, '合并完成', $upload->getBaseInfo());
+            return ResultHelper::json(200, '合并完成', $upload->getBaseInfo());
         } catch (\Exception $e) {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
     /**
-     * 获取oss信息
+     * oss直传配置
      *
-     * @throws \League\Flysystem\FileNotFoundException
-     * @throws \yii\web\NotFoundHttpException
+     * @return array
      * @throws \Exception
      */
-    public function actionGetOssPath()
+    public function actionOssAccredit()
     {
-        $url = Yii::$app->request->post('url');
-        $type = Yii::$app->request->post('type');
+        // 上传类型
+        $type = Yii::$app->request->get('type');
+        $typeConfig = Yii::$app->params['uploadConfig'][$type];
 
-        $urlArr = parse_url($url);
-        $base_url = $urlArr['path'];
-        $drive = new UploadDrive(Attachment::DRIVE_OSS);
-        $filesystem = $drive->getEntity();
+        $path = $typeConfig['path'] . date($typeConfig['subName'], time()) . "/";
+        $oss = Yii::$app->uploadDrive->oss()->config($typeConfig['maxSize'], $path, 60 * 60 * 2, $type);
 
-        if (!$filesystem->has($base_url)) {
-            return ResultDataHelper::json(404, '找不到文件');
-        }
-
-        $metadata = $filesystem->getMetadata($base_url);
-        $path = parse_url($metadata['info']['url'])['path'];
-
-        $baseUrlArr = explode('/', $base_url);
-        $fileName = end($baseUrlArr);
-        $fileName = explode('.', $fileName);
-        $extension = end($fileName);
-        unset($fileName[count($fileName) - 1]);
-        $name = implode('.', $fileName);
-
-        $baseInfo = [
-            'drive' => Attachment::DRIVE_OSS,
-            'upload_type' => in_array($type, array_keys(Attachment::$uploadTypeExplain)) ? $type : Attachment::UPLOAD_TYPE_FILES,
-            'specific_type' => $metadata['content-type'],
-            'size' => $metadata['content-length'],
-            'extension' => $extension,
-            'name' => $name,
-            'base_url' => urldecode($metadata['info']['url']),
-            'path' => urldecode($path),
-            'md5' => Yii::$app->request->post('md5'),
-        ];
-
-        // 验证OSS CNAME
-        $user_url = Yii::$app->debris->config('storage_aliyun_user_url');
-        if (!empty($user_url)) {
-            $baseOssUrl = Yii::$app->debris->config('storage_aliyun_bucket') . '.' . Yii::$app->debris->config('storage_aliyun_endpoint');
-            $baseInfo['base_url'] = StringHelper::replace($baseOssUrl, $user_url, $baseInfo['base_url']);
-        }
-
-        // 写入数据库
-        $attachment_id = Yii::$app->services->attachment->create($baseInfo);
-
-        $baseInfo['url'] = $baseInfo['base_url'];
-        $baseInfo['id'] = $attachment_id;
-        $baseInfo['upload_type'] = UploadHelper::formattingFileType($baseInfo['specific_type'], $baseInfo['extension'], $baseInfo['upload_type']);
-        $baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($baseInfo['size'], 2);
-
-        return ResultDataHelper::json(200, '获取成功', $baseInfo);
+        return ResultHelper::json(200, '获取成功', $oss);
     }
 
     /**
@@ -268,10 +252,10 @@ class FileBaseController extends Controller
             $file['url'] = $file['base_url'];
             $file['upload_type'] = UploadHelper::formattingFileType($file['specific_type'], $file['extension'], $file['upload_type']);
 
-            return ResultDataHelper::json(200, '获取成功', $file);
+            return ResultHelper::json(200, '获取成功', $file);
         }
 
-        return ResultDataHelper::json(404, '找不到文件');
+        return ResultHelper::json(404, '找不到文件');
     }
 
     /**
@@ -291,7 +275,7 @@ class FileBaseController extends Controller
 
         // 判断是否直接返回json格式
         if ($json == true) {
-            return ResultDataHelper::json(200, '获取成功', $models);
+            return ResultHelper::json(200, '获取成功', $models);
         }
 
         return $this->renderAjax('@common/widgets/webuploader/views/selector', [

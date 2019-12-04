@@ -1,6 +1,6 @@
 <?php
 use common\helpers\ImageHelper;
-use backend\widgets\menu\MenuLeftWidget;
+use common\widgets\menu\MenuLeftWidget;
 ?>
 
 <aside class="main-sidebar">

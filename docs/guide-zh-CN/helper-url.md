@@ -24,7 +24,7 @@ UrlHelper::toFront(['index']);
 ### 生成微信 Url
 
 ```
-UrlHelper::toWechat(['index']);
+UrlHelper::toHtml5(['index']);
 ```
 
 ### 生成Api Url

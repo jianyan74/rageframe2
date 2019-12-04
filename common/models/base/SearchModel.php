@@ -263,7 +263,8 @@ class SearchModel extends Model
                 }
 
                 foreach ((array)$attributes as $attribute) {
-                    $attributeName = str_replace('.', '_', $relation) . '_' . $attribute;
+                    // $attributeName = str_replace('.', '_', $relation) . '_' . $attribute;
+                    $attributeName = $relation . '.' . $attribute;
                     $tableAttribute = $this->internalRelations[$relation]['tableName'] . '.' . $attribute;
                     $this->rules[] = [$attributeName, 'safe'];
                     $this->scenarios[$this->scenario][] = $attributeName;

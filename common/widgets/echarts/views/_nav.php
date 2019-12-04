@@ -5,7 +5,7 @@ use common\helpers\Html;
 ?>
 
 <div class="box-body" id="<?= $boxId; ?>">
-    <div>
+    <div class="m-b-md">
         <?php $i = 0; ?>
         <?php foreach ($themeConfig as $key => $value) { ?>
             <span class="<?= $i == 0 ? 'orange' : '' ?> pointer"
