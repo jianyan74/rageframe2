@@ -46,6 +46,8 @@ class ExcelHelper
         $hk = 1;
         foreach ($header as $k => $v) {
             $sheet->setCellValue(Coordinate::stringFromColumnIndex($hk) . '1', $v[0]);
+            $sheet->getStyle(Coordinate::stringFromColumnIndex($hk) . '1')->getFont()->setBold(true);
+            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($hk))->setAutoSize(true);
             $hk += 1;
         }
 
