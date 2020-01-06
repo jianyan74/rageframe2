@@ -4,10 +4,10 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use common\helpers\Html;
 use common\enums\StatusEnum;
-use addons\RfWechat\common\models\RuleKeyword;
+use addons\Wechat\common\models\RuleKeyword;
 
 $this->title = $model->isNewRecord ? '创建' : '编辑';
-$this->params['breadcrumbs'][] = ['label' => '规则回复', 'url' => ['/addons/rule', 'addon' => $model['data']]];
+$this->params['breadcrumbs'][] = ['label' => '规则回复', 'url' => ['rule']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php $form = ActiveForm::begin([
     'id' => 'ruleForm',
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::to(['/addons/rule-edit', 'id' => $model['id'], 'addon' => $model['data']]),
+    'validationUrl' => Url::to(['rule-edit', 'id' => $model['id']]),
 ]); ?>
 <div class="row">
     <div class="col-sm-12">

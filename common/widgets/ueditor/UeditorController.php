@@ -9,7 +9,7 @@ use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
 use common\enums\StatusEnum;
 use yii\helpers\Json;
-use addons\RfWechat\common\models\Attachment as WechatAttachment;
+use addons\Wechat\common\models\Attachment as WechatAttachment;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 

@@ -4,7 +4,7 @@ namespace backend\modules\common\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\common\Menu;
 use common\enums\AppEnum;
 use backend\controllers\BaseController;

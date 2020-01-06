@@ -4,11 +4,11 @@ namespace common\controllers;
 
 use Yii;
 use yii\web\Controller;
+use yii\web\UnauthorizedHttpException;
+use common\helpers\Auth;
 use common\helpers\AddonHelper;
-use common\helpers\StringHelper;
-use common\helpers\Url;
+use common\traits\BaseAction;
 use common\enums\AppEnum;
-use common\components\BaseAction;
 
 /**
  * 模块基类控制器
@@ -42,92 +42,43 @@ class AddonsController extends Controller
     {
         parent::init();
 
+        // 后台视图默认载入模块视图
+        if (!$this->layout && in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
+            $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
+        }
+    }
+
+    /**
+     * @param $action
+     * @return bool
+     * @throws UnauthorizedHttpException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function beforeAction($action)
+    {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
         // 每页数量
         $this->pageSize = Yii::$app->request->get('per-page', 10);
         $this->pageSize > 50 && $this->pageSize = 50;
 
-        // 后台视图默认载入模块视图
-        if (!$this->layout) {
-            $this->layout = '@' . Yii::$app->id . '/views/layouts/main';
-
-            if (in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
-                $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
+        // 后台进行权限校验
+        if (in_array(Yii::$app->id, [AppEnum::MERCHANT, AppEnum::BACKEND])) {
+            // 判断当前模块的是否为主模块, 模块+控制器+方法
+            $permissionName = '/' . Yii::$app->controller->route;
+            // 判断是否忽略校验
+            if (in_array($permissionName, Yii::$app->params['noAuthRoute'])) {
+                return true;
+            }
+            // 开始权限校验
+            if (!Auth::verify($permissionName)) {
+                throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
             }
         }
-    }
 
-    /**
-     * @param string $view
-     * @param array $params
-     * @return string
-     */
-    public function render($view, $params = [])
-    {
-        $content = $this->getView()->render($this->analyView($view), $params, $this);
-        return $this->renderContent($content);
-    }
-
-    /**
-     * @param string $view
-     * @param array $params
-     * @return string
-     */
-    public function renderPartial($view, $params = [])
-    {
-        return $this->getView()->render($this->analyView($view), $params, $this);
-    }
-
-    /**
-     * @param string $view
-     * @param array $params
-     * @return string
-     */
-    public function renderAjax($view, $params = [])
-    {
-        return $this->getView()->renderAjax($this->analyView($view), $params, $this);
-    }
-
-    /**
-     * 跳转
-     *
-     * @param array|string $url
-     * @param int $statusCode
-     * @return \yii\console\Response|\yii\web\Response
-     */
-    public function redirect($url, $statusCode = 302)
-    {
-        return Yii::$app->getResponse()->redirect(Url::to($url), $statusCode);
-    }
-
-    /**
-     * 匹配对应的渲染的视图
-     *
-     * @param $view
-     */
-    protected function analyView($view)
-    {
-        // 判断是否有自定义的路径
-        if (strncmp($view, '@', 1) === 0) {
-            return $view;
-        }
-
-        // 判断路由是否写全
-        $controller = '';
-        if (count(explode('/', $view)) == 1) {
-            $controller = StringHelper::toUnderScore(Yii::$app->params['addonInfo']['controller']) . '/';
-        }
-
-        $appId = Yii::$app->id;
-        if ($this->isHook == true) {
-            $appId = AppEnum::BACKEND;
-        }
-
-        // 开启了商户映射
-        if ($appId == AppEnum::MERCHANT && Yii::$app->params['addon']['is_merchant_route_map'] == true) {
-            $appId = AppEnum::BACKEND;
-        }
-
-        return "@addons" . '/' . Yii::$app->params['addonInfo']['name'] . '/' . $appId . '/views/' . $controller . $view;
+        return true;
     }
 
     /**

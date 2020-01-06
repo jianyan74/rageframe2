@@ -3,14 +3,24 @@ return [
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
+    'user.log.noPostData' => [ // 安全考虑,不接收Post某些字段存储到日志的路由
+        'password',
+        'passwd',
+        'passwd_new',
+        'passwd_repetition',
+        'password_hash',
+        'password_repetition',
+    ],
     // 是否在模块内
     'inAddon' => false,
-    // 多商户开启
-    'merchantOpen' => true,
     // 系统管理员账号id
     'adminAccount' => '0',
     // 请求全局唯一ID
     'uuid' => '',
+    // 模式 仅支持 b2c 和 b2b2c
+    'pattern' => 'b2c',
+    // 真实 app id
+    'real_app_id' => '',
     // 百度编辑器默认上传驱动
     'UEditorUploadDrive' => 'local',
     // 全局上传配置
@@ -99,12 +109,6 @@ return [
     'wechatWorkConfig' => [],
     // 微信企业微信开放平台 具体可参考EasyWechat
     'wechatOpenWorkConfig' => [],
-
-    /** ------ 微信自定义接口配置------ **/
-
-    'userApiPath' => Yii::getAlias('@root') . '/addons/RfWechat/backend/userapis', // 自定义接口路径
-    'userApiNamespace' => '\addons\RfWechat\backend\userapis', // 命名空间
-    'userApiCachePrefixKey' => 'wechat:reply:user-api:', // 缓存前缀
 
     /** ------ 插件类型 ------ **/
     'addonsGroup' => [

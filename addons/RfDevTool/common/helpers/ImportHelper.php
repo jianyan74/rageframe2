@@ -7,7 +7,7 @@ use yii\helpers\Json;
 use common\enums\AppEnum;
 use common\models\common\Provinces;
 use common\models\common\AuthItem;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -92,7 +92,7 @@ class ImportHelper
                     'title' => $datum[0],
                     'name' => $datum[1],
                     'app_id' => $app_id,
-                    'type' => TypeEnum::DEFAULT,
+                    'is_addon' => WhetherEnum::DISABLED,
                     'pid' => $pid,
                     'sort' => $sortArr[$datum[2]]['id'],
                     'level' => $level,

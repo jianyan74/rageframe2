@@ -67,7 +67,7 @@ class CounterBehavior extends Behavior
         $redis->zremrangebyscore($key, 0, $now - $this->period); // 移除时间窗口之前的行为记录，剩下的都是时间窗口内的
 
         if ($redis->zcard($key) > $this->maxCount) {
-            throw new TooManyRequestsHttpException('请求过快');
+            throw new TooManyRequestsHttpException('服务器繁忙');
         }
     }
 }

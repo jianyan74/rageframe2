@@ -36,6 +36,10 @@ class DebrisHelper
      */
     public static function htmlEncode($value)
     {
+        if (empty($value)) {
+            return $value;
+        }
+
         if (!is_array($value)) {
             $value = Json::decode($value);
         }

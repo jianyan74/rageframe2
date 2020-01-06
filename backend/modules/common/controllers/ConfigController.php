@@ -8,7 +8,7 @@ use common\enums\StatusEnum;
 use common\models\base\SearchModel;
 use common\models\common\Config;
 use common\helpers\ResultHelper;
-use common\components\Curd;
+use common\traits\Curd;
 use common\enums\ConfigTypeEnum;
 use common\enums\AppEnum;
 use backend\controllers\BaseController;

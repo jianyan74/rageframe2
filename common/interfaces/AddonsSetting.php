@@ -16,12 +16,4 @@ interface AddonsSetting
      * @return mixed
      */
     public function actionDisplay();
-
-    /**
-     * 默认钩子方法
-     *
-     * @param array $param
-     * @return mixed
-     */
-    public function actionHook($param = []);
 }

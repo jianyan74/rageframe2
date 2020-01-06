@@ -52,7 +52,7 @@ class SiteController extends OnAuthController
         }
 
         // 返回数据验证失败
-        return ResultHelper::api(422, $this->getError($model));
+        return ResultHelper::json(422, $this->getError($model));
     }
 
     /**
@@ -63,10 +63,10 @@ class SiteController extends OnAuthController
     public function actionLogout()
     {
         if (Yii::$app->services->apiAccessToken->disableByAccessToken(Yii::$app->user->identity->access_token)) {
-            return ResultHelper::api(200, '退出成功');
+            return ResultHelper::json(200, '退出成功');
         }
 
-        return ResultHelper::api(422, '退出失败');
+        return ResultHelper::json(422, '退出失败');
     }
 
     /**
@@ -82,7 +82,7 @@ class SiteController extends OnAuthController
         $model = new RefreshForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return Yii::$app->services->apiAccessToken->getAccessToken($model->getUser(), $model->group);
@@ -103,7 +103,7 @@ class SiteController extends OnAuthController
         }
 
         // 返回数据验证失败
-        return ResultHelper::api(422, $this->getError($model));
+        return ResultHelper::json(422, $this->getError($model));
     }
 
     /**
@@ -117,7 +117,7 @@ class SiteController extends OnAuthController
         $model = new SmsCodeForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model->send();
@@ -134,14 +134,14 @@ class SiteController extends OnAuthController
         $model = new RegisterForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         $member = new Member();
         $member->attributes = ArrayHelper::toArray($model);
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
         if (!$member->save()) {
-            return ResultHelper::api(422, $this->getError($member));
+            return ResultHelper::json(422, $this->getError($member));
         }
 
         return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);
@@ -158,13 +158,13 @@ class SiteController extends OnAuthController
         $model = new UpPwdForm();
         $model->attributes = Yii::$app->request->post();
         if (!$model->validate()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         $member = $model->getUser();
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
         if (!$member->save()) {
-            return ResultHelper::api(422, $this->getError($member));
+            return ResultHelper::json(422, $this->getError($member));
         }
 
         return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);

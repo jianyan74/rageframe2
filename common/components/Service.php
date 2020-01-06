@@ -5,6 +5,7 @@ namespace common\components;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use common\traits\BaseAction;
 
 /**
  * Class Service

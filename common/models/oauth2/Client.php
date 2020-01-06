@@ -37,7 +37,7 @@ class Client extends \common\models\base\BaseModel
     {
         return [
             [['client_id'], 'unique'],
-            [['title', 'client_id', 'client_secret'], 'required'],
+            [['title', 'client_id', 'client_secret', 'redirect_uri'], 'required'],
             [['merchant_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 100],
             [['client_id', 'client_secret'], 'string', 'max' => 64, 'min' => 10],

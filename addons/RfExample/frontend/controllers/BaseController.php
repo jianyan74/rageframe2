@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\frontend\controllers;
 
 use Yii;
@@ -13,7 +14,7 @@ use common\controllers\AddonsController;
 class BaseController extends AddonsController
 {
     /**
-    * @var string
-    */
+     * @var string
+     */
     public $layout = "@addons/RfExample/frontend/views/layouts/main";
 }

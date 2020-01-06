@@ -2,12 +2,14 @@
 
 namespace addons\RfArticle;
 
+use common\components\BaseAddonConfig;
 use addons\RfArticle\common\components\Bootstrap;
 
 /**
  * Class Addon
- * @package addons\RfArticle */
-class AddonConfig
+ * @package addons\RfArticle
+ */
+class AddonConfig extends BaseAddonConfig
 {
     /**
      * 基础信息

@@ -12,6 +12,7 @@
 - 文件上传
 - 生成二维码
 - IP地址转地区
+- 快递查询
 - Curl
 - 中文转拼音
 - 爬虫
@@ -32,6 +33,13 @@ Yii::$app->debris->config($fildName, true);
 Yii::$app->debris->config($fildName, false, 1);
 ```
 
+读取某一端的配置
+
+```
+// 商户端配置
+Yii::$app->debris->merchantConfig($fildName);
+```
+
 ##### 获取全部配置信息
 
 ```
@@ -43,6 +51,13 @@ Yii::$app->debris->configAll(true);
 
 // 从缓存中强制读取商户 ID 为 1 全部配置(注意: 1 为总后台的 ID)
 Yii::$app->debris->configAll(false, 1);
+```
+
+读取某一端的配置
+
+```
+// 商户端配置
+Yii::$app->debris->merchantConfigAll();
 ```
 
 ##### 打印调试
@@ -154,6 +169,41 @@ array (size=4)
   2 => string '郑州' (length=6)
   3 => string '' (length=0)
   4 => string '410100' (length=6)
+```
+
+### 快递查询
+
+```
+// 查询所有的可用快递公司
+$companies = Yii::$app->logistics->companies('aliyun');
+
+/**
+ * 支持 aliyun(阿里云)、juhe(聚合)、kdniao(快递鸟)、kd100(快递100)
+ *
+ * @param string $no 快递单号
+ * @param null $company 快递公司
+ * @return OrderInterface
+ */
+$order = Yii::$app->logistics->aliyun($no, $company);
+```
+
+更多操作
+
+```
+ $order->getCode(); // 状态码
+ $order->getMsg(); // 状态信息
+ $order->getCompany(); // 物流公司简称
+ $order->getNo(); // 物流单号
+ $order->getStatus(); // 当前物流单状态
+ 
+ 注：物流状态可能不一定准确
+ 
+ $order->getDisplayStatus(); // 当前物流单状态展示名
+ $order->getAbstractStatus(); // 当前抽象物流单状态
+ $order->getCourier(); // 快递员姓名
+ $order->getCourierPhone(); // 快递员手机号
+ $order->getList(); // 物流单状态详情
+ $order->getOriginal(); // 获取接口原始返回信息
 ```
 
 ### Curl

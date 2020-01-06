@@ -232,23 +232,23 @@ class LogService extends Service
         $data['get_data'] = Yii::$app->request->get();
         $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
 
-        $module = Yii::$app->controller->module->id ?? '';
-        $controller = Yii::$app->controller->id ?? '';
-        $action = Yii::$app->controller->action->id ?? '';
-        $route = $module . '/' . $controller . '/' . $action;
-        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
-            $data['post_data'] = Yii::$app->request->post();
+        // 过滤敏感字段
+        $post_data = Yii::$app->request->post();
+        $noPostData = Yii::$app->params['user.log.noPostData'];
+        foreach ($noPostData as $noPostDatum) {
+            isset($post_data[$noPostDatum]) && $post_data[$noPostDatum] = '';
         }
 
+        $data['post_data'] = $post_data;
         $data['user_agent'] = Yii::$app->debris->detectVersion();
         $data['device'] = Yii::$app->request->headers->get('device', '');
         $data['device_uuid'] = Yii::$app->request->headers->get('device-uuid', '');
         $data['device_version'] = Yii::$app->request->headers->get('device-version', '');
         $data['device_app_version'] = Yii::$app->request->headers->get('device-app-version', '');
         $data['method'] = Yii::$app->request->method;
-        $data['module'] = $module;
-        $data['controller'] = $controller;
-        $data['action'] = $action;
+        $data['module'] = Yii::$app->controller->module->id ?? '';
+        $data['controller'] = Yii::$app->controller->id ?? '';
+        $data['action'] = Yii::$app->controller->action->id ?? '';
         $data['ip'] = (int)ip2long(Yii::$app->request->userIP);
 
         return $data;

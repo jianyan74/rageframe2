@@ -3,12 +3,13 @@
 namespace addons\RfHelpers;
 
 use addons\RfHelpers\common\components\Bootstrap;
+use common\components\BaseAddonConfig;
 
 /**
  * Class Addon
  * @package addons\RfHelpers
  */
-class AddonConfig
+class AddonConfig extends BaseAddonConfig
 {
     /**
      * 基础信息

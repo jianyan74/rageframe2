@@ -12,7 +12,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title"><?= $this->title; ?></h3>
+                <h3 class="box-title">
+                    <?= $this->title; ?>
+                    <small>「网站设置->OAuth2」里面配置对应的值才可使用</small>
+                </h3>
                 <div class="box-tools">
                     <?= Html::create(['ajax-edit'], '创建', [
                         'data-toggle' => 'modal',

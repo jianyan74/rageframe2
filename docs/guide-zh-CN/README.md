@@ -44,7 +44,6 @@
 
 - [模块介绍及目录](addon-introduce-catalog.md)
 - [模块开发流程](addon-flow.md)
-- [钩子说明及调用](addon-hook.md)
 - [模块辅助说明](addon-helper.md)
 
 #### Api

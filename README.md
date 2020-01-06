@@ -25,6 +25,7 @@ RageFrame 创建于 2016 年 4 月 16 日，一个基于 Yii2 高级框架的快
 - 快速高效的 Servises (服务层)，遵循 Yii2 的懒加载方式，只初始化使用到的组件服务。
 - 丰富的表单控件(时间、日期、时间日期、日期范围选择、颜色选择器、省市区三级联动、省市区勾选、单图上传、多图上传、单文件上传、多文件上传、百度编辑器、百度图表、多文本编辑框、地图经纬度选择器、图片裁剪上传、TreeGrid、JsTree、Markdown 编辑器)和组件(二维码生成、Curl、IP地址转地区)，快速开发，不必再为基础组件而担忧。
 - 快速生成 CURD ,无需编写代码，只需创建表设置路径就能出现一个完善的 CURD ,其中所需表单控件也是勾选即可直接生成。
+- 正常开发只需要开发商户端，没有 Saas 的时候商户端就是总后台，有了 Saas，商户端就是子后台
 - 完善的文档和辅助类，方便二次开发与集成。
 
 ### 思维导图
@@ -79,8 +80,8 @@ http://www.rageframe.com
 
 ### 插件
 
-- 微信公众号：https://github.com/jianyan74/RfWechat
-- 商家管理：https://github.com/jianyan74/RfMerchants
+- 微信公众号：https://github.com/jianyan74/Wechat
+- 商家管理：https://github.com/jianyan74/Merchants
 - 在线文档：https://github.com/jianyan74/RfOnlineDoc
 
 ### 问题反馈
@@ -111,6 +112,6 @@ RageFrame 遵循 Apache2 开源协议发布，并提供免费使用。
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2016-2019 by RageFrame [www.rageframe.com](http://www.rageframe.com)
+版权所有Copyright © 2016-2020 by RageFrame [www.rageframe.com](http://www.rageframe.com)
 
 All rights reserved。

@@ -11,7 +11,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
-use common\components\BaseAction;
+use common\traits\BaseAction;
 use common\behaviors\ActionLogBehavior;
 use common\behaviors\HttpSignAuth;
 
@@ -51,9 +51,9 @@ class ActiveController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
         // 跨域支持
-        $behaviors['corsFilter'] = [
-            'class' => Cors::class,
-        ];
+//        $behaviors['corsFilter'] = [
+//            'class' => Cors::class,
+//        ];
 
         // var_dump(1);die();
         // 移除行为的权限验证的优先级

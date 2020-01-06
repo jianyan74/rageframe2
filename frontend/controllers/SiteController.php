@@ -234,4 +234,16 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionOffline()
+    {
+        return $this->renderPartial('offline', [
+            'title' => '系统维护中...'
+        ]);
+    }
 }

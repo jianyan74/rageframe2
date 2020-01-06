@@ -5,14 +5,13 @@ namespace backend\modules\common\controllers;
 use Yii;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\base\SearchModel;
 use common\helpers\FileHelper;
 use common\helpers\AddonHelper;
 use common\models\common\Addons;
 use common\helpers\ExecuteHelper;
 use common\enums\AppEnum;
-use common\enums\TypeEnum;
 use common\interfaces\AddonWidget;
 use backend\modules\common\forms\AddonsForm;
 use backend\controllers\BaseController;
@@ -125,6 +124,7 @@ class AddonsController extends BaseController
             $allMenu = [];
             $allCover = [];
             $removeAppIds = [];
+            $defaultConfig = [];
 
             foreach ($config->appsConfig as $appId => $item) {
                 $file = $rootPath . $item;
@@ -145,9 +145,12 @@ class AddonsController extends BaseController
                 if (isset($appConfig['menu']) && !empty($appConfig['menu'])) {
                     $allMenu[$appId] = $appConfig['menu'];
                 }
+
+                // 默认存储配置
+                $defaultConfig[$appId] = $appConfig['config'] ?? [];
                 // 菜单配置
-                if (isset($appConfig['menuConfig']['location']) && $appConfig['menuConfig']['location'] == TypeEnum::DEFAULT) {
-                    $cate = Yii::$app->services->menuCate->createByAddons($appId, $config->info, $appConfig['menuConfig']['icon']);
+                if (isset($defaultConfig[$appId]['menu']['location']) && $defaultConfig[$appId]['menu']['location'] == Addons::TYPE_DEFAULT) {
+                    $cate = Yii::$app->services->menuCate->createByAddons($appId, $config->info, $defaultConfig[$appId]['menu']['icon']);
                     Yii::$app->services->menu->delByCate($cate);
                     Yii::$app->services->menu->createByAddons($appConfig['menu'], $cate);
                     // 移除菜单到应用中心列表
@@ -168,7 +171,7 @@ class AddonsController extends BaseController
             Yii::$app->services->addonsBinding->create($allMenu, $allCover, $name);
 
             // 更新信息
-            $model = Yii::$app->services->addons->update($name, $config);
+            $model = Yii::$app->services->addons->update($name, $config, $defaultConfig);
 
             // 进行安装数据库
             if ($data == true) {
@@ -300,7 +303,7 @@ class AddonsController extends BaseController
                 $files[] = "{$addonDir}{$item}/";
                 $files[] = "{$addonDir}{$item}/controllers/";
 
-                if ($item != AppEnum::API) {
+                if (!in_array($item,  AppEnum::api())) {
                     $files[] = "{$addonDir}{$item}/controllers/DefaultController.php";
                     $files[] = "{$addonDir}{$item}/views/";
                     $files[] = "{$addonDir}{$item}/views/layouts/";
@@ -312,10 +315,16 @@ class AddonsController extends BaseController
                     $files[] = "{$addonDir}{$item}/resources/";
                 } else {
                     // api特殊目录
-                    $files[] = "{$addonDir}{$item}/controllers/v1/";
-                    $files[] = "{$addonDir}{$item}/controllers/v1/DefaultController.php";
-                    $files[] = "{$addonDir}{$item}/controllers/v2/";
-                    $files[] = "{$addonDir}{$item}/controllers/v2/DefaultController.php";
+                    $files[] = "{$addonDir}{$item}/controllers/DefaultController.php";
+                    $files[] = "{$addonDir}{$item}/modules/";
+                    $files[] = "{$addonDir}{$item}/modules/v1/";
+                    $files[] = "{$addonDir}{$item}/modules/v1/Module.php";
+                    $files[] = "{$addonDir}{$item}/modules/v1/controllers/";
+                    $files[] = "{$addonDir}{$item}/modules/v1/controllers/DefaultController.php";
+                    $files[] = "{$addonDir}{$item}/modules/v2/";
+                    $files[] = "{$addonDir}{$item}/modules/v2/Module.php";
+                    $files[] = "{$addonDir}{$item}/modules/v2/controllers/";
+                    $files[] = "{$addonDir}{$item}/modules/v2/controllers/DefaultController.php";
                 }
             }
 
@@ -332,37 +341,42 @@ class AddonsController extends BaseController
             // 写入文件
             foreach ($app as $item) {
                 // 配置文件
-                file_put_contents("{$addonDir}common/config/{$item}.php", $this->renderPartial('template/config/app', ['bindings' => $data['bindings'] ?? [], 'appID' => $item]));
+                file_put_contents("{$addonDir}common/config/{$item}.php", $this->renderPartial('template/config/app', [
+                    'bindings' => $data['bindings'] ?? [],
+                    'appID' => $item,
+                    'model' => $model
+                ]));
 
-                if ($item === AppEnum::API) {
-                    file_put_contents("{$addonDir}api/controllers/v1/DefaultController.php",
-                        $this->renderPartial('template/controllers/ApiDefaultController',
+                if (in_array($item, AppEnum::api())) {
+                    // 默认控制器
+                    file_put_contents("{$addonDir}{$item}/controllers/DefaultController.php", $this->renderPartial('template/controllers/ApiDefaultController',
+                            ['model' => $model, 'appID' => $item]));
+                    file_put_contents("{$addonDir}{$item}/modules/v1/controllers/DefaultController.php", $this->renderPartial('template/controllers/ApiModulesDefaultController',
                             ['appID' => $item, 'model' => $model, 'versions' => 'v1']));
-                    file_put_contents("{$addonDir}api/controllers/v2/DefaultController.php",
-                        $this->renderPartial('template/controllers/ApiDefaultController',
+                    file_put_contents("{$addonDir}{$item}/modules/v2/controllers/DefaultController.php", $this->renderPartial('template/controllers/ApiModulesDefaultController',
                             ['appID' => $item, 'model' => $model, 'versions' => 'v2']));
+
+                    file_put_contents("{$addonDir}{$item}/modules/v1/Module.php", $this->renderPartial('template/ApiModules',
+                        ['appID' => $item, 'model' => $model, 'versions' => 'v1']));
+                    file_put_contents("{$addonDir}{$item}/modules/v2/Module.php", $this->renderPartial('template/ApiModules',
+                        ['appID' => $item, 'model' => $model, 'versions' => 'v2']));
 
                     continue;
                 }
 
-                // 控制器
-                file_put_contents("{$addonDir}{$item}/controllers/BaseController.php",
-                    $this->renderPartial('template/controllers/BaseController', ['model' => $model, 'appID' => $item]));
-                // 控制器
-                file_put_contents("{$addonDir}{$item}/controllers/DefaultController.php",
-                    $this->renderPartial('template/controllers/DefaultController',
+                // 默认控制器
+                file_put_contents("{$addonDir}{$item}/controllers/DefaultController.php", $this->renderPartial('template/controllers/DefaultController',
                         ['model' => $model, 'appID' => $item]));
+                // 基础控制器
+                file_put_contents("{$addonDir}{$item}/controllers/BaseController.php", $this->renderPartial('template/controllers/BaseController', ['model' => $model, 'appID' => $item]));
                 // 资源目录
                 file_put_contents("{$addonDir}{$item}/resources/.gitkeep", '*');
                 // 写入默认视图
-                file_put_contents("{$addonDir}{$item}/views/default/index.php",
-                    $this->renderPartial('template/view/index', ['model' => $model, 'appID' => $item]));
+                file_put_contents("{$addonDir}{$item}/views/default/index.php", $this->renderPartial('template/view/index', ['model' => $model, 'appID' => $item]));
                 // 写入视图自动载入
-                file_put_contents("{$addonDir}{$item}/views/layouts/main.php",
-                    $this->renderPartial('template/view/main', ['model' => $model, 'appID' => $item]));
+                file_put_contents("{$addonDir}{$item}/views/layouts/main.php", $this->renderPartial('template/view/main', ['model' => $model, 'appID' => $item]));
                 // 写入前台/后台/微信资源
-                file_put_contents("{$addonDir}{$item}/assets/AppAsset.php",
-                    $this->renderPartial('template/AppAsset', ['model' => $model, 'appID' => $item]));
+                file_put_contents("{$addonDir}{$item}/assets/AppAsset.php", $this->renderPartial('template/AppAsset', ['model' => $model, 'appID' => $item]));
             }
 
             // 控制台控制器
@@ -372,27 +386,19 @@ class AddonsController extends BaseController
             file_put_contents("{$addonDir}console/migrations/.gitkeep", '*');
 
             // 写入引导
-            file_put_contents("{$addonDir}common/components/Bootstrap.php",
-                $this->renderPartial('template/Bootstrap', ['model' => $model]));
+            file_put_contents("{$addonDir}common/components/Bootstrap.php", $this->renderPartial('template/Bootstrap', ['model' => $model]));
 
             // 写入默认model
-            file_put_contents("{$addonDir}common/models/DefaultModel.php",
-                $this->renderPartial('template/models/DefaultModel', ['model' => $model, 'appID' => 'merchant']));
+            file_put_contents("{$addonDir}common/models/DefaultModel.php", $this->renderPartial('template/models/DefaultModel', ['model' => $model, 'appID' => 'merchant']));
 
             // 参数设置支持
-            file_put_contents("{$addonDir}merchant/controllers/SettingController.php",
-                $this->renderPartial('template/controllers/SettingController',
+            file_put_contents("{$addonDir}merchant/controllers/SettingController.php", $this->renderPartial('template/controllers/SettingController',
                     ['model' => $model, 'appID' => 'merchant']));
-            file_put_contents("{$addonDir}common/models/SettingForm.php",
-                $this->renderPartial('template/models/SettingFormModel', ['model' => $model, 'appID' => 'common']));
-            file_put_contents("{$addonDir}merchant/views/setting/hook.php",
-                $this->renderPartial('template/view/hook', ['model' => $model]));
-            file_put_contents("{$addonDir}merchant/views/setting/display.php",
-                $this->renderPartial('template/view/display', ['model' => $model]));
+            file_put_contents("{$addonDir}common/models/SettingForm.php", $this->renderPartial('template/models/SettingFormModel', ['model' => $model, 'appID' => 'common']));
+            file_put_contents("{$addonDir}merchant/views/setting/display.php", $this->renderPartial('template/view/display', ['model' => $model]));
 
             // 写入微信消息回复
-            file_put_contents("{$addonDir}AddonMessage.php",
-                $this->renderPartial('template/AddonMessage', ['model' => $model]));
+            file_put_contents("{$addonDir}AddonMessage.php", $this->renderPartial('template/AddonMessage', ['model' => $model]));
 
             // 写入配置
             file_put_contents("{$addonDir}AddonConfig.php", $this->renderPartial('template/AddonConfig', [
@@ -401,12 +407,9 @@ class AddonsController extends BaseController
             ]));
 
             // 写入文件
-            $model['install'] && file_put_contents("{$addonDir}/{$model['install']}.php",
-                $this->renderPartial('template/Install', ['model' => $model]));
-            $model['uninstall'] && file_put_contents("{$addonDir}/{$model['uninstall']}.php",
-                $this->renderPartial('template/UnInstall', ['model' => $model]));
-            $model['upgrade'] && file_put_contents("{$addonDir}/{$model['upgrade']}.php",
-                $this->renderPartial('template/Upgrade', ['model' => $model]));
+            $model['install'] && file_put_contents("{$addonDir}/{$model['install']}.php", $this->renderPartial('template/Install', ['model' => $model]));
+            $model['uninstall'] && file_put_contents("{$addonDir}/{$model['uninstall']}.php", $this->renderPartial('template/UnInstall', ['model' => $model]));
+            $model['upgrade'] && file_put_contents("{$addonDir}/{$model['upgrade']}.php", $this->renderPartial('template/Upgrade', ['model' => $model]));
 
             return $this->message('模块创建成功', $this->redirect(['local']));
         }

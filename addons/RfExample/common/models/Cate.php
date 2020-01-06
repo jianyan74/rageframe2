@@ -1,10 +1,11 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use common\behaviors\MerchantBehavior;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
-use common\components\Tree;
+use common\traits\Tree;
 
 /**
  * This is the model class for table "{{%addon_example_cate}}".
@@ -80,6 +81,7 @@ class Cate extends \common\models\base\BaseModel
 
         $models = ArrayHelper::itemsMerge($list);
         $data = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+
         return ArrayHelper::merge([0 => '顶级分类'], $data);
     }
 

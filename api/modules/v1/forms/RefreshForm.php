@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\web\UnauthorizedHttpException;
 use common\models\api\AccessToken;
 use common\models\member\Member;
+use common\enums\AccessTokenGroupEnum;
 
 /**
  * Class RefreshForm
@@ -27,7 +28,7 @@ class RefreshForm extends Model
         return [
             [['refresh_token', 'group'], 'required'],
             ['refresh_token', 'validateTime'],
-            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage]
+            ['group', 'in', 'range' => AccessTokenGroupEnum::getKeys()]
         ];
     }
 

@@ -3,7 +3,7 @@
 use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\StatusEnum;
-use common\enums\PayEnum;
+use common\enums\PayTypeEnum;
 
 $this->title = '支付日志';
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
@@ -27,10 +27,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'label' => '支付金额',
                             'value' => function ($model) {
-                                $total_fee = $model->total_fee > 0 ? $model->total_fee / 100 : 0;
-                                $pay_fee = $model->pay_fee > 0 ? $model->pay_fee / 100 : 0;
-                                $str = '应付金额：' . $total_fee . '<br>';
-                                $str .= '实际支付：' . $pay_fee;
+                                $str = '应付金额：' . $model->total_fee . '<br>';
+                                $str .= '实际支付：' . $model->pay_fee;
                                 return $str;
                             },
                             'format' => 'raw',
@@ -47,9 +45,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                         [
                             'label' => '支付类型',
                             'value' => function ($model) {
-                                return PayEnum::$payTypeExplain[$model->pay_type];
+                                return PayTypeEnum::getValue($model->pay_type);
                             },
-                            'filter' => Html::activeDropDownList($searchModel, 'pay_type', PayEnum::$payTypeExplain, [
+                            'filter' => Html::activeDropDownList($searchModel, 'pay_type', PayTypeEnum::thirdParty(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

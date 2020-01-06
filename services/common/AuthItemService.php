@@ -2,18 +2,19 @@
 
 namespace services\common;
 
-use common\enums\AuthMenuEnum;
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 use common\enums\AppEnum;
-use common\models\common\Addons;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\common\AuthItem;
 use common\helpers\TreeHelper;
 use common\models\common\AuthItemChild;
+use common\enums\AddonDefaultRouteEnum;
+use common\enums\AuthMenuEnum;
+use common\helpers\StringHelper;
 
 /**
  * Class AuthItemService
@@ -38,57 +39,16 @@ class AuthItemService extends Service
             $val = ArrayHelper::regroupMapToArr($val, 'name');
         }
 
-        $defaultAuth = [
-            [
-                'name' => Addons::AUTH_COVER,
-                'title' => '应用入口',
-                'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-            [
-                'name' => Addons::AUTH_RULE,
-                'title' => '规则回复',
-                'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-            [
-                'name' => Addons::AUTH_SETTING,
-                'title' => '参数设置',
-                'app_id' => AppEnum::BACKEND,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-            // 商户
-            [
-                'name' => Addons::AUTH_COVER,
-                'title' => '应用入口',
-                'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-            [
-                'name' => Addons::AUTH_RULE,
-                'title' => '规则回复',
-                'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-            [
-                'name' => Addons::AUTH_SETTING,
-                'title' => '参数设置',
-                'app_id' => AppEnum::MERCHANT,
-                'type' => TypeEnum::ADDONS,
-                'addons_name' => $name,
-                'sort' => 1,
-            ],
-        ];
+        $defaultAuth = [];
+        // 默认后台权限
+        if (!empty($allAuthItem[AppEnum::BACKEND])) {
+            $defaultAuth = ArrayHelper::merge(AddonDefaultRouteEnum::route(AppEnum::BACKEND, $name), $defaultAuth);
+        }
+
+        // 默认商家权限
+        if (!empty($allAuthItem[AppEnum::MERCHANT])) {
+            $defaultAuth = ArrayHelper::merge(AddonDefaultRouteEnum::route(AppEnum::MERCHANT, $name), $defaultAuth);
+        }
 
         // 重组路由
         $allAuth = [];
@@ -106,7 +66,7 @@ class AuthItemService extends Service
         // 创建权限
         $rows = $this->createByAddonsData(ArrayHelper::merge($defaultAuth, $allAuth));
         // 批量写入数据
-        $field = ['title', 'name', 'app_id', 'type', 'addons_name', 'pid', 'level', 'is_menu', 'sort', 'tree', 'created_at', 'updated_at'];
+        $field = ['title', 'name', 'app_id', 'is_addon', 'addons_name', 'pid', 'level', 'is_menu', 'sort', 'tree', 'created_at', 'updated_at'];
         !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItem::tableName(), $field, $rows)->execute();
 
         unset($data, $allAuth, $installData, $defaultAuth);
@@ -119,8 +79,8 @@ class AuthItemService extends Service
      */
     public function uninstallAddonsByName($name)
     {
-        AuthItem::deleteAll(['type' => TypeEnum::ADDONS, 'addons_name' => $name]);
-        AuthItemChild::deleteAll(['type' => TypeEnum::ADDONS, 'addons_name' => $name]);
+        AuthItem::deleteAll(['is_addon' => WhetherEnum::ENABLED, 'addons_name' => $name]);
+        AuthItemChild::deleteAll(['is_addon' => WhetherEnum::ENABLED, 'addons_name' => $name]);
     }
 
     /**
@@ -134,7 +94,7 @@ class AuthItemService extends Service
     {
         $list = AuthItem::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['app_id' => $app_id, 'type' => TypeEnum::DEFAULT])
+            ->andWhere(['app_id' => $app_id, 'is_addon' => WhetherEnum::DISABLED])
             ->andFilterWhere(['<>', 'id', $id])
             ->select(['id', 'title', 'pid', 'level'])
             ->orderBy('sort asc')
@@ -183,7 +143,7 @@ class AuthItemService extends Service
             ->where(['status' => StatusEnum::ENABLED])
             ->andWhere(['app_id' => $app_id])
             ->andFilterWhere(['in', 'id', $ids])
-            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'type', 'addons_name', 'is_menu'])
+            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'is_addon', 'addons_name', 'is_menu'])
             ->orderBy('sort asc, id asc')
             ->asArray()
             ->all();
@@ -200,7 +160,7 @@ class AuthItemService extends Service
     {
         foreach ($item as &$value) {
             $value['app_id'] = $app_id;
-            $value['type'] = TypeEnum::ADDONS;
+            $value['is_addon'] = WhetherEnum::ENABLED;
             $value['addons_name'] = $name;
 
             // 判断是否是菜单
@@ -236,6 +196,7 @@ class AuthItemService extends Service
             !empty($parent) && $model->setParent($parent);
             $model->pid = $pid;
             $model->level = $level;
+            $model->name = '/' . StringHelper::toUnderScore($model->addons_name) . '/' . $model->name;
             $model->setScenario('addonsBatchCreate');
             if (!$model->validate()) {
                 throw new UnprocessableEntityHttpException($this->getError($model));
@@ -256,7 +217,7 @@ class AuthItemService extends Service
                     $model->title,
                     $model->name,
                     $model->app_id,
-                    $model->type,
+                    $model->is_addon,
                     $model->addons_name,
                     $pid,
                     $level,

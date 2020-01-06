@@ -22,8 +22,7 @@ $i = 1;
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <?php foreach ($covers as $key => $value) { ?>
-                    <li class="<?= empty($active) ? 'active' : ''; ?>"><a data-toggle="tab" href="#tab-<?= $key ?>"
-                                                                          aria-expanded="true"><?= Html::encode($key) ?></a></li>
+                    <li class="<?= empty($active) ? 'active' : ''; ?>"><a data-toggle="tab" href="#tab-<?= $key ?>" aria-expanded="true"><?= Html::encode($key) ?></a></li>
                     <?php if (!$active) {
                         $active = $key;
                     } ?>

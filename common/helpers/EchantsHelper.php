@@ -2,6 +2,8 @@
 
 namespace common\helpers;
 
+use Yii;
+
 /**
  * 图表辅助类
  *
@@ -85,6 +87,10 @@ class EchantsHelper
                 break;
             case 'betweenYear' :
                 list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'year'];
+                break;
+            case 'customData' :
+                $end = strtotime(Yii::$app->request->get('echarts_end')) + 60 * 60 * 24 - 1;
+                list($time, $format) = [['start' => strtotime(Yii::$app->request->get('echarts_start')), 'end' => $end], 'day'];
                 break;
             default :
                 // 默认今天

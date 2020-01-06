@@ -23,6 +23,7 @@ use common\helpers\RegularHelper;
  * @property string $nickname 昵称
  * @property string $realname 真实姓名
  * @property string $head_portrait 头像
+ * @property int $current_level 当前级别
  * @property int $gender 性别[0:未知;1:男;2:女]
  * @property string $qq qq
  * @property string $email 邮箱
@@ -60,7 +61,7 @@ class Member extends User
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
             [['username'], 'unique', 'on' => ['backendCreate']],
-            [['merchant_id', 'type', 'gender','visit_count', 'role', 'last_time', 'province_id', 'city_id', 'area_id', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'current_level', 'merchant_id', 'type', 'gender','visit_count', 'role', 'last_time', 'province_id', 'city_id', 'area_id', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['username', 'qq', 'home_phone', 'mobile'], 'string', 'max' => 20],
             [['password_hash', 'password_reset_token', 'head_portrait'], 'string', 'max' => 150],
@@ -88,6 +89,7 @@ class Member extends User
             'nickname' => '昵称',
             'realname' => '真实姓名',
             'head_portrait' => '头像',
+            'current_level' => '当前级别',
             'gender' => '性别',
             'qq' => 'QQ',
             'email' => '邮箱',
@@ -130,6 +132,14 @@ class Member extends User
     }
 
     /**
+     * 关联级别
+     */
+    public function getLevel()
+    {
+        return $this->hasOne(Level::class, ['level' => 'current_level'])->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
+    }
+
+    /**
      * 关联第三方绑定
      */
     public function getAuth()
@@ -163,6 +173,10 @@ class Member extends User
             $account = new Account();
             $account->member_id = $this->id;
             $account->save();
+        }
+
+        if ($this->status == StatusEnum::DELETE) {
+            Account::updateAll(['status' => StatusEnum::DELETE], ['member_id' => $this->id]);
         }
 
         parent::afterSave($insert, $changedAttributes);

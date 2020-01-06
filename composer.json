@@ -56,7 +56,9 @@
         "mobiledetect/mobiledetectlib": "^2.8",
         "jaeger/querylist": "^4.1",
         "overtrue/wechat": "~4.2.2",
-        "mingyoung/dingtalk": "2.0"
+        "mingyoung/dingtalk": "2.0",
+        "finecho/logistics": "^3.0",
+        "ext-bcmath": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

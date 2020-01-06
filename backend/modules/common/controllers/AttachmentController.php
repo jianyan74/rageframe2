@@ -3,7 +3,7 @@
 namespace backend\modules\common\controllers;
 
 use Yii;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\base\SearchModel;
 use common\models\common\Attachment;
 use common\enums\StatusEnum;
@@ -44,7 +44,6 @@ class AttachmentController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render($this->action->id, [

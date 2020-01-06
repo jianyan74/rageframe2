@@ -30,8 +30,8 @@ class Auth extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
-    const CLIENT_MINI_PROGRAM = 'miniProgram';
     const CLIENT_WECHAT = 'wechat';
+    const CLIENT_WECHAT_MP = 'wechatMp';
     const CLIENT_QQ = 'qq';
     const CLIENT_SINA = 'sina';
 

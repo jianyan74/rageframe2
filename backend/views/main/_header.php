@@ -27,7 +27,7 @@ use backend\widgets\notify\Notify;
                 </li>
                 <!-- Notifications: style can be found in dropdown.less -->
                 <?php foreach ($menuCates as $cate){ ?>
-                    <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>" data-is_addon="<?= $cate['is_addon']; ?>">
+                    <li class="dropdown notifications-menu rfTopMenu hide <?php if($cate['is_default_show'] == StatusEnum::ENABLED) echo 'rfTopMenuHover'; ?>" data-type="<?= $cate['id']; ?>" data-addon_centre="<?= $cate['addon_centre']; ?>">
                         <a class="dropdown-toggle">
                             <i class="fa <?= $cate['icon']; ?>"></i> <?= $cate['title']; ?>
                         </a>

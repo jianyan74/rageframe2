@@ -2,11 +2,11 @@
 
 namespace services\common;
 
+use yii\db\ActiveQuery;
 use common\components\Service;
 use common\models\common\ConfigCate;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
-use yii\db\ActiveQuery;
 
 /**
  * Class ConfigCateService

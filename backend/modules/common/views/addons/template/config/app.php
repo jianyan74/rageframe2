@@ -1,6 +1,7 @@
 <?php
 
 use common\helpers\StringHelper;
+use common\enums\AppEnum;
 
 $menuCount = 0;
 $menus = $bindings['menu'][$appID] ?? [];
@@ -18,6 +19,27 @@ echo "<?php\n";
 ?>
 
 return [
+
+    // ----------------------- 菜单配置 ----------------------- //
+    'config' => [
+        // 菜单配置
+        'menu' => [
+            'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
+            'icon' => 'fa fa-puzzle-piece',
+        ],
+        // 子模块配置
+        'modules' => [
+<?php if (in_array($appID, [AppEnum::API, AppEnum::OAUTH2])) { ?>
+            'v1' => [
+                'class' => 'addons\<?= $model->name; ?>\<?= $appID ?>\modules\v1\Module',
+            ],
+            'v2' => [
+                'class' => 'addons\<?= $model->name; ?>\<?= $appID ?>\modules\v2\Module',
+            ],
+<?php } ?>
+        ],
+    ],
+
     // ----------------------- 快捷入口 ----------------------- //
 
     'cover' => [
@@ -42,10 +64,6 @@ return [
     ],
 
     // ----------------------- 菜单配置 ----------------------- //
-    'menuConfig' => [
-         'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
-         'icon' => 'fa fa-puzzle-piece',
-    ],
 
     'menu' => [
 <?php for ($i = 0; $i < $menuCount; $i++){

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace common\enums;
 
 /**
@@ -21,6 +20,7 @@ class MessageLevelEnum extends BaseEnum
     public static function getMap(): array
     {
         return [
+            // self::SUCCESS => '成功',
             self::INFO => '信息',
             self::WARNING => '警告',
             self::ERROR => '错误',

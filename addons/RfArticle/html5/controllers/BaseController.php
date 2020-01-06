@@ -4,7 +4,7 @@ namespace addons\RfArticle\html5\controllers;
 
 use Yii;
 use common\controllers\AddonsController;
-use common\components\WechatLogin;
+use common\traits\WechatLogin;
 
 /**
  * 默认控制器

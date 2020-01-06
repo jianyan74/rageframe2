@@ -80,7 +80,7 @@ class OnAuthController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         $model->client_id = Yii::$app->user->identity->client_id;
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -98,7 +98,7 @@ class OnAuthController extends ActiveController
         $model = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;

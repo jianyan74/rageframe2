@@ -3,6 +3,7 @@
 namespace services\common;
 
 use Yii;
+use common\helpers\FileHelper;
 use common\components\Service;
 use JPush\Client as JPush;
 
@@ -22,10 +23,13 @@ class JPushService extends Service
     {
         parent::init();
 
+        $logPath = Yii::getAlias('@runtime') . '/logs/j-push/' . date('Y-m') . '/';
+        FileHelper::mkdirs($logPath);
+
         $this->client = new JPush(
             Yii::$app->debris->config('push_jpush_appid'),
             Yii::$app->debris->config('push_jpush_app_secret'),
-            Yii::getAlias('@runtime') . '/logs/j-push/' . date('Y-m') . '/' .  date('d') . '.log'
+            $logPath . date('d') . '.log'
         );
     }
 
@@ -33,10 +37,10 @@ class JPushService extends Service
      * @param string $form
      * @param $message
      */
-    public function send($form = 'all', $message)
+    public function send($form, $message)
     {
         $pusher = $this->client->push();
-        $pusher->setPlatform($form);
+        $pusher->setPlatform($form ?? 'all');
         $pusher->addAllAudience();
         $pusher->setNotificationAlert($message);
         try {

@@ -2,7 +2,6 @@
 
 namespace services\common;
 
-use common\enums\AppEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Json;
@@ -10,6 +9,7 @@ use common\enums\StatusEnum;
 use common\models\common\Config;
 use common\components\Service;
 use common\models\common\ConfigValue;
+use common\enums\AppEnum;
 
 /**
  * Class ConfigService

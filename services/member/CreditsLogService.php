@@ -2,7 +2,8 @@
 
 namespace services\member;
 
-use Yii;
+use common\enums\StatusEnum;
+use common\helpers\EchantsHelper;
 use yii\web\NotFoundHttpException;
 use common\models\forms\CreditsLogForm;
 use common\components\Service;
@@ -17,223 +18,345 @@ use common\models\member\Account;
 class CreditsLogService extends Service
 {
     /**
-     * 字段类型
-     *
-     * @var
-     */
-    protected $creditType;
-
-    /**
-     * @var
-     */
-    protected $oldNum;
-
-    /**
-     * @var
-     */
-    protected $newNum;
-
-    /**
-     * 累计字段
-     *
-     * @var string
-     */
-    protected $accumulate;
-
-    /**
      * 增加积分
      *
      * @param CreditsLogForm $creditsLogForm
+     * @return bool|CreditsLog
      * @throws NotFoundHttpException
      */
     public function incrInt(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num < 0) {
-            return;
-        }
-
-        /** @var Account $account */
-        $account = $creditsLogForm->member->account;
-        if ($creditsLogForm->num == 0) {
-            $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-            $this->oldNum = $account->user_integral;
-            $this->newNum = $account->user_integral;
-            $this->create($creditsLogForm);
-
-            return;
-        }
-
         $creditsLogForm->num = abs($creditsLogForm->num);
-        $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-        $this->oldNum = $account->user_integral;
-        $account->user_integral += $creditsLogForm->num;
-        $this->accumulate = 'accumulate_integral';
-        $this->newNum = $account->user_integral;
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
 
-        // 更新账户
-        $this->updateAccount($account);
-        // 记录日志
-        $this->create($creditsLogForm);
+        return $this->userInt($creditsLogForm);
     }
 
     /**
      * 减少积分
      *
      * @param CreditsLogForm $creditsLogForm
-     * @throws NotFoundHttpException
+     * @return bool|CreditsLog
      * @throws NotFoundHttpException
      */
     public function decrInt(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num < 0) {
-            return;
-        }
-
-        /** @var Account $account */
-        $account = $creditsLogForm->member->account;
-        if ($creditsLogForm->num == 0) {
-            $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-            $this->oldNum = $account->user_integral;
-            $this->newNum = $account->user_integral;
-            $this->create($creditsLogForm);
-
-            return;
-        }
-
         $creditsLogForm->num = -abs($creditsLogForm->num);
-        $this->creditType = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
-        $this->oldNum = $account->user_integral;
-        $account->user_integral += $creditsLogForm->num;
-        $this->newNum = $account->user_integral;
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_USER_INTEGRAL;
 
-        if ($this->newNum < 0) {
-            throw new NotFoundHttpException('积分不足');
-        }
-
-        // 更新账户
-        $this->updateAccount($account);
-        // 记录日志
-        $this->create($creditsLogForm);
+        return $this->userInt($creditsLogForm);
     }
 
     /**
-     * 增加金额
+     * 赠送
      *
      * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    public function giveInt(CreditsLogForm $creditsLogForm)
+    {
+        $creditsLogForm->num = abs($creditsLogForm->num);
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_GIVE_INTEGRAL;
+
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 直接记录日志不修改
+        if ($creditsLogForm->num == 0) {
+            return $this->create($creditsLogForm, $account->user_integral, $account->user_integral);
+        }
+
+        // 赠送增加
+        if (!$account->updateAllCounters([
+            'user_integral' => $creditsLogForm->num,
+            'accumulate_integral' => $creditsLogForm->num,
+            'give_integral' => $creditsLogForm->num,
+        ], ['id' => $account->id])) {
+            throw new NotFoundHttpException('积分赠送失败');
+        }
+
+        // 记录日志
+        return $this->create($creditsLogForm, $account->user_integral, $account->user_integral + $creditsLogForm->num);
+    }
+
+    /**
+     * 取消赠送
+     *
+     * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    public function closeGiveInt(CreditsLogForm $creditsLogForm)
+    {
+        $creditsLogForm->num = -abs($creditsLogForm->num);
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_GIVE_INTEGRAL;
+
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 直接记录日志不修改
+        if ($creditsLogForm->num == 0) {
+            return $this->create($creditsLogForm, $account->user_integral, $account->user_integral);
+        }
+
+        // 赠送增加
+        if (!$account->updateAllCounters([
+            'user_integral' => $creditsLogForm->num,
+            'accumulate_integral' => $creditsLogForm->num,
+            'give_integral' => $creditsLogForm->num,
+        ], [
+            'and',
+            ['id' => $account->id],
+            ['>=', 'user_integral', abs($creditsLogForm->num)],
+        ])) {
+            throw new NotFoundHttpException('积分取消赠送失败');
+        }
+
+        // 记录日志
+        return $this->create($creditsLogForm, $account->user_integral, $account->user_integral + $creditsLogForm->num);
+    }
+
+    /**
+     * 增加余额
+     *
+     * @param CreditsLogForm $creditsLogForm
+     * @return bool|CreditsLog
      * @throws NotFoundHttpException
      */
     public function incrMoney(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num < 0) {
-            return;
-        }
-
-        /** @var Account $account */
-        $account = $creditsLogForm->member->account;
-        // 增加金额为0不变更
-        if ($creditsLogForm->num == 0) {
-            $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-            $this->oldNum = $account->user_money;
-            $this->newNum = $account->user_money;
-            $this->create($creditsLogForm);
-
-            return;
-        }
-
         $creditsLogForm->num = abs($creditsLogForm->num);
-        $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-        $this->oldNum = $account->user_money;
-        $account->user_money += $creditsLogForm->num;
-        $this->accumulate = 'accumulate_money';
-        $this->newNum = $account->user_money;
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_USER_MONEY;
 
-        // 更新账户
-        $this->updateAccount($account);
-        // 记录日志
-        $model = $this->create($creditsLogForm);
-        $creditsLogForm->map_id = $model->id;
+        return $this->userMoney($creditsLogForm);
     }
 
     /**
-     * 减少金额
+     * 减少余额
      *
      * @param CreditsLogForm $creditsLogForm
+     * @return bool|CreditsLog
      * @throws NotFoundHttpException
      */
     public function decrMoney(CreditsLogForm $creditsLogForm)
     {
-        if ($creditsLogForm->num < 0) {
-            return;
-        }
+        $creditsLogForm->num = -abs($creditsLogForm->num);
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_USER_MONEY;
+
+        return $this->userMoney($creditsLogForm);
+    }
+
+    /**
+     * 赠送
+     *
+     * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    public function giveMoney(CreditsLogForm $creditsLogForm)
+    {
+        $creditsLogForm->num = abs($creditsLogForm->num);
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_GIVE_MONEY;
 
         /** @var Account $account */
         $account = $creditsLogForm->member->account;
-        // 消费金额为0不变更
+        // 直接记录日志不修改
         if ($creditsLogForm->num == 0) {
-            $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-            $this->oldNum = $account->user_money;
-            $this->newNum = $account->user_money;
-            $this->create($creditsLogForm);
-
-            return;
+            return $this->create($creditsLogForm, $account->user_money, $account->user_money);
         }
 
-        $creditsLogForm->num = -abs($creditsLogForm->num);
-        $this->creditType = CreditsLog::CREDIT_TYPE_USER_MONEY;
-        $this->oldNum = $account->user_money;
-        $account->user_money += $creditsLogForm->num;
-        $this->newNum = $account->user_money;
-
-        if ($this->newNum < 0) {
-            throw new NotFoundHttpException('余额不足');
+        // 赠送增加
+        if (!$account->updateAllCounters([
+            'user_money' => $creditsLogForm->num,
+            'accumulate_money' => $creditsLogForm->num,
+            'give_money' => $creditsLogForm->num,
+        ], ['id' => $account->id])) {
+            throw new NotFoundHttpException('金额赠送失败');
         }
 
-        // 更新账户
-        $this->updateAccount($account);
+        // 变动级别
+        $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral += $creditsLogForm->num);
+
         // 记录日志
-        $model = $this->create($creditsLogForm);
-        $creditsLogForm->map_id = $model->id;
+        return $this->create($creditsLogForm, $account->user_money, $account->user_money + $creditsLogForm->num);
     }
 
     /**
-     * 更新账户，尽量不拒绝，宁可记录不正确
+     * 消费
      *
-     * @param Account $account
-     * @throws NotFoundHttpException
-     */
-    protected function updateAccount(Account $account)
-    {
-        $amount = $this->newNum - $this->oldNum;
-
-        if ($amount > 0) {
-            if (!$account->updateAllCounters([$this->creditType => $amount, $this->accumulate => $amount], ['id' => $account->id])) {
-                throw new NotFoundHttpException('系统繁忙');
-            }
-        } else {
-            if (!$account->updateAllCounters([$this->creditType => $amount], ['and', ['id' => $account->id], ['>=', $this->creditType, $amount]])) {
-                throw new NotFoundHttpException('余额不足');
-            }
-        }
-    }
-
-    /**
-     * 创建
+     * 一般用于微信/支付宝/银联消费记录使用
      *
      * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
      * @throws NotFoundHttpException
      */
-    public function create(CreditsLogForm $creditsLogForm)
+    public function consumeMoney(CreditsLogForm $creditsLogForm)
+    {
+        $creditsLogForm->num = -abs($creditsLogForm->num);
+        $creditsLogForm->credit_type = CreditsLog::CREDIT_TYPE_CONSUME_MONEY;
+
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 直接记录日志不修改
+        if ($creditsLogForm->num == 0) {
+            return $this->create($creditsLogForm, $account->consume_money, $account->consume_money);
+        }
+
+        // 消费
+        if (!$account->updateAllCounters(['consume_money' => $creditsLogForm->num,], ['id' => $account->id])) {
+            throw new NotFoundHttpException('消费失败');
+        }
+
+        // 变动级别
+        $creditsLogForm->updateLevel($account->consume_money += $creditsLogForm->num, $account->accumulate_integral);
+
+        // 记录日志
+        return $this->create($creditsLogForm, $account->consume_money, $account->consume_money + $creditsLogForm->num);
+    }
+
+    /**
+     * 积分变动
+     *
+     * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    protected function userInt(CreditsLogForm $creditsLogForm)
+    {
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 直接记录日志不修改
+        if ($creditsLogForm->num == 0) {
+            return $this->create($creditsLogForm, $account->user_integral, $account->user_integral);
+        }
+
+        if ($creditsLogForm->num > 0) {
+            // 增加
+            $status = $account->updateAllCounters([
+                'user_integral' => $creditsLogForm->num,
+                'accumulate_integral' => $creditsLogForm->num,
+            ], ['id' => $account->id]);
+
+            // 变动级别
+            $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral += $creditsLogForm->num);
+        } else {
+            // 消费
+            $status = $account->updateAllCounters([
+                'user_integral' => $creditsLogForm->num,
+                'consume_integral' => $creditsLogForm->num
+            ],
+                [
+                    'and',
+                    ['id' => $account->id],
+                    ['>=', 'user_integral', abs($creditsLogForm->num)],
+                ]);
+        }
+
+        if ($status == false) {
+            throw new NotFoundHttpException('积分不足/增加失败');
+        }
+
+        // 记录日志
+        return $this->create($creditsLogForm, $account->user_integral, $account->user_integral + $creditsLogForm->num);
+    }
+
+    /**
+     * 余额变动
+     *
+     * @param CreditsLogForm $creditsLogForm
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    protected function userMoney(CreditsLogForm $creditsLogForm)
+    {
+        /** @var Account $account */
+        $account = $creditsLogForm->member->account;
+        // 直接记录日志不修改
+        if ($creditsLogForm->num == 0) {
+            return $this->create($creditsLogForm, $account->user_money, $account->user_money);
+        }
+
+        if ($creditsLogForm->num > 0) {
+            // 增加
+            $status = $account->updateAllCounters([
+                'user_money' => $creditsLogForm->num,
+                'accumulate_money' => $creditsLogForm->num,
+            ], ['id' => $account->id]);
+        } else {
+            // 消费
+            $status = $account->updateAllCounters(
+                [
+                    'user_money' => $creditsLogForm->num,
+                    'consume_money' => $creditsLogForm->num,
+                ],
+                [
+                    'and',
+                    ['id' => $account->id],
+                    ['>=', 'user_money', abs($creditsLogForm->num)],
+                ]);
+
+            // 变动级别
+            $creditsLogForm->updateLevel($account->consume_money += $creditsLogForm->num, $account->accumulate_integral);
+        }
+
+        if ($status == false) {
+            throw new NotFoundHttpException('积分不足/增加失败');
+        }
+
+        // 记录日志
+        return $this->create($creditsLogForm, $account->user_money, $account->user_money + $creditsLogForm->num);
+    }
+
+    /**
+     * 获取区间消费统计
+     *
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function getBetweenCountStat($type, $credit_type = CreditsLog::CREDIT_TYPE_CONSUME_MONEY, $title = '第三方消费统计')
+    {
+        $fields = [
+            'price' => $title,
+        ];
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) use ($credit_type) {
+            $data = CreditsLog::find()
+                ->select(['sum(num) as price', "from_unixtime(created_at, '$formatting') as time"])
+                ->where(['credit_type' => $credit_type])
+                ->andWhere(['>', 'status', StatusEnum::DISABLED])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->groupBy(['time'])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+                ->asArray()
+                ->all();
+
+            foreach ($data as &$datum) {
+                $datum['price'] = abs($datum['price']);
+            }
+
+            return $data;
+        }, $fields, $time, $format);
+    }
+
+    /**
+     * @param CreditsLogForm $creditsLogForm
+     * @param $oldNum
+     * @param $newNum
+     * @return CreditsLog
+     * @throws NotFoundHttpException
+     */
+    protected function create(CreditsLogForm $creditsLogForm, $oldNum, $newNum)
     {
         $model = new CreditsLog();
         $model = $model->loadDefaultValues();
         $model->member_id = $creditsLogForm->member->id;
         $model->pay_type = $creditsLogForm->pay_type;
-        $model->old_num = $this->oldNum;
-        $model->new_num = $this->newNum;
+        $model->old_num = $oldNum;
+        $model->new_num = $newNum;
         $model->num = $creditsLogForm->num;
-        $model->credit_type = $this->creditType;
+        $model->credit_type = $creditsLogForm->credit_type;
         $model->credit_group = $creditsLogForm->credit_group;
-        $model->credit_group_detail = $creditsLogForm->credit_group_detail;
         $model->remark = $creditsLogForm->remark;
         $model->map_id = $creditsLogForm->map_id;
 

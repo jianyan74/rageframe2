@@ -19,6 +19,8 @@ Yii::$app->view->registerJs(<<<JS
         $(this).parent().find('span').removeClass('orange');
         $(this).addClass('orange');
         var type = $(this).data('type');
+        var start = $(this).attr('data-start');
+        var end = $(this).attr('data-end');
         var boxId = $(this).parent().parent().attr('id');
         var config = echartsListConfig[boxId];
         
@@ -26,7 +28,7 @@ Yii::$app->view->registerJs(<<<JS
             type:"get",
             url: config.server,
             dataType: "json",
-            data: {type:type, echarts_type: 'line-bar'},
+            data: {type:type, echarts_type: 'line-bar', echarts_start: start, echarts_end: end},
             success: function(result){
                 var data = result.data;
                 if (parseInt(result.code) === 200) {

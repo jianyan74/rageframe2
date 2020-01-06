@@ -6,22 +6,35 @@ use Yii;
 use yii\base\Model;
 use yii\helpers\Json;
 use yii\web\UnprocessableEntityHttpException;
-use common\enums\PayEnum;
+use common\enums\PayGroupEnum;
+use common\enums\PayTypeEnum;
+use common\models\common\PayLog;
+use common\interfaces\PayHandler;
+use common\helpers\ArrayHelper;
+use common\helpers\StringHelper;
 
 /**
+ * 支付校验
+ *
  * Class PayForm
- * @package api\modules\v1\forms
+ * @package common\models\forms
  * @author jianyan74 <751393839@qq.com>
  */
-class PayForm extends Model
+class PayForm extends PayLog
 {
-    public $orderGroup;
-    public $payType;
-    public $tradeType = 'default';
-    public $data; // json数组
-    public $memberId;
-    public $returnUrl;
-    public $notifyUrl;
+    public $data;
+
+    /**
+     * 授权码
+     *
+     * @var
+     */
+    public $code;
+
+    /**
+     * @var
+     */
+    private $_handlers;
 
     /**
      * @return array
@@ -29,115 +42,147 @@ class PayForm extends Model
     public function rules()
     {
         return [
-            [['orderGroup', 'payType', 'data', 'tradeType', 'memberId'], 'required'],
-            [['orderGroup'], 'in', 'range' => array_keys(PayEnum::$orderGroupExplain)],
-            [['payType'], 'in', 'range' => array_keys(PayEnum::$payTypeExplain)],
-            [['notifyUrl', 'returnUrl', 'data'], 'string'],
-            [['tradeType'], 'verifyTradeType'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function attributeLabels()
-    {
-        return [
-            'orderGroup' => '订单组别',
-            'data' => '组别对应数据',
-            'payType' => '支付类别',
-            'tradeType' => '交易类别',
-            'memberId' => '用户id',
-            'returnUrl' => '跳转地址',
-            'notifyUrl' => '回调地址',
+            [['order_group', 'pay_type', 'data', 'trade_type', 'member_id'], 'required'],
+            [['order_group'], 'in', 'range' => PayGroupEnum::getKeys()],
+            [['pay_type'], 'in', 'range' => PayTypeEnum::getKeys()],
+            [['notify_url', 'return_url', 'code', 'openid'], 'string'],
+            [['data'], 'safe'],
+            [['trade_type'], 'verifyTradeType'],
         ];
     }
 
     /**
      * 校验交易类型
+     *
+     * @param $attribute
+     * @throws UnprocessableEntityHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function verifyTradeType($attribute)
     {
-        switch ($this->payType) {
-            case PayEnum::PAY_TYPE :
-                break;
-            case PayEnum::PAY_TYPE_WECHAT :
-                if (!in_array($this->tradeType, ['native', 'app', 'js', 'pos', 'mweb'])) {
+        try {
+            $this->data = Json::decode($this->data);
+        } catch (\Exception $e) {
+            $this->addError($attribute, $e->getMessage());
+
+            return;
+        }
+
+        switch ($this->pay_type) {
+            case PayTypeEnum::WECHAT :
+                if (!in_array($this->trade_type, ['native', 'app', 'js', 'pos', 'mweb', 'mini_program'])) {
                     $this->addError($attribute, '微信交易类型不符');
+
+                    return;
                 }
+
+                // 直接通过授权码进行支付
+                if ($this->code) {
+                    if ($this->trade_type == 'mini_program') {
+                        $auth = Yii::$app->wechat->miniProgram->auth->session($this->code);
+                        Yii::$app->debris->getWechatError($auth);
+                        $this->openid = $auth['openId'];
+                    }
+
+                    if ($this->trade_type == 'js') {
+                        $user = Yii::$app->wechat->app->oauth->user();
+                        $this->openid = $user['openid'];
+                    }
+                }
+
                 break;
-            case PayEnum::PAY_TYPE_ALI :
-                if (!in_array($this->tradeType, ['pc', 'app', 'f2f', 'wap'])) {
+            case PayTypeEnum::ALI :
+                if (!in_array($this->trade_type, ['pc', 'app', 'f2f', 'wap'])) {
                     $this->addError($attribute, '支付宝交易类型不符');
                 }
                 break;
-            case PayEnum::PAY_TYPE_MINI_PROGRAM :
-                break;
-            case PayEnum::PAY_TYPE_UNION :
-                if (!in_array($this->tradeType, ['app', 'html'])) {
+            case PayTypeEnum::UNION :
+                if (!in_array($this->trade_type, ['app', 'html'])) {
                     $this->addError($attribute, '银联交易类型不符');
                 }
                 break;
         }
+
+
     }
 
     /**
-     * @return array
+     * 执行类
+     *
+     * @param array $handlers
+     */
+    public function setHandlers(array $handlers)
+    {
+        $this->_handlers = $handlers;
+    }
+
+    /**
+     * @return array|\EasyWeChat\Kernel\Support\Collection|mixed|object|\Psr\Http\Message\ResponseInterface|string
      * @throws UnprocessableEntityHttpException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \yii\base\InvalidConfigException
      */
     public function getConfig()
     {
-        $action = PayEnum::$payTypeAction[$this->payType];
-        $baseOrder = $this->getBaseOrderInfo();
+        if (!isset($this->_handlers[$this->order_group])) {
+            throw new UnprocessableEntityHttpException('找不到订单组别');
+        }
 
-        return Yii::$app->services->pay->$action($this, $baseOrder);
+        /** @var Model|PayHandler $model */
+        $model = new $this->_handlers[$this->order_group]();
+        if (!($model instanceof PayHandler)) {
+            throw new UnprocessableEntityHttpException('无效的订单组别');
+        }
+
+        $model->attributes = $this->data;
+        if (!$model->validate()) {
+            throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($model->getFirstErrors()));
+        }
+
+        $log = new PayLog();
+        $log->out_trade_no = StringHelper::randomNum(date('YmdHis'), 8);
+        if ($model->isQueryOrderSn() == true && ($history = Yii::$app->services->pay->findByOrderSn($model->getOrderSn()))) {
+            $log = $history;
+        }
+
+        $log->attributes = ArrayHelper::toArray($this);
+        $log->body = $model->getBody();
+        $log->detail = $model->getDetails();
+        $log->order_sn = $model->getOrderSn();
+        $log->total_fee = $model->getTotalFee();
+        $log->pay_fee = $log->total_fee;
+        if (!$log->save()) {
+            throw new UnprocessableEntityHttpException(Yii::$app->debris->analyErr($log->getFirstErrors()));
+        }
+
+        return $this->payConfig($log);
     }
 
     /**
-     * 获取支付基础信息
-     *
-     * @param $type
-     * @param $data
-     * @return array
+     * @return array|\EasyWeChat\Kernel\Support\Collection|mixed|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yii\base\InvalidConfigException
      */
-    protected function getBaseOrderInfo()
+    protected function payConfig(PayLog $log)
     {
-        $data = Json::decode($this->data);
-        switch ($this->orderGroup) {
-            case PayEnum::ORDER_GROUP :
-                // TODO 查询订单获取订单信息
-                $orderSn = '';
-                $totalFee = '';
-                $order = [
-                    'body' => '',
-                    'total_fee' => $totalFee,
-                ];
+        switch ($log->pay_type) {
+            case PayTypeEnum::WECHAT :
+                return Yii::$app->services->pay->wechat($log);
                 break;
-            case PayEnum::ORDER_GROUP_GOODS :
-                // TODO 查询充值生成充值订单
-                $orderSn = '';
-                $totalFee = '';
-                $order = [
-                    'body' => '',
-                    'total_fee' => $totalFee,
-                ];
+            case PayTypeEnum::ALI :
+                return Yii::$app->services->pay->alipay($log);
+                break;
+            case PayTypeEnum::UNION :
+                return Yii::$app->services->pay->union($log);
                 break;
         }
-
-        // 也可直接查数据库对应的关联ID，这样子一个订单只生成一个支付操作ID 增加下单率
-        // Yii::$app->services->pay->findByOutTradeNo($order->out_trade_no);
-
-        $order['out_trade_no'] = Yii::$app->services->pay->getOutTradeNo(
-            $totalFee,
-            $orderSn,
-            $this->payType,
-            $this->tradeType,
-            $this->orderGroup
-        );
-
-        // 必须返回 body、total_fee、out_trade_no
-        return $order;
     }
 }

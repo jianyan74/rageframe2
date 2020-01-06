@@ -3,11 +3,13 @@
 namespace addons\RfDevTool;
 
 use addons\RfDevTool\common\components\Bootstrap;
+use common\components\BaseAddonConfig;
 
 /**
  * Class Addon
- * @package addons\RfDevTool */
-class AddonConfig
+ * @package addons\RfDevTool
+ */
+class AddonConfig extends BaseAddonConfig
 {
     /**
      * 基础信息

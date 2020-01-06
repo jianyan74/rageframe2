@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\api\controllers;
 
 use yii\rest\Serializer;

@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\Cors;
 use yii\web\BadRequestHttpException;
 use oauth2\behaviors\JWTAuth;
-use common\components\BaseAction;
+use common\traits\BaseAction;
 use common\behaviors\HttpSignAuth;
 
 /**

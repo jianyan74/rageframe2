@@ -63,9 +63,9 @@ class AuthorizeController extends OnAuthController
             // 这里只需要这一行就可以，具体的判断在 Repositories 中
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultHelper::api(422, $exception->getMessage());
+            return ResultHelper::json(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultHelper::api(422, $exception->getMessage());
+            return ResultHelper::json(422, $exception->getMessage());
         }
     }
 

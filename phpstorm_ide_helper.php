@@ -21,11 +21,12 @@ class Yii
  * @property \services\Application $services
  * @property \common\components\Debris $debris
  * @property \common\components\Pay $pay
+ * @property \common\components\Logistics $logistics
  * @property \common\components\UploadDrive $uploadDrive
- * @property \common\components\AddonsModule $addons
- * @property \addons\RfTinyShop\services\Application $shopServices
- * @property \addons\RfOnlineDoc\services\Application $docServices
- * @property \addons\RfWechat\services\Application $wechatServices
+ * @property \common\components\BaseAddonModule $addons
+ * @property \addons\TinyShop\services\Application $tinyShopService
+ * @property \addons\Wechat\services\Application $wechatService
+ * @property \addons\RfOnlineDoc\services\Application $rfOnlineDocService
  * @property \Detection\MobileDetect $mobileDetect
  * @property \jianyan\easywechat\Wechat $wechat
  * @property \Da\QrCode\Component\QrCodeComponent $qr

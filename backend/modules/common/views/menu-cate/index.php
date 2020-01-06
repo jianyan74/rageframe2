@@ -67,9 +67,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 'format' => 'raw',
                             ],
                             [
-                                'attribute' => 'is_addon',
+                                'attribute' => 'addon_centre',
                                 'value' => function ($model) {
-                                    return Html::whether($model->is_addon);
+                                    return Html::whether($model->addon_centre);
                                 },
                                 'filter' => false,
                                 'format' => 'raw',

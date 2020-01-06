@@ -11,7 +11,6 @@ use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
 use common\helpers\ResultHelper;
 use common\models\common\Attachment;
-use common\helpers\StringHelper;
 
 /**
  * Class FileBaseController

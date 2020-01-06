@@ -27,7 +27,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <label class="control-label" for="provincejob-max_level">权限类别</label>
                     <?= Html::dropDownList('app_id', '', \common\enums\AppEnum::getMap(), [
                         'class' => 'form-control',
-                    ])?>
+                    ]) ?>
+                    <div class="hint-block">请在项目初始化的时候才使用，不然会清空所有已有的权限</div>
                     <div class="help-block"></div>
                 </div>
                 <div class="form-group">

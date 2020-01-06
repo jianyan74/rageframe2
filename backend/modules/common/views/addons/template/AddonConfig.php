@@ -5,13 +5,14 @@ echo "<?php\n";
 
 namespace addons\<?= $model->name;?>;
 
+use common\components\BaseAddonConfig;
 use addons\<?= $model->name;?>\common\components\Bootstrap;
 
 /**
  * Class Addon
  * @package addons\<?= $model->name . "\r";?>
  */
-class AddonConfig
+class AddonConfig extends BaseAddonConfig
 {
     /**
      * 基础信息
@@ -53,18 +54,28 @@ class AddonConfig
     public $bootstrap = '';
 
     /**
+    * 服务层
+    *
+    * 设置后系统会自动注册
+    *
+    * 调用方式
+    *
+    * Yii::$app->插件名称 + Services
+    *
+    * 例如
+    *
+    * Yii::$app->tinyShopServices;
+    *
+    * @var string
+    */
+    public $service = '';
+
+    /**
      * 参数配置开启
      *
      * @var bool
      */
     public $isSetting = <?= $model['is_setting'] == true ? 'true' : 'false' ?>;
-
-    /**
-     * 钩子开启
-     *
-     * @var bool
-     */
-    public $isHook = <?= $model['is_hook'] == true ? 'true' : 'false' ?>;
 
     /**
      * 规则管理开启

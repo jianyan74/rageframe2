@@ -44,7 +44,7 @@ $this->title = $article['title'];
                 </div>
             </div>
             <!--获取左侧内页推荐-->
-            <?= \common\helpers\Hook::to('RfArticle', ['position' => 4]); ?>
+            <?php // \common\helpers\Hook::to('RfArticle', ['position' => 4]); ?>
         </div>
     </div>
 </div>

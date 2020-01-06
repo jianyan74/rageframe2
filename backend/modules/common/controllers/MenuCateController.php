@@ -3,7 +3,7 @@
 namespace backend\modules\common\controllers;
 
 use Yii;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\base\SearchModel;
 use common\models\common\MenuCate;
 use common\enums\StatusEnum;

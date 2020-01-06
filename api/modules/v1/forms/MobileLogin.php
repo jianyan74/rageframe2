@@ -5,9 +5,9 @@ namespace api\modules\v1\forms;
 use yii\base\Model;
 use common\enums\StatusEnum;
 use common\helpers\RegularHelper;
-use common\models\api\AccessToken;
 use common\models\member\Member;
 use common\models\common\SmsLog;
+use common\enums\AccessTokenGroupEnum;
 
 /**
  * Class MobileLogin
@@ -47,7 +47,7 @@ class MobileLogin extends Model
             ['code', 'filter', 'filter' => 'trim'],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '请输入正确的手机号'],
             ['mobile', 'validateMobile'],
-            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage]
+            ['group', 'in', 'range' => AccessTokenGroupEnum::getKeys()]
         ];
     }
 

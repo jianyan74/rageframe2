@@ -87,17 +87,4 @@ class SmsLog extends \common\models\base\BaseModel
             'updated_at' => '修改时间',
         ];
     }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
-    {
-        if ($this->isNewRecord) {
-            $this->ip = ip2long(Yii::$app->request->userIP);
-        }
-
-        return parent::beforeSave($insert);
-    }
 }

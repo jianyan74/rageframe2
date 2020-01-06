@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use common\components\Tree;
+use common\traits\Tree;
 use common\helpers\ArrayHelper;
 use common\helpers\TreeHelper;
 
@@ -12,7 +12,7 @@ use common\helpers\TreeHelper;
  * @property int $id
  * @property string $name 别名
  * @property string $app_id 类别
- * @property string $type 子类别
+ * @property int $is_addon 是否插件
  * @property string $addons_name 插件名称
  * @property string $title 说明
  * @property int $pid 父级id
@@ -44,12 +44,13 @@ class AuthItem extends \common\models\base\BaseModel
         return [
             [['title', 'name'], 'required'],
             [['name'], 'uniquName', 'on' => 'default'],
-            [['is_menu', 'pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['is_menu', 'is_addon', 'pid', 'level', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['app_id', 'type'], 'string', 'max' => 20],
+            [['app_id'], 'string', 'max' => 20],
             [['addons_name'], 'string', 'max' => 100],
             [['title'], 'string', 'max' => 200],
             [['tree'], 'string', 'max' => 500],
+            [['name', 'title'], 'trim'],
         ];
     }
 
@@ -62,7 +63,7 @@ class AuthItem extends \common\models\base\BaseModel
             'id' => 'ID',
             'title' => '说明',
             'app_id' => '应用',
-            'type' => '类型',
+            'is_addon' => '是否插件',
             'addons_name' => '插件名称',
             'name' => '路由/别名',
             'pid' => '父类',

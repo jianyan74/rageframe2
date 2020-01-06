@@ -21,7 +21,7 @@ class Debris
      * @param string $merchant_id
      * @return string|null
      */
-    public function config($name, $noCache = false, $merchant_id = '')
+    public function config($name, $noCache = false, $merchant_id = 1)
     {
         // 获取缓存信息
         $info = $this->getConfigInfo($noCache, $merchant_id);
@@ -34,10 +34,33 @@ class Debris
      * @param bool $noCache true 不从缓存读取 false 从缓存读取
      * @return array|bool|mixed
      */
-    public function configAll($noCache = false, $merchant_id = '')
+    public function configAll($noCache = false, $merchant_id = 1)
     {
         $info = $this->getConfigInfo($noCache, $merchant_id);
         return $info ? $info : [];
+    }
+
+    /**
+     * 获取当前商户配置
+     *
+     * @param $name
+     * @param bool $noCache
+     * @return string|null
+     */
+    public function merchantConfig($name, $noCache = false)
+    {
+        return $this->config($name, $noCache, Yii::$app->services->merchant->getId());
+    }
+
+    /**
+     * 获取当前商户的全部配置
+     *
+     * @param bool $noCache
+     * @return array|bool|mixed
+     */
+    public function merchantConfigAll($noCache = false)
+    {
+        return $this->configAll($noCache, Yii::$app->services->merchant->getId());
     }
 
     /**

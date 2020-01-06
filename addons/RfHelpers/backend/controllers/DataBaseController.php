@@ -449,7 +449,8 @@ class DataBaseController extends BaseController
         foreach ($tableSchemas as $key => $datum) {
             $table_comment = $tables[$i]['comment'];
 
-            $str .= "### {$table_comment} : {$key}" . "<br>";
+            $str .= "### {$key}" . "<br>";
+            $str .= "#### {$table_comment}" . "<br>";
             $str .= "字段 | 类型 | 允许为空 | 默认值 | 字段说明" . "<br>";
             $str .= "---|---|---|---|---" . "<br>";
 

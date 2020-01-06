@@ -3,10 +3,10 @@
 namespace services\common;
 
 use Yii;
-use common\enums\PayEnum;
+use common\models\forms\CreditsLogForm;
+use common\enums\PayGroupEnum;
 use common\components\Service;
 use common\models\common\PayLog;
-use common\helpers\StringHelper;
 use common\models\forms\PayForm;
 use common\helpers\ArrayHelper;
 
@@ -18,59 +18,67 @@ use common\helpers\ArrayHelper;
 class PayService extends Service
 {
     /**
+     * 微信支付
+     *
      * @param PayForm $payForm
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
+     * @param $baseOrder
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function wechat(PayForm $payForm, $baseOrder)
+    public function wechat(PayLog $payLog)
     {
+        // 小程序支付
+        if ($payLog->trade_type == 'mini_program') {
+            return $this->wechatMp($payLog);
+        }
+
         // 生成订单
         $order = [
-            'body' => $baseOrder['body'], // 内容
-            'out_trade_no' => $baseOrder['out_trade_no'], // 订单号
-            'total_fee' => $baseOrder['total_fee'],
-            'notify_url' => $payForm->notifyUrl, // 回调地址
+            'body' => $payLog->body, // 内容
+            'out_trade_no' => $payLog->out_trade_no, // 订单号
+            'total_fee' => $payLog->total_fee * 100,
+            'notify_url' => $payLog->notify_url, // 回调地址
+            'detail' => $payLog->detail,
         ];
 
         //  判断如果是js支付
-        if ($payForm->tradeType == 'js') {
-            $order['open_id'] = '';
-        }
-
+        $payLog->trade_type == 'js' && $order['openid'] = $payLog->openid;
         //  判断如果是刷卡支付
-        if ($payForm->tradeType == 'pos') {
-            $order['auth_code'] = '';
-        }
+        $payLog->trade_type == 'pos' && $order['auth_code'] = $payLog->auth_code;
 
         // 交易类型
-        $tradeType = $payForm->tradeType;
+        $tradeType = $payLog->trade_type;
 
-        return Yii::$app->pay->wechat->$tradeType($order);
+        return Yii::$app->pay->wechat->$tradeType($order, false);
     }
 
     /**
-     * @param PayForm $payForm
-     * @return mixed
+     * 支付宝支付
+     *
+     * @param PayLog $payLog
+     * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function alipay(PayForm $payForm, $baseOrder)
+    public function alipay(PayLog $payLog)
     {
         // 配置
         $config = [
-            'notify_url' => $payForm->notifyUrl, // 支付通知回调地址
-            'return_url' => $payForm->returnUrl, // 买家付款成功跳转地址
+            'notify_url' => $payLog->notify_url, // 支付通知回调地址
+            'return_url' => $payLog->return_url, // 买家付款成功跳转地址
             'sandbox' => false,
         ];
 
         // 生成订单
         $order = [
-            'out_trade_no' => $baseOrder['out_trade_no'],
-            'total_amount' => $baseOrder['total_fee'] / 100,
-            'subject' => $baseOrder['body'],
+            'out_trade_no' => $payLog->out_trade_no,
+            'total_amount' => $payLog->total_fee,
+            'subject' => $payLog->body,
         ];
 
         // 交易类型
-        $tradeType = $payForm->tradeType;
+        $tradeType = $payLog->trade_type;
 
         return [
             'config' => Yii::$app->pay->alipay($config)->$tradeType($order),
@@ -78,28 +86,30 @@ class PayService extends Service
     }
 
     /**
+     * 银联支付
+     *
      * @param PayForm $payForm
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
-    public function union(PayForm $payForm, $baseOrder)
+    public function union(PayLog $payLog)
     {
         // 配置
         $config = [
-            'notify_url' => $payForm->notifyUrl, // 支付通知回调地址
-            'return_url' => $payForm->returnUrl, // 买家付款成功跳转地址
+            'notify_url' => $payLog->notify_url, // 支付通知回调地址
+            'return_url' => $payLog->return_url, // 买家付款成功跳转地址
         ];
 
         // 生成订单
         $order = [
-            'orderId' => $baseOrder['out_trade_no'], //Your order ID
+            'orderId' => $payLog->out_trade_no, //Your order ID
             'txnTime' => date('YmdHis'), //Should be format 'YmdHis'
-            'orderDesc' => $baseOrder['body'], //Order Title
-            'txnAmt' => $baseOrder['total_fee'], //Order Total Fee
+            'orderDesc' => $payLog->body, //Order Title
+            'txnAmt' => $payLog->total_fee, //Order Total Fee
         ];
 
         // 交易类型
-        $tradeType = $payForm->tradeType;
+        $tradeType = $payLog->trade_type;
 
         return Yii::$app->pay->union($config)->$tradeType($order);
     }
@@ -112,7 +122,7 @@ class PayService extends Service
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function miniProgram(PayForm $payForm, $baseOrder)
+    public function wechatMp(PayLog $payLog)
     {
         // 设置appid
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
@@ -121,64 +131,76 @@ class PayService extends Service
 
         $orderData = [
             'trade_type' => 'JSAPI',
-            'body' => $baseOrder['body'],
-            // 'detail' => '支付详情',
-            'notify_url' => $payForm->notifyUrl, // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-            'out_trade_no' => $baseOrder['out_trade_no'], // 支付
-            'total_fee' => $baseOrder['total_fee'],
-            'openid' => '', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
+            'body' => $payLog->body,
+            'detail' => $payLog->detail,
+            'notify_url' => $payLog->notify_url, // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'out_trade_no' => $payLog->out_trade_no, // 支付
+            'total_fee' => $payLog->total_fee,
+            'openid' => $payLog->openid, // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
         ];
 
         $payment = Yii::$app->wechat->payment;
         $result = $payment->order->unify($orderData);
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
+            return $payment->jssdk->sdkConfig($result['prepay_id']);
+        }
 
-        return $payment->jssdk->sdkConfig($result['prepay_id']);
-    }
-
-    /**
-     * 获取订单支付日志编号
-     *
-     * @param int $payFee 单位分
-     * @param string $orderSn 关联订单号
-     * @param int $orderGroup 订单组别 如果有自己的多种订单类型请去\common\models\common\PayLog里面增加对应的常量
-     * @param int $payType 支付类型 1:微信;2:支付宝;3:银联;4:微信小程序
-     * @param string $tradeType 支付方式
-     * @return string
-     */
-    public function getOutTradeNo($totalFee, string $orderSn, int $payType, $tradeType = 'JSAPI', $orderGroup = 1)
-    {
-        $payModel = new PayLog();
-        $payModel->out_trade_no = StringHelper::randomNum(time());
-        $payModel->total_fee = $totalFee;
-        $payModel->order_sn = $orderSn;
-        $payModel->order_group = $orderGroup;
-        $payModel->pay_type = $payType;
-        $payModel->trade_type = $tradeType;
-        $payModel->save();
-
-        return $payModel->out_trade_no;
+        return $result;
     }
 
     /**
      * 支付通知回调
      *
      * @param PayLog $log
-     * @param string $paymentType 支付类型
-     * @return bool
+     * @param $paymentType
+     * @throws \yii\web\NotFoundHttpException
      */
-    public function notify(PayLog $log, $paymentType)
+    public function notify(PayLog $log)
     {
-        $log->ip = ip2long(Yii::$app->request->userIP);
+        $log->pay_ip = Yii::$app->request->userIP;
         $log->save();
 
         switch ($log->order_group) {
-            case PayEnum::ORDER_GROUP :
+            case PayGroupEnum::ORDER :
                 // TODO 处理订单
-                return true;
+
+                // 记录消费日志
+                Yii::$app->services->memberCreditsLog->consumeMoney(new CreditsLogForm([
+                    'member' => Yii::$app->services->member->get($log->member_id),
+                    'num' => $log->pay_fee,
+                    'credit_group' => 'order',
+                    'pay_type' => $log->pay_type,
+                    'remark' => "【系统】订单支付",
+                    'map_id' => $log->id,
+                ]));
+
                 break;
-            case PayEnum::ORDER_GROUP_RECHARGE :
-                // TODO 处理充值信息
-                return true;
+            case PayGroupEnum::RECHARGE :
+                $payFee = $log['pay_fee'];
+                $member = Yii::$app->services->member->get($log['member_id']);
+
+                // 充值
+                Yii::$app->services->memberCreditsLog->incrMoney(new CreditsLogForm([
+                    'member' => $member,
+                    'pay_type' => $log['pay_type'],
+                    'num' => $payFee,
+                    'credit_group' => 'recharge',
+                    'remark' => "【系统】在线充值",
+                    'map_id' => $log['id'],
+                ]));
+
+                // 赠送
+                if (($money = Yii::$app->services->memberRechargeConfig->getGiveMoney($payFee)) > 0) {
+                    Yii::$app->services->memberCreditsLog->giveMoney(new CreditsLogForm([
+                        'member' => $member,
+                        'pay_type' => $log['pay_type'],
+                        'num' => $money,
+                        'credit_group' => 'rechargeGive',
+                        'remark' => "【系统】充值赠送",
+                        'map_id' => $log['id'],
+                    ]));
+                }
+
                 break;
         }
     }
@@ -193,4 +215,17 @@ class PayService extends Service
             ->where(['out_trade_no' => $outTradeNo])
             ->one();
     }
+
+    /**
+     * @param $order_sn
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByOrderSn($order_sn)
+    {
+        return PayLog::find()
+            ->where(['order_sn' => $order_sn])
+            ->one();
+    }
+
+
 }

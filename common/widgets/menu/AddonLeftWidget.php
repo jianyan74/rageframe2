@@ -1,11 +1,12 @@
 <?php
+
 namespace common\widgets\menu;
 
 use Yii;
 use yii\base\Widget;
 use common\helpers\Auth;
 use common\helpers\ArrayHelper;
-use common\models\common\Addons;
+use common\enums\AddonDefaultRouteEnum;
 
 /**
  * 模块菜单
@@ -28,9 +29,10 @@ class AddonLeftWidget extends Widget
         $addon['is_cover'] = !empty(Yii::$app->params['addonBinding']['cover']);
         if (!Yii::$app->services->auth->isSuperAdmin()) {
             $auth = Auth::getAuth();
-            $addon['is_rule'] = ($addon['is_rule'] == true && in_array(Addons::AUTH_RULE, $auth));
-            $addon['is_cover'] = ($addon['is_cover'] == true && in_array(Addons::AUTH_COVER, $auth));
-            $addon['is_setting'] = ($addon['is_setting'] == true && in_array(Addons::AUTH_SETTING, $auth));
+            $prefix = '/' . Yii::$app->params['addonName'] . '/';
+            $addon['is_rule'] = ($addon['is_rule'] == true && in_array($prefix . AddonDefaultRouteEnum::RULE, $auth));
+            $addon['is_cover'] = ($addon['is_cover'] == true && in_array($prefix . AddonDefaultRouteEnum::COVER, $auth));
+            $addon['is_setting'] = ($addon['is_setting'] == true && in_array($prefix . AddonDefaultRouteEnum::SETTING, $auth));
 
             foreach ($menus as $kye => $menu) {
                 // 移除无权限菜单

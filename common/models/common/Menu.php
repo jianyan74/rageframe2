@@ -12,7 +12,7 @@ use common\helpers\TreeHelper;
  * @property int $id
  * @property string $title 标题
  * @property string $app_id 应用
- * @property string $type 类别
+ * @property int $is_addon 是否插件
  * @property string $addons_name 插件名称
  * @property int $cate_id 分类id
  * @property string $pid 上级id
@@ -44,10 +44,10 @@ class Menu extends \common\models\base\BaseModel
     {
         return [
             [['title', 'pid', 'cate_id'], 'required'],
-            [['cate_id', 'pid', 'level', 'dev', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['cate_id', 'pid', 'level', 'is_addon', 'dev', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['params'], 'safe'],
             [['title', 'url', 'icon'], 'string', 'max' => 50],
-            [['app_id', 'type'], 'string', 'max' => 20],
+            [['app_id'], 'string', 'max' => 20],
             [['addons_name'], 'string', 'max' => 100],
             [['tree'], 'string', 'max' => 300],
             [['level'], 'default', 'value' => 1],
@@ -65,7 +65,7 @@ class Menu extends \common\models\base\BaseModel
             'title' => '标题',
             'cate_id' => '分类',
             'app_id' => '应用',
-            'type' => '类别',
+            'is_addon' => '是否插件',
             'addons_name' => '插件名称',
             'pid' => '父级',
             'tree' => '树',
@@ -125,7 +125,7 @@ class Menu extends \common\models\base\BaseModel
 
             !$this->app_id && $this->app_id = $this->cate->app_id;
             !$this->addons_name && $this->addons_name = $this->cate->addons_name;
-            !$this->type && $this->type = $this->cate->type;
+            !$this->is_addon && $this->is_addon = $this->cate->is_addon;
         } else {
             // 修改父类
             if ($this->oldAttributes['pid'] != $this->pid) {

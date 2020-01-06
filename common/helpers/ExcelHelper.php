@@ -158,7 +158,7 @@ class ExcelHelper
                     foreach ($header as $key => $value) {
                         // 解析字段
                         $realData = self::formatting($header[$key], trim(self::formattingField($row, $value[1])), $row);
-                        $data[] = str_replace(PHP_EOL, '', $realData);
+                        $data[] = '"' . $realData . '"';
                     }
 
                     $info[] = implode("\t ,", $data) . "\t ,";

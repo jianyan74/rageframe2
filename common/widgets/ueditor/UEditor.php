@@ -99,7 +99,7 @@ class UEditor extends InputWidget
 
         $formData = Json::encode($this->formData);
 
-        //ready部分代码，是为了缩略图管理。UEditor本身就很大，在后台直接加载大文件图片会很卡。
+        // ready部分代码，是为了缩略图管理。UEditor本身就很大，在后台直接加载大文件图片会很卡。
         $script = <<<JS
         UE.delEditor('{$id}');
         var ue = UE.getEditor('{$id}',{$config}).ready(function(){

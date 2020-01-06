@@ -35,17 +35,4 @@ class SettingController extends BaseController implements AddonsSetting
             'model' => $model,
         ]);
     }
-
-    /**
-     * 钩子
-     *
-     * @param array $param
-     * @return mixed|string
-     */
-    public function actionHook($param = [])
-    {
-        return $this->render('hook', [
-            'param' => $param
-        ]);
-    }
 }

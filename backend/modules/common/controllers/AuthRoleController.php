@@ -6,10 +6,10 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use common\enums\StatusEnum;
 use common\helpers\TreeHelper;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\common\AuthRole;
 use common\enums\AppEnum;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 use common\helpers\ResultHelper;
 use backend\controllers\BaseController;
 
@@ -51,7 +51,6 @@ class AuthRoleController extends BaseController
             'query' => AuthRole::find()
                 ->where(['app_id' => $this->appId])
                 ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->andFilterWhere($where)
                 ->orderBy('sort asc, created_at asc')
                 ->asArray(),
@@ -85,8 +84,8 @@ class AuthRoleController extends BaseController
             }
 
             // 创建角色关联的权限信息
-            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], TypeEnum::DEFAULT, $this->appId);
-            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], TypeEnum::ADDONS, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['userTreeIds'] ?? [], WhetherEnum::DISABLED, $this->appId);
+            Yii::$app->services->authRole->accredit($model->id, $data['plugTreeIds'] ?? [], WhetherEnum::ENABLED, $this->appId);
 
             return ResultHelper::json(200, '提交成功');
         }

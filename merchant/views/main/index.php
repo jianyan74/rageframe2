@@ -47,7 +47,7 @@ AppAsset::register($this);
     <script>
         // 配置
         let config = {
-            tag: "<?= Yii::$app->debris->config('sys_tags') ?? false; ?>",
+            tag: "<?= Yii::$app->debris->merchantConfig('sys_tags') ?? false; ?>",
             isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
         };
     </script>

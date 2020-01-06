@@ -14,12 +14,6 @@
 Yii::$app->params['addon'];
 ```
 
-#### 获取模块路由和基础信息
-
-```
-Yii::$app->params['addonInfo'];
-```
-
 #### 获取模块导航和菜单信息
 
 ```

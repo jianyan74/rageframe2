@@ -2,7 +2,7 @@
 
 namespace common\models\common;
 
-use common\components\Tree;
+use common\traits\Tree;
 use common\enums\StatusEnum;
 
 /**

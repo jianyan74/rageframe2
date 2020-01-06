@@ -2,9 +2,8 @@
 
 use common\helpers\Url;
 use common\helpers\ArrayHelper;
-use yii\helpers\Url as BaseUrl;
 use common\enums\StatusEnum;
-use \common\helpers\StringHelper;
+use common\helpers\StringHelper;
 
 /** @var array $addon */
 $addonName = $addon['name'];
@@ -20,21 +19,21 @@ $addonName = StringHelper::toUnderScore($addonName);
             <ul class="nav nav-pills nav-stacked">
                 <?php if ($addon['is_cover'] == StatusEnum::ENABLED) { ?>
                     <li class="border-bottom-none">
-                        <a href="<?= BaseUrl::to(['/addons/cover', 'addon' => $addonName]) ?>">
+                        <a href="<?= Url::to(["/addons/cover"]) ?>">
                             <i class="fa fa-arrow-circle-right rf-i"></i>应用入口
                         </a>
                     </li>
                 <?php } ?>
                 <?php if ($addon['is_rule'] == StatusEnum::ENABLED) { ?>
                     <li>
-                        <a href="<?= BaseUrl::to(['/addons/rule', 'addon' => $addonName]) ?>">
+                        <a href="<?= Url::to(["/addons/rule"]) ?>">
                             <i class="fa fa-comments rf-i"></i>规则回复
                         </a>
                     </li>
                 <?php } ?>
                 <?php if ($addon['is_setting'] == StatusEnum::ENABLED) { ?>
                     <li>
-                        <a href="<?= Url::to(['setting/display']) ?>">
+                        <a href="<?= Url::to(["/setting/display"]) ?>">
                             <i class="fa fa-cog rf-i"></i>参数设置
                         </a>
                     </li>

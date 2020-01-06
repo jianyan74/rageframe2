@@ -34,7 +34,6 @@ class ActionLogController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->with(['backendMember', 'merchantMember', 'member']);
 

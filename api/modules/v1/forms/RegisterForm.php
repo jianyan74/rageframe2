@@ -5,8 +5,8 @@ namespace api\modules\v1\forms;
 use yii\base\Model;
 use common\helpers\RegularHelper;
 use common\models\member\Member;
-use common\models\api\AccessToken;
 use common\models\common\SmsLog;
+use common\enums\AccessTokenGroupEnum;
 use common\models\validators\SmsCodeValidator;
 
 /**
@@ -42,7 +42,7 @@ class RegisterForm extends Model
             ['code', SmsCodeValidator::class, 'usage' => SmsLog::USAGE_REGISTER],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '请输入正确的手机号码'],
             [['password_repetition'], 'compare', 'compareAttribute' => 'password'],// 验证新密码和重复密码是否相等
-            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage],
+            ['group', 'in', 'range' => AccessTokenGroupEnum::getKeys()],
         ];
     }
 

@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <?= $form->field($model, 'description')->textarea()->hint('详细介绍插件的功能和使用方法 ') ?>
                                 <?= $form->field($model, 'author')->textInput() ?>
                                 <?= $form->field($model, 'is_setting')->checkbox()->hint('勾选后会开启该功能') ?>
-                                <?= $form->field($model, 'is_hook')->checkbox()->hint('勾选后会开启该功能') ?>
                                 <?= $form->field($model, 'is_merchant_route_map')->checkbox()->hint('开启后会将商户端的url直接映射到后台来，节省相同代码，请了解后再使用') ?>
                                 <div class="hr-line-dashed"></div>
                                 <?= $form->field($model, 'wechat_message')->checkboxList(WechatEnum::getMap())->hint('当前插件能够直接处理的消息类型(没有上下文的对话语境, 能直接处理消息并返回数据). 如果公众平台传递过来的消息类型不在设定的类型列表中, 那么系统将不会把此消息路由至此插件') ?>

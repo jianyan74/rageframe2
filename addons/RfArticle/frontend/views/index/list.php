@@ -59,7 +59,7 @@ $this->title = '文章列表';
                 </div>
             </div>
             <!--获取左侧列表推荐-->
-            <?= \common\helpers\Hook::to('RfArticle', ['position' => 2]); ?>
+            <?php // \common\helpers\Hook::to('RfArticle', ['position' => 2]); ?>
         </div>
     </div>
 </div>

@@ -9,18 +9,10 @@ return [
     /** ------ 总管理员配置 ------ **/
     'adminAccount' => 1,// 系统管理员账号id
     'isMobile' => false, // 手机访问
-    // 多商户
-    'merchantOpen' => false,
 
     /** ------ 日志记录 ------ **/
     'user.log' => true,
     'user.log.level' => ['warning', 'error'], // 级别 ['success', 'info', 'warning', 'error']
-    'user.log.noPostData' => [ // 安全考虑,不接收Post存储到日志的路由
-        'backend/site/login',
-        'base/member/up-password',
-        'base/member/ajax-edit',
-        'member/member/ajax-edit',
-    ],
     'user.log.except.code' => [404], // 不记录的code
 
     /** ------ 开发者信息 ------ **/
@@ -37,5 +29,7 @@ return [
     'noAuthRoute' => [
         '/main/index',// 系统主页
         '/main/system',// 系统首页
+        '/main/member-between-count',
+        '/main/member-credits-log-between-count',
     ],
 ];

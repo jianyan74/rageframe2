@@ -71,8 +71,6 @@ class Invoice extends \common\models\base\BaseModel
     {
         if ($this->type == InvoiceTypeEnum::COMPANY && !$this->duty_paragraph) {
             $this->addError($attribute, '请填写税号');
-        } else {
-            $this->duty_paragraph = '';
         }
     }
 
@@ -94,6 +92,10 @@ class Invoice extends \common\models\base\BaseModel
     {
         if ($this->is_default == StatusEnum::ENABLED) {
             self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
+        }
+
+        if ($this->type == InvoiceTypeEnum::PERSONAGE) {
+            $this->duty_paragraph = '';
         }
 
         return parent::beforeSave($insert);

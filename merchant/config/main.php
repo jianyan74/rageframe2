@@ -21,6 +21,10 @@ return [
         'base' => [
             'class' => 'merchant\modules\base\Module',
         ],
+        /** ------ 会员模块 ------ **/
+        'member' => [
+            'class' => 'merchant\modules\member\Module',
+        ],
     ],
     'components' => [
         'request' => [

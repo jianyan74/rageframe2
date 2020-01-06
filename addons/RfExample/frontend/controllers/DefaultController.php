@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\frontend\controllers;
 
 use Yii;
@@ -13,13 +14,13 @@ use common\controllers\AddonsController;
 class DefaultController extends BaseController
 {
     /**
-    * 首页
-    *
-    * @return string
-    */
+     * 首页
+     *
+     * @return string
+     */
     public function actionIndex()
     {
-        return $this->render('index',[
+        return $this->render('index', [
 
         ]);
     }
