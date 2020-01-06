@@ -5,6 +5,7 @@ namespace common\traits;
 use Yii;
 use yii\base\Model;
 use common\enums\AppEnum;
+use common\components\Init;
 
 /**
  * trait BaseAction

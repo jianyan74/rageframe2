@@ -34,7 +34,7 @@ class AccessTokenGroupEnum extends BaseEnum
             self::H5 => 'H5',
             self::PC => 'PC',
             self::WECHAT => '微信',
-            self::WECHAT_MQ => '微信小git程序',
+            self::WECHAT_MQ => '微信小程序',
             self::ALI_MQ => '支付宝小程序',
             self::QQ_MQ => 'QQ小程序',
             self::BAIDU_MQ => '百度小程序',
