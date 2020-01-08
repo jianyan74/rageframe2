@@ -9,6 +9,7 @@
 ### 示例一
 
   ```php
+use common\models\base\SearchModel;
 $searchModel = new SearchModel([
    'model' => Topic::class,
    'scenario' => 'default',
