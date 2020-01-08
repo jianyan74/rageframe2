@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'attribute' => 'level.name',
                             'value' => function ($model) {
-                                return Html::tag('span', $model->level->name, [
+                                return Html::tag('span', $model->level->name ?? '', [
                                         'class' => 'label label-primary'
                                 ]);
                             },
