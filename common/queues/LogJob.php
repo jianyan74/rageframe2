@@ -1,8 +1,9 @@
 <?php
+
 namespace common\queues;
 
+use Yii;
 use yii\base\BaseObject;
-use common\models\common\Log;
 
 /**
  * Class LogJob
@@ -25,6 +26,6 @@ class LogJob extends BaseObject implements \yii\queue\JobInterface
      */
     public function execute($queue)
     {
-        Log::record($this->data);
+        Yii::$app->services->log->realCreate($this->data);
     }
 }

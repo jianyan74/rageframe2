@@ -4,7 +4,9 @@ namespace frontend\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main frontend application asset bundle.
+ * Class AppAsset
+ * @package frontend\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class AppAsset extends AssetBundle
 {
@@ -14,6 +16,7 @@ class AppAsset extends AssetBundle
 
     public $css = [
         '/resources/css/site.css',
+        '/resources/bower_components/font-awesome/css/font-awesome.min.css',
     ];
 
     public $js = [

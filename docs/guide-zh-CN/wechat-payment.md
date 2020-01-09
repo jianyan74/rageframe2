@@ -27,12 +27,9 @@ $result = $app->order->unify([
     'openid' => 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o',
 ]);
 
-if ($result['return_code'] == 'SUCCESS')
-{
+if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
     $config = $payment->jssdk->sdkConfig($result['prepay_id']);
-}
-else
-{
+} else {
     throw new yii\base\ErrorException('微信支付异常, 请稍后再试');
 }
 

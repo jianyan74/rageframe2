@@ -9,7 +9,7 @@
 
 ### 设置基础配置信息
 
-> 默认已经在BaseController基类控制器动态写入(微信配置、微信支付配置、微信小程序配置)，不用重复配置，backend、frontend、wechat应用已继承该基类，api应用需要自己按需写入。
+> 默认已经动态写入(微信配置、微信支付配置、微信小程序配置)，不用重复配置，backend、frontend、wechat应用已继承该基类，api应用需要自己按需写入。
 
 设置基础配置信息在 `config/params.php`，如果不需要请忽略，默认已配置
 
@@ -17,35 +17,34 @@
 // 微信配置 具体可参考EasyWechat 
 'wechatConfig' => [],
 ```
-[微信配置文档](https://www.easywechat.com/docs/master/zh-CN/official-account/configuration)  
+[微信配置文档](https://www.easywechat.com/docs/master/official-account/configuration)  
 ```
 // 微信支付配置 具体可参考EasyWechat
 'wechatPaymentConfig' => [],
 ```
-[微信支付配置文档](https://www.easywechat.com/docs/master/zh-CN/payment/jssdk)  
+[微信支付配置文档](https://www.easywechat.com/docs/master/payment/jssdk)  
 ```
 // 微信小程序配置 具体可参考EasyWechat
 'wechatMiniProgramConfig' => [],
 ```
-[微信小程序配置文档](https://www.easywechat.com/docs/master/zh-CN/mini-program/index)  
+[微信小程序配置文档](https://www.easywechat.com/docs/master/mini-program/index)  
 ```
 // 微信开放平台第三方平台配置 具体可参考EasyWechat
 'wechatOpenPlatformConfig' => [],
 ```
-[微信开放平台第三方平台配置文档](https://www.easywechat.com/docs/master/zh-CN/open-platform/index) 
+[微信开放平台第三方平台配置文档](https://www.easywechat.com/docs/master/open-platform/index) 
 ```
 // 微信企业微信配置 具体可参考EasyWechat
 'wechatWorkConfig' => [],
 ```
-[企业微信配置文档](https://www.easywechat.com/docs/master/zh-CN/wework/index)
+[企业微信配置文档](https://www.easywechat.com/docs/master/wework/index)
 
 ### 使用例子
 
 微信网页授权
 
 ```
-if (Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized()) 
-{
+if (Yii::$app->wechat->isWechat && !Yii::$app->wechat->isAuthorized()) {
     return Yii::$app->wechat->authorizeRequired()->send();
 }
 ```

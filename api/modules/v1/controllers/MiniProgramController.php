@@ -1,15 +1,14 @@
 <?php
+
 namespace api\modules\v1\controllers;
 
 use Yii;
 use api\controllers\OnAuthController;
-use api\modules\v1\models\MiniProgramLoginForm;
-use common\models\member\MemberInfo;
-use common\models\api\AccessToken;
-use common\helpers\ArrayHelper;
-use common\helpers\ResultDataHelper;
-use common\models\member\MemberAuth;
-use common\helpers\FileHelper;
+use api\modules\v1\forms\MiniProgramLoginForm;
+use common\models\member\Member;
+use common\enums\AccessTokenGroupEnum;
+use common\helpers\ResultHelper;
+use common\models\member\Auth;
 
 /**
  * 小程序授权验证
@@ -29,79 +28,32 @@ class MiniProgramController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['decode', 'session-key'];
+    protected $authOptional = ['login'];
 
     /**
-     * 通过 Code 换取 SessionKey
-     *
-     * @param $code
-     * @return array|mixed
-     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws \yii\base\Exception
-     * @throws \yii\web\UnprocessableEntityHttpException
-     */
-    public function actionSessionKey($code)
-    {
-        if (!$code)
-        {
-            return ResultDataHelper::api(422, '通信错误,请在微信重新发起请求');
-        }
-
-        $oauth = Yii::$app->wechat->miniProgram->auth->session($code);
-        // 解析是否接口报错
-        Yii::$app->debris->getWechatError($oauth);
-
-        // 缓存数据
-        $auth_key = Yii::$app->security->generateRandomString() . '_' . time();
-        Yii::$app->cache->set($auth_key, ArrayHelper::toArray($oauth), 7195);
-
-        return [
-            'auth_key' => $auth_key // 临时缓存token
-        ];
-    }
-
-    /**
-     * 加密数据进行解密 || 进行登录认证
+     * 登录认证
      *
      * @return array|mixed
+     * @throws \EasyWeChat\Kernel\Exceptions\DecryptException
      * @throws \yii\base\Exception
      * @throws \Exception
      */
-    public function actionDecode()
+    public function actionLogin()
     {
         $model = new MiniProgramLoginForm();
         $model->attributes = Yii::$app->request->post();
 
-        if (!$model->validate())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->validate()) {
+            return ResultHelper::json(422, $this->getError($model));
         }
 
-        if (!($oauth = Yii::$app->cache->get($model->auth_key)))
-        {
-            return ResultDataHelper::api(422, 'auth_key已过期');
-        }
-
-        $sign = sha1(htmlspecialchars_decode($model->rawData . $oauth['session_key']));
-        if ($sign !== $model->signature)
-        {
-            return ResultDataHelper::api(422, '签名错误');
-        }
-
-        $userinfo = Yii::$app->wechat->miniProgram->encryptor->decryptData($oauth['session_key'], $model->iv, $model->encryptedData);
-        Yii::$app->cache->delete($model->auth_key);
+        $userinfo = $model->getUser();
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = MemberAuth::findOauthClient(MemberAuth::CLIENT_MINI_PROGRAM, $userinfo['openId'])))
-        {
-            $memberAuth = new MemberAuth();
-            $memberAuthInfo = $memberAuth->add([
-                'unionid' => isset($userinfo['unionId']) ? $userinfo['unionId'] : '',
-                'oauth_client' => MemberAuth::CLIENT_MINI_PROGRAM,
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_WECHAT_MP, $userinfo['openId']))) {
+            $memberAuthInfo = Yii::$app->services->memberAuth->create([
+                'unionid' => $userinfo['unionId'] ?? '',
+                'oauth_client' => Auth::CLIENT_WECHAT_MP,
                 'oauth_client_user_id' => $userinfo['openId'],
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
@@ -117,9 +69,8 @@ class MiniProgramController extends OnAuthController
         // TODO 以下代码都可以替换
 
         // 判断是否有管理信息 数据也可以后续在绑定
-        if (!($member = $memberAuthInfo->member))
-        {
-            $member = new MemberInfo();
+        if (!($member = $memberAuthInfo->member)) {
+            $member = new Member();
             $member->attributes = [
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
@@ -132,7 +83,7 @@ class MiniProgramController extends OnAuthController
             $memberAuthInfo->save();
         }
 
-        return AccessToken::getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessTokenGroupEnum::WECHAT_MQ);
     }
 
     /**
@@ -156,16 +107,16 @@ class MiniProgramController extends OnAuthController
 
         // $response 成功时为 EasyWeChat\Kernel\Http\StreamResponse 实例，失败时为数组或者你指定的 API 返回格式
 
+        $directory = Yii::getAlias('@attachment');
+
         // 保存小程序码到文件
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
-        {
-            $filename = $response->save('/path/to/directory');
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            $filename = $response->save($directory);
         }
 
         // 或
-        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse)
-        {
-            $filename = $response->saveAs('/path/to/directory', 'appcode.png');
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            $filename = $response->saveAs($directory, 'appcode.png');
         }
     }
 
@@ -180,8 +131,7 @@ class MiniProgramController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
-        {
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

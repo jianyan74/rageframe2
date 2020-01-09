@@ -1,8 +1,10 @@
 <?php
+
 namespace addons\RfArticle\common\models;
 
-use common\enums\StatusEnum;
 use Yii;
+use common\behaviors\MerchantBehavior;
+use common\enums\StatusEnum;
 
 /**
  * This is the model class for table "{{%addon_article_tag}}".
@@ -14,8 +16,10 @@ use Yii;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class ArticleTag extends \common\models\common\BaseModel
+class ArticleTag extends \common\models\base\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +34,7 @@ class ArticleTag extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 20],
             [['title'], 'required'],
         ];
@@ -69,13 +73,13 @@ class ArticleTag extends \common\models\common\BaseModel
         // 文章标签
         $articleTags = ArticleTag::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->select(['id', 'title'])
             ->asArray()
             ->all();
 
         $tags = [];
-        foreach ($articleTags as $tag)
-        {
+        foreach ($articleTags as $tag) {
             $tags[$tag['id']] = $tag['title'];
         }
 

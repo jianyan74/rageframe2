@@ -4,7 +4,7 @@
 
 - 继承的基类说明
 - 速率和参数配置
-- 不需要速率控制设置
+  - 不需要速率控制设置
 - 签名验证
 - Url权限配置
 - 方法权限验证
@@ -12,6 +12,11 @@
 - 自定义code返回
 - 解析Model首个报错信息
 - 获取当前登录的用户信息
+
+> ！！！  
+> ！！！  
+> ！！！  
+> 注意：添加好控制器后必须配置rule才能正常访问，具体查看`api/config/main.php` 的路由规则示例
 
 ### 继承的基类说明
 
@@ -22,15 +27,15 @@
 
 > 可自行修改 `common\models\common\RateLimit` 配置
 
-### 不需要速率控制设置
+##### 不需要速率控制设置
 
-找到 `common\models\api\AccessToken` 让其直接继承 `common\models\common\BaseModel` 即可
+找到 `common\models\api\AccessToken` 让其直接继承 `common\models\base\BaseModel` 即可
 
 ### 签名验证
 
 > 可自行修改 `api/config/params.php` 配置
 
-测试控制器：`api\controllersSignSecretKeyController`，注意要先开启路由规则匹配才能访问
+测试控制器：`api\controllers\SignSecretKeyController`，注意要先开启路由规则匹配才能访问
 
 ```
 return [
@@ -64,8 +69,7 @@ return [
 public function checkAccess($action, $model = null, $params = [])
 {
     // 方法名称
-    if (in_array($action, ['delete', 'index']))
-    {
+    if (in_array($action, ['delete', 'index'])) {
         throw new \yii\web\BadRequestHttpException('权限不足');
     }
 }
@@ -88,7 +92,7 @@ public function checkAccess($action, $model = null, $params = [])
  * @param string $message 返回的报错信息
  * @param array|object $data 返回的数据结构
  */
-api\controllers\ResultDataHelper::api($code, $message, $data = []);
+common\helpers\ResultHelper::json($code, $message, $data = []);
 ```
 
 ### 解析Model首个报错信息
@@ -106,8 +110,8 @@ $this->analyErr($model->getFirstErrors())
 ### 获取当前登录的用户信息
 
 ```
-use common\models\member\MemberInfo;
+use common\models\member\Member;
 
 $tokenModel = Yii::$app->user->identity;
-$member = MemberInfo::findIdentity($tokenModel['member_id']);
+$member = Yii::$app->services->member->get($tokenModel['member_id']);
 ```

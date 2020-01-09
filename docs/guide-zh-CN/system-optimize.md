@@ -1,21 +1,8 @@
-## 代码提示/线上性能优化
+## 线上性能优化
 
 目录
 
-- 代码提示
 - 性能优化
-
-### 代码提示
-
-可以在yii\base\Application;加入以下注释，来让IDE来智能提示
-
-```
- * @property \jianyan\easywechat\Wechat $wechat
- * @property \common\components\Debris $debris
- * @property \common\services\Application $services
- * @property \Da\QrCode\Component\QrCodeComponent $qr
- * @property \common\components\Pay $pay
- ```
  
  ### 性能优化
  
@@ -52,12 +39,14 @@ return [
 ```
 ##### 4、使用别的存储方式session
   
-  例如：redis、memcache、mysql
+例如：redis、memcache、mysql
   
 ##### 5、多使用局部缓存，整页缓存 ，http 缓存等，复杂数据库查询也可以做缓存依赖
  
 ##### 6、数据库索引等优化，尽量多的使用视图（当有必要）
+
 ##### 7、查询操作limit限制
+
 查询结果使用AsArray，这样可以节省内存因为这样返回的是数组，而不是对象，譬如：
 ```
 $posts = Post::find()->orderBy('id desc')->limit(100)->asArray()->all();
@@ -74,6 +63,4 @@ php composer.phar dumpautoload -o
 ```
 ##### 10、通过脚本处理中间数据
   
-  可以通过cron定时任务批量处理数据，譬如产品的特价，产品的过滤等等
-  
-原文参考：https://blog.csdn.net/terry_water/article/details/43898765
+可以通过cron定时任务批量处理数据，譬如产品的特价，产品的过滤等等

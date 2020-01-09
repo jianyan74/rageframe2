@@ -5,6 +5,8 @@
 - 绑定
 - 微信应用使用注意
 
+> 注意确保自己的微信公众号插件已经安装，如果删除了想重新安装请去 https://github.com/jianyan74/Wechat 下载最新
+
 ### 绑定
 
 第一步
@@ -15,7 +17,7 @@
 
 第二步
 
-> 微信公众号绑定的服务器地址为 当前域名`/wechat/api/index.html`，完整例子 : `www.rageframe.com/wechat/api/index.html`
+> 微信公众号绑定的服务器地址为 当前域名`html5/wechat/receive-msg/index`，完整例子 : `www.rageframe.com/html5/wechat/receive-msg/index`
 
 ### 配置信息修改
 

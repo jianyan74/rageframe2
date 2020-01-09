@@ -1,9 +1,10 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
-use common\models\sys\MenuCate;
-use common\helpers\DebrisHelper;
+use backend\forms\ClearCache;
+use common\helpers\ResultHelper;
 
 /**
  * 主控制器
@@ -12,58 +13,76 @@ use common\helpers\DebrisHelper;
  * @package backend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class MainController extends MController
+class MainController extends BaseController
 {
     /**
      * 系统首页
      *
      * @return string
-     * @throws \yii\db\Exception
      */
     public function actionIndex()
     {
-        // 判断是否手机
-        Yii::$app->params['isMobile'] = DebrisHelper::isMobile();
-        // 拉取公告
-        Yii::$app->services->sys->notify->pullAnnounce(Yii::$app->user->id);
-        // 获取当前通知
-        list($notify, $notifyPage) = Yii::$app->services->sys->notify->getUserNotify(Yii::$app->user->id);
-
-        return $this->renderPartial('index', [
-            'menuCates' => MenuCate::getList(),
-            'manager' => Yii::$app->user->identity,
-            'notify' => $notify,
-            'notifyPage' => $notifyPage,
+        return $this->renderPartial($this->action->id, [
         ]);
     }
 
     /**
-     * 系统主页
+     * 子框架默认主页
      *
      * @return string
      */
     public function actionSystem()
     {
-        return $this->render('system',[
+        $merchant_id = Yii::$app->services->merchant->getId();
 
+        return $this->render($this->action->id, [
+            'memberCount' => Yii::$app->services->member->getCount($merchant_id),
+            'memberAccount' => Yii::$app->services->memberAccount->getSum($merchant_id),
         ]);
     }
 
     /**
+     * 用户指定时间内数量
+     *
+     * @param $type
+     * @return array
+     */
+    public function actionMemberBetweenCount($type)
+    {
+        $data = Yii::$app->services->member->getBetweenCountStat($type);
+
+        return ResultHelper::json(200, '获取成功', $data);
+    }
+
+    /**
+     * 用户指定时间内消费日志
+     *
+     * @param $type
+     * @return array
+     */
+    public function actionMemberCreditsLogBetweenCount($type)
+    {
+        $data = Yii::$app->services->memberCreditsLog->getBetweenCountStat($type);
+
+        return ResultHelper::json(200, '获取成功', $data);
+    }
+
+    /**
      * 清理缓存
+     *
+     * @return string
      */
     public function actionClearCache()
     {
-        // 删除后台文件缓存
-        $result = Yii::$app->cache->flush();
+        $model = new ClearCache();
+        if ($model->load(Yii::$app->request->post())) {
+            return $model->save()
+                ? $this->message('清理成功', $this->refresh())
+                : $this->message($this->getError($model), $this->refresh(), 'error');
+        }
 
-        // 删除备份缓存
-        $path = Yii::$app->params['dataBackupPath'];
-        $lock = realpath($path) . DIRECTORY_SEPARATOR . Yii::$app->params['dataBackLock'];
-        array_map("unlink", glob($lock));
-
-        return $this->render('clear-cache', [
-            'result' => $result
+        return $this->render($this->action->id, [
+            'model' => $model
         ]);
     }
 }

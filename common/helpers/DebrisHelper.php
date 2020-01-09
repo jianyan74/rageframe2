@@ -1,7 +1,9 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
+use yii\helpers\Json;
 
 /**
  * Class DebrisHelper
@@ -10,6 +12,174 @@ use Yii;
  */
 class DebrisHelper
 {
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function getUrl()
+    {
+        $url = explode('?', Yii::$app->request->getUrl())[0];
+        $matching = '/' . Yii::$app->id . '/';
+        if (substr($url, 0, strlen($matching)) == $matching) {
+            $url = substr($url, strlen($matching), strlen($url));
+        }
+
+        if (substr($url, 0, 1) === '/') {
+            $url = substr($url, 1, strlen($url));
+        }
+
+        return $url;
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public static function htmlEncode($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        if (!is_array($value)) {
+            $value = Json::decode($value);
+        }
+
+        $array = [];
+        foreach ($value as $key => &$item) {
+            if (!is_array($item)) {
+                $array[$key] = Html::encode($item);
+            } else {
+                $array[$key] = self::htmlEncode($item);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * 获取分页跳转
+     *
+     * @return array
+     */
+    public static function getPageSkipUrl()
+    {
+        $defautlUrl = Yii::$app->request->getHostInfo() . Yii::$app->request->url;
+        $urlArr = explode('?', $defautlUrl);
+        $defautlUrl = $urlArr[0];
+        $getQueryParam = urldecode($urlArr[1] ?? '');
+        $getQueryParamArr = explode('&', $getQueryParam);
+
+        // 查询字符串是否有page
+        foreach ($getQueryParamArr as $key => $value) {
+            if (StringHelper::strExists($value, 'page=') || !StringHelper::strExists($value, 'per-page=')) {
+                unset($getQueryParamArr[$key]);
+            }
+        }
+
+        $connector = !empty($getQueryParamArr) ? '?' : '';
+        $fullUrl = $defautlUrl . $connector;
+        $pageConnector = '?';
+        if (!empty($getQueryParamArr)) {
+            $fullUrl .= implode('&', $getQueryParamArr);
+            $pageConnector = '&';
+        }
+
+        $fullUrl = Html::encode($fullUrl);
+        $pageConnector = Html::encode($pageConnector);
+
+        return [$fullUrl, $pageConnector];
+    }
+
+    /**
+     * @param $ip
+     * @return string
+     */
+    public static function long2ip($ip)
+    {
+        try {
+            return long2ip($ip);
+        } catch (\Exception $e) {
+            return $ip;
+        }
+    }
+
+    /**
+     * @param $ip
+     * @return string
+     */
+    public static function analysisIp($ip, $long = true)
+    {
+        if (empty($ip)) {
+            return false;
+        }
+
+        if (ip2long('127.0.0.1') == $ip) {
+            return '本地';
+        }
+
+        if ($long === true) {
+            $ip = self::long2ip($ip);
+            if (((int)$ip) > 1000) {
+                return '无法解析';
+            }
+        }
+
+        $ipData = \Zhuzhichao\IpLocationZh\Ip::find($ip);
+
+        $str = '';
+        isset($ipData[0]) && $str .= $ipData[0];
+        isset($ipData[1]) && $str .= ' · ' . $ipData[1];
+        isset($ipData[2]) && $str .= ' · ' . $ipData[2];
+
+        return $str;
+    }
+
+    /**
+     * 调用这个方法前面干了什么
+     *
+     * @param bool $reverse
+     * @return array
+     */
+    public static function debug($reverse = false)
+    {
+        $debug = debug_backtrace();
+        $data = [];
+        foreach ($debug as $e) {
+            $function = isset($e['function']) ? $e['function'] : 'null function';
+            $class = isset($e['class']) ? $e['class'] : 'null class';
+            $file = isset($e['file']) ? $e['file'] : 'null file';
+            $line = isset($e['line']) ? $e['line'] : 'null';
+            $data[] = $file . '(' . $line . '),' . $class . '::' . $function . '()';
+        }
+
+        return $reverse == true ? array_reverse($data) : $data;
+    }
+
+    /**
+     * 根据两点间的经纬度计算距离
+     *
+     * @param $lat1
+     * @param $lng1
+     * @param $lat2
+     * @param $lng2
+     * @return float
+     */
+    public static function getDistance($lat1, $lng1, $lat2, $lng2)
+    {
+        $earthRadius = 6367000; // 地球的近似半径(米)
+        $lat1 = ($lat1 * pi()) / 180;
+        $lng1 = ($lng1 * pi()) / 180;
+        $lat2 = ($lat2 * pi()) / 180;
+        $lng2 = ($lng2 * pi()) / 180;
+        $calcLongitude = $lng2 - $lng1;
+        $calcLatitude = $lat2 - $lat1;
+        $stepOne = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
+        $stepTwo = 2 * asin(min(1, sqrt($stepOne)));
+        $calculatedDistance = $earthRadius * $stepTwo;
+
+        return round($calculatedDistance);
+    }
+
     /**
      * 获取水印坐标
      *
@@ -20,20 +190,17 @@ class DebrisHelper
      */
     public static function getWatermarkLocation($imgUrl, $watermarkImgUrl, $point)
     {
-        if (empty($imgUrl) || empty($watermarkImgUrl))
-        {
+        if (empty($imgUrl) || empty($watermarkImgUrl)) {
             return false;
         }
 
-        if (!file_exists($watermarkImgUrl) || !file_exists($imgUrl))
-        {
+        if (!file_exists($watermarkImgUrl) || !file_exists($imgUrl)) {
             return false;
         }
 
         $imgSize = getimagesize($imgUrl);
         $watermarkImgSize = getimagesize($watermarkImgUrl);
-        if (empty($imgSize) || empty($watermarkImgSize))
-        {
+        if (empty($imgSize) || empty($watermarkImgSize)) {
             return false;
         }
 
@@ -44,8 +211,7 @@ class DebrisHelper
         $watermarkImgHeight = $watermarkImgSize[1];
         $watermarkImgMime = $watermarkImgSize['mime'];
 
-        switch ($point)
-        {
+        switch ($point) {
             case 1 : // 左上角
                 $porintLeft = 20;
                 $pointTop = 20;
@@ -98,78 +264,10 @@ class DebrisHelper
         }
 
         // 太小就不生成水印坐标
-        if (($imgWidth - $porintLeft) < $watermarkImgWidth || ($imgHeight - $pointTop) < $watermarkImgHeight)
-        {
+        if (($imgWidth - $porintLeft) < $watermarkImgWidth || ($imgHeight - $pointTop) < $watermarkImgHeight) {
             return false;
         }
 
         return [$porintLeft, $pointTop];
-    }
-
-    /**
-     * 判断是否手机端
-     *
-     * @return bool
-     */
-    public static function isMobile()
-    {
-        // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
-        if (isset($_SERVER['HTTP_X_WAP_PROFILE']))
-        {
-            return true;
-        }
-
-        // 如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息
-        if (isset($_SERVER['HTTP_VIA']))
-        {
-            // 找不到为flase,否则为true
-            return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
-        }
-
-        // 脑残法，判断手机发送的客户端标志,兼容性有待提高。其中'MicroMessenger'是电脑微信
-        if (isset($_SERVER['HTTP_USER_AGENT']))
-        {
-            $clientkeywords = array('nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile','MicroMessenger');
-            // 从HTTP_USER_AGENT中查找手机浏览器的关键字
-            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT'])))
-            {
-                return true;
-            }
-        }
-
-        // 协议法，因为有可能不准确，放到最后判断
-        if (isset ($_SERVER['HTTP_ACCEPT']))
-        {
-            // 如果只支持wml并且不支持html那一定是移动设备
-            // 如果支持wml和html但是wml在html之前则是移动设备
-            if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html'))))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 调用这个方法前面干了什么
-     *
-     * @param bool $reverse
-     * @return array
-     */
-    public static function debug($reverse = false)
-    {
-        $debug = debug_backtrace();
-        $data = [];
-        foreach($debug as $e)
-        {
-            $function = isset($e['function']) ? $e['function'] : 'null function';
-            $class = isset($e['class']) ? $e['class'] : 'null class';
-            $file = isset($e['file']) ? $e['file'] : 'null file';
-            $line = isset($e['line']) ? $e['line'] : 'null';
-            $data[] = $file . '(' . $line . '),' . $class . '::' . $function . '()';
-        }
-
-        return $reverse == true ? array_reverse($data) : $data;
     }
 }

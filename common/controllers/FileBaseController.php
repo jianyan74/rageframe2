@@ -1,16 +1,16 @@
 <?php
+
 namespace common\controllers;
 
 use Yii;
-use yii\data\Pagination;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\Response;
+use common\helpers\ArrayHelper;
 use common\helpers\UploadHelper;
-use common\helpers\ResultDataHelper;
-use common\enums\StatusEnum;
+use common\helpers\ResultHelper;
 use common\models\common\Attachment;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 
 /**
  * Class FileBaseController
@@ -74,17 +74,14 @@ class FileBaseController extends Controller
      */
     public function actionImages()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_IMAGES);
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -96,17 +93,14 @@ class FileBaseController extends Controller
      */
     public function actionFiles()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_FILES);
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -118,17 +112,14 @@ class FileBaseController extends Controller
      */
     public function actionVideos()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VIDEOS);
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -140,17 +131,41 @@ class FileBaseController extends Controller
      */
     public function actionVoices()
     {
-        try
-        {
+        try {
             $upload = new UploadHelper(Yii::$app->request->post(), Attachment::UPLOAD_TYPE_VOICES);
             $upload->verifyFile();
             $upload->save();
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+    }
+
+    /**
+     * Markdown 图片上传
+     *
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionImagesMarkdown()
+    {
+        try {
+            $upload = new UploadHelper(Yii::$app->request->get(), Attachment::UPLOAD_TYPE_IMAGES);
+            $upload->uploadFileName = 'editormd-image-file';
+            $upload->verifyFile();
+            $upload->save();
+
+            $info = $upload->getBaseInfo();
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return [
+                'success' => 1,
+                'url' => $info['url'],
+            ];
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -161,8 +176,7 @@ class FileBaseController extends Controller
      */
     public function actionBase64()
     {
-        try
-        {
+        try {
             // 保存扩展名称
             $extend = Yii::$app->request->post('extend', 'jpg');
             !in_array($extend, Yii::$app->params['uploadConfig']['images']['extensions']) && $extend = 'jpg';
@@ -172,11 +186,9 @@ class FileBaseController extends Controller
             $upload->verifyBase64($data, $extend);
             $upload->save(base64_decode($data));
 
-            return ResultDataHelper::json(200, '上传成功', $upload->getBaseInfo());
-        }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+            return ResultHelper::json(200, '上传成功', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
     }
 
@@ -190,26 +202,59 @@ class FileBaseController extends Controller
         $guid = Yii::$app->request->post('guid');
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
 
-        if (!$mergeInfo)
-        {
-            return ResultDataHelper::json(404, '找不到文件信息, 合并文件失败');
+        if (!$mergeInfo) {
+            return ResultHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
-        try
-        {
-            $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type']);
+        try {
+            $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type'], true);
             $upload->setPaths($mergeInfo['paths']);
             $upload->setBaseInfo($mergeInfo['baseInfo']);
             $upload->merge();
 
             Yii::$app->cache->delete('upload-file-guid:' . $guid);
 
-            return ResultDataHelper::json(200, '合并完成', $upload->getBaseInfo());
+            return ResultHelper::json(200, '合并完成', $upload->getBaseInfo());
+        } catch (\Exception $e) {
+            return ResultHelper::json(404, $e->getMessage());
         }
-        catch (\Exception $e)
-        {
-            return ResultDataHelper::json(404, $e->getMessage());
+    }
+
+    /**
+     * oss直传配置
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function actionOssAccredit()
+    {
+        // 上传类型
+        $type = Yii::$app->request->get('type');
+        $typeConfig = Yii::$app->params['uploadConfig'][$type];
+
+        $path = $typeConfig['path'] . date($typeConfig['subName'], time()) . "/";
+        $oss = Yii::$app->uploadDrive->oss()->config($typeConfig['maxSize'], $path, 60 * 60 * 2, $type);
+
+        return ResultHelper::json(200, '获取成功', $oss);
+    }
+
+    /**
+     * 根据md5获取文件
+     *
+     * @return array
+     */
+    public function actionVerifyMd5()
+    {
+        $md5 = Yii::$app->request->post('md5');
+        if ($file = Yii::$app->services->attachment->findByMd5($md5)) {
+            $file['formatter_size'] = Yii::$app->formatter->asShortSize($file['size'], 2);
+            $file['url'] = $file['base_url'];
+            $file['upload_type'] = UploadHelper::formattingFileType($file['specific_type'], $file['extension'], $file['upload_type']);
+
+            return ResultHelper::json(200, '获取成功', $file);
         }
+
+        return ResultHelper::json(404, '找不到文件');
     }
 
     /**
@@ -223,118 +268,25 @@ class FileBaseController extends Controller
         $upload_type = Yii::$app->request->get('upload_type', Attachment::UPLOAD_TYPE_IMAGES);
         $year = Yii::$app->request->get('year', '');
         $month = Yii::$app->request->get('month', '');
-
-        $data = Attachment::find()
-            ->where(['>=', 'status', StatusEnum::DISABLED])
-            ->andWhere(['upload_type' => $upload_type])
-            ->andFilterWhere(['year' => $year])
-            ->andFilterWhere(['month' => $month]);
-        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => 10, 'validatePage' => false]);
-        $models = $data->offset($pages->offset)
-            ->orderBy('id desc')
-            ->limit($pages->limit)
-            ->asArray()
-            ->all();
-
-        // 如果是以文件形式上传的图片手动修改为图片类型显示
-        foreach ($models as &$model)
-        {
-            if (preg_match("/^image/", $model['specific_type']) && $model['extension'] != 'psd')
-            {
-                $model['upload_type'] = Attachment::UPLOAD_TYPE_IMAGES;
-            }
-        }
+        $keyword = Yii::$app->request->get('keyword', '');
+        $drive = Yii::$app->request->get('drive', '');
+        list($models, $pages) = Yii::$app->services->attachment->getListPage($upload_type, $drive, $year, $month, $keyword);
 
         // 判断是否直接返回json格式
-        if ($json == true)
-        {
-            return ResultDataHelper::json(200, '获取成功', $models);
-        }
-
-        $year = [];
-        for ($i = 2019; $i <= date('Y'); $i++)
-        {
-            $year[$i] = $i;
-        }
-
-        $month = [];
-        for ($i = 1; $i <= 12; $i++)
-        {
-            $month[$i] = $i;
+        if ($json == true) {
+            return ResultHelper::json(200, '获取成功', $models);
         }
 
         return $this->renderAjax('@common/widgets/webuploader/views/selector', [
-            'models' => $models,
+            'models' => Json::encode($models),
+            'pages' => $pages,
             'upload_type' => $upload_type,
-            'month' => $month,
-            'year' => $year,
+            'multiple' => Yii::$app->request->get('multiple', true),
+            'upload_drive' => Yii::$app->request->get('upload_drive', Attachment::DRIVE_LOCAL),
+            'drives' => Attachment::$driveExplain,
+            'year' => ArrayHelper::numBetween(2019, date('Y')),
+            'month' => ArrayHelper::numBetween(1, 12),
             'boxId' => Yii::$app->request->get('boxId'),
-            'multiple' => Yii::$app->request->get('multiple'),
         ]);
-    }
-
-    /**
-     * 获取本地文件列表
-     *
-     * @return array
-     */
-    protected function actionLocal()
-    {
-        /* 获取参数 */
-        $path = Yii::$app->request->get('path', 'images');
-        $year = Yii::$app->request->get('year', date('Y'));
-        $month = Yii::$app->request->get('month', date('m'));
-        $path = $path . '/' . $year . '/' . $month;
-        $size = Yii::$app->request->get('size', 20);
-        $this->fileStart = Yii::$app->request->get('start', 0);
-        $this->fileEnd = $this->fileStart + $size;
-        /* 设置驱动 */
-        $adapter = new Local(Yii::getAlias('@attachment'));
-        $this->filesystem = new Filesystem($adapter);
-
-        $prefix = Yii::$app->params['uploadConfig'][$path]['fullPath'] == true ? Yii::$app->request->hostInfo : '';
-        $files = $this->getLocalList($path, $prefix);
-
-        return ResultDataHelper::json(200, '获取成功', [
-            'list' => $files,
-            'start' => $this->fileStart,
-            'total' => count($files),
-        ]);
-    }
-
-    /**
-     * 根据目录获取文件列表
-     *
-     * @param string $path 文件路径
-     * @param string $allowFiles 文件后缀
-     * @param array $files 文件列表
-     * @param string $prefix 前缀
-     * @return array
-     */
-    protected function getLocalList($path, $prefix, &$files = [])
-    {
-        $listFiles = $this->filesystem->listContents($path);
-        foreach ($listFiles as $key => &$listFile)
-        {
-            if ($listFile['type'] == 'dir')
-            {
-                $this->getLocalList($listFile['path'], $prefix, $files);
-            }
-            else
-            {
-                // 获取选中列表
-                if ($this->fileNum >= $this->fileStart && $this->fileNum < $this->fileEnd)
-                {
-                    $listFile['path'] = $prefix . Yii::getAlias('@attachurl') . '/' . $listFile['path'];
-                    $files[] = $listFile;
-                }
-
-                $this->fileNum++;
-            }
-
-            unset($listFiles[$key]);
-        }
-
-        return $files;
     }
 }

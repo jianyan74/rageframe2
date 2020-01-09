@@ -6,6 +6,7 @@
 - 内页打开新标签页面
 - Ajax更新数据
 - Js模板引擎Demo
+- 用Iframe进行表单提交
 
 ### 弹出框
 
@@ -17,14 +18,21 @@
 * @param string text 副标题
 */
 rfError(title,text);
+
 // 警告提示
 rfWarning(title,text)
+
 // 普通提示
 rfAffirm(title,text)
+
 // 信息提示
 rfInfo(title,text)
+
 // 成功提示
 rfSuccess(title,text)
+
+// 消息提示，layer风格
+rfMsg(title)
 ```
 
 删除二次确认
@@ -51,10 +59,10 @@ rfSuccess(title,text)
 ```
 <tr id = "<?= $model['id']?>">
     <td>
-         <?= \common\helpers\HtmlHelper::sort($model['sort']); ?>
+         <?= \common\helpers\Html::sort($model['sort']); ?>
     </td>
     <td>
-        <?= \common\helpers\HtmlHelper::status($model['status']); ?>
+        <?= \common\helpers\Html::status($model['status']); ?>
     </td>
 </tr>
 ```
@@ -95,3 +103,12 @@ $.ajax({
 ```
 
 相关文档：https://github.com/aui/art-template/wiki/syntax:simple
+
+### 用Iframe进行表单提交
+
+```
+// class带上 openIframe 即可，提交表单默认id为w0，具体案例看 功能案例->Curd Grid
+<?= Html::create(['edit'], '创建', [
+        'class' => 'btn btn-primary btn-xs openIframe',
+]); ?>
+```

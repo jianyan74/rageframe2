@@ -15,6 +15,7 @@
 $config = [
     'notify_url' => 'http://rageframe.com/notify.php', // 支付通知回调地址
     'return_url' => 'http://rageframe.com/return.php', // 买家付款成功跳转地址
+    'sandbox' => false, // 沙盒模式
 ];
 
 // 生成订单
@@ -91,7 +92,9 @@ Yii::$app->pay->alipay->refund($info);
 异步/同步通知
 
 ```
-$request = Yii::$app->pay->alipay->notify()
+$request = Yii::$app->pay->alipay([
+    'ali_public_key' => '', // 支付宝公钥
+])->notify()
 
 try {
     /** @var \Omnipay\Alipay\Responses\AopCompletePurchaseResponse $response */
@@ -186,7 +189,7 @@ $info = [
     'transaction_id' => $transaction_id, //The wechat trade no
     'out_refund_no'  => $outRefundNo,
     'total_fee'      => 1, //=0.01
-    'refund_fee'    => 1, //=0.01
+    'refund_fee'     => 1, //=0.01
 ];
 
 $response = Yii::$app->pay->wechat->refund($info);

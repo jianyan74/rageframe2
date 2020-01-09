@@ -4,6 +4,7 @@
 
 - 创建/维护
 - 权限
+- 数据迁移
 - 继承的基类说明
 - 开发
 
@@ -15,11 +16,30 @@
 
 ### 权限
 
-权限请在创建的模块下的 AddonConfig 文件内手动填写，安装后会自动注册进系统权限管理
+权限请在创建的模块下的 common/config 的各种应用文件内手动填写，安装后会自动注册进系统权限管理
 
 例如：
 
 ```
+    // ----------------------- 默认配置 ----------------------- //
+
+    'config' => [
+        // 菜单配置
+        'menu' => [
+            'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
+            'icon' => 'fa fa-puzzle-piece',
+        ],
+        // 子模块配置
+        'modules' => [
+            'v1' => [
+                'class' => 'addons\RfTinyShop\api\modules\v1\Module',
+            ],
+            'v2' => [
+                'class' => 'addons\RfTinyShop\api\modules\v2\Module',
+            ],
+        ],
+    ],
+
     /**
      * 可授权权限
      *
@@ -30,13 +50,36 @@
      *  )
      * @var array
      */
-    public $authItem = [
+    'authItem' => [
         'curd/index' => 'Curd首页',
         'curd/edit' => 'Curd编辑',
     ];
+    
+    // ----------------------- 快捷入口 ----------------------- //
+    
+    'cover' => [
+
+    ],
+
+    // ----------------------- 菜单配置 ----------------------- //
+
+    'menu' => [
+        [
+            'title' => 'Curd',
+            'route' => 'curd/index',
+            'icon' => '',
+            'params' => [
+                'test' => '1'
+            ]
+        ]
+    ],
 ```
 
 查看设置权限：系统管理->用户权限->角色管理->创建/编辑
+
+### 数据迁移
+
+可以用系统自带的开发工具插件生成对应的数据迁移文件，并遵循系统规范进行数据安装
 
 ### 继承的基类说明
 
@@ -46,10 +89,6 @@
 
 - 控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `optional` 属性
 - 用户私有控制器请全部继承 `api\controllers\UserAuthController`
-
-##### 其他(wechat/backend/frontend)
-
-控制器需统一继承 `common\components\AddonsBaseController`  
 
 ### 开发
 

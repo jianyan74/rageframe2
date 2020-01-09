@@ -1,7 +1,10 @@
 <?php
+
 namespace addons\RfArticle\common\models;
 
 use Yii;
+use common\traits\Tree;
+use common\behaviors\MerchantBehavior;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 
@@ -10,6 +13,7 @@ use common\helpers\ArrayHelper;
  *
  * @property int $id 主键
  * @property string $title 标题
+ * @property string $tree 树
  * @property int $sort 排序
  * @property int $level 级别
  * @property int $pid 上级id
@@ -17,8 +21,10 @@ use common\helpers\ArrayHelper;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class ArticleCate extends \common\models\common\BaseModel
+class ArticleCate extends \common\models\base\BaseModel
 {
+    use Tree, MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -33,9 +39,10 @@ class ArticleCate extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['sort', 'level', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'sort', 'level', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
             [['title'], 'required'],
+            [['tree'], 'string', 'max' => 500],
         ];
     }
 
@@ -48,8 +55,9 @@ class ArticleCate extends \common\models\common\BaseModel
             'id' => 'ID',
             'title' => '标题',
             'sort' => '排序',
+            'tree' => '树',
             'level' => '级别',
-            'pid' => 'Pid',
+            'pid' => '父级',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
@@ -65,6 +73,7 @@ class ArticleCate extends \common\models\common\BaseModel
     {
         $cates = self::find()
             ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->asArray()
             ->all();
 
@@ -72,27 +81,48 @@ class ArticleCate extends \common\models\common\BaseModel
     }
 
     /**
-     * 获取下拉列表
+     * 获取下拉
      *
+     * @param string $id
      * @return array
      */
-    public static function getDropDown()
+    public static function getDropDownForEdit($id = '')
     {
-        $cates = self::getTree();
+        $list = self::find()
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+            ->andFilterWhere(['<>', 'id', $id])
+            ->select(['id', 'title', 'pid', 'level'])
+            ->orderBy('sort asc')
+            ->asArray()
+            ->all();
 
-        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($cates), 'id', 'title');
+        $models = ArrayHelper::itemsMerge($list);
+        $data = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+        return ArrayHelper::merge([0 => '顶级分类'], $data);
     }
 
     /**
-     * 删除全部子类
-     *
-     * @return bool
+     * @return array|\yii\db\ActiveRecord[]
      */
-    public function beforeDelete()
+    public static function getDropDown()
     {
-        $ids = ArrayHelper::getChildIds(self::find()->all(), $this->id);
-        self::deleteAll(['in', 'id', $ids]);
+        $models = ArticleCate::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+            ->orderBy('sort asc,created_at asc')
+            ->asArray()
+            ->all();
 
-        return parent::beforeDelete();
+        $models = ArrayHelper::itemsMerge($models);
+        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(self::class, ['id' => 'pid']);
     }
 }

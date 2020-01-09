@@ -2,10 +2,9 @@
 
 namespace addons\RfArticle\common\models;
 
-use common\helpers\StringHelper;
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
+use common\behaviors\MerchantBehavior;
+use common\helpers\StringHelper;
 
 /**
  * This is the model class for table "{{%addon_article}}".
@@ -27,8 +26,10 @@ use yii\db\ActiveRecord;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Article extends \common\models\common\BaseModel
+class Article extends \common\models\base\BaseModel
 {
+    use MerchantBehavior;
+
     public $tags = [];
 
     /**
@@ -56,8 +57,8 @@ class Article extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['title'], 'required'],
-            [['cate_id', 'view', 'sort', 'status', 'updated_at'], 'integer'],
+            [['title', 'cover', 'sort'], 'required'],
+            [['merchant_id', 'cate_id', 'view', 'sort', 'status', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['position', 'created_at', 'tags'], 'safe'],
             [['title', 'seo_key'], 'string', 'max' => 50],
@@ -104,8 +105,9 @@ class Article extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['<', 'id', $id])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->select(['id', 'title'])
-            ->orderBy('id asc')
+            ->orderBy('id desc')
             ->one();
     }
 
@@ -119,6 +121,7 @@ class Article extends \common\models\common\BaseModel
     {
         return self::find()
             ->where(['>', 'id', $id])
+            ->andWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->select(['id', 'title'])
             ->orderBy('id asc')
             ->one();
@@ -156,19 +159,13 @@ class Article extends \common\models\common\BaseModel
     protected function getPosition()
     {
         $position = $this->position;
-
         $pos = 0;
-        if (!is_array($position))
-        {
-            if ($position > 0)
-            {
+        if (!is_array($position)) {
+            if ($position > 0) {
                 return $position;
             }
-        }
-        else
-        {
-            foreach ($position as $key => $value)
-            {
+        } else {
+            foreach ($position as $key => $value) {
                 // 将各个推荐位的值相加
                 $pos += $value;
             }
@@ -184,13 +181,12 @@ class Article extends \common\models\common\BaseModel
      */
     public function getCate()
     {
-        return $this->hasOne(ArticleCate::class,['id' => 'cate_id']);
+        return $this->hasOne(ArticleCate::class, ['id' => 'cate_id']);
     }
 
     /**
-     * 中间表关联标签
-     *
      * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
     public function getTags()
     {
@@ -210,21 +206,5 @@ class Article extends \common\models\common\BaseModel
         $this->created_at = StringHelper::dateToInt($this->created_at);
 
         return parent::beforeSave($insert);
-    }
-
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-            ],
-        ];
     }
 }

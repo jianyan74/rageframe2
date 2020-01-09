@@ -1,4 +1,4 @@
-## 组件调用
+## 系统组件
 
 目录
 
@@ -9,10 +9,13 @@
   - 行为日志记录
   - 微信接口验证及报错获取
   - 解析 model 报错
+- 文件上传
 - 生成二维码
 - IP地址转地区
+- 快递查询
 - Curl
 - 中文转拼音
+- 爬虫
 - Glide
 
 ### 基本组件
@@ -25,6 +28,16 @@ Yii::$app->debris->config($fildName);
 
 // 强制不从缓存读取
 Yii::$app->debris->config($fildName, true);
+
+// 从缓存中强制读取商户 ID 为 1 配置(注意: 1 为总后台的 ID)
+Yii::$app->debris->config($fildName, false, 1);
+```
+
+读取某一端的配置
+
+```
+// 商户端配置
+Yii::$app->debris->merchantConfig($fildName);
 ```
 
 ##### 获取全部配置信息
@@ -35,6 +48,16 @@ Yii::$app->debris->configAll();
 
 // 强制不从缓存读取
 Yii::$app->debris->configAll(true);
+
+// 从缓存中强制读取商户 ID 为 1 全部配置(注意: 1 为总后台的 ID)
+Yii::$app->debris->configAll(false, 1);
+```
+
+读取某一端的配置
+
+```
+// 商户端配置
+Yii::$app->debris->merchantConfigAll();
 ```
 
 ##### 打印调试
@@ -54,7 +77,7 @@ Yii::$app->debris->p();
  * @param bool $noRecordData 是否记录 post 数据 [true||false]
  * @throws \yii\base\InvalidConfigException
  */
-Yii::$app->services->sys->log($behavior, $remark, $noRecordData)
+Yii::$app->services->actionLog->create($behavior, $remark, $noRecordData)
 ```
 
 ##### 微信接口验证及报错
@@ -73,6 +96,28 @@ $error = Yii::$app->debris->getWechatError($message, false);
 // 注意 $firstErrors 为 $model->getFirstErrors();
 Yii::$app->debris->analyErr($firstErrors);
 ```
+
+### 文件上传
+
+获取组件全部实现 `League\Flysystem\Filesystem` 接口
+
+```
+// 支持 oss/cos/qiniu/local, 配置不传默认使用总后台
+$entity = Yii::$app->uploadDrive->local($config)->entity()；
+```
+
+使用案例
+
+```
+$entity = Yii::$app->uploadDrive->local()->entity()；
+$stream = fopen('文件绝对路径', 'r+');
+$result = $entity->writeStream('存储相对路径', $stream);
+
+// 直接写入base64数据
+$entity->write('存储相对路径', $base64Data);
+```
+
+更多说明：新增驱动请放入 `common\components\uploaddrive` 目录, 并在 `common\components\UploadDrive` 类内实现可实例化的方法
 
 ### 生成二维码
 
@@ -126,6 +171,41 @@ array (size=4)
   4 => string '410100' (length=6)
 ```
 
+### 快递查询
+
+```
+// 查询所有的可用快递公司
+$companies = Yii::$app->logistics->companies('aliyun');
+
+/**
+ * 支持 aliyun(阿里云)、juhe(聚合)、kdniao(快递鸟)、kd100(快递100)
+ *
+ * @param string $no 快递单号
+ * @param null $company 快递公司
+ * @return OrderInterface
+ */
+$order = Yii::$app->logistics->aliyun($no, $company);
+```
+
+更多操作
+
+```
+ $order->getCode(); // 状态码
+ $order->getMsg(); // 状态信息
+ $order->getCompany(); // 物流公司简称
+ $order->getNo(); // 物流单号
+ $order->getStatus(); // 当前物流单状态
+ 
+ 注：物流状态可能不一定准确
+ 
+ $order->getDisplayStatus(); // 当前物流单状态展示名
+ $order->getAbstractStatus(); // 当前抽象物流单状态
+ $order->getCourier(); // 快递员姓名
+ $order->getCourierPhone(); // 快递员手机号
+ $order->getList(); // 物流单状态详情
+ $order->getOriginal(); // 获取接口原始返回信息
+```
+
 ### Curl
 
 ```
@@ -173,6 +253,24 @@ $pinyin->convert('带着希望去旅行，比到达终点更美好', PINYIN_ASCI
 ```
 
 更多文档：https://github.com/overtrue/pinyin
+
+### 爬虫
+
+```
+use QL\QueryList;
+
+$data = QueryList::get('https://www.baidu.com/s?wd=QueryList')
+  // 设置采集规则
+  ->rules([ 
+      'title'=>array('h3','text'),
+      'link'=>array('h3>a','href')
+  ])
+  ->queryData();
+
+print_r($data);
+```
+
+更多文档：http://www.querylist.cc/docs/guide/v4/
 
 ### Glide
 

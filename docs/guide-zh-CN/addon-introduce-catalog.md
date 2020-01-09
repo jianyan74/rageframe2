@@ -15,6 +15,7 @@
 ---|---
 **Demo** | 模块名称
 --- **backend** | 模块后台应用
+--- --- resources | 资源(js/css/image)目录(不可修改命名)
 --- --- controllers | 控制器目录
 --- --- --- SettingController.php | 配置文件控制器, 有配置项的话可选
 --- --- views | 视图目录
@@ -24,11 +25,13 @@
 --- --- --- --- hook.php | 钩子视图文件
 --- --- --- --- display.php | 配置视图文件
 --- **frontend** | 模块前台应用
+--- --- resources | 资源(js/css/image)目录(不可修改命名)
 --- --- controllers | 控制器目录
 --- --- views | 视图目录
 --- --- asset | 资源配置目录
 --- --- ---  Asset.php | 前台静态资源载入器
 --- **wechat** | 模块微信应用
+--- --- resources | 资源(js/css/image)目录(不可修改命名)
 --- --- controllers | 控制器目录
 --- --- views | 视图目录
 --- --- asset | 资源配置目录
@@ -37,12 +40,13 @@
 --- --- controllers | 控制器目录
 --- **common** | 公用
 --- --- models | 公共模型层
---- **resources** | 资源(js/css/image)目录(不可修改命名)
---- --- wechat | wechat资源文件
---- --- frontend | frontend资源文件
---- --- backend | backend资源文件
+--- --- components | 组件
+--- --- --- Bootstrap | 引导文件，插件启动前会访问该文件
+--- --- config | 配置：例如权限、菜单、导航入口
+--- **console** | 控制层
+--- --- migrations | 数据迁移文件
 --- AddonConfig.php | 模块配置文件(必须有)
 --- AddonMessage.php | 模块微信消息接收处理文件(可选)
---- install.php | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)
---- uninstall.php | 卸载SQL文件(同上)
---- upgrade.php | 更新SQL文件(同上)
+--- Install | 安装SQL文件(文件名可自定义详细看DebrisAddon.php)
+--- UnInstall | 卸载SQL文件(同上)
+--- Upgrade | 更新SQL文件(同上)

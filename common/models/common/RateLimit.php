@@ -1,8 +1,10 @@
 <?php
+
 namespace common\models\common;
 
 use Yii;
 use yii\filters\RateLimitInterface;
+use common\models\base\User;
 
 /**
  * 速率控制
@@ -42,8 +44,7 @@ class RateLimit extends User implements RateLimitInterface
         $allowance = Yii::$app->cache->get($this->getCacheKey('api_rate_allowance'));
         $timestamp = Yii::$app->cache->get($this->getCacheKey('api_rate_timestamp'));
 
-        if ($allowance === false)
-        {
+        if ($allowance === false) {
             return [$this->rateWindowSize, time()];
         }
 

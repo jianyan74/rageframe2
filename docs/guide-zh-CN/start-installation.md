@@ -8,14 +8,16 @@
 
 ### 环境要求
 
-- PHP >= 7.1.3
+- PHP >= 7.2 (卸载邮件依赖 7.1.3 亦可)
 - PHP cURL 扩展
 - PHP OpenSSL 扩展
 - PHP fileinfo 拓展 素材管理模块需要用到
-- Mysql >= 5.6
+- Mysql >= 5.7
 - Apache 或 Nginx
 - Composer (用于管理第三方扩展包)
 - 安装CA证书 (windows开发环境下)
+
+> 必须先看[环境搭建文档](start-environment.md)，安装完毕后务必配置站点和对应的[伪静态](start-rewrite.md)还有[常见问题文档](start-issue.md)
 
 ### 安装
 
@@ -67,20 +69,33 @@ php ./yii password/init
 php composer.phar update
 ```
 
-### 站点配置及说明
+### 站点配置
 
-> 注意：先要设置好[伪静态](start-rewrite.md)
+> 注意：Nginx/IIS 先要设置好[伪静态](start-rewrite.md)，Apache 默认已配置
 
-站点指向目录为当前项目的web下 例如: 
+站点指向目录为当前项目的web下 
+
+例如: 
 
 ```
 /path/to/rageframe2/web/
 ```
 
-后台地址：当前域名/backend
+访问说明
 
-微信地址：当前域名/wechat
+应用 | Url
+---|---
+后台 | 当前域名/backend
+商户 | 当前域名/merchant
+Html5 | 当前域名/html5
+Api | 当前域名/api
+OAuth2 | 当前域名/oauth2
 
-Api地址：当前域名/api
+> 安装成功后如果需要微信公众号管理、商户管理等等功能，请到 系统管理->应用管理 进行安装插件
+
+建议
+
+生产环境如果是文件缓存去  `backend/runtime`  执行一下 `chmod -R 777 cache`
+
 
 

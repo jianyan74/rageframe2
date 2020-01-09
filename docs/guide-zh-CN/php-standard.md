@@ -2,6 +2,7 @@
 
 ```
 <?php
+
 namespaceStandard; // 顶部命名空间
 // 空一行
 use TestTestClass; //use引入类
@@ -26,7 +27,7 @@ abstract class StandardExample
      *
      * @var string
      */
-    public $nameTest = ''; // 属性名称建议开头小写驼峰
+    public $nameTest = ''; // 属性名称建议开头小写驼峰 protected 一样
     // 成员属性必须添加public（不能省略）， private, protected修饰符
     
     /**
@@ -52,14 +53,15 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
      * 成员方法描述
      *
-     * @param  string $value 形参名称/描述
+     * @param string $value 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      * 返回值类型：string，array，object，mixed（多种，不确定的），void（无返回值）
      */
     public function testFunction($value = '') // 成员方法必须小写开头驼峰
@@ -67,42 +69,45 @@ abstract class StandardExample
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
      * 成员方法描述
      *
-     * @param  string $value 形参名称/描述
+     * @param string $value 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      */
     private function _privateTestFunction($value = '') // 私有成员方法建议下划线小写开头驼峰
     {
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
      * 成员方法描述
      *
-     * @param  string $value 形参名称/描述
+     * @param string $value 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      */
     public static function staticFunction($value = '') // static位于修饰符之后
     {
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
      * 成员方法描述
      *
-     * @param  string $value 形参名称/描述
+     * @param string $value 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      */
     abstract public function abstractFunction($value = ''); // abstract位于修饰符之前
     
@@ -111,28 +116,29 @@ abstract class StandardExample
      *
      * 成员方法描述
      *
-     * @param  string $value 形参名称/描述
+     * @param string $value 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      */
     final public function finalFunction($value = '') // final位于修饰符之前
     {
         // code...
         
     }
+    
     /**
      * 成员方法名称.
      *
      * 成员方法描述
      *
-     * @param  string $valueOne 形参名称/描述
-     * @param  string $valueTwo 形参名称/描述
-     * @param  string $valueThree 形参名称/描述
-     * @param  string $valueFour 形参名称/描述
-     * @param  string $valueFive 形参名称/描述
-     * @param  string $valueSix 形参名称/描述
+     * @param string $valueOne 形参名称/描述
+     * @param string $valueTwo 形参名称/描述
+     * @param string $valueThree 形参名称/描述
+     * @param string $valueFour 形参名称/描述
+     * @param string $valueFive 形参名称/描述
+     * @param string $valueSix 形参名称/描述
      *
-     * @return 返回值类型        返回值描述
+     * @return 返回值类型 返回值描述
      */
     public function tooLangFunction($valueOne = '', // 变量命名可小写开头驼峰或者下划线命名,个人那习惯，据说下划线可读性好
     $valueTwo = '', $valueThree = '', $valueFour = '', $valueFive = '', $valueSix = '') // 参数过多换行
@@ -141,6 +147,7 @@ abstract class StandardExample
             // code...
             
         }
+        
         switch ($valueThree) {
             case 'value':
                 // code...
@@ -151,14 +158,17 @@ abstract class StandardExample
                 
             break;
         }
+        
         do {
             // code...
             
         } while ($valueFour <= 10);
+        
         while ($valueFive <= 10) {
             // code...
             
         }
+        
         for ($i = 0;$i < $valueSix;$i++) {
             // code...
             

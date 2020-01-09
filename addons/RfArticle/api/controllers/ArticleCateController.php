@@ -1,6 +1,8 @@
 <?php
+
 namespace addons\RfArticle\api\controllers;
 
+use addons\RfArticle\common\models\ArticleCate;
 use api\controllers\OnAuthController;
 
 /**
@@ -12,7 +14,7 @@ use api\controllers\OnAuthController;
  */
 class ArticleCateController extends OnAuthController
 {
-    public $modelClass = 'addons\RfArticle\common\models\ArticleCate';
+    public $modelClass = ArticleCate::class;
 
     /**
      * 不用进行登录验证的方法
@@ -21,7 +23,7 @@ class ArticleCateController extends OnAuthController
      *
      * @var array
      */
-    protected $optional = ['index'];
+    protected $authOptional = ['index'];
 
     /**
      * 权限验证
@@ -34,8 +36,7 @@ class ArticleCateController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['delete', 'create', 'update', 'view']))
-        {
+        if (in_array($action, ['delete', 'create', 'update', 'view'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

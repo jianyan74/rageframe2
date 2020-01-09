@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'id' => 'app-storage',
+    'id' => 'storage',
     'basePath' => dirname(__DIR__),
     'defaultRoute' => 'glide/index',
     'controllerNamespace' => 'storage\controllers',
@@ -12,7 +12,6 @@ return [
             'enablePrettyUrl' => true,  // 这个是生成路由 ?r=site/about--->/site/about
             'showScriptName' => false,
             'rules' =>[
-
             ],
         ],
         'glide' => [

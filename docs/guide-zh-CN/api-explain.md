@@ -9,7 +9,6 @@
 - 公共出参说明
 - 公用请求方法
 - 公共状态码说明
-- 接口二次加密(可选)
 
 #### 测试域名
 
@@ -23,18 +22,28 @@ v1
 
 #### 北京时间格式
 
-YYYYmmddHHiiss
+YYYY-mm-dd HH:ii:ss
 
 #### 公共入参说明
 
 > 注意是通过Url传递
-> 例如 `http://www.example.com/api/v1/member/info?access-token=[登陆获取到access-token]`
+> 例如 `http://www.example.com/api/v1/member/info
 
-入参说明
+Query 入参说明
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-access-token | string | 否 | 无 | 授权秘钥 | 需登录验证(出现401错误)必传
+access-token | string | 否 | 无 | 授权秘钥 | 需登录验证(出现401错误)必传,与下面的x-api-key 2选1即可
+
+Header 入参说明
+
+参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
+---|---|---|---|---|---
+x-api-key | string | 否 |  | 授权秘钥 | 与上面的access-token 2选1即可
+device | string | 否 |  | 设备类型 | ios/android
+device-uuid | string | 否 |  | 设备唯一码 | ios: IDFA码;android:IMEI码;
+device-version | string | 否 |  | 设备系统版本号 | 
+device-app-version | string | 否 |  | 设备上当前app版本号 | 
 
 #### 公共出参说明
 
@@ -82,15 +91,21 @@ X-Pagination-Page-Count | int | 总页数 |
 X-Pagination-Current-Page | int | 当前页数 |
 X-Pagination-Per-Page | int | 每页数量 |
 
+> 注意：如果自行修改了系统默认的首页查询，需要自行设置header头
+
 #### 公用请求方法
 
 针对不同操作，服务器向用户返回的结果应该符合以下规范。
 
-- GET /article  获取文章列表
-- GET /article/1  获取文章详情(id为1)
-- POST /article  创建一篇文章
-- PUT /article/1  获取文章(id为1)
-- DELETE /article/1  删除文章(id为1)
+方法 | 说明 | 对应控制器方法(路由)
+---|---|---
+GET /article | 获取文章列表 | /article/index
+GET /article/1 | 获取文章详情(id为1) | /article/view?id=1
+POST /article | 创建一篇文章 | /article/create
+PUT /article/1 | 更新文章(id为1) | /article/update?id=1
+DELETE /article/1 | 删除文章(id为1) | /article/delete?id=1
+
+> 如果想自定义控制器内的方法(不包含：index/view/create/update/delete)，需要自行在`rule`里面配置`extraPatterns`
 
 #### 公共状态码说明
 
@@ -109,51 +124,3 @@ X-Pagination-Per-Page | int | 每页数量 |
 * `422`: 数据验证失败 (例如，响应一个 `POST` 请求)。 请检查响应体内详细的错误消息。
 * `429`: 请求过多。 由于限速请求被拒绝。
 * `500`: 内部服务器错误。 这可能是由于内部程序错误引起的。
-
-#### 接口二次加密(可选)
-
-签名sign的生成规则：  
-将需要参与签名的参数按照参数名字符串顺序升序排列，并用请求查询串的形式依次拼接。  
-格式为：p1=v1&p2=v2&p3=v3  
-将以上拼好的结果后面直接加上appSecret,形成待签名字符串  
-对待签名字符串按照UTF-8编码做MD5摘要运算，结果转化为32位小写签名摘要。
-
-示例
-
-```
-appId: doormen // 授权公钥
-nonceStr: z7cl7WR9 // 随机字符串
-time: 1539846942 // 时间戳，注意和当前校验时间不能大于60秒
-
-// 最后直接拼接加密
-appSecret: e3de3825cfbf // 授权秘钥
-```
-
-测试拼接字符串为：
-
-```
-// 这里加了个手机号的参数
-appId=doormen&mobile=15888888888&nonceStr=z7cl7WR9&time=1539846942e3de3825cfbf
-
-// php版加密方式
-$sign = strtolower(md5('上面的字符串'));
-```
-测试生成的sign：
-
-```
-94c897114201d7f9b4adf03b5e3afc8f
-```
-
-查看最后生成的Url：
-
-```
-appId=doormen&mobile=15888888888&nonceStr=z7cl7WR9&time=1539846942&sign=94c897114201d7f9b4adf03b5e3afc8f
-```
-
-项目Url测试访问地址
-
-```
-// 注意系统默认关闭了该测试控制器 请去 api 的 main 文件内开启 sign-secret-key 路由
-http://www.example.com/api/sign-secret-key
-```
-

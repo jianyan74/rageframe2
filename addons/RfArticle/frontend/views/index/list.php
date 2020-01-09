@@ -1,8 +1,8 @@
 <?php
 use common\helpers\AddonHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = '文章列表';
 ?>
 
@@ -12,7 +12,7 @@ $this->title = '文章列表';
     <div class="container">
         <div class="row w_main_row">
             <ol class="breadcrumb w_breadcrumb">
-                <li><a href="<?= AddonUrl::to(['index/index'])?>">首页</a></li>
+                <li><a href="<?= Url::to(['index/index'])?>">首页</a></li>
                 <li class="active">文章</li>
                 <span class="w_navbar_tip">RageFrame，一个基于Yii2高级框架的快速开发应用引擎。</span>
             </ol>
@@ -24,13 +24,13 @@ $this->title = '文章列表';
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-xs-6 col-md-3">
-                                        <a href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
+                                        <a href="<?= Url::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
                                             <img src="<?= $article['cover']; ?>" alt="...">
                                         </a>
                                     </div>
 
                                     <h4 class="media-heading">
-                                        <a class="title" href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a>
+                                        <a class="title" href="<?= Url::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a>
                                     </h4>
                                     <p>
                                         <?php if(!empty($article['tags'])){ ?>
@@ -53,17 +53,13 @@ $this->title = '文章列表';
                             <?= \yii\widgets\LinkPager::widget([
                                 'pagination' => $pages,
                                 'maxButtonCount' => 5,
-                                'firstPageLabel' => "首页",
-                                'lastPageLabel' => "尾页",
-                                'nextPageLabel' => "下一页",
-                                'prevPageLabel'=> "上一页",
                             ]);?>
                         </div>
                     </div>
                 </div>
             </div>
             <!--获取左侧列表推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 2]); ?>
+            <?php // \common\helpers\Hook::to('RfArticle', ['position' => 2]); ?>
         </div>
     </div>
 </div>

@@ -1,4 +1,5 @@
 <?php
+
 namespace api\modules\v1\controllers\member;
 
 use api\controllers\UserAuthController;
@@ -14,5 +15,8 @@ use common\models\member\Address;
  */
 class AddressController extends UserAuthController
 {
-    public $modelClass = 'common\models\member\Address';
+    /**
+     * @var Address
+     */
+    public $modelClass = Address::class;
 }

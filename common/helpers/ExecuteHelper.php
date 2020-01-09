@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use yii\web\NotFoundHttpException;
@@ -18,15 +19,13 @@ class ExecuteHelper
      */
     public static function map($classPath, $method, $params)
     {
-        if (!class_exists($classPath))
-        {
+        if (!class_exists($classPath)) {
             throw new NotFoundHttpException($classPath . '未找到');
         }
 
-        /* @var $class \backend\interfaces\WechatMessageInterface */
+        /* @var $class \common\interfaces\AddonWidget */
         $class = new $classPath;
-        if (!method_exists($class, $method))
-        {
+        if (!method_exists($class, $method)) {
             throw new NotFoundHttpException($classPath . '/' . $method . ' 方法未找到');
         }
 

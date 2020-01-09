@@ -1,8 +1,9 @@
 <?php
 use common\helpers\AddonHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
+use common\helpers\Hook;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = '我的博客';
 ?>
 
@@ -10,7 +11,7 @@ $this->title = '我的博客';
     <div class="container">
         <div class="row w_main_row">
             <div class="col-lg-9 col-md-9 w_main_left">
-                <?= \common\helpers\AddonHook::to('RfArticle', [], 'adv'); ?>
+                <?php // Hook::to('RfArticle.adv', []); ?>
                 <div class="panel panel-default contenttop">
                     <a href="javascript:void (0)">
                         <strong>置顶</strong>
@@ -29,7 +30,7 @@ $this->title = '我的博客';
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <div class="contentleft">
-                                        <h4><a class="title" href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a></h4>
+                                        <h4><a class="title" href="<?= Url::to(['details', 'id' => $article['id']])?>"><?= $article['title']; ?></a></h4>
                                         <p>
                                             <?php if(!empty($article['tags'])){ ?>
                                                 <?php foreach ($article['tags'] as $tag){ ?>
@@ -46,7 +47,7 @@ $this->title = '我的博客';
                                     <div class="contentImage">
                                         <!--<img src="img/slider/abs_img_no.jpg"/>-->
                                         <div class="row">
-                                            <a href="<?= AddonUrl::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
+                                            <a href="<?= Url::to(['details', 'id' => $article['id']])?>" class="thumbnail w_thumbnail">
                                                 <img src="<?= $article['cover']; ?>" alt="...">
                                             </a>
                                         </div>
@@ -60,7 +61,7 @@ $this->title = '我的博客';
                 </div>
             </div>
             <!--获取左侧首页推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 1]); ?>
+            <?php //  Hook::to('RfArticle', ['position' => 1]); ?>
         </div>
     </div>
 </div>

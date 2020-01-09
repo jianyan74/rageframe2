@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\components;
 
 use yii\base\BaseObject;

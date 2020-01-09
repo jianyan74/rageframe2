@@ -1,10 +1,11 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
-use common\models\member\MemberInfo;
-use common\models\sys\Manager;
 use Yii;
+use common\behaviors\MerchantBehavior;
 use common\helpers\StringHelper;
+use common\models\backend\Member;
 
 /**
  * This is the model class for table "{{%addon_example_curd}}".
@@ -12,7 +13,7 @@ use common\helpers\StringHelper;
  * @property string $id ID
  * @property string $title 标题
  * @property string $cate_id 分类ID(单选)
- * @property string $manager_id 管理员ID
+ * @property string $member_id 管理员ID
  * @property int $sort 排序
  * @property int $position 推荐位
  * @property int $sex 性别1男2女
@@ -37,8 +38,14 @@ use common\helpers\StringHelper;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Curd extends \common\models\common\BaseModel
+class Curd extends \common\models\base\BaseModel
 {
+    use MerchantBehavior;
+
+    public $province_ids;
+    public $city_ids;
+    public $area_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -53,17 +60,33 @@ class Curd extends \common\models\common\BaseModel
     public function rules()
     {
         return [
-            [['cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [
+                [
+                    'member_id',
+                    'cate_id',
+                    'member_id',
+                    'sort',
+                    'position',
+                    'sex',
+                    'views',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                ],
+                'integer',
+            ],
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
-            [['content', 'files'], 'string'],
+            [['content'], 'string'],
             [['price'], 'number'],
-            [['start_time', 'end_time'], 'safe'],
+            [['start_time', 'end_time', 'files', 'covers', 'address'], 'safe'],
             [['title'], 'string', 'max' => 50],
             [['cover', 'attachfile', 'keywords', 'tag'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 200],
             [['email'], 'string', 'max' => 60],
             [['provinces', 'city', 'area'], 'integer'],
             [['ip'], 'string', 'max' => 16],
+            [['color'], 'string', 'max' => 7],
+            [['date', 'time'], 'string', 'max' => 20],
         ];
     }
 
@@ -76,7 +99,7 @@ class Curd extends \common\models\common\BaseModel
             'id' => 'ID',
             'title' => '标题',
             'cate_id' => '分类ID',
-            'manager_id' => '创建者ID',
+            'member_id' => '创建者ID',
             'sort' => '排序',
             'position' => '推荐位',
             'sex' => '性别',
@@ -91,6 +114,8 @@ class Curd extends \common\models\common\BaseModel
             'description' => '简单介绍',
             'price' => '价格',
             'views' => '浏览量',
+            'date' => '日期',
+            'time' => '时间',
             'start_time' => '开始时间',
             'end_time' => '结束时间',
             'status' => '状态',
@@ -99,6 +124,8 @@ class Curd extends \common\models\common\BaseModel
             'city' => '市',
             'area' => '区',
             'ip' => 'ip',
+            'color' => '颜色',
+            'address' => '经纬度选择',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
@@ -109,9 +136,9 @@ class Curd extends \common\models\common\BaseModel
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getManager()
+    public function getMember()
     {
-        return $this->hasOne(Manager::class, ['id' => 'manager_id']);
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**
@@ -121,10 +148,9 @@ class Curd extends \common\models\common\BaseModel
     public function beforeSave($insert)
     {
         //创建时候插入
-        if ($this->isNewRecord)
-        {
+        if ($this->isNewRecord) {
             $this->ip = Yii::$app->request->userIP;
-            $this->manager_id = Yii::$app->user->id;
+            $this->member_id = Yii::$app->user->id;
         }
 
         $this->start_time = StringHelper::dateToInt(($this->start_time));

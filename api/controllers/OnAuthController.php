@@ -1,19 +1,19 @@
 <?php
+
 namespace api\controllers;
 
 use Yii;
-use yii\rest\OptionsAction;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use common\enums\StatusEnum;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
 
 /**
  * 需要授权登录访问基类
  *
  * Class OnAuthController
  * @package api\controllers
- * @property yii\db\ActiveRecord|yii\base\Model $modelClass;
+ * @property yii\db\ActiveRecord|yii\base\Model $modelClass
  * @author jianyan74 <751393839@qq.com>
  */
 class OnAuthController extends ActiveController
@@ -32,46 +32,6 @@ class OnAuthController extends ActiveController
     }
 
     /**
-     * @return array
-     */
-    protected function verbs()
-    {
-        // 判断是否插件模块进入
-        if (isset(Yii::$app->params['addon']))
-        {
-            return [];
-        }
-
-        return [
-            'index' => ['GET', 'HEAD'],
-            'view' => ['GET', 'HEAD'],
-            'create' => ['POST'],
-            'update' => ['PUT', 'PATCH'],
-            'delete' => ['DELETE'],
-        ];
-    }
-
-    /**
-     * 验证更新是否本人
-     *
-     * @param $action
-     * @return bool
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function beforeAction($action)
-    {
-        if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null))
-        {
-            throw new NotFoundHttpException('权限不足.');
-        }
-
-        return parent::beforeAction($action);
-    }
-
-    /**
      * 首页
      *
      * @return ActiveDataProvider
@@ -81,10 +41,11 @@ class OnAuthController extends ActiveController
         return new ActiveDataProvider([
             'query' => $this->modelClass::find()
                 ->where(['status' => StatusEnum::ENABLED])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
                 ->orderBy('id desc')
                 ->asArray(),
             'pagination' => [
-                'pageSize' => Yii::$app->params['user.pageSize'],
+                'pageSize' => $this->pageSize,
                 'validatePage' => false,// 超出分页不返回data
             ],
         ]);
@@ -101,9 +62,8 @@ class OnAuthController extends ActiveController
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->identity->member_id;
-        if (!$model->save())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->save()) {
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -120,9 +80,8 @@ class OnAuthController extends ActiveController
     {
         $model = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
-        if (!$model->save())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->save()) {
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -139,6 +98,7 @@ class OnAuthController extends ActiveController
     {
         $model = $this->findModel($id);
         $model->status = StatusEnum::DELETE;
+
         return $model->save();
     }
 
@@ -162,9 +122,11 @@ class OnAuthController extends ActiveController
     protected function findModel($id)
     {
         /* @var $model \yii\db\ActiveRecord */
-        if (empty($id) || !($model = $this->modelClass::find()->where(['id' => $id, 'status' => StatusEnum::ENABLED])->one()))
-        {
-            throw new NotFoundHttpException('请求的数据不存在或您的权限不足.');
+        if (empty($id) || !($model = $this->modelClass::find()->where([
+                'id' => $id,
+                'status' => StatusEnum::ENABLED,
+            ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one())) {
+            throw new NotFoundHttpException('请求的数据不存在');
         }
 
         return $model;

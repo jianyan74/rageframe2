@@ -1,4 +1,5 @@
 <?php
+
 namespace api\controllers;
 
 use Yii;
@@ -19,8 +20,7 @@ class MessageController extends Controller
      */
     public function actionError()
     {
-        if (($exception = Yii::$app->getErrorHandler()->exception) === null)
-        {
+        if (($exception = Yii::$app->getErrorHandler()->exception) === null) {
             $exception = new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
 

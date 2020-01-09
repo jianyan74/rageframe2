@@ -1,14 +1,17 @@
 <?php
+
 namespace common\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
+use common\helpers\Auth;
 use common\helpers\AddonHelper;
-use common\helpers\StringHelper;
+use common\traits\BaseAction;
+use common\enums\AppEnum;
 
 /**
- * 模块插件渲染
+ * 模块基类控制器
  *
  * Class AddonsController
  * @package common\controllers
@@ -16,95 +19,86 @@ use common\helpers\StringHelper;
  */
 class AddonsController extends Controller
 {
+    use BaseAction;
+
     /**
+     * 视图自动加载文件路径
+     *
      * @var string
      */
-    public $layout = "@backend/views/layouts/addon";
+    public $layout = null;
 
     /**
-     * 当前路由
+     * 是否钩子
      *
-     * @var
+     * @var bool
      */
-    public $route;
+    public $isHook = false;
 
     /**
-     * 模块名称
-     *
-     * @var
+     * @throws \yii\base\InvalidConfigException
      */
-    public $addonName;
-
     public function init()
     {
         parent::init();
 
-        $this->route = Yii::$app->request->get('route', Yii::$app->request->post('route', ''));
-        $this->addonName = Yii::$app->request->get('addon', Yii::$app->request->post('addon', ''));
-        $this->addonName = StringHelper::strUcwords($this->addonName);
+        // 后台视图默认载入模块视图
+        if (!$this->layout && in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
+            $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
+        }
     }
 
     /**
      * @param $action
      * @return bool
+     * @throws UnauthorizedHttpException
      * @throws \yii\web\BadRequestHttpException
      */
     public function beforeAction($action)
     {
-        // 关闭csrf
-        $action->id == 'execute' && $this->enableCsrfValidation = false;
-        return parent::beforeAction($action);
-    }
-
-    /**
-     * 跳转插件详情页面
-     *
-     * @return mixed
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\InvalidRouteException
-     */
-    public function actionExecute()
-    {
-        // 初始化模块
-        AddonHelper::initAddon($this->addonName, $this->route);
-        // 解析路由
-        AddonHelper::analysisRoute($this->route, AddonHelper::getAppName());
-
-        // 替换
-        Yii::$classMap['yii\data\Pagination'] = '@backend/components/Pagination.php';// 分页
-        Yii::$classMap['yii\data\Sort'] = '@backend/components/Sort.php';// 排序
-
-        // 实例化解获取数据
-        return $this->rendering();
-    }
-
-    /**
-     * 渲染
-     *
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\InvalidRouteException
-     */
-    protected function rendering()
-    {
-        $oldAction = Yii::$app->params['addonInfo']['oldAction'];
-        $id = Yii::$app->params['addonInfo']['controller'];
-        $controllersPath = Yii::$app->params['addonInfo']['controllersPath'];
-        $parts = Yii::createObject($controllersPath, [$id, $this]);
-
-        $params = Yii::$app->request->get();
-        /* @var $controller \yii\base\Controller */
-        list($controller, $actionID) = [$parts, $oldAction];
-        $oldController = Yii::$app->controller;
-        Yii::$app->controller = $controller;
-        $result = $controller->runAction($actionID, $params);
-
-        if ($oldController !== null)
-        {
-            Yii::$app->controller = $oldController;
+        if (!parent::beforeAction($action)) {
+            return false;
         }
 
-        return $result;
+        // 每页数量
+        $this->pageSize = Yii::$app->request->get('per-page', 10);
+        $this->pageSize > 50 && $this->pageSize = 50;
+
+        // 后台进行权限校验
+        if (in_array(Yii::$app->id, [AppEnum::MERCHANT, AppEnum::BACKEND])) {
+            // 判断当前模块的是否为主模块, 模块+控制器+方法
+            $permissionName = '/' . Yii::$app->controller->route;
+            // 判断是否忽略校验
+            if (in_array($permissionName, Yii::$app->params['noAuthRoute'])) {
+                return true;
+            }
+            // 开始权限校验
+            if (!Auth::verify($permissionName)) {
+                throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取配置信息
+     *
+     * @return mixed
+     */
+    protected function getConfig()
+    {
+        return AddonHelper::getConfig();
+    }
+
+    /**
+     * 写入配置信息
+     *
+     * @param $config
+     * @return bool
+     */
+    protected function setConfig($config)
+    {
+        return AddonHelper::setConfig($config);
     }
 }

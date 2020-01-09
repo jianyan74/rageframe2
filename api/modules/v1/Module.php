@@ -1,21 +1,24 @@
 <?php
+
 namespace api\modules\v1;
 
-use Yii;
-
 /**
- * Class Module
- * @package api\modules\v1
+ * v1 module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     public $controllerNamespace = 'api\modules\v1\controllers';
 
+    /**
+     * {@inheritdoc}
+     */
     public function init()
     {
         parent::init();
+
+        // custom initialization code goes here
     }
 }

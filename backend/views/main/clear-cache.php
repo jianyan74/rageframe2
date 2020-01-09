@@ -1,20 +1,31 @@
 <?php
-$this->title = "缓存清理";
-$this->params['breadcrumbs'][] = $this->title;
+use yii\widgets\ActiveForm;
+
+$this->title = '清理缓存';
+$this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<div class="box box-default">
-    <!-- /.box-header -->
-    <?php if ($result == true) { ?>
-        <div class="alert alert-success alert-dismissible">
-            <h4><i class="icon fa fa-check"></i> 缓存清理成功</h4>
-            请手动关闭当前标签页
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">基本信息</h3>
+            </div>
+            <?php $form = ActiveForm::begin([
+                'fieldConfig' => [
+                    'template' => "<div class='col-sm-2 text-right'>{label}</div><div class='col-sm-10'>{input}{hint}{error}</div>",
+                ]
+            ]); ?>
+            <div class="box-body">
+                <?= $form->field($model, 'cache')->checkbox() ?>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="col-sm-12 text-center">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                </div>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
-    <?php }else{ ?>
-        <div class="alert alert-danger alert-dismissible">
-            <h4><i class="icon fa fa-ban"></i> 缓存清理失败</h4>
-            请检查自己的服务器/文件夹清理权限
-        </div>
-    <?php } ?>
-    <!-- /.box-body -->
+    </div>
 </div>

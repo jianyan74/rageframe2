@@ -2,11 +2,10 @@
 namespace addons\RfArticle\frontend\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use addons\RfArticle\common\models\ArticleCate;
 use addons\RfArticle\common\models\Article;
 use common\enums\StatusEnum;
-use common\controllers\AddonsBaseController;
-use yii\data\Pagination;
 
 /**
  * 首页
@@ -15,13 +14,8 @@ use yii\data\Pagination;
  * @package addons\RfArticle\frontend\controllers
  * @author jianyan74 <751393839@qq.com>
  */
-class IndexController extends AddonsBaseController
+class IndexController extends BaseController
 {
-    /**
-     * @var string
-     */
-    public $layout = "@addons/RfArticle/frontend/views/layouts/main";
-
     /**
     * 首页
     *
@@ -32,6 +26,7 @@ class IndexController extends AddonsBaseController
         $articles = Article::find()
             ->where(['status' => StatusEnum::ENABLED])
             ->andWhere(Article::position(1))// 推荐位 位运算查询
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->with(['tags'])
             ->asArray()
             ->all();
@@ -57,6 +52,7 @@ class IndexController extends AddonsBaseController
 
         $data = Article::find()
             ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['like', 'title', $keyword])
             ->andFilterWhere(['cate_id' => $cate_id]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
@@ -81,6 +77,7 @@ class IndexController extends AddonsBaseController
     {
         $article = Article::find()
             ->where(['status' => StatusEnum::ENABLED, 'id' => $id])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->with(['tags'])
             ->asArray()
             ->one();

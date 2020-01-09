@@ -1,14 +1,19 @@
 <?php
+
 namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use common\models\api\AccessToken;
-use common\helpers\ResultDataHelper;
+use common\helpers\ResultHelper;
+use common\helpers\ArrayHelper;
+use common\models\member\Member;
+use api\modules\v1\forms\UpPwdForm;
 use api\controllers\OnAuthController;
-use api\modules\v1\models\LoginForm;
-use api\modules\v1\models\RefreshForm;
-use api\modules\v1\models\MobileLogin;
+use api\modules\v1\forms\LoginForm;
+use api\modules\v1\forms\RefreshForm;
+use api\modules\v1\forms\MobileLogin;
+use api\modules\v1\forms\SmsCodeForm;
+use api\modules\v1\forms\RegisterForm;
 
 /**
  * 登录接口
@@ -23,12 +28,13 @@ class SiteController extends OnAuthController
 
     /**
      * 不用进行登录验证的方法
+     *
      * 例如： ['index', 'update', 'create', 'view', 'delete']
      * 默认全部需要验证
      *
      * @var array
      */
-    protected $optional = ['login', 'refresh'];
+    protected $authOptional = ['login', 'refresh', 'mobile-login', 'sms-code', 'register', 'up-pwd'];
 
     /**
      * 登录根据用户信息返回accessToken
@@ -41,13 +47,26 @@ class SiteController extends OnAuthController
     {
         $model = new LoginForm();
         $model->attributes = Yii::$app->request->post();
-        if ($model->validate())
-        {
-            return AccessToken::getAccessToken($model->getUser(), $model->group);
+        if ($model->validate()) {
+            return Yii::$app->services->apiAccessToken->getAccessToken($model->getUser(), $model->group);
         }
 
         // 返回数据验证失败
-        return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        return ResultHelper::json(422, $this->getError($model));
+    }
+
+    /**
+     * 登出
+     *
+     * @return array|mixed
+     */
+    public function actionLogout()
+    {
+        if (Yii::$app->services->apiAccessToken->disableByAccessToken(Yii::$app->user->identity->access_token)) {
+            return ResultHelper::json(200, '退出成功');
+        }
+
+        return ResultHelper::json(422, '退出失败');
     }
 
     /**
@@ -62,12 +81,11 @@ class SiteController extends OnAuthController
     {
         $model = new RefreshForm();
         $model->attributes = Yii::$app->request->post();
-        if (!$model->validate())
-        {
-            return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        if (!$model->validate()) {
+            return ResultHelper::json(422, $this->getError($model));
         }
 
-        return AccessToken::getAccessToken($model->getUser(), $model->group);
+        return Yii::$app->services->apiAccessToken->getAccessToken($model->getUser(), $model->group);
     }
 
     /**
@@ -76,17 +94,80 @@ class SiteController extends OnAuthController
      * @return array|mixed
      * @throws \yii\base\Exception
      */
-    protected function actionMobileLogin()
+    private function actionMobileLogin()
     {
         $model = new MobileLogin();
         $model->attributes = Yii::$app->request->post();
-        if ($model->validate())
-        {
-            return AccessToken::getAccessToken($model->getUser(), $model->group);
+        if ($model->validate()) {
+            return Yii::$app->services->apiAccessToken->getAccessToken($model->getUser(), $model->group);
         }
 
         // 返回数据验证失败
-        return ResultDataHelper::api(422, $this->analyErr($model->getFirstErrors()));
+        return ResultHelper::json(422, $this->getError($model));
+    }
+
+    /**
+     * 获取验证码
+     *
+     * @return int|mixed
+     * @throws \yii\web\UnprocessableEntityHttpException
+     */
+    public function actionSmsCode()
+    {
+        $model = new SmsCodeForm();
+        $model->attributes = Yii::$app->request->post();
+        if (!$model->validate()) {
+            return ResultHelper::json(422, $this->getError($model));
+        }
+
+        return $model->send();
+    }
+
+    /**
+     * 注册
+     *
+     * @return array|mixed
+     * @throws \yii\base\Exception
+     */
+    private function actionRegister()
+    {
+        $model = new RegisterForm();
+        $model->attributes = Yii::$app->request->post();
+        if (!$model->validate()) {
+            return ResultHelper::json(422, $this->getError($model));
+        }
+
+        $member = new Member();
+        $member->attributes = ArrayHelper::toArray($model);
+        $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
+        if (!$member->save()) {
+            return ResultHelper::json(422, $this->getError($member));
+        }
+
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);
+    }
+
+    /**
+     * 密码重置
+     *
+     * @return array|mixed
+     * @throws \yii\base\Exception
+     */
+    private function actionUpPwd()
+    {
+        $model = new UpPwdForm();
+        $model->attributes = Yii::$app->request->post();
+        if (!$model->validate()) {
+            return ResultHelper::json(422, $this->getError($model));
+        }
+
+        $member = $model->getUser();
+        $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
+        if (!$member->save()) {
+            return ResultHelper::json(422, $this->getError($member));
+        }
+
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, $model->group);
     }
 
     /**
@@ -100,8 +181,7 @@ class SiteController extends OnAuthController
     public function checkAccess($action, $model = null, $params = [])
     {
         // 方法名称
-        if (in_array($action, ['index', 'view', 'update', 'create', 'delete']))
-        {
+        if (in_array($action, ['index', 'view', 'update', 'create', 'delete'])) {
             throw new \yii\web\BadRequestHttpException('权限不足');
         }
     }

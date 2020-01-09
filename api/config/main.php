@@ -7,7 +7,7 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-api',
+    'id' => 'api',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
@@ -20,6 +20,17 @@ return [
         ],
     ],
     'components' => [
+        'request' => [
+            'csrfParam' => '_csrf-api',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+                'text/json' => 'yii\web\JsonParser',
+            ]
+        ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'as beforeSend' => 'api\behaviors\BeforeSend',
+        ],
         'user' => [
             'identityClass' => 'common\models\api\AccessToken',
             'enableAutoLogin' => true,
@@ -35,6 +46,9 @@ return [
                     'logFile' => '@runtime/logs/' . date('Y-m/d') . '.log',
                 ],
             ],
+        ],
+        'errorHandler' => [
+            'errorAction' => 'message/error',
         ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
@@ -62,23 +76,27 @@ return [
                         'v1/default',// 默认测试入口
                         'v1/site',
                         'v1/mini-program',
-                        'v1/mini-program-pay',
-                        'v1/member/info',
+                        'v1/pay',
+                        'v1/common/provinces',
+                        'v1/member/member',
                         'v1/member/address',
+                        'v1/member/invoice',
                         'v1/member/auth',
                         // 版本2
-                        'v2/default',// 默认测试入口
+                        'v2/default', // 默认测试入口
                     ],
-                    'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
+                    'pluralize' => false, // 是否启用复数形式，注意index的复数indices，开启后不直观
                     'extraPatterns' => [
-                        'POST login' => 'login',// 登录获取token
-                        'POST refresh' => 'refresh',// 重置token
+                        'POST login' => 'login', // 登录获取token
+                        'POST logout' => 'logout', // 退出登录
+                        'POST refresh' => 'refresh', // 重置token
+                        'POST sms-code' => 'sms-code', // 获取验证码
+                        'POST register' => 'register', // 注册
+                        'POST up-pwd' => 'up-pwd', // 重置密码
                         // 测试查询可删除 例如：http://www.rageframe.com/api/v1/default/search
                         'GET search' => 'search',
-                        'GET session-key' => 'session-key',// 小程序获取session key
-                        'POST decode' => 'decode',// 解密获取小程序用户信息数据
-                        'GET qr-code' => 'qr-code',// 获取小程序码
-                    ],
+                        'GET qr-code' => 'qr-code', // 获取小程序码
+                    ]
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
@@ -89,42 +107,18 @@ return [
                         'POST videos' => 'videos', // 视频上传
                         'POST voices' => 'voices', // 语音上传
                         'POST files' => 'files', // 文件上传
-                        'POST base64-img' => 'base64-img', // base64上传 其他上传权限自己添加
+                        'POST base64' => 'base64', // base64上传
                         'POST merge' => 'merge', // 合并分片
+                        'POST verify-md5' => 'verify-md5', // md5文件校验
+                        'GET oss-accredit' => 'oss-accredit', // oss js 直传配置
                     ],
                 ],
                 [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => ['addons',],
-                    'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
-                    'extraPatterns' => [
-                        'GET execute' => 'execute', // 插件渲染
-                        'POST execute' => 'execute', // 插件渲染
-                        'PUT execute' => 'execute', // 插件渲染
-                        'DELETE execute' => 'execute', // 插件渲染
-                    ],
+                    'class' => 'api\rest\UrlRule',
+                    'controller' => ['addons'],
+                    'pluralize' => false,
                 ],
             ]
-        ],
-        'response' => [
-            'class' => 'yii\web\Response',
-            'as beforeSend' => 'api\behaviors\BeforeSend',
-        ],
-        'request' => [
-            'csrfParam' => '_csrf-api',
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-                'text/json' => 'yii\web\JsonParser',
-            ]
-        ],
-        'errorHandler' => [
-            'errorAction' => 'message/error',
-        ],
-    ],
-    'controllerMap' => [
-        // 插件渲染默认控制器
-        'addons' => [
-            'class' => 'common\controllers\AddonsController',
         ],
     ],
     'params' => $params,

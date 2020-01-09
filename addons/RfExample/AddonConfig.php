@@ -1,94 +1,84 @@
-<?php 
+<?php
+
 namespace addons\RfExample;
+
+use addons\RfExample\common\components\Bootstrap;
+use common\components\BaseAddonConfig;
 
 /**
  * Class Addon
  * @package addons\RfExample
  */
-class AddonConfig
+class AddonConfig extends BaseAddonConfig
 {
     /**
-     * 配置信息
+     * 基础信息
      *
      * @var array
      */
     public $info = [
         'name' => 'RfExample',
-        'title' => '示例管理',
-        'brief_introduction' => '系统的功能示例',
+        'title' => '功能案例',
+        'brief_introduction' => '系统的一些功能案例',
         'description' => '系统自带的功能使用示例及其说明，包含一些简单的交互',
         'author' => '简言',
         'version' => '1.0.0',
     ];
 
     /**
-     * 可授权权限
-     *
-     * 例子：
-     *  array(
-     *      'index/index' => '首页',
-     *      'index/edit' => '首页编辑',
-     *  )
-     * @var array
-     */
-    public $authItem = [
-        'curd/index' => 'Curd首页',
-        'curd/edit' => 'Curd编辑',
-        'curd/ajax-update' => 'Curd状态修改',
-        'curd/export' => 'Curd导出',
-        'curd/delete' => 'Curd删除',
-        'grid-curd/index' => 'Grid首页',
-        'grid-curd/edit' => 'Grid编辑',
-        'grid-curd/ajax-update' => 'Grid状态修改',
-        'grid-curd/delete' => 'Grid删除',
-        'mongo-db-curd/index' => 'MongoDb首页',
-        'mongo-db-curd/edit' => 'MongoDb编辑',
-        'mongo-db-curd/ajax-update' => 'MongoDb状态修改',
-        'mongo-db-curd/delete' => 'MongoDb删除',
-        'elastic-search/index' => 'ES首页',
-        'elastic-search/edit' => 'ES编辑',
-        'elastic-search/ajax-update' => 'ES状态修改',
-        'elastic-search/delete' => 'ES删除',
-        'xunsearch/index' => 'Xunsearch首页',
-        'xunsearch/edit' => 'Xunsearch编辑',
-        'xunsearch/ajax-update' => 'Xunsearch状态修改',
-        'xunsearch/delete' => 'Xunsearch删除',
-        'queue/index' => '消息队列',
-        'cate/index' => '分类首页',
-        'cate/ajax-edit' => '分类编辑',
-        'cate/ajax-update' => '分类状态修改',
-        'cate/delete' => '分类删除',
-        'video/cut-image' => '截取视频指定帧',
-        'excel/index' => 'excel导入数据',
+    * 应用配置
+    *
+    * 例如：菜单设置/权限设置/快捷入口
+    *
+    * @var array
+    */
+    public $appsConfig = [
+        'backend' => 'common/config/backend.php',
+        'frontend' => 'common/config/frontend.php',
+        'merchant' => 'common/config/merchant.php',
+        'html5' => 'common/config/html5.php',
+        'api' => 'common/config/api.php',
+        'oauth2' => 'common/config/oauth2.php',
     ];
 
     /**
-     * 参数配置
+    * 引导文件
+    *
+    * 设置后系统会在执行插件控制器前执行
+    *
+    * @var Bootstrap
+    */
+    public $bootstrap = Bootstrap::class;
+
+    /**
+     * 参数配置开启
      *
      * @var bool
      */
     public $isSetting = true;
 
     /**
-     * 钩子
+     * 钩子开启
      *
      * @var bool
      */
     public $isHook = true;
 
     /**
-     * 小程序
-     *
-     * @var bool
-     */
-    public $isMiniProgram = true;
-
-    /**
-     * 规则管理
+     * 规则管理开启
      *
      * @var bool
      */
     public $isRule = true;
+
+    /**
+    * 商户路由映射
+    *
+    * 开启后无需再去商户应用端去开发程序，直接映射后台应用的控制器方法过去，菜单权限还需要单独配置
+    *
+    * @var bool
+    */
+    public $isMerchantRouteMap = true;
 
     /**
      * 类别
@@ -107,108 +97,35 @@ class AddonConfig
      */
     public $group = 'plug';
 
-     /**
+    /**
      * 微信接收消息类别
-      *
-     * @var array
-      * 例如 : ['image','voice','video','shortvideo']
-     */
-    public $wechatMessage = ['image','voice','video','shortvideo'];
-
-    /**
-     * 后台菜单
-     *
-     * 例如
-     * public $menu = [
-     *  [
-     *      'title' => '基本表格',
-     *      'route' => 'curd-base/index',
-     *      'icon' => ''
-     *   ]
-     * ]
-     * @var array
-     */
-    public $menu = [
-        [
-            'title' => 'Curd',
-            'route' => 'curd/index',
-            'icon' => ''
-        ],
-        [
-            'title' => 'Curd Grid',
-            'route' => 'grid-curd/index',
-            'icon' => ''
-        ],
-        [
-            'title' => 'MongoDb Curd',
-            'route' => 'mongo-db-curd/index',
-            'icon' => ''
-        ],
-        [
-            'title' => 'Elasticsearch',
-            'route' => 'elastic-search/index',
-            'icon' => ''
-        ],
-        [
-            'title' => 'Xunsearch',
-            'route' => 'xunsearch/index',
-            'icon' => ''
-        ],
-        [
-            'title' => '消息队列',
-            'route' => 'queue/index',
-            'icon' => ''
-        ],
-        [
-            'title' => '无限级分类',
-            'route' => 'cate/index',
-            'icon' => ''
-        ],
-        [
-            'title' => '截取视频指定帧',
-            'route' => 'video/cut-image',
-            'icon' => ''
-        ],
-        [
-            'title' => 'Excel导入数据',
-            'route' => 'excel/index',
-            'icon' => ''
-        ],
-    ];
-
-    /**
-     * 同menu上
      *
      * @var array
+     * 例如 : ['image','voice','video','shortvideo']
      */
-    public $cover = [
-        [
-            'title' => '首页导航',
-            'route' => 'index/index',
-        ],
-    ];
+    public $wechatMessage = ["image","voice","video","shortvideo","location","trace","link","merchant_order","ShakearoundUserShake","ShakearoundLotteryBind","WifiConnected"];
 
     /**
      * 保存在当前模块的根目录下面
      *
-     * 例如 public $install = 'install.php';
-     * 安装SQL,只支持php文件
+     * 例如 $install = 'Install';
+     * 安装类
      * @var string
      */
-    public $install = 'install.php';
+    public $install = 'Install';
     
     /**
-     * 卸载SQL
+     * 卸载SQL类
      *
      * @var string
      */
-    public $uninstall = 'uninstall.php';
+    public $uninstall = 'UnInstall';
     
     /**
-     * 更新SQL
+     * 更新SQL类
      *
      * @var string
      */
-    public $upgrade = 'upgrade.php';
+    public $upgrade = 'Upgrade';
 }
             

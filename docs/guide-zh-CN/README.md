@@ -13,16 +13,17 @@
 
 - [目录结构](sys-catalog.md)
 - [开发规范](sys-exploit.md)
-- [全局说明](sys-global-description.md)
+- [控制台](sys-console.md)
 - [表单控件](sys-widget.md)
-- [组件调用](sys-subassembly.md)
+- [系统组件](sys-subassembly.md)
 - [系统JS](sys-js-method.md)
+- [Gii](sys-gii.md)
 - [权限控制](sys-auth.md)
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
-- [服务层Server](sys-service.md)
+- [服务层](sys-service.md)
+- 公用服务
 - [RESTful Api](sys-restful-api.md)
-- WebSocket
 - [数据字典](sys-data-dictionary.md)
 - 单元测试
 
@@ -43,42 +44,50 @@
 
 - [模块介绍及目录](addon-introduce-catalog.md)
 - [模块开发流程](addon-flow.md)
-- [钩子说明及调用](addon-hook.md)
 - [模块辅助说明](addon-helper.md)
 
-#### API文档
+#### Api
 
 - [接口说明](api-explain.md)
+- [接口加密](api-encryption.md)
 - [登录重置](api-login.md)
 - [小程序登录注册](api-mini-program.md)
 - [文件上传](api-upload.md)
 - [个人信息](api-get-member.md)
+- [支付生成参数](api-pay.md)
+
+#### OAuth2
+
+- [授权/刷新Token](oauth2-login.md)
+- [个人信息](oauth2-get-member.md)
 
 #### 助手类
 
-- [AuthHelper](helper-auth.md) - 权限辅助类
+- [Auth](helper-auth.md) - 权限辅助类
+- [Url](helper-url.md) - Url生成辅助类
+- [Html](helper-html.md) - Html辅助类
 - ArrayHelper - 数组辅助类
 - FileHelper - 文件辅助类
 - DateHelper - 日期格式辅助类
 - PayHelper - 支付辅助类
-- [HtmlHelper](helper-html.md) - Html辅助类
+- ImageHelper - 图片辅助类
 - [StringHelper](helper-string.md) - 字符串辅助类
-- [UrlHelper](helper-url.md) - Url生成辅助类
 - RegularHelper - 正则验证辅助类
 - HashidsHelper - ID加密辅助类
 - UploadHelper - 上传辅助类
-- [ResultDataHelper](helper-result-data.md) - 格式化数据返回辅助类
+- [ResultHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
-- [AddonAuthHelper](helper-addon-auth.md) - 模块权限辅助类
-- [AddonHelper](helper-addon.md) - 模块辅助类
-- [AddonUrl](helper-addon-url.md) - 模块Url生成辅助类
-- [AddonHtmlHelper](helper-addon-html.md) - 模块Html辅助类
+- ...
 
 #### 附录
 
+- [安全防范](php-safety.md)
 - [SearchModel](component-search-model.md)
-- CurdTrait
 - [应用配置独立域名](independent-app-domain-name.md)
-- [代码提示/线上性能优化](system-optimize.md)
+- [代码模板](system-code-template.md)
+- [线上性能优化](system-optimize.md)
+- [团队编辑器代码规范](php-by-team.md)
 - [PHP编程规范](php-standard.md)
+- [Yii2核心框架代码风格](core-code-style.md)
+- [扩展依赖安装使用](system-relyon.md)
 - [网址收录](append-website.md)

@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 /**
@@ -19,7 +20,7 @@ class RegularHelper
      */
     public static function verify($type, $value)
     {
-        return preg_match(self::$type() , $value);
+        return preg_match(self::$type(), $value);
     }
 
     /**
@@ -29,8 +30,7 @@ class RegularHelper
      */
     public static function mobile()
     {
-        // return '/^[1][3456789][0-9]{9}$/';
-        return '/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/';
+        return '/^[1][3456789][0-9]{9}$/';
     }
 
     /**
@@ -83,6 +83,6 @@ class RegularHelper
      */
     public static function url()
     {
-        return '';
+        return '/(http:\/\/)|(https:\/\/)/i';
     }
 }

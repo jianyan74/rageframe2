@@ -1,4 +1,5 @@
 <?php
+
 namespace common\enums;
 
 /**
@@ -8,18 +9,21 @@ namespace common\enums;
  * @package common\enums
  * @author jianyan74 <751393839@qq.com>
  */
-class GenderEnum
+class GenderEnum extends BaseEnum
 {
     const UNKNOWN = 0;
     const MAN = 1;
     const WOMAN = 2;
 
     /**
-     * @var array
+     * @return array
      */
-    public static $listExplain = [
-        self::UNKNOWN => '未知',
-        self::MAN => '男',
-        self::WOMAN => '女',
-    ];
+    public static function getMap(): array
+    {
+        return [
+            self::MAN => '男',
+            self::WOMAN => '女',
+            self::UNKNOWN => '未知',
+        ];
+    }
 }

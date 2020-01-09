@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use yii\base\Model;
@@ -11,6 +12,7 @@ class SettingForm extends Model
 {
     public $share_title;
     public $share_cover;
+    public $share_desc;
     public $share_link;
 
     /**
@@ -20,7 +22,7 @@ class SettingForm extends Model
     {
         return [
             [['share_title', 'share_cover'], 'string', 'max' => 100],
-            [['share_link'], 'string', 'max' => 255],
+            [['share_link', 'share_desc'], 'string', 'max' => 255],
             [['share_link'], 'url'],
         ];
     }
@@ -33,6 +35,7 @@ class SettingForm extends Model
         return [
             'share_title' => '分享标题',
             'share_cover' => '分享封面',
+            'share_desc' => '分享描述',
             'share_link' => '分享链接',
         ];
     }

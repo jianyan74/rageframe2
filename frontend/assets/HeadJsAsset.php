@@ -5,7 +5,8 @@ use yii\web\AssetBundle;
 
 /**
  * Class HeadJsAsset
- * @package backend\assets
+ * @package frontend\assets
+ * @author jianyan74 <751393839@qq.com>
  */
 class HeadJsAsset extends AssetBundle
 {

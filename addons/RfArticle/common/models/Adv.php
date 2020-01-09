@@ -1,7 +1,8 @@
 <?php
+
 namespace addons\RfArticle\common\models;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 use common\helpers\StringHelper;
 
 /**
@@ -21,8 +22,10 @@ use common\helpers\StringHelper;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class Adv extends \common\models\common\BaseModel
+class Adv extends \common\models\base\BaseModel
 {
+    use MerchantBehavior;
+
     const LOCATION_INDEX = 1;
 
     /**
@@ -47,7 +50,7 @@ class Adv extends \common\models\common\BaseModel
     {
         return [
             [['title', 'cover', 'start_time', 'end_time'], 'required'],
-            [['location_id', 'jump_type', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'location_id', 'jump_type', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 30],
             [['cover'], 'string', 'max' => 100],
             [['silder_text', 'jump_link'], 'string', 'max' => 150],
@@ -74,36 +77,6 @@ class Adv extends \common\models\common\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
-    }
-
-    /**
-     * 根据开始时间和结束时间发回当前状态
-     *
-     * @param int $start_time 开始时间
-     * @param int $end_time 结束时间
-     * @return mixed
-     */
-    public static function getTimeStatus($start_time, $end_time)
-    {
-        $time = time();
-        if ($start_time > $end_time)
-        {
-            return "<span class='label label-danger'>有效期错误</span>";
-        }
-        elseif ($start_time > $time)
-        {
-            return "<span class='label label-default'>未开始</span>";
-        }
-        elseif ($start_time < $time && $end_time > $time)
-        {
-            return "<span class='label label-primary'>进行中</span>";
-        }
-        elseif ($end_time < $time)
-        {
-            return "<span class='label label-default'>已结束</span>";
-        }
-
-        return false;
     }
 
     /**

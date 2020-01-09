@@ -1,8 +1,8 @@
 <?php
 use common\helpers\AddonHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 $this->title = $article['title'];
 ?>
 
@@ -13,8 +13,8 @@ $this->title = $article['title'];
         <div class="row w_main_row">
 
             <ol class="breadcrumb w_breadcrumb">
-                <li><a href="<?= AddonUrl::to(['index/index'])?>">首页</a></li>
-                <li><a href="<?= AddonUrl::to(['index/list'])?>">文章</a></li>
+                <li><a href="<?= Url::to(['index/index'])?>">首页</a></li>
+                <li><a href="<?= Url::to(['index/list'])?>">文章</a></li>
                 <li class="active"><?= $article['title']; ?></li>
                 <span class="w_navbar_tip">RageFrame，一个基于Yii2高级框架的快速开发应用引擎。</span>
             </ol>
@@ -37,14 +37,14 @@ $this->title = $article['title'];
                             </p>
                         </div>
                         <div class="nextinfo">
-                            <?php if(!empty($prev)){ ?><p class="last">上一篇：<a href="<?= AddonUrl::to(['index/details', 'id' => $prev['id']])?>"><?= $prev['title']?></a></p><?php } ?>
-                            <?php if(!empty($next)){ ?><p class="next">下一篇：<a href="<?= AddonUrl::to(['index/details', 'id' => $next['id']])?>"><?= $next['title']?></a></p><?php } ?>
+                            <?php if(!empty($prev)){ ?><p class="last">上一篇：<a href="<?= Url::to(['index/details', 'id' => $prev['id']])?>"><?= $prev['title']?></a></p><?php } ?>
+                            <?php if(!empty($next)){ ?><p class="next">下一篇：<a href="<?= Url::to(['index/details', 'id' => $next['id']])?>"><?= $next['title']?></a></p><?php } ?>
                         </div>
                     </div>
                 </div>
             </div>
             <!--获取左侧内页推荐-->
-            <?= \common\helpers\AddonHook::to('RfArticle', ['position' => 4]); ?>
+            <?php // \common\helpers\Hook::to('RfArticle', ['position' => 4]); ?>
         </div>
     </div>
 </div>

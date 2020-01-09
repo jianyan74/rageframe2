@@ -68,7 +68,7 @@ class Alert extends \yii\bootstrap\Widget
 
                 // 调用函数
                 $this->view->registerJs(<<<Js
-    toastr.{$type}("{$message}")
+    toastr.{$type}('{$message}')
 Js
                 );
             }

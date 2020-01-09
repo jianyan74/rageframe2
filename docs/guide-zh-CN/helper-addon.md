@@ -14,11 +14,11 @@ use common\helpers\AddonHelper;
 ```
 
 ```
-// 获取静态资源文件所在目录 该方法获取的内容为 addons\[模块]\resources\ 目录
-AddonHelper::getResourcesUrl();
+// 获取静态资源文件所在目录 该方法获取的内容为 addons\[模块]\resources\
+$path = AddonHelper::filePath();
 
 // 获取静态资源文件 该方法获取的内容为 addons\[模块]\resources\img\test.jpg 文件
-AddonHelper::getResourcesFile('img/test.jpg');
+AddonHelper::file('img/test.jpg');
 ```
 
 #### 获取/设置当前模块配置信息

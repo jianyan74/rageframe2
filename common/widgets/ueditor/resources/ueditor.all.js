@@ -7340,9 +7340,9 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             var me = this;
 
             me.fireEvent('beforesetcontent', html);
-            var root = UE.htmlparser(html);
-            me.filterInputRule(root);
-            html = root.toHtml();
+            // var root = UE.htmlparser(html);
+            // me.filterInputRule(root);
+            // html = root.toHtml();
 
             me.body.innerHTML = (isAppendTo ? me.body.innerHTML : '') + html;
 
@@ -17641,8 +17641,7 @@ UE.plugins['video'] = function (){
      * @param toEmbed 是否以flash代替显示
      * @param addParagraph  是否需要添加P 标签
      */
-    function creatInsertStr(url,width,height,id,align,classname,type){
-
+    function creatInsertStr(url,width,height,id,align,classname,type, posterUrl){
         url = utils.unhtmlForUrl(url);
         align = utils.unhtml(align);
         classname = utils.unhtml(classname);
@@ -17665,8 +17664,8 @@ UE.plugins['video'] = function (){
                 var ext = url.substr(url.lastIndexOf('.') + 1);
                 if(ext == 'ogv') ext = 'ogg';
                 str = '<video' + (id ? ' id="' + id + '"' : '') + ' class="' + classname + ' video-js" ' + (align ? ' style="float:' + align + '"': '') +
-                    ' controls preload="none" width="' + width + '" height="' + height + '" src="' + url + '" data-setup="{}">' +
-                    '<source src="' + url + '" type="video/' + ext + '" /></video>';
+                    ' controls preload="metadata" poster="' + posterUrl + '" width="' + width + '" height="' + height + '" src="' + url + '" data-setup="{}">' +
+                    '<source src="' + url + '" type="video/' + ext + '" />Your browser does not support video</video>';
                 break;
         }
         return str;
@@ -17766,16 +17765,18 @@ UE.plugins['video'] = function (){
             for(var i=0,vi,len = videoObjs.length;i<len;i++){
                 vi = videoObjs[i];
                 cl = (type == 'upload' ? 'edui-upload-video video-js vjs-default-skin':'edui-faked-video');
-                html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'image'));
+
+                console.log(vi);
+                html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'video', vi.posterUrl));
             }
             me.execCommand("inserthtml",html.join(""),true);
             var rng = this.selection.getRange();
-            for(var i= 0,len=videoObjs.length;i<len;i++){
-                var img = this.document.getElementById('tmpVedio'+i);
-                domUtils.removeAttributes(img,'id');
-                rng.selectNode(img).select();
-                me.execCommand('imagefloat',videoObjs[i].align)
-            }
+            // for(var i= 0,len=videoObjs.length;i<len;i++){
+                // var img = this.document.getElementById('tmpVedio'+i);
+                // domUtils.removeAttributes(img,'id');
+                // rng.selectNode(img).select();
+                // me.execCommand('imagefloat',videoObjs[i].align)
+            // }
         },
         queryCommandState : function(){
             var img = me.selection.getRange().getClosedNode(),

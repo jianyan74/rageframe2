@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
@@ -17,7 +18,21 @@ class CurdSearch extends Curd
     public function rules()
     {
         return [
-            [['cate_id', 'manager_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [
+                [
+                    'merchant_id',
+                    'cate_id',
+                    'member_id',
+                    'sort',
+                    'position',
+                    'sex',
+                    'views',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                ],
+                'integer',
+            ],
             [['content', 'covers', 'files'], 'string'],
             [['price'], 'number'],
             [['start_time', 'end_time'], 'safe'],
@@ -62,7 +77,7 @@ class CurdSearch extends Curd
         $query->andFilterWhere([
             'id' => $this->id,
             'cate_id' => $this->cate_id,
-            'manager_id' => $this->manager_id,
+            'member_id' => $this->member_id,
             'sort' => $this->sort,
             'position' => $this->position,
             'sex' => $this->sex,

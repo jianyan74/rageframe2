@@ -3,43 +3,33 @@
 namespace common\models\api;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
-use common\models\member\MemberInfo;
+use yii\web\UnauthorizedHttpException;
+use common\enums\StatusEnum;
+use common\models\member\Member;
 use common\models\common\RateLimit;
-use common\helpers\ArrayHelper;
+use common\models\common\AuthAssignment;
 
 /**
- * 如果不想速率控制请直接继承 common\models\common\BaseModel
+ *  如果不想速率控制请直接继承 \common\models\base\BaseModel
  *
  * This is the model class for table "{{%api_access_token}}".
  *
  * @property string $id
+ * @property int $merchant_id 商户id
  * @property string $refresh_token 刷新令牌
  * @property string $access_token 授权令牌
- * @property string $member_id 用户id
+ * @property int $member_id 用户id
+ * @property string $openid
  * @property string $group 组别
  * @property int $status 状态[-1:删除;0:禁用;1启用]
- * @property string $created_at 创建时间
- * @property string $updated_at 修改时间
+ * @property int $created_at 创建时间
+ * @property int $updated_at 修改时间
  */
 class AccessToken extends RateLimit
 {
-    /**
-     * 组别 主要用于多端登录
-     */
-    const GROUP_MINI_PROGRAM = 'miniProgram'; // 小程序
-    const GROUP_APP = 'app'; // app
-    const GROUP_WECHAT = 'wechat'; // 微信
-
-    /**
-     * 给其他表单验证的数据
-     *
-     * @var array
-     */
-    public static $ruleGroupRnage = ['miniProgram', 'app', 'wechat'];
-
-
     /**
      * {@inheritdoc}
      */
@@ -48,13 +38,16 @@ class AccessToken extends RateLimit
         return '{{%api_access_token}}';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
-            [['member_id','refresh_token', 'access_token', 'group'], 'required'],
-            [['member_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['refresh_token', 'access_token'], 'string', 'max' => 60],
-            [['group'], 'string', 'max' => 30],
+            [['openid'], 'string', 'max' => 50],
+            [['group'], 'string', 'max' => 100],
             [['access_token'], 'unique'],
             [['refresh_token'], 'unique'],
         ];
@@ -67,8 +60,10 @@ class AccessToken extends RateLimit
     {
         return [
             'id' => 'ID',
+            'merchant_id' => '商户',
             'refresh_token' => '重置令牌',
             'access_token' => '登录令牌',
+            'openid' => 'openid',
             'member_id' => '会员ID',
             'group' => '组别',
             'status' => '状态',
@@ -78,84 +73,57 @@ class AccessToken extends RateLimit
     }
 
     /**
-     * access_token 找到identity
-     *
      * @param mixed $token
      * @param null $type
-     * @return static
+     * @return array|mixed|ActiveRecord|\yii\web\IdentityInterface|null
+     * @throws UnauthorizedHttpException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['access_token' => $token]);
+        // 判断验证token有效性是否开启
+        if (Yii::$app->params['user.accessTokenValidity'] === true) {
+            $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+            $expire = Yii::$app->params['user.accessTokenExpire'];
+
+            // 验证有效期
+            if ($timestamp + $expire <= time()) {
+                throw new UnauthorizedHttpException('您的登录验证已经过期，请重新登录');
+            }
+        }
+
+        // 优化版本到缓存读取用户信息 注意需要开启服务层的cache
+        return Yii::$app->services->apiAccessToken->getTokenToCache($token, $type);
     }
 
     /**
-     * refresh_token 找到identity
-     *
      * @param $token
      * @param null $group
-     * @return AccessToken|null
+     * @return AccessToken|\common\models\base\User|null
      */
     public static function findIdentityByRefreshToken($token, $group = null)
     {
-        return static::findOne(['group' => $group, 'refresh_token' => $token]);
+        return static::findOne(['group' => $group, 'refresh_token' => $token, 'status' => StatusEnum::ENABLED]);
     }
 
     /**
-     * 获取token
+     * 关联用户
      *
-     * @param object $member
-     * @param bool $noFlushToken
-     * @return array
-     * @throws \yii\base\Exception
+     * @return \yii\db\ActiveQuery
      */
-    public static function getAccessToken(MemberInfo $member, $group)
+    public function getMember()
     {
-        $model = static::findModel($member->id, $group);
-        $model->member_id = $member->id;
-        $model->group = $group;
-        $model->refresh_token = Yii::$app->security->generateRandomString() . '_' . time();
-        $model->access_token = Yii::$app->security->generateRandomString() . '_' . time();
-
-        // 记录访问次数
-        $member->visit_count += 1;
-        $member->last_time = time();
-        $member->last_ip = Yii::$app->request->getUserIP();
-
-        if (!$model->save())
-        {
-            return self::getAccessToken($member, $group);
-        }
-
-        $result = [];
-        $result['refresh_token'] =  $model->refresh_token;
-        $result['access_token'] = $model->access_token;
-        $result['expiration_time'] = Yii::$app->params['user.accessTokenExpire'];
-
-        $member->save();
-        $member = ArrayHelper::toArray($member);
-        unset($member['password_hash'], $member['auth_key'], $member['password_reset_token'], $member['access_token'], $member['refresh_token']);
-        $result['member'] = $member;
-
-        return $result;
+        return $this->hasOne(Member::class, ['id' => 'member_id']);
     }
 
     /**
-     * 返回模型
+     * 关联授权角色
      *
-     * @param $member_id
-     * @param $group
-     * @return array|AccessToken|null|ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
-    protected static function findModel($member_id, $group)
+    public function getAssignment()
     {
-        if (empty(($model = self::find()->where(['member_id' => $member_id, 'group' => $group])->one())))
-        {
-            $model = new self();
-            return $model->loadDefaultValues();
-        }
-
-        return $model;
+        return $this->hasOne(AuthAssignment::class, ['user_id' => 'member_id'])
+            ->where(['type' => Yii::$app->id]);
     }
 
     /**
@@ -171,6 +139,13 @@ class AccessToken extends RateLimit
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
             ],
+            [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
+                ],
+                'value' => Yii::$app->services->merchant->getId(),
+            ]
         ];
     }
 }

@@ -1,11 +1,11 @@
 <?php
-use wechat\assets\AppAsset;
-use yii\helpers\Html;
+use addons\RfArticle\frontend\assets\AppAsset;
+use common\helpers\Html;
 use common\widgets\Alert;
 use common\helpers\AddonHelper;
-use common\helpers\AddonUrl;
+use common\helpers\Url;
 
-$path = AddonHelper::getResourcesUrl();
+$path = AddonHelper::filePath();
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -26,19 +26,17 @@ AppAsset::register($this);
 <div class="w_header">
     <div class="container">
         <div class="w_header_top">
-            <a href="<?= AddonUrl::to(['index/index'])?>" class="w_logo"></a>
+            <a href="<?= Url::to(['index/index'])?>" class="w_logo"></a>
             <span class="w_header_nav">
                 <ul>
-                    <li><a href="<?= AddonUrl::to(['index/index'])?>">首页</a></li>
-                    <li><a href="<?= AddonUrl::to(['index/list'])?>">最新文章</a></li>
+                    <li><a href="<?= Url::to(['index/index'])?>">首页</a></li>
+                    <li><a href="<?= Url::to(['index/list'])?>">最新文章</a></li>
                 </ul>
             </span>
             <div class="w_search">
-                <form action="<?= AddonUrl::to(['index/list'])?>" method="get">
+                <form action="<?= Url::to(['index/list'])?>" method="get">
                     <div class="w_searchbox">
                         <input type="text" placeholder="关键字查询" name="keyword" value="<?= Yii::$app->request->get('keyword', '')?>"/>
-                        <input type="hidden" name="addon" value="<?= Yii::$app->params['addonInfo']['name'];?>"/>
-                        <input type="hidden"  name="route" value="index/list"/>
                         <button>搜索</button>
                     </div>
                 </form>

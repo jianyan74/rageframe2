@@ -1,70 +1,48 @@
 <?php
+
 namespace addons\RfArticle\backend\controllers;
 
-use addons\RfArticle\common\models\Adv;
-use addons\RfArticle\common\models\Article;
-use addons\RfArticle\common\models\ArticleTag;
-use common\controllers\AddonsBaseController;
-use common\enums\StatusEnum;
+use Yii;
+use common\helpers\ArrayHelper;
+use common\interfaces\AddonsSetting;
+use addons\RfArticle\common\models\SettingForm;
 
 /**
  * 参数设置
  *
  * Class SettingController
  * @package addons\RfArticle\backend\controllers
- * @author jianyan74 <751393839@qq.com>
  */
-class SettingController extends AddonsBaseController
+class SettingController extends BaseController implements AddonsSetting
 {
     /**
-     * 文章列表钩子
-     *
-     * @param array $params
+     * @return mixed|string
      */
-    public function actionHook($params)
+    public function actionDisplay()
     {
-        $tags = ArticleTag::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->asArray()
-            ->all();
+        $request = Yii::$app->request;
+        $model = new SettingForm();
+        $model->attributes = $this->getConfig();
+        if ($model->load($request->post()) && $model->validate()) {
+            $this->setConfig(ArrayHelper::toArray($model));
+            return $this->message('修改成功', $this->redirect(['display']));
+        }
 
-        $articles = Article::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->andWhere(Article::position($params['position']))
-            ->orderBy('view desc')
-            ->with(['tags'])
-            ->limit(10)
-            ->asArray()
-            ->all();
-
-        return $this->render('hook', [
-            'tags' => $tags,
-            'articles' => $articles,
+        return $this->render('display',[
+            'model' => $model,
         ]);
     }
 
     /**
-     * 幻灯片钩子
+     * 钩子
      *
-     * @param array $params
-     * @return string
+     * @param array $param
+     * @return mixed|string
      */
-    public function actionAdv($params)
+    public function actionHook($param = [])
     {
-        $models = Adv::find()
-            ->where(['status' => StatusEnum::ENABLED])
-            ->andWhere(['<=', 'start_time', time()])
-            ->andWhere(['>=', 'end_time', time()])
-            ->asArray()
-            ->all();
-
-        if (!$models)
-        {
-            return false;
-        }
-
-        return $this->render('adv', [
-            'models' => $models,
+        return $this->render('hook', [
+            'param' => $param
         ]);
     }
 }

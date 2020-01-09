@@ -14,21 +14,11 @@
 Yii::$app->params['addon'];
 ```
 
-#### 获取模块路由和基础信息
-
-```
-Yii::$app->params['addonInfo'];
-```
-
 #### 获取模块导航和菜单信息
 
 ```
 Yii::$app->params['addonBinding'];
 ```
-
-#### 生成模块Url地址
-
-[模块Url生成辅助类](helper-addon-url.md)
 
 ####  辅助方法
 
