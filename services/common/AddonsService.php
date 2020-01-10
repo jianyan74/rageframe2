@@ -186,7 +186,7 @@ class AddonsService extends Service
         }
 
         // 更新缓存
-        Yii::$app->services->addons->findByNameWithBinding($name, true);
+        Yii::$app->services->addons->updateCacheByName($name);
 
         return $model;
     }
