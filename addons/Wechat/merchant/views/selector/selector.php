@@ -116,7 +116,7 @@ use yii\helpers\ArrayHelper;
     function rfGetAttachment() {
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['/selector/list', 'media_type' => $media_type, 'json' => true])?>",
+            url:"<?= Url::to(['/wechat/selector/list', 'media_type' => $media_type, 'json' => true])?>",
             dataType: "json",
             data: {
                 page:page,
