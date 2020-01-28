@@ -35,7 +35,7 @@ class Wechat extends \jianyan\easywechat\Wechat
         $config = Yii::$app->debris->merchantConfigAll();
 
         $callbackUrl = $notifyUrl = '';
-        if (!empty($this->id) && $this->id != AppEnum::CONSOLE) {
+        if (!empty(Yii::$app->id) && Yii::$app->id != AppEnum::CONSOLE) {
             $callbackUrl = Yii::$app->request->hostInfo . Yii::$app->request->getUrl();
             $notifyUrl = Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']);
         }
