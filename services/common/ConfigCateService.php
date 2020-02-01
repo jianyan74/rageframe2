@@ -85,7 +85,10 @@ class ConfigCateService extends Service
             ->orderBy('sort asc')
             ->with(['config' => function($query) use ($app_id) {
                 /** @var ActiveQuery $query */
-                return $query->andWhere(['app_id' => $app_id])->with('value');
+                return $query->andWhere(['app_id' => $app_id])
+                    ->with(['value' => function($query){
+                        return $query->andWhere(['merchant_id' => $this->getMerchantId()]);
+                    }]);
             }])
             ->asArray()
             ->all();
