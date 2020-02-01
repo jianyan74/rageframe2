@@ -139,7 +139,7 @@ trait Curd
         $this->activeFormValidate($model);
         if ($model->load(Yii::$app->request->post())) {
             return $model->save()
-                ? $this->redirect(['index'])
+                ? $this->redirect(Yii::$app->request->referrer)
                 : $this->message($this->getError($model), $this->redirect(['index']), 'error');
         }
 
