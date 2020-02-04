@@ -255,7 +255,7 @@ a.desc:after {
 }
 
 .box {
-    border-top: 0;
+    /*border-top: 0;*/
     box-shadow: 0 0 0;
 }
 
