@@ -4,7 +4,6 @@ namespace oauth2\controllers;
 
 use Yii;
 use yii\filters\Cors;
-use yii\web\BadRequestHttpException;
 use oauth2\behaviors\JWTAuth;
 use common\traits\BaseAction;
 

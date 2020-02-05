@@ -82,6 +82,7 @@ return [
                         'v1/member/address',
                         'v1/member/invoice',
                         'v1/member/auth',
+                        'v1/member/bank-account',
                         // 版本2
                         'v2/default', // 默认测试入口
                     ],

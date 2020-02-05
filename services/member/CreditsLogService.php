@@ -251,8 +251,12 @@ class CreditsLogService extends Service
                 ]);
         }
 
-        if ($status == false) {
-            throw new NotFoundHttpException('积分不足/增加失败');
+        if ($status == false && $creditsLogForm->num < 0) {
+            throw new NotFoundHttpException('积分不足');
+        }
+
+        if ($status == false && $creditsLogForm->num > 0) {
+            throw new NotFoundHttpException('增加失败');
         }
 
         // 记录日志
@@ -298,8 +302,12 @@ class CreditsLogService extends Service
             $creditsLogForm->updateLevel($account->consume_money += $creditsLogForm->num, $account->accumulate_integral);
         }
 
-        if ($status == false) {
-            throw new NotFoundHttpException('积分不足/增加失败');
+        if ($status == false && $creditsLogForm->num < 0) {
+            throw new NotFoundHttpException('余额不足');
+        }
+
+        if ($status == false && $creditsLogForm->num > 0) {
+            throw new NotFoundHttpException('增加失败');
         }
 
         // 记录日志

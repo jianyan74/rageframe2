@@ -6,10 +6,13 @@
 
 > 该模型方便用户查询，不再每次都要单独的 SearchModel
 
+```php
+use common\models\base\SearchModel;
+```
+
 ### 示例一
 
-  ```php
-use common\models\base\SearchModel;
+```php
 $searchModel = new SearchModel([
    'model' => Topic::class,
    'scenario' => 'default',

@@ -37,7 +37,6 @@ use common\behaviors\MerchantBehavior;
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
-
     use MerchantBehavior;
 
     /**

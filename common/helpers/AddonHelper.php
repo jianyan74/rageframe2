@@ -104,6 +104,11 @@ class AddonHelper
                 $filesystem->copy($localIconPath, $newLocalIconPath);
             }
 
+            // 后台独立域名
+            if ($backendUrl = Yii::getAlias('@backendUrl')) {
+                return $backendUrl . $newPath;
+            }
+
             return '/backend' . $newPath;
         }
 
@@ -209,7 +214,7 @@ class AddonHelper
             $configModel->data = [];
         }
 
-        $configModel->data = ArrayHelper::merge($configModel->data, $config);
+        $configModel->data = array_merge($configModel->data, $config);
         $configModel->save();
 
         return self::getConfig(true, $merchant_id);

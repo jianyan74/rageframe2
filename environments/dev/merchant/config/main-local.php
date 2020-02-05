@@ -23,14 +23,14 @@ if (!YII_ENV_TEST) {
             'crud' => [
                 'class' => \common\components\gii\crud\Generator::class,
                 'templates' => [
-                    'rageframe' => '@common/components/gii/crud/default',
+                    'rageframe' => '@common/components/gii/crud/merchant',
                     'default' => '@vendor/yiisoft/yii2-gii/src/generators/crud/default',
                 ]
             ],
             'model' => [
                 'class' => \yii\gii\generators\model\Generator::class,
                 'templates' => [
-                    'rageframe' => '@common/components/gii/model/default',
+                    'rageframe' => '@common/components/gii/model/merchant',
                     'default' => '@vendor/yiisoft/yii2-gii/src/generators/model/default',
                 ]
             ],

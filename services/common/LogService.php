@@ -70,7 +70,7 @@ class LogService extends Service
     public function record($response, $showReqId = false)
     {
         // 判断是否记录日志
-        if (Yii::$app->params['user.log'] && in_array($this->getLevel($response->statusCode), Yii::$app->params['user.log.level'])) {
+        if (in_array($this->getLevel($response->statusCode), Yii::$app->params['user.log.level'])) {
             // 检查是否报错
             if ($response->statusCode >= 300 && $exception = Yii::$app->getErrorHandler()->exception) {
                 $this->errData = [
@@ -88,10 +88,10 @@ class LogService extends Service
             $this->statusText = $response->statusText;
 
             // 排除状态码
-            !in_array($this->statusCode, ArrayHelper::merge(
-                $this->exceptCode,
-                Yii::$app->params['user.log.except.code'])
-            ) && $this->push();
+            if (Yii::$app->params['user.log'] && !in_array($this->statusCode,
+                    ArrayHelper::merge($this->exceptCode, Yii::$app->params['user.log.except.code']))) {
+                $this->push();
+            }
         }
 
         return $this->errData;
@@ -161,7 +161,7 @@ class LogService extends Service
     }
 
     /**
-     * 报表统计
+     * 状态报表统计
      *
      * @param $type
      * @return array
@@ -176,6 +176,7 @@ class LogService extends Service
 
         // 获取时间和格式化
         list($time, $format) = EchantsHelper::getFormatTime($type);
+
         // 获取数据
         return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) use ($codes) {
             $statData = Log::find()
@@ -189,6 +190,36 @@ class LogService extends Service
                 ->all();
 
             return EchantsHelper::regroupTimeData($statData, 'error_code');
+        }, $fields, $time, $format);
+    }
+
+    /**
+     * 流量报表统计
+     *
+     * @param $type
+     * @return array
+     */
+    public function flowStat($type)
+    {
+        $fields = [
+            'count' => '访问量(PV)',
+            'user_id' => '访问人数(UV)',
+            'ip' => '访问IP',
+        ];
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) {
+            return Log::find()
+                ->select(["from_unixtime(created_at, '$formatting') as time", 'count(id) as count', 'count(distinct(ip)) as ip', 'count(distinct(user_id)) as user_id'])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->andWhere(['status' => StatusEnum::ENABLED])
+                ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+                ->groupBy(['time'])
+                ->asArray()
+                ->all();
         }, $fields, $time, $format);
     }
 

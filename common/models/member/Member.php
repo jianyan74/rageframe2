@@ -140,6 +140,14 @@ class Member extends User
     }
 
     /**
+     * 父级
+     */
+    public function getParent()
+    {
+        return $this->hasOne(Member::class, ['id' => 'pid']);
+    }
+
+    /**
      * 关联第三方绑定
      */
     public function getAuth()

@@ -76,6 +76,9 @@ class EchantsHelper
             case 'this30Day' :
                 list($time, $format) = [['start' => time() - 60 * 60 *24 *30, 'end' => time()], 'day'];
                 break;
+            case 'lastYear' :
+                list($time, $format) = [DateHelper::aYear(date('Y') - 1), 'month'];
+                break;
             case 'betweenHour' :
                 list($time, $format) = [['start' => $start_time, 'end' => $end_time], 'hour'];
                 break;

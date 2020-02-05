@@ -27,8 +27,13 @@ class QrcodeStatService extends Service
         if ($message['Event'] == WechatEnum::EVENT_SUBSCRIBE && !empty($message['Ticket'])) {
             if ($qrCode = Yii::$app->wechatService->qrcode->findByWhere(['ticket' => trim($message['Ticket'])])) {
                 $this->create($qrCode, $message['FromUserName'], QrcodeStat::TYPE_ATTENTION);
+
                 return $qrCode['keyword'];
             }
+        }
+
+        if (!isset($message['EventKey'])) {
+            return false;
         }
 
         // 扫描事件
@@ -39,6 +44,7 @@ class QrcodeStatService extends Service
 
         if ($qrCode = Yii::$app->wechatService->qrcode->findByWhere($where)) {
             $this->create($qrCode, $message['FromUserName'], QrcodeStat::TYPE_SCAN);
+
             return $qrCode['keyword'];
         }
 

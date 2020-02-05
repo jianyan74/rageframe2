@@ -61,6 +61,23 @@ class LogController extends BaseController
     }
 
     /**
+     * @param string $data
+     * @return array|string
+     */
+    public function actionFlowStat($type = '')
+    {
+        if (!empty($type)) {
+            $data = Yii::$app->services->log->flowStat($type);
+
+            return ResultHelper::json(200, '获取成功', $data);
+        }
+
+        return $this->renderAjax($this->action->id, [
+
+        ]);
+    }
+
+    /**
      * 行为日志详情
      *
      * @param $id

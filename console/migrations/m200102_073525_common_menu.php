@@ -18,7 +18,7 @@ class m200102_073525_common_menu extends Migration
             'is_addon' => "tinyint(1) unsigned NULL DEFAULT '0' COMMENT '是否插件'",
             'cate_id' => "tinyint(5) unsigned NULL DEFAULT '0' COMMENT '分类id'",
             'pid' => "int(50) unsigned NULL DEFAULT '0' COMMENT '上级id'",
-            'url' => "varchar(50) NULL DEFAULT '' COMMENT '路由'",
+            'url' => "varchar(100) NULL DEFAULT '' COMMENT '路由'",
             'icon' => "varchar(50) NULL DEFAULT '' COMMENT '样式'",
             'level' => "tinyint(1) unsigned NULL DEFAULT '1' COMMENT '级别'",
             'dev' => "tinyint(4) unsigned NULL DEFAULT '0' COMMENT '开发者[0:都可见;开发模式可见]'",

@@ -20,6 +20,7 @@ use common\helpers\Url;
             'thisWeek' => '本周',
             'thisMonth' => '本月',
             'thisYear' => '本年',
+            'lastYear' => '去年',
         ],
     ]) ?>
 </div>

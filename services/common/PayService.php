@@ -135,7 +135,7 @@ class PayService extends Service
             'detail' => $payLog->detail,
             'notify_url' => $payLog->notify_url, // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'out_trade_no' => $payLog->out_trade_no, // 支付
-            'total_fee' => $payLog->total_fee,
+            'total_fee' => $payLog->total_fee * 100,
             'openid' => $payLog->openid, // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
         ];
 
@@ -226,6 +226,4 @@ class PayService extends Service
             ->where(['order_sn' => $order_sn])
             ->one();
     }
-
-
 }

@@ -100,6 +100,7 @@ class Init implements BootstrapInterface
      * 获取模块
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getModulesByAddons()
     {
@@ -121,6 +122,14 @@ class Init implements BootstrapInterface
                 'name' => $name,
                 'app_id' => $app_id,
             ];
+
+            // 初始化服务
+            if (!empty($addon['service'])) {
+                // 动态注入服务
+                Yii::$app->set(lcfirst($name) . 'Service', [
+                    'class' => $addon['service'],
+                ]);
+            }
         }
 
         return $modules;
