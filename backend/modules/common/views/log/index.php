@@ -15,6 +15,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
+                    <?= Html::linkButton(['flow-stat'], '<i class="fa fa-bar-chart"></i> 流量报表统计', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModalMax',
+                    ]) ?>
                     <?= Html::linkButton(['stat'], '<i class="fa fa-area-chart"></i> 异常请求报表统计', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModalMax',

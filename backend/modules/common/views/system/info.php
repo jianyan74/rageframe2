@@ -1,7 +1,12 @@
 <?php
 
+use common\helpers\RegularHelper;
+
 $this->title = '系统信息';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
+
+$prefix = !RegularHelper::verify('url', Yii::getAlias('@attachurl')) ? Yii::$app->request->hostInfo : '';
+
 ?>
 
 <div class="row">
@@ -30,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>附件目录</td>
-                        <td><?= Yii::$app->request->hostInfo . Yii::getAlias('@attachurl'); ?>/</td>
+                        <td><?= $prefix . Yii::getAlias('@attachurl'); ?>/</td>
                     </tr>
                     <tr>
                         <td>附件目录大小</td>

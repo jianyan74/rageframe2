@@ -38,7 +38,8 @@ class ReceiveMsgController extends BaseController
         switch ($request->getMethod()) {
             // 激活公众号
             case 'GET':
-                if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'), $request->get('nonce'))) {
+                if (WechatHelper::verifyToken($request->get('signature'), $request->get('timestamp'),
+                    $request->get('nonce'))) {
                     return $request->get('echostr');
                 }
 
@@ -71,7 +72,9 @@ class ReceiveMsgController extends BaseController
                                 break;
                         }
 
-                        Yii::$app->wechatService->msgHistory->save(Yii::$app->params['msgHistory'], Yii::$app->wechatService->message->getMessage());
+                        Yii::$app->wechatService->msgHistory->save(Yii::$app->params['msgHistory'],
+                            Yii::$app->wechatService->message->getMessage());
+
                         return $reply;
                     } catch (\Exception $e) {
                         // 记录行为日志
@@ -118,6 +121,7 @@ class ReceiveMsgController extends BaseController
                 if ($qrResult = Yii::$app->wechatService->qrcodeStat->scan($message)) {
                     $message['Content'] = $qrResult;
                     Yii::$app->wechatService->message->setMessage($message);
+
                     return Yii::$app->wechatService->message->text();
                 }
 
@@ -126,6 +130,7 @@ class ReceiveMsgController extends BaseController
             // 取消关注事件
             case 'unsubscribe' :
                 Yii::$app->wechatService->fans->unFollow($message['FromUserName']);
+
                 return false;
                 break;
             // 二维码扫描事件
@@ -133,6 +138,7 @@ class ReceiveMsgController extends BaseController
                 if ($qrResult = Yii::$app->wechatService->qrcodeStat->scan($message)) {
                     $message['Content'] = $qrResult;
                     Yii::$app->wechatService->message->setMessage($message);
+
                     return Yii::$app->wechatService->message->text();
                 }
                 break;
@@ -146,6 +152,7 @@ class ReceiveMsgController extends BaseController
             case 'CLICK' :
                 $message['Content'] = $message['EventKey'];
                 Yii::$app->wechatService->message->setMessage($message);
+
                 return Yii::$app->wechatService->message->text();
                 break;
         }

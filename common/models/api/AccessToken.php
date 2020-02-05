@@ -123,7 +123,7 @@ class AccessToken extends RateLimit
     public function getAssignment()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'member_id'])
-            ->where(['type' => Yii::$app->id]);
+            ->where(['app_id' => Yii::$app->id]);
     }
 
     /**

@@ -36,6 +36,8 @@ cd rageframe2
 3、安装依赖
 
 ```
+// 如果你只有 php 7.1 也可以忽略版本进行安装 php composer.phar install --ignore-platform-reqs
+
 php composer.phar install 
 ```
 

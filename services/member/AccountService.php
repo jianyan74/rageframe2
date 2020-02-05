@@ -14,6 +14,18 @@ use common\models\member\Account;
 class AccountService extends Service
 {
     /**
+     * @param $member_id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByMemberId($member_id)
+    {
+        return Account::find()
+            ->where(['member_id' => $member_id])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
      * 获取指定商户下的用户账号统计
      *
      * @return array|\yii\db\ActiveRecord[]

@@ -30,7 +30,7 @@ class BeforeSend extends Behavior
      */
     public function beforeSend($event)
     {
-        if (YII_DEBUG && Yii::$app->controller->module->id === "debug") {
+        if (YII_DEBUG && isset(Yii::$app->controller->module->id) &&Yii::$app->controller->module->id === "debug") {
             return;
         }
 

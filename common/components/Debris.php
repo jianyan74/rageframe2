@@ -14,6 +14,11 @@ use common\enums\CacheEnum;
 class Debris
 {
     /**
+     * @var array
+     */
+    protected $config = [];
+
+    /**
      * 返回配置名称
      *
      * @param string $name 字段名称
@@ -25,6 +30,7 @@ class Debris
     {
         // 获取缓存信息
         $info = $this->getConfigInfo($noCache, $merchant_id);
+
         return isset($info[$name]) ? trim($info[$name]) : null;
     }
 
@@ -72,21 +78,25 @@ class Debris
      */
     protected function getConfigInfo($noCache, $merchant_id)
     {
+        if ($noCache == false && $this->config) {
+            return $this->config;
+        }
+
         // 获取缓存信息
         $cacheKey = CacheEnum::getPrefix('config', $merchant_id);
-        if (!($info = Yii::$app->cache->get($cacheKey)) || $noCache == true) {
+        if ($noCache == true || !($this->config = Yii::$app->cache->get($cacheKey))) {
             $config = Yii::$app->services->config->findAllWithValue($merchant_id);
-            $info = [];
+            $this->config = [];
 
             foreach ($config as $row) {
-                $info[$row['name']] = $row['value']['data'] ?? $row['default_value'];
+                $this->config[$row['name']] = $row['value']['data'] ?? $row['default_value'];
             }
 
             // 设置缓存
-            Yii::$app->cache->set($cacheKey, $info, 60 * 60);
+            Yii::$app->cache->set($cacheKey, $this->config, 60 * 60);
         }
 
-        return $info;
+        return $this->config;
     }
 
     /**

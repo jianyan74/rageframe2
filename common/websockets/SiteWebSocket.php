@@ -32,4 +32,14 @@ class SiteWebSocket extends BaseWebSocket
     {
         $this->server->push($this->frame->fd, $this->json(2002, 'ok'));
     }
+
+    /**
+     * 测试
+     *
+     * {"route":"site.test",content:{'token':'',}}
+     */
+    public function actionTest()
+    {
+        $this->server->push($this->frame->fd, $this->json(2000, 'test is success'));
+    }
 }

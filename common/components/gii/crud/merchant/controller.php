@@ -40,14 +40,12 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-
     use MerchantCurd;
 
     /**
     * @var <?= $modelClass . "\n" ?>
     */
     public $modelClass = <?= $modelClass ?>::class;
-
 
     /**
     * 首页

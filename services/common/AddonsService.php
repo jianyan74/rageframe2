@@ -265,7 +265,7 @@ class AddonsService extends Service
         }
 
         $models = Addons::find()
-            ->select(['name', 'is_merchant_route_map'])
+            ->select(['name', 'is_merchant_route_map', 'service'])
             ->where(['status' => StatusEnum::ENABLED])
             ->asArray()
             ->all();

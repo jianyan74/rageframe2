@@ -25,6 +25,7 @@ class Yii
  * @property \common\components\UploadDrive $uploadDrive
  * @property \common\components\BaseAddonModule $addons
  * @property \addons\TinyShop\services\Application $tinyShopService
+ * @property \addons\TinyDistribution\services\Application $tinyDistributionService
  * @property \addons\Wechat\services\Application $wechatService
  * @property \addons\RfOnlineDoc\services\Application $rfOnlineDocService
  * @property \Detection\MobileDetect $mobileDetect

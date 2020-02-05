@@ -5,9 +5,11 @@ use yii\grid\GridView;
 use common\helpers\Html;
 use common\enums\WhetherEnum;
 use common\enums\MethodEnum;
+use common\enums\MessageLevelEnum;
 
 $this->title = '行为监控';
 $this->params['breadcrumbs'][] = ['label' => $this->title];
+
 ?>
 
 <div class="row">
@@ -97,7 +99,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'format' => 'raw',
                             'filter' => Html::activeDropDownList($searchModel, 'level',
-                                WhetherEnum::getMap(), [
+                                MessageLevelEnum::getMap(), [
                                     'prompt' => '全部',
                                     'class' => 'form-control'
                                 ]

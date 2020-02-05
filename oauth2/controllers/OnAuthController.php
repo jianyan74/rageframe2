@@ -96,6 +96,7 @@ class OnAuthController extends ActiveController
     {
         $model = $this->findModel($id);
         $model->status = StatusEnum::DELETE;
+
         return $model->save();
     }
 
@@ -121,7 +122,7 @@ class OnAuthController extends ActiveController
         /* @var $model \yii\db\ActiveRecord */
         if (empty($id) || !($model = $this->modelClass::find()->where([
                 'id' => $id,
-                'status' => StatusEnum::ENABLED
+                'status' => StatusEnum::ENABLED,
             ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one())) {
             throw new NotFoundHttpException('请求的数据不存在');
         }

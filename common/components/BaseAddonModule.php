@@ -63,14 +63,6 @@ class BaseAddonModule extends Module
             $this->setModules($addon->default_config[Yii::$app->id]['modules']);
         }
 
-        // 初始化服务
-        if (!empty($addon->service)) {
-            // 动态注入服务
-            Yii::$app->set(lcfirst($this->name) . 'Service', [
-                'class' => $addon->service,
-            ]);
-        }
-
         if (!empty($addon['bootstrap'])) {
             ExecuteHelper::map($addon['bootstrap'], 'run', $addon);
         }

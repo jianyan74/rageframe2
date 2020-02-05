@@ -22,6 +22,7 @@ use common\components\Service;
  * @property \services\member\LevelService $memberLevel 会员级别
  * @property \services\member\AddressService $memberAddress 会员收货地址
  * @property \services\member\InvoiceService $memberInvoice 会员发票
+ * @property \services\member\BankAccountService $memberBankAccount 会员提现账号
  * @property \services\member\CreditsLogService $memberCreditsLog 会员积分/余额变动日志
  * @property \services\member\RechargeConfigService $memberRechargeConfig 会员充值
  * @property \services\common\ActionLogService $actionLog 行为日志
@@ -71,6 +72,7 @@ class Application extends Service
         'memberLevel' => 'services\member\LevelService',
         'memberAddress' => 'services\member\AddressService',
         'memberInvoice' => 'services\member\InvoiceService',
+        'memberBankAccount' => 'services\member\BankAccountService',
         'memberCreditsLog' => 'services\member\CreditsLogService',
         'memberRechargeConfig' => 'services\member\RechargeConfigService',
         /** ------ 商户 ------ **/
@@ -87,7 +89,10 @@ class Application extends Service
         'menuCate' => 'services\common\MenuCateService',
         'config' => 'services\common\ConfigService',
         'configCate' => 'services\common\ConfigCateService',
-        'actionLog' => 'services\common\ActionLogService',
+        'actionLog' => [
+            'class' => 'services\common\ActionLogService',
+            'queueSwitch' => false, // 是否丢进队列
+        ],
         'actionBehavior' => 'services\common\ActionBehaviorService',
         'ipBlacklist' => 'services\common\IpBlacklistService',
         'provinces' => 'services\common\ProvincesService',

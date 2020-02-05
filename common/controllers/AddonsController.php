@@ -9,6 +9,7 @@ use common\helpers\Auth;
 use common\helpers\AddonHelper;
 use common\traits\BaseAction;
 use common\enums\AppEnum;
+use common\behaviors\ActionLogBehavior;
 
 /**
  * 模块基类控制器
@@ -46,6 +47,18 @@ class AddonsController extends Controller
         if (!$this->layout && in_array(Yii::$app->id, [AppEnum::BACKEND, AppEnum::MERCHANT])) {
             $this->layout = '@' . Yii::$app->id . '/views/layouts/addon';
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'actionLog' => [
+                'class' => ActionLogBehavior::class
+            ]
+        ];
     }
 
     /**
