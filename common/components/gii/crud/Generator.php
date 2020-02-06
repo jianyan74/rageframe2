@@ -58,7 +58,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function generateActiveField($attribute)
     {
         $tableSchema = $this->getTableSchema();
-        $type = $this->inputType[$attribute];
+        $type = $this->inputType[$attribute]??'';;
 
         switch ($type) {
             case 'text':
