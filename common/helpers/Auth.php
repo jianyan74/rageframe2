@@ -31,6 +31,9 @@ class Auth
         if (in_array('/*', $auth) || in_array($route, $auth)) {
             return true;
         }
+        if( in_array(Url::to([$route]), $auth) ) {
+            return true;
+        }
 
         return self::multistageCheck($route, $auth);
     }

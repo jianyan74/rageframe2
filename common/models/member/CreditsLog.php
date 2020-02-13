@@ -2,6 +2,7 @@
 
 namespace common\models\member;
 
+use common\enums\AppEnum;
 use Yii;
 use common\behaviors\MerchantBehavior;
 
@@ -101,7 +102,10 @@ class CreditsLog extends \common\models\base\BaseModel
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
-            $this->ip = Yii::$app->request->userIP;
+            if( !in_array(Yii::$app->id, AppEnum::CONSOLE) ) {
+                $this->ip = Yii::$app->request->userIP;
+            }
+
             $this->app_id = Yii::$app->id;
             $this->addons_name = Yii::$app->params['addon']['name'] ?? '';
         }
