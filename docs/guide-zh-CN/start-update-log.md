@@ -10,6 +10,13 @@
 > 各个小版本升级例如 2.1.x 升级到 2.2.x 以上不能完美升级最好重新安装
 git 
 
+### v2.5.39
+updated 2020.2.10
+ 
+- 增加: 风控日志记录
+- 优化: 权限判断路由 [@uutan](https://github.com/uutan)
+- 修复: Gii Curd 有些字段类型有不存在的情况会报错 [@uutan](https://github.com/uutan)
+
 ### v2.5.36
 updated 2020.2.5
 

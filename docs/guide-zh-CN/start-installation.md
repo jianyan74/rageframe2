@@ -97,7 +97,7 @@ OAuth2 | 当前域名/oauth2
 
 建议
 
-生产环境如果是文件缓存去  `backend/runtime`  执行一下 `chmod -R 777 cache`
+生产环境如果是文件缓存去  `backend/runtime`  执行一下 `chmod -R 777 cache`，不执行可能会造成修改了网站设置不生效的情况
 
 
 

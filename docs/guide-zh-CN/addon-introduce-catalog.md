@@ -30,12 +30,18 @@
 --- --- views | 视图目录
 --- --- asset | 资源配置目录
 --- --- ---  Asset.php | 前台静态资源载入器
---- **wechat** | 模块微信应用
+--- **html5** | 模块html5应用
 --- --- resources | 资源(js/css/image)目录(不可修改命名)
 --- --- controllers | 控制器目录
 --- --- views | 视图目录
 --- --- asset | 资源配置目录
---- --- ---  Asset.php | 微信静态资源载入器
+--- --- ---  Asset.php | html5静态资源载入器
+--- **merchant** | 模块html5应用
+--- --- resources | 资源(js/css/image)目录(不可修改命名)
+--- --- controllers | 控制器目录
+--- --- views | 视图目录
+--- --- asset | 资源配置目录
+--- --- ---  Asset.php | merchant静态资源载入器
 --- **api** | 模块api应用(主要用于小程序)
 --- --- controllers | 控制器目录
 --- **common** | 公用
