@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     // 触发插件菜单默认显示值
     $('.rfTopMenu').each(function () {
-        if (parseInt($(this).data('is_addon')) === 1) {
+        if (parseInt($(this).data('addon_centre')) === 1) {
             $('.rfLeftMenuAddon').addClass('rfLeftMenu-' + $(this).data('type'));
         }
     });
@@ -117,7 +117,7 @@ function autoChangeMenu(leftAuto = false) {
                     $(item).addClass('hide');
                     $('.hide-menu').removeClass('hide');
                     // 增加一次的菜单
-                    $('.hide-menu ul li ul').append("<li class='rfTopMenu' data-type=" + $(item).data('type') + " data-is_addon=" + $(item).data('is_addon') + ">" + $(item).html() + "</li>")
+                    $('.hide-menu ul li ul').append("<li class='rfTopMenu' data-type=" + $(item).data('type') + " data-addon_centre=" + $(item).data('addon_centre') + ">" + $(item).html() + "</li>")
                 }
 
                 $('.hide-menu ul li ul').find('a').addClass("pointer");
@@ -133,9 +133,8 @@ function autoChangeMenu(leftAuto = false) {
 
 /* 导航标签切换 */
 $(document).on("click", ".rfTopMenu", function () {
-    console.log(1)
-
     var type = $(this).data('type');
+
     $('.rfTopMenu').removeClass('open');
     if (type) {
         $('.rfTopMenu').removeClass('rfTopMenuHover');

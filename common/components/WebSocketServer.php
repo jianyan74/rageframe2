@@ -6,6 +6,8 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Json;
 use Swoole\WebSocket\Server;
+use common\helpers\ArrayHelper;
+use common\websockets\SiteWebSocket;
 
 /**
  * Class WebSocketServer
@@ -27,7 +29,7 @@ class WebSocketServer
      * @var
      */
     public $childService = [
-        'test' => BaseWebSocket::class,
+        'site' => SiteWebSocket::class,
     ];
 
     protected $_childService;
@@ -38,6 +40,13 @@ class WebSocketServer
      * @var Server
      */
     protected $server;
+
+    /**
+     * 连接id
+     *
+     * @var
+     */
+    protected $fd;
 
     /**
      * WebSocket constructor.
@@ -72,6 +81,7 @@ class WebSocketServer
         $this->server->on('task', [$this, 'onTask']);
         $this->server->on('finish', [$this, 'onFinish']);
         $this->server->on('close', [$this, 'onClose']);
+        $this->server->on('request', [$this, 'onRequest']);
         $this->server->start();
     }
 
@@ -84,6 +94,11 @@ class WebSocketServer
     public function onOpen(Server $server, $request)
     {
         echo "server: handshake success with fd{$request->fd}\n";
+
+        $this->fd = $request->fd;
+        // 验证 token
+
+        $server->push($request->fd, $this->json(2001, '连接成功', ['fd' => $request->fd]));
     }
 
     /**
@@ -94,20 +109,40 @@ class WebSocketServer
      */
     public function onMessage(Server $server, $frame)
     {
-        // 消息
-        $data = Json::decode($frame->data);
-        $runAction = explode('/', $data['action']);
-        $content = $data['content'];
-
+        $this->fd = $frame->fd;
         try {
+            // 消息
+            $data = Json::decode($frame->data);
+            $runAction = explode('.', $data['route']);
+            $content = $data['content'];
             // 对应方法
             $action = 'action' . ucfirst(strtolower($runAction[1]));
             $this->childService($runAction[0], $server, $frame, $content)->$action();
         } catch (\Exception $e) {
-            $server->push($frame->fd, "出现了报错：" . $e->getMessage());
+            $server->push($frame->fd, $this->json(5000, "出现了报错：" . $e->getMessage()));
         }
 
         echo "receive from {}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+    }
+
+    /**
+     * 接收http触发所有websocket的推送
+     *
+     * @param \Swoole\Http\Request $request
+     * @param \Swoole\Http\Response $response
+     */
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
+    {
+        echo "server: http handshake success with fd{$request->fd}\n";
+
+        // 接收http请求从get获取message参数的值，给用户推送
+        // $this->server->connections 遍历所有websocket连接用户的fd，给所有用户推送
+        foreach ($this->server->connections as $fd) {
+            // 需要先判断是否是正确的websocket连接，否则有可能会push失败
+            if ($this->server->isEstablished($fd)) {
+                $this->server->push($fd, $this->json(2000, 'ok', $request->get['message']));
+            }
+        }
     }
 
     /**
@@ -118,6 +153,11 @@ class WebSocketServer
      */
     public function onClose(Server $server, $fd)
     {
+        $this->fd = $fd;
+        if ($server->isEstablished($fd)) {
+            $server->push($fd, $this->json(4000, '长时间未检测到心跳,已被强行断开连接！', ['fd' => $fd]));
+        }
+
         echo "client {$fd} closed" . PHP_EOL;
     }
 
@@ -131,7 +171,10 @@ class WebSocketServer
      */
     public function onTask(Server $server, $task_id, $from_id, $data)
     {
+        $this->fd = $from_id;
+
         echo "新 AsyncTask[id=$task_id]" . PHP_EOL;
+
         $server->finish($data);
     }
 
@@ -170,6 +213,25 @@ class WebSocketServer
         $this->_childService[$childServiceName]->server = $server;
         $this->_childService[$childServiceName]->frame = $frame;
         $this->_childService[$childServiceName]->content = $content;
+
         return $this->_childService[$childServiceName];
+    }
+
+    /**
+     * 返回json数据格式
+     *
+     * @param int $code 状态码
+     * @param string $message 返回的报错信息
+     * @param array|object $data 返回的数据结构
+     */
+    protected function json($code = 4003, $message = '未知错误', $data = [])
+    {
+        $result = [
+            'code' => strval($code),
+            'message' => trim($message),
+            'data' => $data ? ArrayHelper::toArray($data) : [],
+        ];
+
+        return Json::encode($result);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
@@ -13,7 +14,7 @@ class Xunsearch extends ActiveRecord
 {
     public static function projectName()
     {
-        return 'demo';	// 这将使用 @common/config/demo.ini 作为项目名
+        return 'demo';    // 这将使用 @common/config/demo.ini 作为项目名
     }
 
     /**

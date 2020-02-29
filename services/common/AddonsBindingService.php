@@ -7,6 +7,7 @@ use yii\helpers\Json;
 use common\components\Service;
 use common\helpers\ArrayHelper;
 use common\models\common\AddonsBinding;
+use common\helpers\StringHelper;
 
 /**
  * Class AddonsBindingService
@@ -15,24 +16,6 @@ use common\models\common\AddonsBinding;
  */
 class AddonsBindingService extends Service
 {
-    /**
-     * 获取所有的重组数据
-     *
-     * @param $names
-     * @return array
-     */
-    public function regroupMenuByNames($names)
-    {
-        $list = $this->findByNames($names);
-        $data = [];
-        foreach ($list as $item) {
-            $key = $item['addons_name'] . '|' . $item['route'];
-            $data[$key] = $item;
-        }
-
-        return $data;
-    }
-
     /**
      * 创建菜单和入口
      *
@@ -71,9 +54,10 @@ class AddonsBindingService extends Service
 
         foreach ($allMenu as $key => $item) {
             foreach ($item as $k => $value) {
+                $route = $value['route'] ?? '';
                 $row = [];
                 $row['title'] = $value['title'] ?? '';
-                $row['route'] = $value['route'] ?? '';
+                $row['route'] = '/' . StringHelper::toUnderScore($addons_name) . '/' . $route;
                 $row['icon'] = $value['icon'] ?? '';
                 $row['params'] = $value['params'] ?? [];
                 $row['app_id'] = $key;

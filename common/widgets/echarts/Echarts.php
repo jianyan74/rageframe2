@@ -44,8 +44,9 @@ class Echarts extends Widget
         'yesterday' => '昨日',
         'thisWeek' => '本周',
         'thisMonth' => '本月',
-        'thisYear' => '今年',
-        // 'customTime' => '自定义区间'
+        'thisYear' => '本年',
+        'lastYear' => '去年',
+        'customData' => '自定义区间'
     ];
 
     /**

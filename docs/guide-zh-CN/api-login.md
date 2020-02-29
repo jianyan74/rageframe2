@@ -1,3 +1,15 @@
+group (组别) | 说明
+---|---
+pc | PC
+ios | 苹果
+android | 安卓
+h5 | H5
+wechat | 微信小程序
+ali | 支付宝小程序
+qq | QQ小程序
+dingTalk | 钉钉小程序
+touTiao | 头条小程序
+
 ## 登录重置
 
 目录
@@ -19,8 +31,7 @@
 ---|---|---|---|---|---
 username | string| 是 | 无 | 账号 |
 password | string| 是 | 无 | 密码 | 
-group | string| 是 | 无 | 组别 | app:app,wechat:微信,miniProgram:小程序
-
+`group` | string| 是 | 无 | 组别 | 
 
 返回
 
@@ -80,7 +91,7 @@ group | string| 是 | 无 | 组别 | app:app,wechat:微信,miniProgram:小程序
 参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 refresh_token | string| 是 | 无 | 重置令牌 |
-group | string| 是 | 无 | 组别 | app:app,wechat:微信,miniProgram:小程序
+group | string| 是 | 无 | 组别 | 
 
 返回
 

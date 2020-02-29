@@ -16,10 +16,10 @@ yii pull-remind/ding-talk
 yii pull-remind/sys
 
 // 定时清理微信历史消息(需安装微信插件)
-yii addons/rf-wechat/msg-history/index
+yii rf-wechat/msg-history/index
 
 // 定时群发微信消息(需安装微信插件)
-yii addons/rf-wechat/send-message/index
+yii rf-wechat/send-message/index
 ```
 
 ### 数据迁移

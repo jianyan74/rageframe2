@@ -52,13 +52,13 @@ use common\helpers\StringHelper;
         <input type="hidden" name="<?= $name; ?>" value="{{value}}">
         <div class="img-box">
             {{if upload_type == 'images'}}
-                <a href="{{value}}" data-fancybox="rfUploadImg">
-                    <div class="bg-cover" style="background-image: url({{value}});"></div>
-                </a>
+            <a href="{{value}}" data-fancybox="rfUploadImg">
+                <div class="bg-cover" style="background-image: url({{value}});"></div>
+            </a>
             {{else}}
-                <i class="fa fa-file-o"></i>
-                <i class="upload-extend">{{extend}}</i>
-                <div class="bottom-bar"><a href="{{value}}" target="_blank">预览</a></div>
+            <i class="fa fa-file-o"></i>
+            <i class="upload-extend">{{extend}}</i>
+            <div class="bottom-bar"><a href="{{value}}" target="_blank">预览</a></div>
             {{/if}}
             <i class="delimg" data-multiple="{{multiple}}"></i>
         </div>

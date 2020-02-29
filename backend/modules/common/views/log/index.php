@@ -15,6 +15,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
+                    <?= Html::linkButton(['flow-stat'], '<i class="fa fa-bar-chart"></i> 流量报表统计', [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#ajaxModalMax',
+                    ]) ?>
                     <?= Html::linkButton(['stat'], '<i class="fa fa-area-chart"></i> 异常请求报表统计', [
                         'data-toggle' => 'modal',
                         'data-target' => '#ajaxModalMax',
@@ -59,7 +63,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 $str = [];
                                 $str[] = DebrisHelper::analysisIp($model->ip);
                                 $str[] = DebrisHelper::long2ip($model->ip);
-                                return implode($str, '</br>');
+                                return implode("</br>", $str);
                             },
                             'format' => 'raw',
                         ],
@@ -71,7 +75,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                                 $str[] = '唯一码：' . $model->device_uuid;
                                 $str[] = '系统版本：' . $model->device_version;
                                 $str[] = 'App版本：' . $model->device_app_version;
-                                return implode($str, '</br>');
+                               return implode("</br>", $str);
                             },
                             'format' => 'raw',
                             'filter' => false,

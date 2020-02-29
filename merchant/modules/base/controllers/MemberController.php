@@ -5,7 +5,7 @@ namespace merchant\modules\base\controllers;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\merchant\Member;
 use common\enums\AppEnum;
 use common\helpers\ResultHelper;

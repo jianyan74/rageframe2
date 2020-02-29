@@ -36,6 +36,8 @@ cd rageframe2
 3、安装依赖
 
 ```
+// 如果你只有 php 7.1 也可以忽略版本进行安装 php composer.phar install --ignore-platform-reqs
+
 php composer.phar install 
 ```
 
@@ -92,6 +94,10 @@ Api | 当前域名/api
 OAuth2 | 当前域名/oauth2
 
 > 安装成功后如果需要微信公众号管理、商户管理等等功能，请到 系统管理->应用管理 进行安装插件
+
+建议
+
+生产环境如果是文件缓存去  `backend/runtime`  执行一下 `chmod -R 777 cache`，不执行可能会造成修改了网站设置不生效的情况
 
 
 

@@ -10,17 +10,36 @@
 
 ### 创建/维护
 
-进入后台 - 系统管理 - 系统功能 - 应用管理 - 设计新插件
+进入后台 - 系统管理 - 应用管理 - 设计新插件
 
 > 创建成功后会在 根目录的 addons 目录下生成插件文件
 
 ### 权限
 
-权限请在创建的模块下的 common/config 的各种应用文件内手动填写，安装后会自动注册进系统权限管理
+权限请在创建的模块下的 common/config 的各自应用文件内手动填写，安装后会自动注册进系统权限管理
 
 例如：
 
 ```
+    // ----------------------- 默认配置 ----------------------- //
+
+    'config' => [
+        // 菜单配置
+        'menu' => [
+            'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
+            'icon' => 'fa fa-puzzle-piece',
+        ],
+        // 子模块配置
+        'modules' => [
+            'v1' => [
+                'class' => 'addons\RfTinyShop\api\modules\v1\Module',
+            ],
+            'v2' => [
+                'class' => 'addons\RfTinyShop\api\modules\v2\Module',
+            ],
+        ],
+    ],
+
     /**
      * 可授权权限
      *
@@ -43,11 +62,6 @@
     ],
 
     // ----------------------- 菜单配置 ----------------------- //
-
-    'menuConfig' => [
-         'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
-         'icon' => 'fa fa-puzzle-piece',
-    ],
 
     'menu' => [
         [

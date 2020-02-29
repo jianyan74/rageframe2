@@ -3,7 +3,7 @@
 namespace services\common;
 
 use Yii;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\common\AuthRole;
@@ -78,7 +78,7 @@ class AuthRoleService extends Service
         return AuthRole::find()
             ->where(['app_id' => $app_id])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->where(['merchant_id' => Yii::$app->services->merchant->getId()])
             ->andFilterWhere($where)
             ->orderBy('sort asc, created_at asc')
             ->asArray()
@@ -101,7 +101,7 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限
         foreach ($allAuth as $item) {
-            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
+            if ($item['is_addon'] == WhetherEnum::DISABLED) {
                 $formAuth[] = $item;
             } else {
                 if ($item['pid'] == 0) {
@@ -125,7 +125,7 @@ class AuthRoleService extends Service
 
         // 区分默认和插件权限ID
         foreach ($auth as $value) {
-            if ($value['type'] == TypeEnum::TYPE_DEFAULT) {
+            if ($value['is_addon'] == WhetherEnum::DISABLED) {
                 $checkIds[] = $value['id'];
             } else {
                 $addonsCheckIds[] = $value['id'];
@@ -142,13 +142,13 @@ class AuthRoleService extends Service
      * @param string $addons_name
      * @return array
      */
-    public function getAuthByRole($role, $type = TypeEnum::TYPE_DEFAULT, $addons_name = '')
+    public function getAuthByRole($role, $is_addon = WhetherEnum::DISABLED, $addons_name = '')
     {
         // 获取当前角色的权限
         $auth = AuthItemChild::find()
             ->where(['role_id' => $role['id']])
             ->andWhere(['app_id' => Yii::$app->id])
-            ->andWhere(['type' => $type])
+            ->andWhere(['is_addon' => $is_addon])
             ->andFilterWhere(['addons_name' => $addons_name])
             ->asArray()
             ->all();
@@ -170,6 +170,7 @@ class AuthRoleService extends Service
 
         // 获取当前角色的权限
         $allAuth = AuthItemChild::find()
+            ->select(['addons_name', 'name'])
             ->where(['role_id' => $role['id']])
             ->andWhere(['app_id' => Yii::$app->id])
             ->asArray()
@@ -177,13 +178,10 @@ class AuthRoleService extends Service
 
         $addonsName = [];
         foreach ($allAuth as $item) {
-            if ($item['type'] == TypeEnum::TYPE_DEFAULT) {
-                $this->allAuthNames[] = $item['name'];
-            } else {
-                !isset($addonsName[$item['addons_name']]) && $this->allAuthNames[] = $item['addons_name'];
-                $this->allAuthNames[] = $item['addons_name'] . ':' . $item['name'];
-                $addonsName[$item['addons_name']] = true;
-            }
+            !isset($addonsName[$item['addons_name']]) && $this->allAuthNames[] = $item['addons_name'];
+
+            $this->allAuthNames[] =  $item['name'];
+            $addonsName[$item['addons_name']] = true;
         }
 
         return $this->allAuthNames;
@@ -223,14 +221,14 @@ class AuthRoleService extends Service
      *
      * @param int $role_id 角色ID
      * @param array $data 数据
-     * @param string $type 类型
+     * @param string $is_addon 是否插件
      * @param string $app_id 应用ID
      * @throws \yii\db\Exception
      */
-    public function accredit($role_id, array $data, $type, $app_id)
+    public function accredit($role_id, array $data, $is_addon, $app_id)
     {
         // 删除原先所有权限
-        AuthItemChild::deleteAll(['role_id' => $role_id, 'type' => $type]);
+        AuthItemChild::deleteAll(['role_id' => $role_id, 'is_addon' => $is_addon]);
 
         if (empty($data)) {
             return;
@@ -245,15 +243,14 @@ class AuthRoleService extends Service
                 $value['id'],
                 $value['name'],
                 $value['app_id'],
-                $value['type'],
+                $value['is_addon'],
                 $value['addons_name'],
                 $value['is_menu'],
             ];
         }
 
-        $field = ['role_id', 'item_id', 'name', 'app_id', 'type', 'addons_name', 'is_menu'];
-        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field,
-            $rows)->execute();
+        $field = ['role_id', 'item_id', 'name', 'app_id', 'is_addon', 'addons_name', 'is_menu'];
+        !empty($rows) && Yii::$app->db->createCommand()->batchInsert(AuthItemChild::tableName(), $field, $rows)->execute();
     }
 
     /**

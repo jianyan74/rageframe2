@@ -3,17 +3,16 @@
 echo "<?php\n";
 ?>
 
-namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers\<?= $versions ?>;
+namespace addons\<?= $model->name;?>\<?= $appID ?>\controllers;
 
 use Yii;
-use api\controllers\OnAuthController;
-use api\controllers\UserAuthController;
+use <?= $appID ?>\controllers\OnAuthController;
 
 /**
  * 默认控制器
  *
  * Class DefaultController
- * @package addons\<?= $model->name;?>\<?= $appID ?>\controllers\<?= $versions ?>
+ * @package addons\<?= $model->name;?>\<?= $appID ?>\controllers
  */
 class DefaultController extends OnAuthController
 {
@@ -27,7 +26,7 @@ class DefaultController extends OnAuthController
     *
     * @var array
     */
-    protected $optional = ['index'];
+    protected $authOptional = ['index'];
 
     /**
     * 首页

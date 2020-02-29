@@ -3,8 +3,8 @@
 namespace api\modules\v1\forms;
 
 use common\enums\StatusEnum;
-use common\models\api\AccessToken;
 use common\models\member\Member;
+use common\enums\AccessTokenGroupEnum;
 
 /**
  * Class LoginForm
@@ -23,7 +23,7 @@ class LoginForm extends \common\models\forms\LoginForm
         return [
             [['username', 'password', 'group'], 'required'],
             ['password', 'validatePassword'],
-            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage]
+            ['group', 'in', 'range' => AccessTokenGroupEnum::getKeys()]
         ];
     }
 

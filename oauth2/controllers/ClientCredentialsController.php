@@ -53,9 +53,9 @@ class ClientCredentialsController extends OnAuthController
         try {
             $server->respondToAccessTokenRequest($request, $response);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
-            return ResultHelper::api(422, $exception->getMessage());
+            return ResultHelper::json(422, $exception->getMessage());
         } catch (\Exception $exception) {
-            return ResultHelper::api(422, $exception->getMessage());
+            return ResultHelper::json(422, $exception->getMessage());
         }
     }
 

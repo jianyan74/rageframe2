@@ -6,6 +6,7 @@ use Yii;
 use linslin\yii2\curl\Curl;
 use common\helpers\ResultHelper;
 use common\models\common\Attachment;
+use yii\web\Response;
 
 /**
  * Class StorageController
@@ -62,6 +63,16 @@ class StorageController extends BaseController
         $baseInfo['url'] = $baseInfo['base_url'];
         $baseInfo['id'] = $attachment_id;
         $baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($baseInfo['size'], 2);
+
+        // 百度编辑器返回
+        if (isset($data['is_ueditor']) && $data['is_ueditor'] == 'ueditor') {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return [
+                "state" => 'SUCCESS',
+                "url" => $baseInfo['url'],
+            ];
+        }
 
         return ResultHelper::json(200, '获取成功', $baseInfo);
     }

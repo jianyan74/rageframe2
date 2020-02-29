@@ -1,7 +1,12 @@
 <?php
 
+use common\helpers\RegularHelper;
+
 $this->title = '系统信息';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
+
+$prefix = !RegularHelper::verify('url', Yii::getAlias('@attachurl')) ? Yii::$app->request->hostInfo : '';
+
 ?>
 
 <div class="row">
@@ -30,7 +35,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td>附件目录</td>
-                        <td><?= Yii::$app->request->hostInfo . Yii::getAlias('@attachurl'); ?>/</td>
+                        <td><?= $prefix . Yii::getAlias('@attachurl'); ?>/</td>
                     </tr>
                     <tr>
                         <td>附件目录大小</td>
@@ -61,7 +66,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                     </tr>
                     <tr>
                         <td></td>
-                        <td>为二次开发而生，让开发变得更简单。</td>
+                        <td>重量级全栖框架，为二次开发而生。</td>
                     </tr>
                     <tr>
                         <td>系统版本</td>

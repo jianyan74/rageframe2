@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Behavior;
 use yii\web\Controller;
 use common\enums\CacheEnum;
+use common\enums\MethodEnum;
 use common\helpers\DebrisHelper;
 use common\models\common\ActionBehavior;
 
@@ -64,7 +65,7 @@ class ActionLogBehavior extends Behavior
         if (isset($data[$nowKey])) {
             $row = $data[$nowKey];
 
-            if ($row['method'] != ActionBehavior::METHOD && Yii::$app->request->method != $row['method']) {
+            if ($row['method'] != MethodEnum::ALL && Yii::$app->request->method != $row['method']) {
                 return;
             }
             if ($row['is_ajax'] != ActionBehavior::AJAX_ALL && Yii::$app->request->isAjax != $row['is_ajax']) {

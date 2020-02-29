@@ -70,7 +70,7 @@ class LogService extends Service
     public function record($response, $showReqId = false)
     {
         // 判断是否记录日志
-        if (Yii::$app->params['user.log'] && in_array($this->getLevel($response->statusCode), Yii::$app->params['user.log.level'])) {
+        if (in_array($this->getLevel($response->statusCode), Yii::$app->params['user.log.level'])) {
             // 检查是否报错
             if ($response->statusCode >= 300 && $exception = Yii::$app->getErrorHandler()->exception) {
                 $this->errData = [
@@ -88,10 +88,10 @@ class LogService extends Service
             $this->statusText = $response->statusText;
 
             // 排除状态码
-            !in_array($this->statusCode, ArrayHelper::merge(
-                $this->exceptCode,
-                Yii::$app->params['user.log.except.code'])
-            ) && $this->push();
+            if (Yii::$app->params['user.log'] && !in_array($this->statusCode,
+                    ArrayHelper::merge($this->exceptCode, Yii::$app->params['user.log.except.code']))) {
+                $this->push();
+            }
         }
 
         return $this->errData;
@@ -161,7 +161,7 @@ class LogService extends Service
     }
 
     /**
-     * 报表统计
+     * 状态报表统计
      *
      * @param $type
      * @return array
@@ -176,6 +176,7 @@ class LogService extends Service
 
         // 获取时间和格式化
         list($time, $format) = EchantsHelper::getFormatTime($type);
+
         // 获取数据
         return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) use ($codes) {
             $statData = Log::find()
@@ -189,6 +190,36 @@ class LogService extends Service
                 ->all();
 
             return EchantsHelper::regroupTimeData($statData, 'error_code');
+        }, $fields, $time, $format);
+    }
+
+    /**
+     * 流量报表统计
+     *
+     * @param $type
+     * @return array
+     */
+    public function flowStat($type)
+    {
+        $fields = [
+            'count' => '访问量(PV)',
+            'user_id' => '访问人数(UV)',
+            'ip' => '访问IP',
+        ];
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) {
+            return Log::find()
+                ->select(["from_unixtime(created_at, '$formatting') as time", 'count(id) as count', 'count(distinct(ip)) as ip', 'count(distinct(user_id)) as user_id'])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->andWhere(['status' => StatusEnum::ENABLED])
+                ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()])
+                ->groupBy(['time'])
+                ->asArray()
+                ->all();
         }, $fields, $time, $format);
     }
 
@@ -232,23 +263,23 @@ class LogService extends Service
         $data['get_data'] = Yii::$app->request->get();
         $data['header_data'] = ArrayHelper::toArray(Yii::$app->request->headers);
 
-        $module = Yii::$app->controller->module->id ?? '';
-        $controller = Yii::$app->controller->id ?? '';
-        $action = Yii::$app->controller->action->id ?? '';
-        $route = $module . '/' . $controller . '/' . $action;
-        if (!in_array($route, Yii::$app->params['user.log.noPostData'])) {
-            $data['post_data'] = Yii::$app->request->post();
+        // 过滤敏感字段
+        $post_data = Yii::$app->request->post();
+        $noPostData = Yii::$app->params['user.log.noPostData'];
+        foreach ($noPostData as $noPostDatum) {
+            isset($post_data[$noPostDatum]) && $post_data[$noPostDatum] = '';
         }
 
+        $data['post_data'] = $post_data;
         $data['user_agent'] = Yii::$app->debris->detectVersion();
         $data['device'] = Yii::$app->request->headers->get('device', '');
         $data['device_uuid'] = Yii::$app->request->headers->get('device-uuid', '');
         $data['device_version'] = Yii::$app->request->headers->get('device-version', '');
         $data['device_app_version'] = Yii::$app->request->headers->get('device-app-version', '');
         $data['method'] = Yii::$app->request->method;
-        $data['module'] = $module;
-        $data['controller'] = $controller;
-        $data['action'] = $action;
+        $data['module'] = Yii::$app->controller->module->id ?? '';
+        $data['controller'] = Yii::$app->controller->id ?? '';
+        $data['action'] = Yii::$app->controller->action->id ?? '';
         $data['ip'] = (int)ip2long(Yii::$app->request->userIP);
 
         return $data;

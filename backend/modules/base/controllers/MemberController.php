@@ -5,7 +5,7 @@ namespace backend\modules\base\controllers;
 use Yii;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
-use common\components\Curd;
+use common\traits\Curd;
 use common\models\backend\Member;
 use common\enums\AppEnum;
 use common\helpers\ResultHelper;

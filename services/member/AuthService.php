@@ -3,6 +3,7 @@
 namespace services\member;
 
 use Yii;
+use common\enums\StatusEnum;
 use common\models\member\Auth;
 use common\components\Service;
 
@@ -32,13 +33,14 @@ class AuthService extends Service
 
     /**
      * @param $oauthClient
-     * @param $oauthClientUserId
+     * @param $memberId
      * @return array|\yii\db\ActiveRecord|null
      */
-    public function findOauthClient($oauthClient, $oauthClientUserId)
+    public function findOauthClientByMemberId($oauthClient, $memberId)
     {
         return Auth::find()
-            ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
+            ->where(['oauth_client' => $oauthClient, 'member_id' => $memberId])
+            ->andWhere(['status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
@@ -48,12 +50,12 @@ class AuthService extends Service
      * @param $oauthClientUserId
      * @return array|\yii\db\ActiveRecord|null
      */
-    public function findOauthClientWithMember($oauthClient, $oauthClientUserId)
+    public function findOauthClient($oauthClient, $oauthClientUserId)
     {
         return Auth::find()
             ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
+            ->andWhere(['status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->with('member')
             ->one();
     }
 }

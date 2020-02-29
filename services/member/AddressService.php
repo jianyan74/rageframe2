@@ -22,7 +22,11 @@ class AddressService extends Service
     public function findDefaultByMemberId($member_id)
     {
         return Address::find()
-            ->where(['member_id' => $member_id, 'status' => StatusEnum::ENABLED, 'is_default' => StatusEnum::ENABLED])
+            ->where([
+                'member_id' => $member_id,
+                'status' => StatusEnum::ENABLED,
+                'is_default' => StatusEnum::ENABLED
+            ])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }

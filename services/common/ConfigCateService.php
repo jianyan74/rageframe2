@@ -2,11 +2,11 @@
 
 namespace services\common;
 
+use yii\db\ActiveQuery;
 use common\components\Service;
 use common\models\common\ConfigCate;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
-use yii\db\ActiveQuery;
 
 /**
  * Class ConfigCateService
@@ -83,10 +83,16 @@ class ConfigCateService extends Service
             ->where(['status' => StatusEnum::ENABLED])
             ->andWhere(['app_id' => $app_id])
             ->orderBy('sort asc')
-            ->with(['config' => function($query) use ($app_id) {
-                /** @var ActiveQuery $query */
-                return $query->andWhere(['app_id' => $app_id])->with('value');
-            }])
+            ->with([
+                'config' => function (ActiveQuery $query) use ($app_id) {
+                    return $query->andWhere(['app_id' => $app_id])
+                        ->with([
+                            'value' => function (ActiveQuery $query) {
+                                return $query->andWhere(['merchant_id' => $this->getMerchantId()]);
+                            }
+                        ]);
+                }
+            ])
             ->asArray()
             ->all();
     }

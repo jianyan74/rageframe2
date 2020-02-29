@@ -3,7 +3,7 @@
 namespace addons\RfArticle\common\models;
 
 use Yii;
-use common\components\Tree;
+use common\traits\Tree;
 use common\behaviors\MerchantBehavior;
 use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;

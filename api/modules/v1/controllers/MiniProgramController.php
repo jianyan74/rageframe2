@@ -6,7 +6,7 @@ use Yii;
 use api\controllers\OnAuthController;
 use api\modules\v1\forms\MiniProgramLoginForm;
 use common\models\member\Member;
-use common\models\api\AccessToken;
+use common\enums\AccessTokenGroupEnum;
 use common\helpers\ResultHelper;
 use common\models\member\Auth;
 
@@ -44,17 +44,16 @@ class MiniProgramController extends OnAuthController
         $model->attributes = Yii::$app->request->post();
 
         if (!$model->validate()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         $userinfo = $model->getUser();
 
         // 插入到用户授权表
-        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_MINI_PROGRAM,
-            $userinfo['openId']))) {
+        if (!($memberAuthInfo = Yii::$app->services->memberAuth->findOauthClient(Auth::CLIENT_WECHAT_MP, $userinfo['openId']))) {
             $memberAuthInfo = Yii::$app->services->memberAuth->create([
                 'unionid' => $userinfo['unionId'] ?? '',
-                'oauth_client' => Auth::CLIENT_MINI_PROGRAM,
+                'oauth_client' => Auth::CLIENT_WECHAT_MP,
                 'oauth_client_user_id' => $userinfo['openId'],
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
@@ -84,7 +83,7 @@ class MiniProgramController extends OnAuthController
             $memberAuthInfo->save();
         }
 
-        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessToken::GROUP_MINI_PROGRAM);
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessTokenGroupEnum::WECHAT_MQ);
     }
 
     /**

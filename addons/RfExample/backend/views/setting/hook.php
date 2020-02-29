@@ -1,6 +1,3 @@
 <?php
 
-echo '大家好我是钩子';
-
-echo "<pre>";
-print_r($param);
+echo '这是 RfExample 的钩子';

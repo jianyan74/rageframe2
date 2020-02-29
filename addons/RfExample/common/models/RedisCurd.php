@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use common\behaviors\MerchantBehavior;

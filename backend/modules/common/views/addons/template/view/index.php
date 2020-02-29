@@ -3,4 +3,4 @@
 echo "<?php\n";
 ?>
 
-echo '这是' . Yii::$app->params['addonInfo']['name'] . ' <?= $appID ?> 页面';
+echo '这是' . Yii::$app->params['addon']['name'] . ' <?= $appID ?> 页面';

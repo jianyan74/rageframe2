@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use common\components\BaseAction;
+use common\traits\BaseAction;
 use common\behaviors\ActionLogBehavior;
 
 /**

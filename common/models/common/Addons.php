@@ -5,49 +5,38 @@ namespace common\models\common;
 use Yii;
 use common\models\base\BaseModel;
 use common\enums\StatusEnum;
-use addons\RfWechat\common\models\Rule;
-use addons\RfWechat\common\models\RuleKeyword;
+use addons\Wechat\common\models\Rule;
+use addons\Wechat\common\models\RuleKeyword;
 
 /**
- * This is the model class for table "{{%sys_addons}}".
+ * This is the model class for table "{{%common_addons}}".
  *
  * @property int $id 主键
  * @property string $title 中文名
  * @property string $name 插件名或标识
  * @property string $title_initial 首字母拼音
- * @property string $cover
+ * @property string $bootstrap 启用文件
+ * @property string $service 服务调用类
+ * @property string $cover 封面
  * @property string $group 组别
- * @property string $type 详细类别
  * @property string $brief_introduction 简单介绍
  * @property string $description 插件描述
- * @property int $setting 设置
  * @property string $author 作者
  * @property string $version 版本号
- * @property string $bootstrap 启动
- * @property string $wechat_message 接收微信回复类别
- * @property int $is_hook 钩子[0:不支持;1:支持]
+ * @property array $wechat_message 接收微信回复类别
+ * @property int $is_setting 设置
  * @property int $is_rule 是否要嵌入规则
+ * @property int $is_merchant_route_map 商户路由映射
+ * @property array $default_config 默认配置
+ * @property array $console 控制台
  * @property int $status 状态[-1:删除;0:禁用;1启用]
- * @property int $created_at 创建时间
- * @property int $updated_at 修改时间
+ * @property string $created_at 创建时间
+ * @property string $updated_at 修改时间
  */
 class Addons extends BaseModel
 {
-    const TYPE_COVER = 1; // 核心设置
-    const TYPE_MENU = 2; // 菜单路由
-
-    const AUTH_COVER = 'rfAddonsCover'; // 入口管理路由
-    const AUTH_RULE = 'rfAddonsRule'; // 规则管理路由
-    const AUTH_SETTING = 'setting/display'; // 参数设置管理路由
-
-    /**
-     * @var array
-     */
-    public static $authExplain = [
-        self::AUTH_COVER => '应用入口',
-        self::AUTH_RULE => '规则管理',
-        self::AUTH_SETTING => '参数设置',
-    ];
+    const TYPE_DEFAULT = 'default'; // 系统菜单
+    const TYPE_ADDONS = 'addons'; // 插件菜单
 
     /**
      * {@inheritdoc}
@@ -67,16 +56,16 @@ class Addons extends BaseModel
             [['name', 'title', 'group', 'version', 'author'], 'required'],
             ['name', 'match', 'pattern' => '/^[_a-zA-Z]+$/', 'message' => '标识由英文和下划线组成'],
             [
-                ['is_setting', 'is_hook', 'is_rule', 'is_merchant_route_map', 'status', 'created_at', 'updated_at'],
+                ['is_setting', 'is_rule', 'is_merchant_route_map', 'status', 'created_at', 'updated_at'],
                 'integer',
             ],
             [['title', 'group', 'version'], 'string', 'max' => 20],
             [['name', 'author'], 'string', 'max' => 40],
             [['title_initial'], 'string', 'max' => 1],
             [['description'], 'string', 'max' => 1000],
-            [['wechat_message'], 'safe'],
+            [['wechat_message', 'default_config', 'console'], 'safe'],
             [['brief_introduction'], 'string', 'max' => 140],
-            [['cover', 'bootstrap'], 'string', 'max' => 200],
+            [['cover', 'bootstrap', 'service'], 'string', 'max' => 200],
         ];
     }
 
@@ -98,12 +87,13 @@ class Addons extends BaseModel
             'author' => '作者',
             'version' => '版本',
             'wechat_message' => '接收微信消息',
-            'is_hook' => '钩子',
             'is_rule' => '嵌入规则',
             'is_merchant_route_map' => '商户路由映射',
             'is_setting' => '全局设置项',
             'is_mini_program' => 'Api/小程序',
             'bootstrap' => '启动',
+            'console' => '控制台',
+            'default_config' => '默认配置',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
@@ -180,7 +170,7 @@ class Addons extends BaseModel
     public function afterSave($insert, $changedAttributes)
     {
         // 写入缓存数据
-        Yii::$app->services->addons->findByNameWithBinding($this->name, true);
+        Yii::$app->services->addons->updateCacheByName($this->name);
 
         parent::afterSave($insert, $changedAttributes);
     }
@@ -215,7 +205,7 @@ class Addons extends BaseModel
         }
 
         // 写入缓存数据
-        Yii::$app->services->addons->findByNameWithBinding($this->name, true);
+        Yii::$app->services->addons->updateCacheByName($this->name);
 
         parent::afterDelete();
     }

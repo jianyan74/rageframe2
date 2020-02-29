@@ -144,7 +144,7 @@ class FileController extends OnAuthController
             return $file;
         }
 
-        return ResultHelper::api(422, '找不到文件');
+        return ResultHelper::json(422, '找不到文件');
     }
 
     /**
@@ -160,7 +160,7 @@ class FileController extends OnAuthController
         $guid = Yii::$app->request->post('guid');
         $mergeInfo = Yii::$app->cache->get(UploadHelper::PREFIX_MERGE_CACHE . $guid);
         if (!$mergeInfo) {
-            return ResultHelper::api(404, '找不到文件信息, 合并文件失败');
+            return ResultHelper::json(404, '找不到文件信息, 合并文件失败');
         }
 
         $upload = new UploadHelper($mergeInfo['config'], $mergeInfo['type'], true);

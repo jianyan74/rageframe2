@@ -7,6 +7,7 @@ use yii\imagine\Image;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
+use common\enums\StatusEnum;
 use common\models\common\Attachment;
 use common\components\uploaddrive\DriveInterface;
 
@@ -69,6 +70,7 @@ class UploadHelper
         'height',
         'md5',
         'poster',
+        'writeTable',
     ];
 
     /**
@@ -645,8 +647,7 @@ class UploadHelper
         // 获取上传路径
         $this->baseInfo = $this->uploadDrive->getUrl($this->baseInfo, $this->config['fullPath']);
 
-        // 写入数据库
-        $attachment_id = Yii::$app->services->attachment->create([
+        $data = [
             'drive' => $this->drive,
             'upload_type' => $this->type,
             'specific_type' => $this->baseInfo['type'],
@@ -658,9 +659,17 @@ class UploadHelper
             'md5' => $this->config['md5'] ?? '',
             'base_url' => $this->baseInfo['url'],
             'path' => $path
-        ]);
+        ];
 
-        $this->baseInfo['id'] = $attachment_id;
+        // 写入数据库
+        if (!isset($this->config['writeTable'])) {
+            $attachment_id = Yii::$app->services->attachment->create($data);
+            $this->baseInfo['id'] = $attachment_id;
+        } elseif (isset($this->config['writeTable']) && $this->config['writeTable'] == StatusEnum::ENABLED) {
+            $attachment_id = Yii::$app->services->attachment->create($data);
+            $this->baseInfo['id'] = $attachment_id;
+        }
+
         $this->baseInfo['formatter_size'] = Yii::$app->formatter->asShortSize($this->baseInfo['size'], 2);
         $this->baseInfo['upload_type'] = self::formattingFileType($this->baseInfo['type'], $this->baseInfo['extension'], $this->type);
 

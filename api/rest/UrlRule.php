@@ -2,8 +2,10 @@
 
 namespace api\rest;
 
+use Yii;
 use yii\web\Request;
 use yii\base\InvalidConfigException;
+use common\helpers\StringHelper;
 
 /**
  * Class UrlRule
@@ -20,10 +22,16 @@ class UrlRule extends \yii\rest\UrlRule
      */
     public function parseRequest($manager, $request)
     {
-        $pathInfo = $request->getPathInfo();
-        $pathInfoArr = explode('/', $pathInfo);
-        if (count($pathInfoArr) >= 4 && in_array($pathInfoArr[0], $this->controller)) {
-            return [$pathInfo, []];
+        $path_info = $request->getPathInfo();
+        $path_info_list = explode('/', $path_info);
+        $names = [];
+        $addons = Yii::$app->services->addons->findAllNames();
+        foreach ($addons as $addon) {
+            $names[] = StringHelper::toUnderScore($addon['name']);
+        }
+
+        if (count($path_info_list) >= 3 && in_array($path_info_list[0], $names)) {
+            return [$path_info, []];
         }
 
         return false;

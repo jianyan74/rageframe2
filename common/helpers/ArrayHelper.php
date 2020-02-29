@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use yii\helpers\BaseArrayHelper;
+use yii\helpers\Json;
 
 /**
  * Class ArrayHelper
@@ -334,6 +335,28 @@ class ArrayHelper extends BaseArrayHelper
         }
 
         return $arr;
+    }
+
+    /**
+     * 数组内某字段转数组
+     *
+     * @param array $data
+     * @param string $field
+     * @return array
+     */
+    public static function fieldToArray(array $data, $field = 'covers')
+    {
+        foreach ($data as &$datum) {
+            if (empty($datum[$field])) {
+                $datum[$field] = [];
+            }
+
+            if (!is_array($datum[$field])) {
+                $datum[$field] = Json::decode($datum[$field]);
+            }
+        }
+
+        return $data;
     }
 
     /**

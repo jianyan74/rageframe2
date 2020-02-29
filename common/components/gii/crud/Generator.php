@@ -58,7 +58,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function generateActiveField($attribute)
     {
         $tableSchema = $this->getTableSchema();
-        $type = $this->inputType[$attribute];
+        $type = $this->inputType[$attribute]??'';;
 
         switch ($type) {
             case 'text':
@@ -71,10 +71,10 @@ class Generator extends \yii\gii\generators\crud\Generator
                 return "\$form->field(\$model, '$attribute')->dropDownList([])";
                 break;
             case 'radioList':
-                return "\$form->field(\$model, '$attribute')->radioList(\common\\enums\StatusEnum::\$listExplain)";
+                return "\$form->field(\$model, '$attribute')->radioList(\common\\enums\StatusEnum::getMap())";
                 break;
             case 'checkboxList':
-                return "\$form->field(\$model, '$attribute')->checkboxList(\common\\enums\StatusEnum::\$listExplain)";
+                return "\$form->field(\$model, '$attribute')->checkboxList(\common\\enums\StatusEnum::getMap())";
                 break;
             case 'baiduUEditor':
                 return "\$form->field(\$model, '$attribute')->widget(\common\widgets\ueditor\UEditor::class, [])";

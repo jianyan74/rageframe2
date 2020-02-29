@@ -7,7 +7,7 @@ namespace addons\<?= $model->name;?>\<?= $appID;?>\controllers;
 
 use Yii;
 use common\helpers\ArrayHelper;
-use <?= $appID;?>\interfaces\AddonsSetting;
+use common\interfaces\AddonsSetting;
 use addons\<?= $model->name;?>\common\models\SettingForm;
 
 /**
@@ -33,19 +33,6 @@ class SettingController extends BaseController implements AddonsSetting
 
         return $this->render('display',[
             'model' => $model,
-        ]);
-    }
-
-    /**
-     * 钩子
-     *
-     * @param array $param
-     * @return mixed|string
-     */
-    public function actionHook($param = [])
-    {
-        return $this->render('hook', [
-            'param' => $param
         ]);
     }
 }

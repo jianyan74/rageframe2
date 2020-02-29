@@ -1,3 +1,3 @@
 <?php
 
-echo '这是' . Yii::$app->params['addonInfo']['name'] . ' html5 页面';
+echo '这是' . Yii::$app->params['addon']['name'] . ' html5 页面';

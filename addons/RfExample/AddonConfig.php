@@ -3,12 +3,13 @@
 namespace addons\RfExample;
 
 use addons\RfExample\common\components\Bootstrap;
+use common\components\BaseAddonConfig;
 
 /**
  * Class Addon
  * @package addons\RfExample
  */
-class AddonConfig
+class AddonConfig extends BaseAddonConfig
 {
     /**
      * 基础信息

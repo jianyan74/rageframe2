@@ -7,7 +7,7 @@ use common\helpers\Auth;
 use common\helpers\ArrayHelper;
 use common\enums\StatusEnum;
 use common\components\Service;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 use common\models\common\MenuCate;
 
 /**
@@ -37,7 +37,7 @@ class MenuCateService extends Service
         $model = new MenuCate();
         $model->app_id = $appId;
         $model->addons_name = $info['name'];
-        $model->type = TypeEnum::TYPE_ADDONS;
+        $model->is_addon = WhetherEnum::ENABLED;
         $model->title = $info['title'];
         $model->icon = $icon;
         $model->save();
@@ -60,11 +60,11 @@ class MenuCateService extends Service
 
         $models = $this->findAll();
         foreach ($models as $key => $model) {
-            if ($model['type'] == TypeEnum::TYPE_DEFAULT && !Auth::verify('cate:' . $model['id'], $auth)) {
+            if ($model['is_addon'] == WhetherEnum::DISABLED && !Auth::verify('cate:' . $model['id'], $auth)) {
                 unset($models[$key]);
             }
 
-            if ($model['type'] == TypeEnum::TYPE_ADDONS && !Auth::verify($model['addons_name'], $auth)) {
+            if ($model['is_addon'] == WhetherEnum::ENABLED && !Auth::verify($model['addons_name'], $auth)) {
                 unset($models[$key]);
             }
         }
@@ -90,7 +90,7 @@ class MenuCateService extends Service
     public function findDefault($app_id)
     {
         return MenuCate::find()
-            ->where(['is_addon' => StatusEnum::DISABLED])
+             ->where(['addon_centre' => StatusEnum::DISABLED])
             ->andWhere(['app_id' => $app_id])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->orderBy('sort asc')

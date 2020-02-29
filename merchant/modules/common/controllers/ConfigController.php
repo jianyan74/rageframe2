@@ -6,7 +6,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use common\models\common\Config;
 use common\helpers\ResultHelper;
-use common\components\Curd;
+use common\traits\Curd;
 use common\enums\AppEnum;
 use merchant\controllers\BaseController;
 

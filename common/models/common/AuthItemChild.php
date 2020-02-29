@@ -30,9 +30,9 @@ class AuthItemChild extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['role_id', 'item_id', 'is_menu'], 'integer'],
+            [['role_id', 'item_id', 'is_menu', 'is_addon'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['app_id', 'type'], 'string', 'max' => 20],
+            [['app_id'], 'string', 'max' => 20],
             [['addons_name'], 'string', 'max' => 100],
         ];
     }
@@ -47,7 +47,7 @@ class AuthItemChild extends \yii\db\ActiveRecord
             'item_id' => '权限id',
             'name' => '权限标识',
             'app_id' => '应用',
-            'type' => '类型',
+            'is_addon' => '是否插件',
             'addons_name' => '插件名称',
             'is_menu' => '是否菜单',
         ];
@@ -61,6 +61,6 @@ class AuthItemChild extends \yii\db\ActiveRecord
         return $this->hasOne(AuthItem::class, ['id' => 'item_id'])
             ->orderBy('sort asc, id asc')
             ->where(['status' => StatusEnum::ENABLED])
-            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'type', 'addons_name', 'is_menu']);
+            ->select(['id', 'title', 'name', 'pid', 'level', 'app_id', 'is_addon', 'addons_name', 'is_menu']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace common\models\member;
 
+use common\enums\AppEnum;
 use Yii;
 use common\behaviors\MerchantBehavior;
 
@@ -11,10 +12,11 @@ use common\behaviors\MerchantBehavior;
  * @property int $id
  * @property string $merchant_id 商户id
  * @property string $member_id 用户id
+ * @property string $app_id 应用
+ * @property string $addons_name 插件
  * @property int $pay_type 支付类型
  * @property string $credit_type 变动类型[integral:积分;money:余额]
  * @property string $credit_group 变动的组别
- * @property string $credit_group_detail 变动的详细组别
  * @property double $old_num 之前的数据
  * @property double $new_num 变动后的数据
  * @property double $num 变动的数据
@@ -29,29 +31,14 @@ class CreditsLog extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
 
+    // 金额类型
     const CREDIT_TYPE_USER_MONEY = 'user_money';
+    const CREDIT_TYPE_GIVE_MONEY = 'give_money';
+    const CREDIT_TYPE_CONSUME_MONEY = 'consume_money';
+
+    // 积分类型
     const CREDIT_TYPE_USER_INTEGRAL = 'user_integral';
-
-    /**
-     * 变动类型
-     *
-     * @var array
-     */
-    public static $creditTypeExplain = [
-        self::CREDIT_TYPE_USER_MONEY => '余额日志',
-        self::CREDIT_TYPE_USER_INTEGRAL => '积分日志',
-    ];
-
-    const CREDIT_GROUP_MANAGER = 'manager';
-
-    /**
-     * 变动组别
-     *
-     * @var array
-     */
-    public static $creditGroupExplain = [
-        self::CREDIT_GROUP_MANAGER => '管理员',
-    ];
+    const CREDIT_TYPE_GIVE_INTEGRAL = 'give_integral';
 
     /**
      * {@inheritdoc}
@@ -69,8 +56,10 @@ class CreditsLog extends \common\models\base\BaseModel
         return [
             [['pay_type', 'merchant_id', 'member_id', 'map_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['old_num', 'new_num', 'num'], 'number'],
-            [['credit_type', 'credit_group', 'credit_group_detail', 'ip'], 'string', 'max' => 30],
+            [['credit_type', 'credit_group', 'ip'], 'string', 'max' => 30],
             [['remark'], 'string', 'max' => 200],
+            [['app_id'], 'string', 'max' => 50],
+            [['addons_name'], 'string', 'max' => 100],
         ];
     }
 
@@ -88,7 +77,6 @@ class CreditsLog extends \common\models\base\BaseModel
             'ip' => 'ip地址',
             'credit_type' => '变动类型',
             'credit_group' => '操作类型',
-            'credit_group_detail' => '操作详细类型',
             'old_num' => '变更之前',
             'new_num' => '变更后',
             'num' => '变更数量',
@@ -114,7 +102,12 @@ class CreditsLog extends \common\models\base\BaseModel
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
-            $this->ip = Yii::$app->request->userIP;
+            if( !in_array(Yii::$app->id, AppEnum::CONSOLE) ) {
+                $this->ip = Yii::$app->request->userIP;
+            }
+
+            $this->app_id = Yii::$app->id;
+            $this->addons_name = Yii::$app->params['addon']['name'] ?? '';
         }
 
         return parent::beforeSave($insert);

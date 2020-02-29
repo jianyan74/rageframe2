@@ -3,7 +3,7 @@ use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use addons\RfWechat\common\models\RuleKeyword;
+use addons\Wechat\common\models\RuleKeyword;
 use common\enums\StatusEnum;
 
 $this->title = '规则回复';
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             <div class="box-header">
                 <h3 class="box-title"><?= $this->title; ?></h3>
                 <div class="box-tools">
-                    <?= Html::a('<i class="fa fa-plus"></i> 创建', ['/addons/rule-edit', 'addon' => $addonName], [
+                    <?= Html::a('<i class="fa fa-plus"></i> 创建', ['rule-edit'], [
                         'class' => 'btn btn-primary btn-xs'
                     ]) ?>
                 </div>
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <div class="row">
                         <div class="col-sm-4">
                             <?php $form = ActiveForm::begin([
-                                'action' => Url::to(['/addons/rule', 'addon' => $addonName]),
+                                'action' => Url::to(['rule']),
                                 'method' => 'get'
                             ]); ?>
                             <div class="input-group m-b">
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <span class="collapsed"><?= $model->name ?></span>
                                 <span class="pull-right" id="<?= $model->id ?>">
                                     <span class="label label-info">优先级：<?= $model->sort; ?></span>
-                                    <?php if(Yii::$app->wechatServices->ruleKeyword->verifyTake($model->ruleKeyword)){ ?>
+                                    <?php if(Yii::$app->wechatService->ruleKeyword->verifyTake($model->ruleKeyword)){ ?>
                                         <span class="label label-info">直接接管</span>
                                     <?php } ?>
                                     <?php if($model->status == StatusEnum::ENABLED){ ?>
@@ -68,8 +68,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="btn-group pull-right">
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['/addons/rule-edit', 'addon' => $addonName, 'id' => $model->id]); ?>"><i class="fa fa-edit"></i> 编辑</a>
-                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['/addonsrule-delete', 'addon' => $addonName, 'id' => $model->id]); ?>" onclick="rfDelete(this);return false;"><i class="fa fa-times"></i> 删除</a>
+                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-edit', 'id' => $model->id]); ?>"><i class="fa fa-edit"></i> 编辑</a>
+                                            <a class="btn btn-white btn-sm" href="<?= Url::to(['rule-delete', 'id' => $model->id]); ?>" onclick="rfDelete(this);return false;"><i class="fa fa-times"></i> 删除</a>
                                             <!-- <a class="btn btn-white btn-sm" href="#"><i class="fa fa-bar-chart-o"></i> 使用率走势</a>-->
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['/addons/ajax-update'])?>",
+            url:"<?= Url::to(['ajax-update'])?>",
             dataType: "json",
             data: {id:id,status:status},
             success: function(data){

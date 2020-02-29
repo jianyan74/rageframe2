@@ -15,7 +15,7 @@ RageFrame 创建于 2016 年 4 月 16 日，一个基于 Yii2 高级框架的快
 - 极致的插件机制，系统内的系统，安装和卸载不会对原来的系统产生影响,强大的功能完全满足各阶段的需求，支持用户多端访问(后台、微信、Api、前台等)，系统中的系统。
 - 极完善的 RBAC 权限控制管理、无限父子级权限分组、可自由分配子级权限，且按钮/链接/自定义内容/插件等都可加入权限控制。
 - 只做基础底层内容，不会在上面开发过多的业务内容，满足绝大多数的系统二次开发。
-- 多入口模式，多入口分为 Backend (后台)、Merchant (商户端)、Frontend (PC前端)、Wechat (微信)、Console (控制台)、Api (对内接口)、OAuth2 Server (对外接口)、Storage (静态资源)，不同的业务，不同的设备，进入不同的入口。
+- 多入口模式，多入口分为 Backend (后台)、Merchant (商户端)、Frontend (PC前端)、Html5 (手机端)、Console (控制台)、Api (对内接口)、OAuth2 Server (对外接口)、Storage (静态资源)，不同的业务，不同的设备，进入不同的入口。
 - 对接微信公众号且支持小程序，使用了一款优秀的微信非官方 SDK Easywechat 4.x，开箱即用，预置了绝大部分功能，大幅度的提升了微信开发效率。
 - 整合了第三方登录，目前有 QQ、微信、微博、GitHub 等等。
 - 整合了第三方支付，目前有微信支付、支付宝支付、银联支付，二次封装为网关多个支付一个入口一个出口。
@@ -25,11 +25,16 @@ RageFrame 创建于 2016 年 4 月 16 日，一个基于 Yii2 高级框架的快
 - 快速高效的 Servises (服务层)，遵循 Yii2 的懒加载方式，只初始化使用到的组件服务。
 - 丰富的表单控件(时间、日期、时间日期、日期范围选择、颜色选择器、省市区三级联动、省市区勾选、单图上传、多图上传、单文件上传、多文件上传、百度编辑器、百度图表、多文本编辑框、地图经纬度选择器、图片裁剪上传、TreeGrid、JsTree、Markdown 编辑器)和组件(二维码生成、Curl、IP地址转地区)，快速开发，不必再为基础组件而担忧。
 - 快速生成 CURD ,无需编写代码，只需创建表设置路径就能出现一个完善的 CURD ,其中所需表单控件也是勾选即可直接生成。
+- 正常开发只需要开发商户端，没有 Saas 的时候商户端就是总后台，有了 Saas，商户端就是子后台
 - 完善的文档和辅助类，方便二次开发与集成。
 
 ### 思维导图
 
 ![image](docs/guide-zh-CN/images/RageFrame2.png)
+
+### 应用架构流程
+
+![image](docs/guide-zh-CN/images/app-flow.png)
 
 ### 系统快照
 
@@ -79,8 +84,8 @@ http://www.rageframe.com
 
 ### 插件
 
-- 微信公众号：https://github.com/jianyan74/RfWechat
-- 商家管理：https://github.com/jianyan74/RfMerchants
+- 微信公众号：https://github.com/jianyan74/Wechat
+- 商家管理：https://github.com/jianyan74/Merchants
 - 在线文档：https://github.com/jianyan74/RfOnlineDoc
 
 ### 问题反馈
@@ -111,6 +116,6 @@ RageFrame 遵循 Apache2 开源协议发布，并提供免费使用。
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2016-2019 by RageFrame [www.rageframe.com](http://www.rageframe.com)
+版权所有Copyright © 2016-2020 by RageFrame [www.rageframe.com](http://www.rageframe.com)
 
 All rights reserved。

@@ -4,8 +4,8 @@ namespace html5\controllers;
 
 use Yii;
 use yii\web\Controller;
-use common\components\WechatLogin;
-use common\components\BaseAction;
+use common\traits\WechatLogin;
+use common\traits\BaseAction;
 
 /**
  * 微信基类

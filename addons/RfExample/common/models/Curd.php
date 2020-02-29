@@ -71,9 +71,9 @@ class Curd extends \common\models\base\BaseModel
                     'views',
                     'status',
                     'created_at',
-                    'updated_at'
+                    'updated_at',
                 ],
-                'integer'
+                'integer',
             ],
             [['title', 'content', 'covers', 'files', 'cover', 'file'], 'required'],
             [['content'], 'string'],

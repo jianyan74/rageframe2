@@ -1,7 +1,6 @@
 <?php
 
-use common\helpers\Url;
-use common\enums\PayEnum;
+use common\enums\PayTypeEnum;
 use common\helpers\Html;
 use common\enums\StatusEnum;
 
@@ -21,8 +20,8 @@ use common\enums\StatusEnum;
         <tr>
             <td>支付金额</td>
             <td>
-                应付金额：<?= $model->total_fee > 0 ? $model->total_fee / 100 : 0; ?><br>
-                实际支付：<?= $model->pay_fee > 0 ? $model->pay_fee / 100 : 0; ?>
+                应付金额：<?= $model->total_fee ?><br>
+                实际支付：<?= $model->pay_fee ?>
             </td>
         </tr>
         <tr>
@@ -34,7 +33,7 @@ use common\enums\StatusEnum;
         </tr>
         <tr>
             <td>支付类型</td>
-            <td><?= PayEnum::$payTypeExplain[$model['pay_type']]; ?></td>
+            <td><?= PayTypeEnum::getValue($model['pay_type']); ?></td>
         </tr>
         <tr>
             <td>商户号</td>

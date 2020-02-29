@@ -14,7 +14,7 @@ use common\controllers\AddonsController;
 class BaseController extends AddonsController
 {
     /**
-    * @var string
-    */
+     * @var string
+     */
     // public $layout = "@addons/RfArticle/merchant/views/layouts/main";
 }

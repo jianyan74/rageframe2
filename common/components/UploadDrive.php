@@ -26,7 +26,7 @@ class UploadDrive
      */
     public function __construct()
     {
-        $this->config = Yii::$app->debris->configAll(false, 1);
+        $this->config = Yii::$app->debris->configAll();
     }
 
     /**

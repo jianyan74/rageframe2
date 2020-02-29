@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'label'=> '发送对象',
                             'filter' => false, //不显示搜索框
                             'value' => function($model){
-                                return $model->messageManager->manager->username ?? '';
+                                return $model->messageMember->member->username ?? '';
                             }
                         ],
                         'content',

@@ -1,5 +1,4 @@
 <?php
-
 namespace addons\RfExample\merchant\assets;
 
 use yii\web\AssetBundle;

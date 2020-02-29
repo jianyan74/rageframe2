@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
@@ -17,7 +18,21 @@ class CurdSearch extends Curd
     public function rules()
     {
         return [
-            [['merchant_id', 'cate_id', 'member_id', 'sort', 'position', 'sex', 'views', 'status', 'created_at', 'updated_at'], 'integer'],
+            [
+                [
+                    'merchant_id',
+                    'cate_id',
+                    'member_id',
+                    'sort',
+                    'position',
+                    'sex',
+                    'views',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                ],
+                'integer',
+            ],
             [['content', 'covers', 'files'], 'string'],
             [['price'], 'number'],
             [['start_time', 'end_time'], 'safe'],

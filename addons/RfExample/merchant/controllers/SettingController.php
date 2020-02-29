@@ -2,9 +2,9 @@
 
 namespace addons\RfExample\merchant\controllers;
 
-use Yii;
+use yii;
 use common\helpers\ArrayHelper;
-use merchant\interfaces\AddonsSetting;
+use common\interfaces\AddonsSetting;
 use addons\RfExample\common\models\SettingForm;
 
 /**
@@ -12,6 +12,7 @@ use addons\RfExample\common\models\SettingForm;
  *
  * Class SettingController
  * @package addons\RfExample\merchant\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
 class SettingController extends BaseController implements AddonsSetting
 {
@@ -23,12 +24,14 @@ class SettingController extends BaseController implements AddonsSetting
         $request = Yii::$app->request;
         $model = new SettingForm();
         $model->attributes = $this->getConfig();
+
         if ($model->load($request->post()) && $model->validate()) {
             $this->setConfig(ArrayHelper::toArray($model));
+
             return $this->message('修改成功', $this->redirect(['display']));
         }
 
-        return $this->render('display',[
+        return $this->render('display', [
             'model' => $model,
         ]);
     }
@@ -42,7 +45,7 @@ class SettingController extends BaseController implements AddonsSetting
     public function actionHook($param = [])
     {
         return $this->render('hook', [
-            'param' => $param
+            'param' => $param,
         ]);
     }
 }

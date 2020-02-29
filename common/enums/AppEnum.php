@@ -34,4 +34,24 @@ class AppEnum extends BaseEnum
             self::CONSOLE => '控制台',
         ];
     }
+
+    /**
+     * 接口
+     *
+     * @return array
+     */
+    public static function api()
+    {
+        return [self::API, self::OAUTH2];
+    }
+
+    /**
+     * 管理后台
+     *
+     * @return array
+     */
+    public static function admin()
+    {
+        return [self::BACKEND, self::MERCHANT];
+    }
 }

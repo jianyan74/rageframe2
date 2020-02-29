@@ -18,31 +18,18 @@ use common\models\common\AuthAssignment;
  * This is the model class for table "{{%api_access_token}}".
  *
  * @property string $id
- * @property string $merchant_id 商户id
+ * @property int $merchant_id 商户id
  * @property string $refresh_token 刷新令牌
  * @property string $access_token 授权令牌
- * @property string $member_id 用户id
+ * @property int $member_id 用户id
+ * @property string $openid
  * @property string $group 组别
  * @property int $status 状态[-1:删除;0:禁用;1启用]
- * @property string $created_at 创建时间
- * @property string $updated_at 修改时间
+ * @property int $created_at 创建时间
+ * @property int $updated_at 修改时间
  */
 class AccessToken extends RateLimit
 {
-    /**
-     * 组别 主要用于多端登录
-     */
-    const GROUP_MINI_PROGRAM = 'miniProgram'; // 小程序
-    const GROUP_APP = 'app'; // app
-    const GROUP_WECHAT = 'wechat'; // 微信
-
-    /**
-     * 给其他表单验证的数据
-     *
-     * @var array
-     */
-    public static $ruleGroupRnage = ['miniProgram', 'app', 'wechat'];
-
     /**
      * {@inheritdoc}
      */
@@ -59,6 +46,7 @@ class AccessToken extends RateLimit
         return [
             [['merchant_id', 'member_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['refresh_token', 'access_token'], 'string', 'max' => 60],
+            [['openid'], 'string', 'max' => 50],
             [['group'], 'string', 'max' => 100],
             [['access_token'], 'unique'],
             [['refresh_token'], 'unique'],
@@ -75,6 +63,7 @@ class AccessToken extends RateLimit
             'merchant_id' => '商户',
             'refresh_token' => '重置令牌',
             'access_token' => '登录令牌',
+            'openid' => 'openid',
             'member_id' => '会员ID',
             'group' => '组别',
             'status' => '状态',
@@ -134,7 +123,7 @@ class AccessToken extends RateLimit
     public function getAssignment()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'member_id'])
-            ->where(['type' => Yii::$app->id]);
+            ->where(['app_id' => Yii::$app->id]);
     }
 
     /**

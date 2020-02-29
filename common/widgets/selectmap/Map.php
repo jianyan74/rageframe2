@@ -5,7 +5,6 @@ namespace common\widgets\selectmap;
 use Yii;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
-use yii\helpers\Json;
 use common\helpers\StringHelper;
 
 /**
@@ -85,6 +84,9 @@ class Map extends InputWidget
         ]);
     }
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function registerViewJs()
     {
         $view = $this->view;

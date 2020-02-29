@@ -3,7 +3,7 @@
 namespace common\helpers;
 
 use Yii;
-use common\enums\TypeEnum;
+use common\enums\WhetherEnum;
 
 /**
  * Class Auth
@@ -29,6 +29,9 @@ class Auth
 
         $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
         if (in_array('/*', $auth) || in_array($route, $auth)) {
+            return true;
+        }
+        if( in_array(Url::to([$route]), $auth) ) {
             return true;
         }
 
@@ -92,9 +95,9 @@ class Auth
         $role = Yii::$app->services->authRole->getRole();
         // 获取权限数组
         if (true === Yii::$app->params['inAddon']) {
-            $name = Yii::$app->params['addonInfo']['name'] ?? Yii::$app->request->get('addon');
+            $name = Yii::$app->params['addon']['name'];
             $name = StringHelper::strUcwords($name);
-            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, TypeEnum::TYPE_ADDONS, $name);
+            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, WhetherEnum::ENABLED, $name);
         } else {
             self::$auth = Yii::$app->services->authRole->getAuthByRole($role);
         }

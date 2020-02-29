@@ -23,7 +23,7 @@ return [
         ],
         /** ------ 会员模块 ------ **/
         'member' => [
-            'class' => 'backend\modules\member\Module',
+            'class' => 'merchant\modules\member\Module',
         ],
         /** ------ oauth2 ------ **/
         'oauth2' => [

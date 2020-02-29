@@ -1,4 +1,5 @@
 <?php
+
 namespace addons\RfExample\common\models;
 
 use Yii;
@@ -49,6 +50,7 @@ class ElasticSearchCurd extends ActiveRecord
     public function attributes()
     {
         $mapConfig = self::mapConfig();
+
         return array_keys($mapConfig['properties']);
     }
 
@@ -102,7 +104,7 @@ class ElasticSearchCurd extends ActiveRecord
                 'status' => ['type' => 'integer'],
                 'created_at' => ['type' => 'long'],
                 'updated_at' => ['type' => 'long'],
-            ]
+            ],
         ];
     }
 

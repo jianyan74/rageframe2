@@ -72,7 +72,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     $str = '';
                                     $model['is_setting'] == true && $str .= '<span class="label label-info">全局设置</span> ';
                                     $model['is_rule'] == true && $str .= '<span class="label label-info">嵌入规则</span> ';
-                                    $model['is_hook'] == true && $str .= '<span class="label label-info">钩子</span> ';
                                     $model['is_merchant_route_map'] == true && $str .= '<span class="label label-info">商户路由映射</span>';
                                     return $str;
                                 },

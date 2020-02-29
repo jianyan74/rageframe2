@@ -3,7 +3,7 @@
 <script type="text/javascript" charset="utf-8">
     //数组内为jssdk授权可用的方法，按需添加，详细查看微信jssdk的方法
     wx.config(<?php echo $jssdk->buildConfig(['chooseWXPay'], true) ?>);
-    wx.ready(function(){
+    wx.ready(function () {
         // 发起支付
         wx.chooseWXPay({
             timestamp: <?= $config['timestamp'] ?>,

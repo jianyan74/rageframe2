@@ -30,25 +30,6 @@ class OnAuthController extends ActiveController
     }
 
     /**
-     * 验证更新是否本人
-     *
-     * @param $action
-     * @return bool
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function beforeAction($action)
-    {
-        if ($action == 'update' && Yii::$app->user->identity->client_id != Yii::$app->request->get('id', null)) {
-            throw new NotFoundHttpException('权限不足.');
-        }
-
-        return parent::beforeAction($action);
-    }
-
-    /**
      * 首页
      *
      * @return ActiveDataProvider
@@ -80,7 +61,7 @@ class OnAuthController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         $model->client_id = Yii::$app->user->identity->client_id;
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -98,7 +79,7 @@ class OnAuthController extends ActiveController
         $model = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -115,6 +96,7 @@ class OnAuthController extends ActiveController
     {
         $model = $this->findModel($id);
         $model->status = StatusEnum::DELETE;
+
         return $model->save();
     }
 
@@ -140,7 +122,7 @@ class OnAuthController extends ActiveController
         /* @var $model \yii\db\ActiveRecord */
         if (empty($id) || !($model = $this->modelClass::find()->where([
                 'id' => $id,
-                'status' => StatusEnum::ENABLED
+                'status' => StatusEnum::ENABLED,
             ])->andFilterWhere(['merchant_id' => $this->getMerchantId()])->one())) {
             throw new NotFoundHttpException('请求的数据不存在');
         }

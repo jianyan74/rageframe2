@@ -31,6 +31,7 @@ class AddonsBinding extends \yii\db\ActiveRecord
         return [
             [['addons_name', 'route', 'entry', 'title'], 'required'],
             [['addons_name', 'route'], 'string', 'max' => 30],
+            [['route'], 'string', 'max' => 200],
             [['entry'], 'string', 'max' => 10],
             [['app_id'], 'string', 'max' => 20],
             [['params'], 'safe'],

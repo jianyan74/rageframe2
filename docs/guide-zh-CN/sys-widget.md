@@ -134,11 +134,10 @@ HTML;
                  ],
                  'drive' => 'local',// 默认本地 支持 qiniu/oss/cos 上传
              ],
+             'chunked' => false,// 开启分片上传
+             'chunkSize' => 512 * 1024,// 分片大小
+             'independentUrl' => false, // 独立上传地址, 如果设置了true则不受全局上传地址控制 
          ],
-         'chunked' => false,// 开启分片上传
-         'chunkSize' => 512 * 1024,// 分片大小
-         'independentUrl' => false, // 独立上传地址, 如果设置了true则不受全局上传地址控制 
-        ]
 ]);?>
 ```
 获取缩略图路径查看 [字符串辅助类](helper-string.md) 的 `获取缩略图地址`  

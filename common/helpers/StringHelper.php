@@ -302,8 +302,9 @@ class StringHelper extends BaseStringHelper
         }
 
         $max = strlen($seed) - 1;
+        $seed = str_split($seed);
         for ($i = 0; $i < $length; $i++) {
-            $hash .= $seed{mt_rand(0, $max)};
+            $hash .= $seed[mt_rand(0, $max)];
         }
 
         return $hash;

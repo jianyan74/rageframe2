@@ -2,47 +2,71 @@
 
 namespace addons\RfArticle\merchant\controllers;
 
-use Yii;
-use common\helpers\ArrayHelper;
-use merchant\interfaces\AddonsSetting;
-use addons\RfArticle\common\models\SettingForm;
+use addons\RfArticle\common\models\Adv;
+use addons\RfArticle\common\models\Article;
+use addons\RfArticle\common\models\ArticleTag;
+use common\enums\StatusEnum;
 
 /**
  * 参数设置
  *
  * Class SettingController
  * @package addons\RfArticle\merchant\controllers
+ * @author jianyan74 <751393839@qq.com>
  */
-class SettingController extends BaseController implements AddonsSetting
+class SettingController extends BaseController
 {
     /**
-     * @return mixed|string
+     * 文章列表钩子
+     *
+     * @param array $params
      */
-    public function actionDisplay()
+    public function actionHook($params)
     {
-        $request = Yii::$app->request;
-        $model = new SettingForm();
-        $model->attributes = $this->getConfig();
-        if ($model->load($request->post()) && $model->validate()) {
-            $this->setConfig(ArrayHelper::toArray($model));
-            return $this->message('修改成功', $this->redirect(['display']));
-        }
+        $tags = ArticleTag::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->asArray()
+            ->all();
 
-        return $this->render('display',[
-            'model' => $model,
+        $articles = Article::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(Article::position($params['position']))
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->orderBy('view desc')
+            ->with(['tags'])
+            ->limit(10)
+            ->asArray()
+            ->all();
+
+        return $this->render('hook', [
+            'tags' => $tags,
+            'articles' => $articles,
         ]);
     }
 
     /**
-     * 钩子
+     * 幻灯片钩子
      *
-     * @param array $param
-     * @return mixed|string
+     * @param array $params
+     * @return string
      */
-    public function actionHook($param = [])
+    public function actionAdv($params)
     {
-        return $this->render('hook', [
-            'param' => $param
+        $models = Adv::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->andWhere(['<=', 'start_time', time()])
+            ->andWhere(['>=', 'end_time', time()])
+            ->asArray()
+            ->all();
+
+        if (!$models) {
+            return false;
+        }
+
+        return $this->render('adv', [
+            'models' => $models,
         ]);
     }
 }

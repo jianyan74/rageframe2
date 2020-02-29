@@ -32,27 +32,6 @@ class OnAuthController extends ActiveController
     }
 
     /**
-     * 验证更新是否本人
-     *
-     * @param $action
-     * @return bool
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function beforeAction($action)
-    {
-        parent::beforeAction($action);
-
-        if ($action == 'update' && Yii::$app->user->identity->member_id != Yii::$app->request->get('id', null)) {
-            throw new NotFoundHttpException('权限不足.');
-        }
-
-        return true;
-    }
-
-    /**
      * 首页
      *
      * @return ActiveDataProvider
@@ -84,7 +63,7 @@ class OnAuthController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->identity->member_id;
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;
@@ -102,7 +81,7 @@ class OnAuthController extends ActiveController
         $model = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
         if (!$model->save()) {
-            return ResultHelper::api(422, $this->getError($model));
+            return ResultHelper::json(422, $this->getError($model));
         }
 
         return $model;

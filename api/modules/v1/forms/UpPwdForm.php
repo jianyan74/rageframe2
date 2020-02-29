@@ -7,7 +7,7 @@ use common\helpers\RegularHelper;
 use common\models\common\SmsLog;
 use common\models\member\Member;
 use common\models\validators\SmsCodeValidator;
-use common\models\api\AccessToken;
+use common\enums\AccessTokenGroupEnum;
 
 /**
  * Class UpPwdForm
@@ -33,7 +33,7 @@ class UpPwdForm extends \common\models\forms\LoginForm
             ['code', SmsCodeValidator::class, 'usage' => SmsLog::USAGE_UP_PWD],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '请输入正确的手机号码'],
             [['password_repetition'], 'compare', 'compareAttribute' => 'password'],// 验证新密码和重复密码是否相等
-            ['group', 'in', 'range' => AccessToken::$ruleGroupRnage],
+            ['group', 'in', 'range' => AccessTokenGroupEnum::getKeys()],
             ['password', 'validateMobile'],
         ];
     }

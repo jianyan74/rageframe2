@@ -3,6 +3,7 @@
 namespace common\models\merchant;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\enums\AppEnum;
@@ -150,6 +151,13 @@ class Member extends User
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
+            ],
+            [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
+                ],
+                'value' => Yii::$app->services->merchant->getId(),
             ]
         ];
     }

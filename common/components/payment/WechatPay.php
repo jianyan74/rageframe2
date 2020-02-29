@@ -147,13 +147,19 @@ class WechatPay
      * @param bool $debug
      * @return mixed
      */
-    public function js($order, $debug = true)
+    public function js($order, $debug = false)
     {
         $gateway = $this->create(self::JS);
         $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
-        return $debug ? $response->getData() : $response->getJsOrderData();
+        $data = $response->getJsOrderData();
+        if (isset($data['timeStamp'])) {
+            $data['timestamp'] = $data['timeStamp'];
+            unset($data['timeStamp']);
+        }
+
+        return $debug ? $response->getData() : $data;
     }
 
     /**

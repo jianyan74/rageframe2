@@ -7,7 +7,7 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\UnauthorizedHttpException;
-use common\components\BaseAction;
+use common\traits\BaseAction;
 use common\helpers\Auth;
 use common\behaviors\ActionLogBehavior;
 

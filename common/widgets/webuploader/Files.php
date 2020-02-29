@@ -91,6 +91,7 @@ class Files extends InputWidget
             'formData' => [
                 'guid' => null,
                 'md5' => null,
+                'writeTable' => true,
                 'drive' => $this->typeConfig['drive'], // 默认本地 可修改 qiniu/oss/cos 上传
             ], // 表单参数
             'pick' => [
@@ -166,8 +167,8 @@ class Files extends InputWidget
         //  由于百度上传不能传递数组，所以转码成为json
         !isset($this->config['formData']) && $this->config['formData'] = [];
 
-        // 阿里云js直传
-        if (Attachment::DRIVE_OSS_JS == $this->config['formData']['drive']) {
+        // 阿里云直传
+        if (Attachment::DRIVE_OSS_DIRECT_PASSING == $this->config['formData']['drive']) {
             $path = $this->typeConfig['path'] . date($this->typeConfig['subName'], time()) . "/";
             $oss = Yii::$app->uploadDrive->oss()->config($this->config['fileSingleSizeLimit'], $path, 60 * 60 * 2, $this->type);
             $this->config['server'] = $oss['host'];

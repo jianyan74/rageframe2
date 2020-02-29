@@ -16,9 +16,9 @@
 
 参数名 | 参数类型 | 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
-payType | int | 是 | 无 | 支付类型 | 0:余额支付;1:微信;2:支付宝;3:银联;4:小程序 |
-tradeType | string | 是 | 无 | 交易类型 | 具体查看下文具体参数说明 |
-orderGroup | string | 是 | 无 | 订单类型 | default:默认;goods:订单商品 | 
+pay_type | int | 是 | 无 | 支付类型 | 1:微信;2:支付宝;3:银联;5:余额支付 |
+trade_type | string | 是 | 无 | 交易类型 | 具体查看下文具体参数说明 |
+order_group | string | 是 | 无 | 订单类型 | recharge:充值;order:订单 | 
 data | string | 是 | 无 | json格式数组具体看下文 |
 
 tradeType
@@ -27,9 +27,8 @@ tradeType
 
 ```
 支付宝：'native', 'app', 'js', 'pos', 'mweb'
-微信：'pc', 'app', 'f2f', 'wap'
+微信：'pc', 'app', 'f2f', 'wap', 'mini_program'
 银联：'app', 'html'
-小程序：'default'
 余额：'default'
 ```
 

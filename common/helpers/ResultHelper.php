@@ -4,6 +4,7 @@ namespace common\helpers;
 
 use Yii;
 use yii\web\Response;
+use common\enums\AppEnum;
 
 /**
  * 格式化数据返回
@@ -15,13 +16,28 @@ use yii\web\Response;
 class ResultHelper
 {
     /**
+     * @param int $code
+     * @param string $message
+     * @param array $data
+     * @return array|mixed
+     */
+    public static function json($code = 404, $message = '未知错误', $data = [])
+    {
+        if (in_array(Yii::$app->id, [AppEnum::API, AppEnum::OAUTH2])) {
+            return static::api($code, $message, $data);
+        }
+
+        return static::baseJson($code, $message, $data);
+    }
+
+    /**
      * 返回json数据格式
      *
      * @param int $code 状态码
      * @param string $message 返回的报错信息
      * @param array|object $data 返回的数据结构
      */
-    public static function json($code = 404, $message = '未知错误', $data = [])
+    protected static function baseJson($code, $message, $data)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -41,7 +57,7 @@ class ResultHelper
      * @param string $message 返回的报错信息
      * @param array|object $data 返回的数据结构
      */
-    public static function api($code = 404, $message = '未知错误', $data = [])
+    protected static function api($code, $message, $data)
     {
         Yii::$app->response->setStatusCode($code, $message);
         Yii::$app->response->data = $data ? ArrayHelper::toArray($data) : [];

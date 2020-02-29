@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 $str = [];
                                 $str[] = DebrisHelper::analysisIp($model->ip);
                                 $str[] = DebrisHelper::long2ip($model->ip);
-                                return implode($str, '</br>');
+                                return implode('</br>', $str);
                             },
                             'format' => 'raw',
                         ],

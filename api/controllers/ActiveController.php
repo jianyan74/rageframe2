@@ -11,7 +11,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\web\BadRequestHttpException;
-use common\components\BaseAction;
+use common\traits\BaseAction;
 use common\behaviors\ActionLogBehavior;
 use common\behaviors\HttpSignAuth;
 
@@ -146,7 +146,9 @@ class ActiveController extends \yii\rest\ActiveController
      */
     public function beforeAction($action)
     {
-        parent::beforeAction($action);
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
 
         // 权限方法检查，如果用了rbac，请注释掉
         $this->checkAccess($action->id, $this->modelClass, Yii::$app->request->get());

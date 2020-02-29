@@ -2,7 +2,6 @@
 
 namespace services\common;
 
-use common\enums\AppEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Json;
@@ -10,6 +9,7 @@ use common\enums\StatusEnum;
 use common\models\common\Config;
 use common\components\Service;
 use common\models\common\ConfigValue;
+use common\enums\AppEnum;
 
 /**
  * Class ConfigService
@@ -26,10 +26,16 @@ class ConfigService extends Service
      */
     public function updateAll($app_id, $data)
     {
+        $merchant_id = Yii::$app->services->merchant->getId();
+
         $config = Config::find()
             ->where(['in', 'name', array_keys($data)])
             ->andWhere(['app_id' => $app_id])
-            ->with('value')
+            ->with([
+                'value' => function (ActiveQuery $query) use ($merchant_id) {
+                    return $query->andWhere(['merchant_id' => $merchant_id]);
+                }
+            ])
             ->all();
 
         foreach ($config as $item) {
@@ -41,7 +47,7 @@ class ConfigService extends Service
             $model->save();
         }
 
-        Yii::$app->debris->configAll(true);
+        Yii::$app->debris->configAll(true, $merchant_id);
     }
 
     /**
@@ -61,9 +67,11 @@ class ConfigService extends Service
         return Config::find()
             ->where(['status' => StatusEnum::ENABLED])
             ->andWhere(['app_id' => $app_id])
-            ->with(['value' => function(ActiveQuery $query) use ($merchant_id) {
-                return $query->andWhere(['merchant_id' => $merchant_id]);
-            }])
+            ->with([
+                'value' => function (ActiveQuery $query) use ($merchant_id) {
+                    return $query->andWhere(['merchant_id' => $merchant_id]);
+                }
+            ])
             ->asArray()
             ->all();
     }

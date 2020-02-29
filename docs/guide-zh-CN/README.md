@@ -6,6 +6,7 @@
 - [环境搭建](start-environment.md)
 - [系统安装](start-installation.md)
 - [伪静态](start-rewrite.md)
+- [如何提问](start-questions.md)
 - [常见问题](start-issue.md)
 - [更新历史](start-update-log.md)
 
@@ -22,6 +23,7 @@
 - [公用支付](sys-payment.md)
 - [消息队列](sys-queue.md)
 - [服务层](sys-service.md)
+- [WebSocket](sys-websocket.md)
 - 公用服务
 - [RESTful Api](sys-restful-api.md)
 - [数据字典](sys-data-dictionary.md)
@@ -44,7 +46,6 @@
 
 - [模块介绍及目录](addon-introduce-catalog.md)
 - [模块开发流程](addon-flow.md)
-- [钩子说明及调用](addon-hook.md)
 - [模块辅助说明](addon-helper.md)
 
 #### Api
