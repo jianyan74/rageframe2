@@ -311,7 +311,7 @@ class AuthRoleService extends Service
 
         $dropDownList = ArrayHelper::itemsMerge($childRoles, $role['pid'] ?? 0);
         $dropDownList = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($dropDownList, 'id', 'title', $role['level'] ?? 1), 'id', 'title');
-        Yii::$app->services->auth->isSuperAdmin() && $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
+         $dropDownList = ArrayHelper::merge([0 => '顶级角色'], $dropDownList);
 
         return $dropDownList;
     }

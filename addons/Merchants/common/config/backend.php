@@ -25,6 +25,10 @@ return [
         'role/edit' => '角色编辑',
         'role/ajax-update' => '角色状态修改',
         'role/delete' => '角色删除',
+        'auth-group/index' => '权限分组',
+        'auth-group/edit' => '组别编辑',
+        'auth-group/ajax-update' => '组别状态修改',
+        'auth-group/delete' => '组别删除',
         'menu/index' => '菜单管理',
         'menu/ajax-edit' => '菜单编辑',
         'menu/ajax-update' => '菜单状态修改',
@@ -83,6 +87,12 @@ return [
             'title' => '商户权限',
             'route' => 'auth-item/index',
             'icon' => 'fa fa-user-secret',
+            'params' => []
+        ],
+        [
+            'title' => '权限分组',
+            'route' => 'auth-group/index',
+            'icon' => 'fa fa-fw fa-road',
             'params' => []
         ],
     ],
