@@ -2,6 +2,7 @@
 
 namespace services\common;
 
+use common\models\common\AuthGroupItem;
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
 use common\components\Service;
@@ -117,18 +118,24 @@ class AuthItemService extends Service
         if (Yii::$app->services->auth->isSuperAdmin()) {
             return $this->findAllByAppId($app_id);
         }
-
-        if (!$role = Yii::$app->services->authRole->getRole()) {
+        $groupAuth = $roleAuth = [];
+        if( $group = Yii::$app->services->authGroup->getGroup() ){
+            $groupAuth = AuthGroupItem::find()
+                ->where(['in', 'group_id', $group['id']])
+                ->with(['item'])
+                ->asArray()
+                ->all();
+        }elseif( $role = Yii::$app->services->authRole->getRole() ){
+            // 获取当前角色的权限
+            $roleAuth = AuthItemChild::find()
+                ->where(['in', 'role_id', $role['id']])
+                ->with(['item'])
+                ->asArray()
+                ->all();
+        }else{
             return [];
         }
-
-        // 获取当前角色的权限
-        $auth = AuthItemChild::find()
-            ->where(['in', 'role_id', $role['id']])
-            ->with(['item'])
-            ->asArray()
-            ->all();
-
+        $auth = array_merge($groupAuth,$roleAuth);
         return array_column($auth, 'item');
     }
 

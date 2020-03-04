@@ -91,15 +91,28 @@ class Auth
         if (self::$auth) {
             return self::$auth;
         }
+        $group = Yii::$app->services->authGroup->getGroup();
 
         $role = Yii::$app->services->authRole->getRole();
+        $groupAuth = $roleAuth = [];
+
         // 获取权限数组
         if (true === Yii::$app->params['inAddon']) {
             $name = Yii::$app->params['addon']['name'];
             $name = StringHelper::strUcwords($name);
-            self::$auth = Yii::$app->services->authRole->getAuthByRole($role, WhetherEnum::ENABLED, $name);
+            if( $group ){
+                $groupAuth = Yii::$app->services->authGroup->getAuthByGroup($group, WhetherEnum::ENABLED, $name);
+            }elseif ($role){
+                $roleAuth = Yii::$app->services->authRole->getAuthByRole($role, WhetherEnum::ENABLED, $name);
+            }
+            self::$auth = array_merge($groupAuth,$roleAuth);
         } else {
-            self::$auth = Yii::$app->services->authRole->getAuthByRole($role);
+            if( $group ){
+                $groupAuth = Yii::$app->services->authGroup->getAuthByGroup($group);
+            }elseif ($role){
+                $roleAuth = Yii::$app->services->authRole->getAuthByRole($role);
+            }
+            self::$auth = array_merge($groupAuth,$roleAuth);
         }
 
         return self::$auth;

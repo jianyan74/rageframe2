@@ -39,6 +39,7 @@ use common\components\Service;
  * @property \services\common\AddonsBindingService $addonsBinding 插件菜单入口
  * @property \services\common\AuthItemService $authItem 权限
  * @property \services\common\AuthRoleService $authRole 角色
+ * @property \services\common\AuthGroupService $authGroup 分组
  * @property \services\common\AuthAssignmentService $authAssignment 授权
  * @property \services\common\AuthService $auth 权限验证
  * @property \services\common\ConfigService $config 基础配置
@@ -103,6 +104,7 @@ class Application extends Service
         'auth' => 'services\common\AuthService',
         'authItem' => 'services\common\AuthItemService',
         'authRole' => 'services\common\AuthRoleService',
+        'authGroup' => 'services\common\AuthGroupService',
         'authAssignment' => 'services\common\AuthAssignmentService',
         'log' => [
             'class' => 'services\common\LogService',

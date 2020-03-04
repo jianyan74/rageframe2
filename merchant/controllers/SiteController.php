@@ -2,6 +2,8 @@
 
 namespace merchant\controllers;
 
+use common\enums\AppEnum;
+use merchant\forms\SignUpForm;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -33,7 +35,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'captcha'],
+                        'actions' => ['login', 'register','error', 'captcha'],
                         'allow' => true,
                     ],
                     [
@@ -108,6 +110,21 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionRegister()
+    {
+        $model = new SignUpForm();
+        if( $model->load(Yii::$app->request->post()) && $model->validate() ){
+            if ($user = $model->register()) {
+                return $this->goHome();
+            }
+            return $this->redirect(['register']);
+        }
+        return $this->render( $this->action->id,[
+            'model' => $model,
+            'cate' => Yii::$app->services->authGroup->getNormalGroup( AppEnum::MERCHANT )
+        ] );
     }
 
     /**

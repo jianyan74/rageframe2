@@ -105,8 +105,15 @@ class MenuService extends Service
         // 获取权限信息
         $auth = [];
         if (!Yii::$app->services->auth->isSuperAdmin()) {
+            $group = Yii::$app->services->authGroup->getGroup();
             $role = Yii::$app->services->authRole->getRole();
-            $auth = Yii::$app->services->authRole->getAllAuthByRole($role);
+            $groupAuth = $roleAuth = [];
+            if( $group ){
+                $groupAuth = Yii::$app->services->authGroup->getAllAuthByGroup($group);
+            }elseif( $role ){
+                $roleAuth = Yii::$app->services->authRole->getAllAuthByRole($role);
+            }
+            $auth = array_merge($groupAuth,$roleAuth);
         }
 
         foreach ($models as $key => &$model) {

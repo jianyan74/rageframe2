@@ -171,6 +171,16 @@ a.desc:after {
     background-size: cover;
     color: rgba(255, 255, 255, .95);
 }
+.register-page{
+    background: #18c8f6;
+    height: auto;
+    background: url("../img/register-bg.jpg") no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: rgba(255, 255, 255, .95);
+}
 
 .main-header .navbar,
 .content-wrapper, .main-footer {

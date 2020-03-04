@@ -2,6 +2,7 @@
 
 namespace common\models\merchant;
 
+use common\models\common\AuthAllocation;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -116,6 +117,12 @@ class Member extends User
             ->where(['app_id' => AppEnum::MERCHANT]);
     }
 
+    public function getAllocation()
+    {
+        return $this->hasOne( AuthAllocation::class, [ 'member_id' => 'id' ] )
+            ->where(['app_id' => AppEnum::MERCHANT]);
+    }
+
     /**
      * @param bool $insert
      * @return bool
@@ -152,13 +159,6 @@ class Member extends User
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
             ],
-            [
-                'class' => BlameableBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
-                ],
-                'value' => Yii::$app->services->merchant->getId(),
-            ]
         ];
     }
 }

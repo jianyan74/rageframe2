@@ -54,10 +54,16 @@ class MenuCateService extends Service
     {
         $auth = [];
         if (!Yii::$app->services->auth->isSuperAdmin()) {
+            $group = Yii::$app->services->authGroup->getGroup();
             $role = Yii::$app->services->authRole->getRole();
-            $auth = Yii::$app->services->authRole->getAllAuthByRole($role);
+            $groupAuth = $roleAuth = [];
+            if( $group ){
+                $groupAuth = Yii::$app->services->authGroup->getAllAuthByGroup($group);
+            }elseif( $role ){
+                $roleAuth = Yii::$app->services->authRole->getAllAuthByRole($role);
+            }
         }
-
+        $auth = array_merge($groupAuth,$roleAuth);
         $models = $this->findAll();
         foreach ($models as $key => $model) {
             if ($model['is_addon'] == WhetherEnum::DISABLED && !Auth::verify('cate:' . $model['id'], $auth)) {
