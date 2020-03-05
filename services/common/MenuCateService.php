@@ -52,11 +52,11 @@ class MenuCateService extends Service
      */
     public function getOnAuthList()
     {
-        $auth = [];
+        $groupAuth = $roleAuth = [];
         if (!Yii::$app->services->auth->isSuperAdmin()) {
             $group = Yii::$app->services->authGroup->getGroup();
             $role = Yii::$app->services->authRole->getRole();
-            $groupAuth = $roleAuth = [];
+
             if( $group ){
                 $groupAuth = Yii::$app->services->authGroup->getAllAuthByGroup($group);
             }elseif( $role ){
