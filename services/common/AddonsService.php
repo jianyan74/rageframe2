@@ -234,21 +234,48 @@ class AddonsService extends Service
      */
     public function findByNameWithBinding($name, $noCache = false)
     {
-        $cacheKey = CacheEnum::getPrefix('addonsConfig', Yii::$app->id . ':' . $name);
-        if (!$noCache && Yii::$app->cache->exists($cacheKey)) {
-            return Yii::$app->cache->get($cacheKey);
+
+
+        if (!$noCache && $this->addonsConfigCache($name)) {
+            $this->addonsConfigCache($name, 'get');
         }
 
         $data = Addons::find()
             ->where(['name' => $name, 'status' => StatusEnum::ENABLED])
-            ->with(['bindingMenu' => function(ActiveQuery $query) {
+            ->with(['bindingMenu' => function (ActiveQuery $query) {
                 return $query->andWhere(['app_id' => Yii::$app->id]);
             }, 'bindingCover'])
             ->one();
 
-        Yii::$app->cache->set($cacheKey, $data, 7200);
-
+        $this->addonsConfigCache($name, 'set', $data);
         return $data;
+    }
+
+    /**
+     * 插件配置信息缓存操作
+     *
+     * @param string $name 插件名称
+     * @param string $type 缓存操作动作 set/get/delete/exists default
+     * @param array $data 创建或者更新缓存数据
+     * @return array|mixed|bool
+     */
+    public function addonsConfigCache($name, $type = '', $data = [])
+    {
+        $cacheKey = CacheEnum::getPrefix('addonsConfig', $name . ':');
+        switch ($type) {
+            case 'set':
+                $data ? Yii::$app->cache->set($cacheKey, $data, 7200) : null;
+                break;
+            case 'get':
+                return Yii::$app->cache->get($cacheKey);
+                break;
+            case 'delete':
+                Yii::$app->cache->delete($cacheKey);
+                break;
+            default:
+                return Yii::$app->cache->exists($cacheKey) ? true : false;
+                break;
+        }
     }
 
     /**
@@ -262,6 +289,7 @@ class AddonsService extends Service
         $cacheKey = CacheEnum::getPrefix('addonsName');
         if (!$noCache && Yii::$app->cache->exists($cacheKey)) {
             return Yii::$app->cache->get($cacheKey);
+
         }
 
         $models = Addons::find()

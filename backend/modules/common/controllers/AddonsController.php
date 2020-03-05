@@ -40,6 +40,7 @@ class AddonsController extends BaseController
      */
     public function actionIndex()
     {
+
         $searchModel = new SearchModel([
             'model' => Addons::class,
             'scenario' => 'default',
@@ -81,7 +82,7 @@ class AddonsController extends BaseController
             $uninstallClass = AddonHelper::getAddonRoot($name) . (new $class)->uninstall;
             ExecuteHelper::map($uninstallClass, 'run', $model);
         }
-
+        Yii::$app->services->addons->addonsConfigCache($name,'delete');
         return $this->message('卸载成功', $this->redirect(['index']));
     }
 
@@ -180,7 +181,7 @@ class AddonsController extends BaseController
             }
 
             $transaction->commit();
-
+            Yii::$app->services->addons->addonsConfigCache($name,'set',$model);
             return $this->message('安装/更新成功', $this->redirect(['index']));
         } catch (\Exception $e) {
             $transaction->rollBack();
