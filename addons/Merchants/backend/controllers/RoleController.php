@@ -127,4 +127,13 @@ class RoleController extends BaseController
 
         return $dropDownList;
     }
+
+    public function actionDelete($id)
+    {
+        if ($this->findModel($id)->delete()) {
+            return $this->message("删除成功", $this->redirect(['index','merchant_id' => $this->merchant_id]));
+        }
+
+        return $this->message("删除失败", $this->redirect(['index','merchant_id' => $this->merchant_id]), 'error');
+    }
 }
