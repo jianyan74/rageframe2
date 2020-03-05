@@ -645,7 +645,7 @@ class UploadHelper
         $this->baseInfo['size'] = $this->filesystem->getSize($this->baseInfo['url']);
         $path = $this->baseInfo['url'];
         // 获取上传路径
-        $this->baseInfo = $this->uploadDrive->getUrl($this->baseInfo, $this->config['fullPath']);
+        $this->baseInfo = $this->uploadDrive->getUrl($this->baseInfo, $this->drive, $this->config['fullPath']);
 
         $data = [
             'drive' => $this->drive,
