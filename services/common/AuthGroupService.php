@@ -183,7 +183,7 @@ class AuthGroupService extends Service
             return [];
         }
 
-        if (!$this->group) {
+        if (!empty($this->group)) {
             /* @var $allocation \common\models\common\Allocation */
             if ($allocation = Yii::$app->user->identity->allocation) {
                 $allocation = ArrayHelper::toArray($allocation);
