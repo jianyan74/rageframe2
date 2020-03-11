@@ -13,6 +13,7 @@
 #### 启动加密
 
 具体查看文件 `api/config/params.php`
+
 ```
 // 签名验证默认关闭验证，如果开启需了解签名生成及验证
 'user.httpSignValidity' => false,

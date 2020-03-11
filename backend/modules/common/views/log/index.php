@@ -68,19 +68,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
                             'format' => 'raw',
                         ],
                         [
-                            'label' => '设备信息',
-                            'value' => function ($model) {
-                                $str = [];
-                                $str[] = '类型：' . $model->device;
-                                $str[] = '唯一码：' . $model->device_uuid;
-                                $str[] = '系统版本：' . $model->device_version;
-                                $str[] = 'App版本：' . $model->device_app_version;
-                               return implode("</br>", $str);
-                            },
-                            'format' => 'raw',
-                            'filter' => false,
-                        ],
-                        [
                             'attribute' => 'error_code',
                             'label' => '状态码',
                             'value' => function ($model) {

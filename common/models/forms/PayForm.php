@@ -85,7 +85,7 @@ class PayForm extends PayLog
                     if ($this->trade_type == 'mini_program') {
                         $auth = Yii::$app->wechat->miniProgram->auth->session($this->code);
                         Yii::$app->debris->getWechatError($auth);
-                        $this->openid = $auth['openId'];
+                        $this->openid = $auth['openid'];
                     }
 
                     if ($this->trade_type == 'js') {

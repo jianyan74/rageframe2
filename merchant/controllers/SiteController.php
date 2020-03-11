@@ -2,14 +2,14 @@
 
 namespace merchant\controllers;
 
-use common\enums\AppEnum;
-use merchant\forms\SignUpForm;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\behaviors\ActionLogBehavior;
 use merchant\forms\LoginForm;
+use merchant\forms\SignUpForm;
 
 /**
  * Class SiteController
@@ -35,7 +35,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'register','error', 'captcha'],
+                        'actions' => ['login', 'register', 'register-protocol', 'error', 'captcha'],
                         'allow' => true,
                     ],
                     [
@@ -46,7 +46,7 @@ class SiteController extends Controller
                 ],
             ],
             'actionLog' => [
-                'class' => ActionLogBehavior::class
+                'class' => ActionLogBehavior::class,
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -77,7 +77,7 @@ class SiteController extends Controller
                 'offset' => 4, // 设置字符偏移量
                 'backColor' => 0xffffff, // 背景颜色
                 'foreColor' => 0x62a8ea, // 字体颜色
-            ]
+            ],
         ];
     }
 
@@ -112,19 +112,48 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * 注册
+     *
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
+     */
     public function actionRegister()
     {
+        // 判断开放注册
+        if (empty(Yii::$app->debris->backendConfig('merchant_register_is_open'))){
+            throw new NotFoundHttpException('找不到页面');
+        }
+
         $model = new SignUpForm();
-        if( $model->load(Yii::$app->request->post()) && $model->validate() ){
-            if ($user = $model->register()) {
-                return $this->goHome();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($merchant = $model->register()) {
+                return $this->redirect(['login']);
             }
+
             return $this->redirect(['register']);
         }
-        return $this->render( $this->action->id,[
+
+        return $this->render($this->action->id, [
             'model' => $model,
-            'cate' => Yii::$app->services->authGroup->getNormalGroup( AppEnum::MERCHANT )
-        ] );
+            'cate' => Yii::$app->services->merchantCate->getMapList(),
+        ]);
+    }
+
+    /**
+     * 注册协议
+     *
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionRegisterProtocol()
+    {
+        // 判断开放注册
+        if (empty(Yii::$app->debris->backendConfig('merchant_register_is_open'))){
+            throw new NotFoundHttpException('找不到页面');
+        }
+
+        return $this->render($this->action->id, []);
     }
 
     /**
@@ -134,6 +163,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
+
         return $this->goHome();
     }
 }

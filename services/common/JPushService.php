@@ -27,8 +27,8 @@ class JPushService extends Service
         FileHelper::mkdirs($logPath);
 
         $this->client = new JPush(
-            Yii::$app->debris->config('push_jpush_appid'),
-            Yii::$app->debris->config('push_jpush_app_secret'),
+            Yii::$app->debris->backendConfig('push_jpush_appid'),
+            Yii::$app->debris->backendConfig('push_jpush_app_secret'),
             $logPath . date('d') . '.log'
         );
     }

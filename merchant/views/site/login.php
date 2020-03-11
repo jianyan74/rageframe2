@@ -42,8 +42,11 @@ use yii\captcha\Captcha;
             <?= Html::submitButton('立即登录', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
         </div>
         <?php ActiveForm::end(); ?>
+        <?php if (!empty(Yii::$app->debris->backendConfig('merchant_register_is_open'))) { ?>
+            <div class="social-auth-links text-center">还没有有帐号？<?= Html::a('立即注册', ['register']); ?></div>
+        <?php } ?>
         <div class="social-auth-links text-center">
-            <p><?= Html::encode(Yii::$app->debris->config('web_copyright')); ?></p>
+            <p><?= Html::encode(Yii::$app->debris->backendConfig('web_copyright')); ?></p>
         </div>
     </div>
     <!-- /.login-box-body -->

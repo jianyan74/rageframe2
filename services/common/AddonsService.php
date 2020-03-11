@@ -2,6 +2,7 @@
 
 namespace services\common;
 
+use common\enums\AppEnum;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Json;
@@ -15,6 +16,7 @@ use common\helpers\StringHelper;
 use common\helpers\ArrayHelper;
 use common\enums\CacheEnum;
 use common\components\BaseAddonConfig;
+use common\helpers\Auth;
 use Overtrue\Pinyin\Pinyin;
 
 /**
@@ -29,40 +31,24 @@ class AddonsService extends Service
      */
     public function getMenus()
     {
-        $with = Yii::$app->services->auth->isSuperAdmin() ? ['bindingIndexMenu'] : ['authChildMenu'];
-
         $models = Addons::find()
             ->select(['title', 'name', 'group'])
-            ->with($with)
+            ->with('bindingMenu')
             ->asArray()
             ->all();
 
-        // 所有菜单信息
-        $allAddonsMenu = [];
-        if (!Yii::$app->services->auth->isSuperAdmin()) {
-            $data = array_column($models, 'authChildMenu');
-            $names = array_column($data, 'addons_name');
-            $allAddonsMenu = Yii::$app->services->addonsBinding->findByNames($names);
-            $allAddonsMenu = ArrayHelper::arrayKey($allAddonsMenu, 'route');
-        }
-
+        $isSuperAdmin = Yii::$app->services->auth->isSuperAdmin();
         foreach ($models as $k => &$model) {
-            // 超级管理员
-            if (Yii::$app->services->auth->isSuperAdmin()) {
-                $bindingIndexMenu = $model['bindingIndexMenu'];
+            $model['menuUrl'] = '';
 
-                if (isset($bindingIndexMenu['route'])) {
-                    $params = isset($bindingIndexMenu['params']) ? Json::decode($bindingIndexMenu['params']) : [];
-                    $model['menuUrl'] = Url::to(ArrayHelper::merge([$bindingIndexMenu['route']], $params));
-                }
-            } else {
-                $authChildMenu = $model['authChildMenu'];
+            foreach ($model['bindingMenu'] as $bindingMenu) {
+                if (isset($bindingMenu['route']) && empty($model['menuUrl'])) {
+                    $params = isset($bindingMenu['params']) ? Json::decode($bindingMenu['params']) : [];
+                    $model['menuUrl'] = Url::to(ArrayHelper::merge([$bindingMenu['route']], $params));
 
-                // 查询全部的菜单列表进行匹配显示url
-                if (isset($authChildMenu['name'])) {
-                    $key = $authChildMenu['name'];
-                    $params = isset($allAddonsMenu[$key]) ? Json::decode($allAddonsMenu[$key]['params']) : [];
-                    $model['menuUrl'] = Url::to(ArrayHelper::merge([$authChildMenu['name']], $params));
+                    if (!$isSuperAdmin && !Auth::verify($bindingMenu['route'])) {
+                        $model['menuUrl'] = '';
+                    }
                 }
             }
 
@@ -166,8 +152,8 @@ class AddonsService extends Service
 
         $model->attributes = $config->info;
         $model->is_setting = $config->isSetting ? StatusEnum::ENABLED : StatusEnum::DISABLED;
-        $model->is_merchant_route_map = $config->isMerchantRouteMap ? StatusEnum::ENABLED : StatusEnum::DISABLED;
         $model->is_rule = $config->isRule ? StatusEnum::ENABLED : StatusEnum::DISABLED;
+        $model->is_merchant_route_map = $config->isMerchantRouteMap ? StatusEnum::ENABLED : StatusEnum::DISABLED;
         $model->group = $config->group;
         $model->bootstrap = $config->bootstrap ?? '';
         $model->service = $config->service ?? '';
@@ -234,48 +220,24 @@ class AddonsService extends Service
      */
     public function findByNameWithBinding($name, $noCache = false)
     {
-
-
-        if (!$noCache && $this->addonsConfigCache($name)) {
-            $this->addonsConfigCache($name, 'get');
+        $cacheKey = 'addonsConfig'. ':' . Yii::$app->id . ':' . $name;
+        if (!$noCache && Yii::$app->cache->exists($cacheKey)) {
+            return Yii::$app->cache->get($cacheKey);
         }
 
         $data = Addons::find()
             ->where(['name' => $name, 'status' => StatusEnum::ENABLED])
-            ->with(['bindingMenu' => function (ActiveQuery $query) {
-                return $query->andWhere(['app_id' => Yii::$app->id]);
-            }, 'bindingCover'])
+            ->with([
+                'bindingMenu' => function (ActiveQuery $query) {
+                    return $query->andWhere(['app_id' => Yii::$app->id]);
+                },
+                'bindingCover'
+            ])
             ->one();
 
-        $this->addonsConfigCache($name, 'set', $data);
-        return $data;
-    }
+        Yii::$app->cache->set($cacheKey, $data, 7200);
 
-    /**
-     * 插件配置信息缓存操作
-     *
-     * @param string $name 插件名称
-     * @param string $type 缓存操作动作 set/get/delete/exists default
-     * @param array $data 创建或者更新缓存数据
-     * @return array|mixed|bool
-     */
-    public function addonsConfigCache($name, $type = '', $data = [])
-    {
-        $cacheKey = CacheEnum::getPrefix('addonsConfig', $name . ':');
-        switch ($type) {
-            case 'set':
-                $data ? Yii::$app->cache->set($cacheKey, $data, 7200) : null;
-                break;
-            case 'get':
-                return Yii::$app->cache->get($cacheKey);
-                break;
-            case 'delete':
-                Yii::$app->cache->delete($cacheKey);
-                break;
-            default:
-                return Yii::$app->cache->exists($cacheKey) ? true : false;
-                break;
-        }
+        return $data;
     }
 
     /**
@@ -289,11 +251,10 @@ class AddonsService extends Service
         $cacheKey = CacheEnum::getPrefix('addonsName');
         if (!$noCache && Yii::$app->cache->exists($cacheKey)) {
             return Yii::$app->cache->get($cacheKey);
-
         }
 
         $models = Addons::find()
-            ->select(['name', 'is_merchant_route_map', 'service'])
+            ->select(['name', 'is_merchant_route_map', 'service', 'updated_at'])
             ->where(['status' => StatusEnum::ENABLED])
             ->asArray()
             ->all();
@@ -312,6 +273,5 @@ class AddonsService extends Service
     {
         $this->findAllNames(true);
         $this->findByNameWithBinding($name, true);
-        AddonHelper::findConfig(true, '', $name);
     }
 }

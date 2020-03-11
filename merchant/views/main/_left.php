@@ -1,7 +1,7 @@
 <?php
 
 use common\helpers\ImageHelper;
-use merchant\widgets\menu\MenuLeftWidget;
+use common\widgets\menu\MenuLeftWidget;
 
 ?>
 
@@ -19,10 +19,8 @@ use merchant\widgets\menu\MenuLeftWidget;
                     <i class="fa fa-circle text-success"></i>
                     <?php if (Yii::$app->services->auth->isSuperAdmin()) { ?>
                         超级管理员
-                    <?php } elseif ( Yii::$app->user->identity->allocation ) { ?>
-                        商家管理员
-                        <?php } else{ ?>
-                        <?= Yii::$app->services->authRole->getTitle() ?>
+                    <?php } else { ?>
+                        <?= Yii::$app->services->rbacAuthRole->getTitle() ?>
                     <?php } ?>
                 </a>
             </div>

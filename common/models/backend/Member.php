@@ -7,7 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\enums\AppEnum;
 use common\models\base\User;
-use common\models\common\AuthAssignment;
+use common\models\rbac\AuthAssignment;
 
 /**
  * This is the model class for table "{{%backend_member}}".

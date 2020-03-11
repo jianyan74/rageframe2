@@ -2,7 +2,7 @@
 
 namespace common\models\oauth2;
 
-use Yii;
+use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%oauth2_authorization_code}}".
@@ -20,6 +20,8 @@ use Yii;
  */
 class AuthorizationCode extends \common\models\base\BaseModel
 {
+    use MerchantBehavior;
+
     /**
      * {@inheritdoc}
      */

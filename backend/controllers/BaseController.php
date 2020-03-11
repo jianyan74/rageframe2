@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use yii\web\UnauthorizedHttpException;
+use yii\web\ForbiddenHttpException;
 use common\traits\BaseAction;
 use common\helpers\Auth;
 use common\behaviors\ActionLogBehavior;
@@ -41,10 +41,11 @@ class BaseController extends Controller
     }
 
     /**
-     * @param $action
+     * @param \yii\base\Action $action
      * @return bool
-     * @throws UnauthorizedHttpException
+     * @throws ForbiddenHttpException
      * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function beforeAction($action)
     {
@@ -64,7 +65,7 @@ class BaseController extends Controller
         }
         // 开始权限校验
         if (!Auth::verify($permissionName)) {
-            throw new UnauthorizedHttpException('对不起，您现在还没获此操作的权限');
+            throw new ForbiddenHttpException('对不起，您现在还没获此操作的权限');
         }
 
         return true;

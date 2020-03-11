@@ -90,7 +90,7 @@ class MailerService extends Service
      */
     protected function setConfig()
     {
-        $this->config = Yii::$app->debris->configAll();
+        $this->config = Yii::$app->debris->backendConfigAll();
 
         Yii::$app->set('mailer', [
             'class' => 'yii\swiftmailer\Mailer',

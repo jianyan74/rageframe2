@@ -89,6 +89,10 @@
     text-align: center;
 }
 
+.rf-table tbody tr td {
+    white-space: nowrap;
+}
+
 .rf-i {
     min-width: 18px;
     font-size: 13px;
@@ -171,6 +175,7 @@ a.desc:after {
     background-size: cover;
     color: rgba(255, 255, 255, .95);
 }
+
 .register-page{
     background: #18c8f6;
     height: auto;
@@ -969,7 +974,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     color: #76838f;;
 }
 
-.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
     border-top: 1px solid #e4eaec;
     line-height: 1.42857;
     padding: 8px;

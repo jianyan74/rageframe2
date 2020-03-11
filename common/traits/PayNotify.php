@@ -58,7 +58,7 @@ trait PayNotify
     {
         // 微信支付参数配置
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'],
-            ['app_id' => Yii::$app->debris->config('miniprogram_appid')]
+            ['app_id' => Yii::$app->debris->backendConfig('miniprogram_appid')]
         );
 
         $response = Yii::$app->wechat->payment->handlePaidNotify(function ($message, $fail) {
@@ -86,7 +86,7 @@ trait PayNotify
     public function actionAlipay()
     {
         $request = Yii::$app->pay->alipay([
-            'ali_public_key' => Yii::$app->debris->config('alipay_notification_cert_path'),
+            'ali_public_key' => Yii::$app->debris->backendConfig('alipay_notification_cert_path'),
         ])->notify();
 
         try {

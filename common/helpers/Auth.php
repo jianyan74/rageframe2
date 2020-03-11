@@ -3,7 +3,6 @@
 namespace common\helpers;
 
 use Yii;
-use common\enums\WhetherEnum;
 
 /**
  * Class Auth
@@ -15,11 +14,12 @@ class Auth
     protected static $auth = [];
 
     /**
-     * 校验权限是否拥有
+     * 校验权限
      *
      * @param string $route
      * @param array $defaultAuth
      * @return bool
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public static function verify(string $route, $defaultAuth = [])
     {
@@ -27,11 +27,15 @@ class Auth
             return true;
         }
 
+        $route = trim($route);
         $auth = !empty($defaultAuth) ? $defaultAuth : self::getAuth();
-        if (in_array('/*', $auth) || in_array($route, $auth)) {
-            return true;
-        }
-        if( in_array(Url::to([$route]), $auth) ) {
+
+        if (
+            in_array('/*', $auth) ||
+            in_array('*', $auth) ||
+            in_array($route, $auth) ||
+            in_array(Url::to([$route]), $auth)
+        ) {
             return true;
         }
 
@@ -42,7 +46,8 @@ class Auth
      * 过滤自己拥有的权限
      *
      * @param array $route
-     * @return array|bool
+     * @return array
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public static function verifyBatch(array $route)
     {
@@ -60,17 +65,18 @@ class Auth
      * /goods/*
      * /goods/index/*
      *
-     * @param $route
-     * @param array $auth
+     * @param string $route 权限名称
+     * @param array $auth 所有权限组
+     * @param string $separator 分隔符
      * @return bool
      */
-    public static function multistageCheck($route, array $auth)
+    public static function multistageCheck($route, array $auth, $separator = '/')
     {
-        $key = '/';
-        $routeArr = explode('/', $route);
+        $key = $separator;
+        $routeArr = explode($separator, $route);
         foreach ($routeArr as $value) {
             if (!empty($value)) {
-                $key .= $value . '/';
+                $key .= $value . $separator;
 
                 if (in_array($key . '*', $auth)) {
                     return true;
@@ -85,35 +91,16 @@ class Auth
      * 获取权限信息
      *
      * @return array
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public static function getAuth()
     {
         if (self::$auth) {
             return self::$auth;
         }
-        $group = Yii::$app->services->authGroup->getGroup();
 
-        $role = Yii::$app->services->authRole->getRole();
-        $groupAuth = $roleAuth = [];
-
-        // 获取权限数组
-        if (true === Yii::$app->params['inAddon']) {
-            $name = Yii::$app->params['addon']['name'];
-            $name = StringHelper::strUcwords($name);
-            if( $group ){
-                $groupAuth = Yii::$app->services->authGroup->getAuthByGroup($group, WhetherEnum::ENABLED, $name);
-            }elseif ($role){
-                $roleAuth = Yii::$app->services->authRole->getAuthByRole($role, WhetherEnum::ENABLED, $name);
-            }
-            self::$auth = array_merge($groupAuth,$roleAuth);
-        } else {
-            if( $group ){
-                $groupAuth = Yii::$app->services->authGroup->getAuthByGroup($group);
-            }elseif ($role){
-                $roleAuth = Yii::$app->services->authRole->getAuthByRole($role);
-            }
-            self::$auth = array_merge($groupAuth,$roleAuth);
-        }
+        $role = Yii::$app->services->rbacAuthRole->getRole();
+        self::$auth = Yii::$app->services->rbacAuthItemChild->getAuthByRole($role, Yii::$app->id);
 
         return self::$auth;
     }

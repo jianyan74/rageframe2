@@ -17,10 +17,8 @@ return [
     'adminAccount' => '0',
     // 请求全局唯一ID
     'uuid' => '',
-    // 模式 仅支持 b2c 和 b2b2c
-    'pattern' => 'b2c',
     // 真实 app id
-    'real_app_id' => '',
+    'realAppId' => '',
     // 百度编辑器默认上传驱动
     'UEditorUploadDrive' => 'local',
     // 全局上传配置

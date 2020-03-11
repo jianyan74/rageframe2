@@ -10,10 +10,20 @@
 - 公用请求方法
 - 公共状态码说明
 
+> api 文档下的大部分接口商户 api 也通用
+
 #### 测试域名
+
+用户 api
 
 ```
 http://www.example.com/api/接口版本/
+```
+
+商户 api
+
+```
+http://www.example.com/merapi/接口版本/
 ```
 
 #### 接口版本

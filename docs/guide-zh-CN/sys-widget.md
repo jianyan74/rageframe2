@@ -110,6 +110,7 @@ HTML;
 
 ### 图片上传控件
 
+> 配置部分在 `common\config\params.php` 文件，可用自行在里面切换全局上传配置  
 > 注意OSS/七牛暂不支持切片和缩略图操作，以下是完整案例
 
 ```
@@ -145,6 +146,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 
 ### 多图上传控件
 
+> 配置部分在 `common\config\params.php` 文件，可用自行在里面切换全局上传配置  
 > 注意传入的value值为数组,例如: array('img1.jpg', 'img2.jpg')
 
 ```
@@ -171,6 +173,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 
 ### 文件上传控件
 
+> 配置部分在 `common\config\params.php` 文件，可用自行在里面切换全局上传配置  
 > 注意文件上传不支持缩略图配置
 
 ```
@@ -187,6 +190,7 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 
 ### 多文件上传控件
 
+> 配置部分在 `common\config\params.php` 文件，可用自行在里面切换全局上传配置  
 > 注意多文件上传不支持缩略图配置  
 > 注意传入的value值为数组,例如: array('img1.jpg', 'img2.jpg')
 

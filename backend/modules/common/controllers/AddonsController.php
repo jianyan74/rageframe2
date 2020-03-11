@@ -40,7 +40,6 @@ class AddonsController extends BaseController
      */
     public function actionIndex()
     {
-
         $searchModel = new SearchModel([
             'model' => Addons::class,
             'scenario' => 'default',
@@ -82,7 +81,7 @@ class AddonsController extends BaseController
             $uninstallClass = AddonHelper::getAddonRoot($name) . (new $class)->uninstall;
             ExecuteHelper::map($uninstallClass, 'run', $model);
         }
-        Yii::$app->services->addons->addonsConfigCache($name,'delete');
+
         return $this->message('卸载成功', $this->redirect(['index']));
     }
 
@@ -163,7 +162,7 @@ class AddonsController extends BaseController
                 }
             }
 
-            Yii::$app->services->authItem->createByAddons($allAuthItem, $allMenu, $removeAppIds, $name);
+            Yii::$app->services->rbacAuthItemChild->accreditByAddon($allAuthItem, $allMenu, $removeAppIds, $name);
             // 移除
             foreach ($removeAppIds as $removeAppId) {
                 unset($allMenu[$removeAppId]);
@@ -181,7 +180,7 @@ class AddonsController extends BaseController
             }
 
             $transaction->commit();
-            Yii::$app->services->addons->addonsConfigCache($name,'set',$model);
+
             return $this->message('安装/更新成功', $this->redirect(['index']));
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -286,6 +285,7 @@ class AddonsController extends BaseController
                 AppEnum::HTML5,
                 AppEnum::OAUTH2,
                 AppEnum::MERCHANT,
+                AppEnum::MER_API,
                 AppEnum::API,
             ];
 
@@ -417,7 +417,7 @@ class AddonsController extends BaseController
 
         return $this->render($this->action->id, [
             'model' => $model,
-            'coverTypes' => AppEnum::getValues([AppEnum::FRONTEND, AppEnum::API, AppEnum::HTML5, AppEnum::OAUTH2]),
+            'coverTypes' => AppEnum::getValues([AppEnum::FRONTEND, AppEnum::API, AppEnum::MER_API, AppEnum::HTML5, AppEnum::OAUTH2]),
             'menuTypes' => AppEnum::getValues([AppEnum::BACKEND, AppEnum::MERCHANT]),
             'addonsGroup' => Yii::$app->params['addonsGroup'],
         ]);

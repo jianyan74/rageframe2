@@ -21,6 +21,8 @@ class Bootstrap implements AddonWidget
     */
     public function run($addon)
     {
+        Yii::$app->services->merchant->addId(0);
+
         // 注册资源
         if (in_array(Yii::$app->id, [AppEnum::MERCHANT, AppEnum::BACKEND])) {
             AddonHelper::filePath();

@@ -94,7 +94,7 @@ class JsTree extends InputWidget
             $data = [
                 'id' => $datum['id'],
                 'parent' => !empty($datum['pid']) ? $datum['pid'] : '#',
-                'text' => $datum['title'],
+                'text' => trim($datum['title']),
                 // 'icon' => 'none'
             ];
 

@@ -11,7 +11,6 @@ use addons\Wechat\common\models\RuleKeyword;
 use common\traits\MerchantCurd;
 use addons\Wechat\merchant\forms\RuleForm;
 
-
 /**
  * Class RuleController
  * @package addons\Wechat\merchant\controllers

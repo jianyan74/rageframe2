@@ -8,7 +8,6 @@ use addons\Wechat\common\models\QrcodeStat;
 use common\traits\MerchantCurd;
 use common\helpers\ExcelHelper;
 
-
 /**
  * 微信二维码统计
  *
@@ -37,6 +36,7 @@ class QrcodeStatController extends BaseController
         $to_date = $request->get('to_date', date('Y-m-d', strtotime("+1 day")));
 
         $data = QrcodeStat::find()
+            ->where(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['like', 'name', $keyword])
             ->andFilterWhere(['type' => $type])
             ->andFilterWhere(['between', 'created_at', strtotime($from_date), strtotime($to_date)]);

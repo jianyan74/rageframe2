@@ -391,15 +391,15 @@ class UploadHelper
      */
     protected function watermark()
     {
-        if (Yii::$app->debris->config('sys_image_watermark_status') != true) {
+        if (Yii::$app->debris->backendConfig('sys_image_watermark_status') != true) {
             return true;
         }
 
         // 原图路径
         $absolutePath = Yii::getAlias("@attachment/") . $this->baseInfo['url'];
 
-        $local = Yii::$app->debris->config('sys_image_watermark_location');
-        $watermarkImg = StringHelper::getLocalFilePath(Yii::$app->debris->config('sys_image_watermark_img'));
+        $local = Yii::$app->debris->backendConfig('sys_image_watermark_location');
+        $watermarkImg = StringHelper::getLocalFilePath(Yii::$app->debris->backendConfig('sys_image_watermark_img'));
 
         if ($coordinate = DebrisHelper::getWatermarkLocation($absolutePath, $watermarkImg, $local)) {
             // $aliasName = StringHelper::getAliasUrl($fullPathName, 'watermark');

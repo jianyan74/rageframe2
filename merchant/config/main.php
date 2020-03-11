@@ -13,17 +13,9 @@ return [
     'defaultRoute' => 'main', // 默认控制器
     'bootstrap' => ['log'],
     'modules' => [
-        /** ------ 公用模块 ------ **/
-        'common' => [
-            'class' => 'merchant\modules\common\Module',
-        ],
-        /** ------ 基础模块 ------ **/
-        'base' => [
-            'class' => 'merchant\modules\base\Module',
-        ],
         /** ------ 会员模块 ------ **/
         'member' => [
-            'class' => 'merchant\modules\member\Module',
+            'class' => 'backend\modules\member\Module',
         ],
     ],
     'components' => [

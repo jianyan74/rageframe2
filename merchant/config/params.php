@@ -25,5 +25,7 @@ return [
     'noAuthRoute' => [
         '/main/index',// 系统主页
         '/main/system',// 系统首页
+        '/merchants/base/member/personal',// 个人信息
+        '/merchants/base/member/up-password',// 修改密码
     ],
 ];

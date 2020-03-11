@@ -59,9 +59,9 @@ class SmsService extends Service
                     'file' => Yii::getAlias('runtime') . '/easy-sms.log',
                 ],
                 'aliyun' => [
-                    'access_key_id' => Yii::$app->debris->config('sms_aliyun_accesskeyid'),
-                    'access_key_secret' => Yii::$app->debris->config('sms_aliyun_accesskeysecret'),
-                    'sign_name' => Yii::$app->debris->config('sms_aliyun_sign_name'),
+                    'access_key_id' => Yii::$app->debris->backendConfig('sms_aliyun_accesskeyid'),
+                    'access_key_secret' => Yii::$app->debris->backendConfig('sms_aliyun_accesskeysecret'),
+                    'sign_name' => Yii::$app->debris->backendConfig('sms_aliyun_sign_name'),
                 ]
             ],
         ];
@@ -110,7 +110,7 @@ class SmsService extends Service
      */
     public function realSend($mobile, $code, $usage, $member_id = 0, $ip = 0)
     {
-        $template = Yii::$app->debris->config('sms_aliyun_template');
+        $template = Yii::$app->debris->backendConfig('sms_aliyun_template');
         !empty($template) && $template = ArrayHelper::map(Json::decode($template), 'group', 'template');
         $templateID = $template[$usage] ?? '';
 
