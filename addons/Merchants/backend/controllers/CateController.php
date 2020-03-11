@@ -6,7 +6,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use common\traits\Curd;
 use common\models\merchant\Cate;
-use addons\TinyShop\merchant\controllers\BaseController;
 
 /**
  * 商户分类
