@@ -72,7 +72,7 @@ class AddonsController extends BaseController
         $name = Yii::$app->request->get('name');
 
         // 删除数据库
-        if ($model = Yii::$app->services->addons->findByName($name)) {
+        if ($model = Addons::findOne(['name' => $name])) {
             $model->delete();
         }
 
