@@ -9,6 +9,7 @@ use common\enums\WhetherEnum;
 use common\helpers\ArrayHelper;
 use common\helpers\TreeHelper;
 use common\models\rbac\AuthRole;
+use common\enums\AppEnum;
 use yii\web\UnauthorizedHttpException;
 
 /**
@@ -45,11 +46,16 @@ class AuthRoleService extends Service
                 throw new UnauthorizedHttpException('未授权角色，请联系管理员');
             }
 
+            $merchant_id = $this->getMerchantId();
+            if (Yii::$app->id == AppEnum::BACKEND) {
+                $merchant_id = '';
+            }
+
             $assignment = ArrayHelper::toArray($assignment);
             $this->roles = AuthRole::find()
                 ->where(['id' => $assignment['role_id']])
                 ->andWhere(['status' => StatusEnum::ENABLED])
-                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+                ->andFilterWhere(['merchant_id' => $merchant_id])
                 ->asArray()
                 ->one();
 

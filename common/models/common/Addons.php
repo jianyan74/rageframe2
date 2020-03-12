@@ -55,7 +55,7 @@ class Addons extends BaseModel
             [['name', 'title', 'group', 'version', 'author'], 'required'],
             ['name', 'match', 'pattern' => '/^[_a-zA-Z]+$/', 'message' => '标识由英文和下划线组成'],
             [
-                ['is_setting', 'is_rule', 'status', 'created_at', 'updated_at'],
+                ['is_setting', 'is_merchant_route_map', 'is_rule', 'status', 'created_at', 'updated_at'],
                 'integer',
             ],
             [['title', 'group', 'version'], 'string', 'max' => 20],
@@ -89,6 +89,7 @@ class Addons extends BaseModel
             'is_rule' => '嵌入规则',
             'is_setting' => '全局设置项',
             'is_mini_program' => 'Api/小程序',
+            'is_merchant_route_map' => '商户映射',
             'bootstrap' => '启动',
             'console' => '控制台',
             'default_config' => '默认配置',
