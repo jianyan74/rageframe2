@@ -72,7 +72,7 @@ class AddonsController extends BaseController
         $name = Yii::$app->request->get('name');
 
         // 删除数据库
-        if ($model = Yii::$app->services->addons->findByName($name)) {
+        if ($model = Addons::findOne(['name' => $name])) {
             $model->delete();
         }
 
@@ -162,7 +162,7 @@ class AddonsController extends BaseController
                 }
             }
 
-            Yii::$app->services->authItem->createByAddons($allAuthItem, $allMenu, $removeAppIds, $name);
+            Yii::$app->services->rbacAuthItemChild->accreditByAddon($allAuthItem, $allMenu, $removeAppIds, $name);
             // 移除
             foreach ($removeAppIds as $removeAppId) {
                 unset($allMenu[$removeAppId]);
@@ -285,6 +285,7 @@ class AddonsController extends BaseController
                 AppEnum::HTML5,
                 AppEnum::OAUTH2,
                 AppEnum::MERCHANT,
+                AppEnum::MER_API,
                 AppEnum::API,
             ];
 
@@ -416,7 +417,7 @@ class AddonsController extends BaseController
 
         return $this->render($this->action->id, [
             'model' => $model,
-            'coverTypes' => AppEnum::getValues([AppEnum::FRONTEND, AppEnum::API, AppEnum::HTML5, AppEnum::OAUTH2]),
+            'coverTypes' => AppEnum::getValues([AppEnum::FRONTEND, AppEnum::API, AppEnum::MER_API, AppEnum::HTML5, AppEnum::OAUTH2]),
             'menuTypes' => AppEnum::getValues([AppEnum::BACKEND, AppEnum::MERCHANT]),
             'addonsGroup' => Yii::$app->params['addonsGroup'],
         ]);

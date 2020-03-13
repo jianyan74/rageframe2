@@ -36,7 +36,7 @@ class Logistics extends Service
 
     public function init()
     {
-        $defaultConfig = Yii::$app->debris->configAll();
+        $defaultConfig = Yii::$app->debris->backendConfigAll();
         $this->config = [
             'aliyun' => [
                 'app_code' => $defaultConfig['logistics_aliyun_app_code'] ?? '',
@@ -66,9 +66,9 @@ class Logistics extends Service
      * @param null $company
      * @return OrderInterface
      */
-    public function aliyun($no, $company = null)
+    public function aliyun($no, $company = null, $isCache = false)
     {
-        return $this->query($no, $company, 'aliyun');
+        return $this->query($no, $company, 'aliyun', $isCache);
     }
 
     /**
@@ -78,9 +78,9 @@ class Logistics extends Service
      * @param string $company 可选（建议必填，不填查询结果不一定准确）
      * @return OrderInterface
      */
-    public function juhe($no, $company)
+    public function juhe($no, $company, $isCache = false)
     {
-        return $this->query($no, $company, 'juhe');
+        return $this->query($no, $company, 'juhe', $isCache);
     }
 
     /**
@@ -90,9 +90,9 @@ class Logistics extends Service
      * @param string $company 可选（建议必填，不填查询结果不一定准确）
      * @return OrderInterface
      */
-    public function kdniao($no, $company = null)
+    public function kdniao($no, $company = null, $isCache = false)
     {
-        return $this->query($no, $company, 'kdniao');
+        return $this->query($no, $company, 'kdniao', $isCache);
     }
 
     /**
@@ -102,9 +102,9 @@ class Logistics extends Service
      * @param string $company 可选（建议必填，不填查询结果不一定准确）
      * @return OrderInterface
      */
-    public function kd100($no, $company = null)
+    public function kd100($no, $company = null, $isCache = false)
     {
-        return $this->query($no, $company, 'kd100');
+        return $this->query($no, $company, 'kd100', $isCache);
     }
 
     /**
@@ -130,9 +130,19 @@ class Logistics extends Service
      * @param $provider
      * @return mixed
      */
-    protected function query($no, $company, $provider)
+    protected function query($no, $company, $provider, $isCache)
     {
-        return $this->logistics($provider)->query($no, $company);
+        if ($isCache == false) {
+            return $this->logistics($provider)->query($no, $company);
+        }
+
+        $key = 'Logistics|' .  $no;
+        if (!($data = Yii::$app->cache->get($key))) {
+            $data = $this->logistics($provider)->query($no, $company);
+            Yii::$app->cache->set($key, $data, 60 * 60);
+        }
+
+        return $data;
     }
 
     /**

@@ -56,14 +56,15 @@ abstract class DriveInterface
 
     /**
      * @param $baseInfo
+     * @param $drive
      * @param $fullPath
      * @return mixed
      */
-    public function getUrl($baseInfo, $fullPath)
+    public function getUrl($baseInfo, $drive, $fullPath)
     {
         $baseInfo = $this->baseUrl($baseInfo, $fullPath);
 
-        if ($baseInfo['type'] != Attachment::DRIVE_LOCAL && !RegularHelper::verify('url', $baseInfo['url'])) {
+        if ($drive != Attachment::DRIVE_LOCAL && !RegularHelper::verify('url', $baseInfo['url'])) {
             $baseInfo['url'] = 'http://' . $baseInfo['url'];
         }
 

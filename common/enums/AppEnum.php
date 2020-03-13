@@ -14,6 +14,7 @@ class AppEnum extends BaseEnum
     const API = 'api';
     const HTML5 = 'html5';
     const MERCHANT = 'merchant';
+    const MER_API = 'merapi';
     const OAUTH2 = 'oauth2';
     const STORAGE = 'storage';
     const CONSOLE = 'console';
@@ -29,6 +30,7 @@ class AppEnum extends BaseEnum
             self::API => '接口',
             self::HTML5 => '手机',
             self::MERCHANT => '商家',
+            self::MER_API => '商家接口',
             self::OAUTH2 => 'oauth2',
             self::STORAGE => '存储',
             self::CONSOLE => '控制台',
@@ -42,7 +44,7 @@ class AppEnum extends BaseEnum
      */
     public static function api()
     {
-        return [self::API, self::OAUTH2];
+        return [self::API, self::MER_API, self::OAUTH2];
     }
 
     /**

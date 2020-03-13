@@ -9,7 +9,8 @@ use common\interfaces\AddonWidget;
  * Bootstrap
  *
  * Class Bootstrap
- * @package addons\RfArticle\common\config */
+ * @package addons\RfArticle\common\config
+ */
 class Bootstrap implements AddonWidget
 {
     /**
@@ -18,6 +19,6 @@ class Bootstrap implements AddonWidget
     */
     public function run($addon)
     {
-
+        Yii::$app->services->merchant->addId(0);
     }
 }

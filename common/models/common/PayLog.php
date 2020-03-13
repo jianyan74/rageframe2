@@ -60,12 +60,12 @@ class PayLog extends \common\models\base\BaseModel
             [['merchant_id', 'member_id', 'pay_type', 'pay_status', 'pay_time', 'is_refund', 'status', 'created_at', 'updated_at'], 'integer'],
             [['total_fee', 'pay_fee', 'refund_fee'], 'number'],
             [['addons_name', 'body', 'detail', 'refund_sn', 'notify_url', 'return_url'], 'string', 'max' => 100],
-            [['order_sn', 'order_group', 'mch_id'], 'string', 'max' => 20],
+            [['order_group', 'mch_id'], 'string', 'max' => 20],
             [['openid', 'auth_code', 'transaction_id'], 'string', 'max' => 50],
             [['out_trade_no'], 'string', 'max' => 32],
             [['fee_type'], 'string', 'max' => 10],
             [['trade_type'], 'string', 'max' => 16],
-            [['create_ip', 'pay_ip'], 'string', 'max' => 30],
+            [['order_sn', 'create_ip', 'pay_ip'], 'string', 'max' => 30],
         ];
     }
 

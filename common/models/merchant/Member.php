@@ -3,12 +3,12 @@
 namespace common\models\merchant;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\enums\AppEnum;
 use common\models\base\User;
-use common\models\common\AuthAssignment;
+use common\enums\StatusEnum;
+use common\models\rbac\AuthAssignment;
 
 /**
  * This is the model class for table "{{%merchant_member}}".
@@ -117,6 +117,32 @@ class Member extends User
     }
 
     /**
+     * 关联账号
+     */
+    public function getAccount()
+    {
+        return $this->hasOne(Account::class, ['merchant_id' => 'merchant_id']);
+    }
+
+    /**
+     * 关联商户
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMerchant()
+    {
+        return $this->hasOne(Merchant::class, ['id' => 'merchant_id']);
+    }
+
+    /**
+     * 关联第三方绑定
+     */
+    public function getAuth()
+    {
+        return $this->hasMany(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
+    }
+
+    /**
      * @param bool $insert
      * @return bool
      * @throws \yii\base\Exception
@@ -135,7 +161,7 @@ class Member extends User
      */
     public function beforeDelete()
     {
-        AuthAssignment::deleteAll(['user_id' => $this->id, 'app_id' => AppEnum::BACKEND]);
+        AuthAssignment::deleteAll(['user_id' => $this->id, 'app_id' => AppEnum::MERCHANT]);
         return parent::beforeDelete();
     }
 
@@ -151,13 +177,6 @@ class Member extends User
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
-            ],
-            [
-                'class' => BlameableBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
-                ],
-                'value' => Yii::$app->services->merchant->getId(),
             ]
         ];
     }

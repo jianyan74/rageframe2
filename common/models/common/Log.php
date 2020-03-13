@@ -63,11 +63,10 @@ class Log extends \common\models\base\BaseModel
         return [
             [['merchant_id', 'user_id', 'error_code', 'status', 'created_at', 'updated_at', 'ip'], 'integer'],
             [['get_data', 'post_data', 'error_data', 'header_data'], 'safe'],
-            [['method', 'device_version', 'device_app_version'], 'string', 'max' => 20],
-            [['module', 'action', 'req_id', 'app_id', 'device_uuid'], 'string', 'max' => 50],
+            [['method'], 'string', 'max' => 20],
+            [['module', 'action', 'req_id', 'app_id'], 'string', 'max' => 50],
             [['controller'], 'string', 'max' => 100],
             [['user_agent'], 'string', 'max' => 200],
-            [['device'], 'string', 'max' => 30],
             [['url', 'error_msg'], 'string', 'max' => 1000],
         ];
     }
@@ -96,10 +95,6 @@ class Log extends \common\models\base\BaseModel
             'error_msg' => '报错信息',
             'error_data' => '报错内容',
             'status' => '状态',
-            'device' => '设备类型',
-            'device_uuid' => '设备唯一码',
-            'device_version' => '设备系统版本',
-            'device_app_version' => '设备app版本',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];

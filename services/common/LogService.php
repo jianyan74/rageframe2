@@ -129,6 +129,9 @@ class LogService extends Service
         $log->attributes = $data;
         $log->save();
 
+        // 记录风控日志
+        Yii::$app->services->reportLog->create($log);
+
         // 创建订阅消息
         $action = $this->getLevel($log['error_code']);
         $actions = [
@@ -272,15 +275,12 @@ class LogService extends Service
 
         $data['post_data'] = $post_data;
         $data['user_agent'] = Yii::$app->debris->detectVersion();
-        $data['device'] = Yii::$app->request->headers->get('device', '');
-        $data['device_uuid'] = Yii::$app->request->headers->get('device-uuid', '');
-        $data['device_version'] = Yii::$app->request->headers->get('device-version', '');
-        $data['device_app_version'] = Yii::$app->request->headers->get('device-app-version', '');
         $data['method'] = Yii::$app->request->method;
         $data['module'] = Yii::$app->controller->module->id ?? '';
         $data['controller'] = Yii::$app->controller->id ?? '';
         $data['action'] = Yii::$app->controller->action->id ?? '';
         $data['ip'] = (int)ip2long(Yii::$app->request->userIP);
+        $data['created_at'] = time();
 
         return $data;
     }

@@ -11,7 +11,7 @@ $path = Yii::getAlias('@runtime') . '/logs/';
  * 每天凌晨执行一次
  */
 $filePath = $path . 'msgHistory.log';
-$schedule->command('addons/rf-wechat/msg-history/index')->cron('0 0 * * *')->sendOutputTo($filePath);
+$schedule->command('wechat/msg-history/index')->cron('0 0 * * *')->sendOutputTo($filePath);
 
 /**
  * 定时群发微信消息
@@ -19,4 +19,4 @@ $schedule->command('addons/rf-wechat/msg-history/index')->cron('0 0 * * *')->sen
  * 每分钟执行一次
  */
 $filePath = $path . 'sendMessage.log';
-$schedule->command('addons/rf-wechat/send-message/index')->cron('* * * * *')->sendOutputTo($filePath);
+$schedule->command('wechat/send-message/index')->cron('* * * * *')->sendOutputTo($filePath);

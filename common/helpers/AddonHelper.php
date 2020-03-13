@@ -7,6 +7,7 @@ use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
 use common\enums\CacheEnum;
 use common\models\common\AddonsConfig;
+use common\enums\AppEnum;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 
@@ -23,6 +24,13 @@ class AddonHelper
      * @var array
      */
     protected static $_service = [];
+
+    /**
+     * 配置
+     *
+     * @var array
+     */
+    protected static $_config = [];
 
     /**
      * 获取插件配置
@@ -127,7 +135,7 @@ class AddonHelper
             $assets = [];
             $assets[] = 'addons';
             $assets[] = Yii::$app->params['addon']['name'];
-            $assets[] = Yii::$app->params['real_app_id'];
+            $assets[] = Yii::$app->params['realAppId'];
             $assets[] = 'assets';
             $assets[] = 'AppAsset';
             $assets = implode('\\', $assets);
@@ -174,50 +182,64 @@ class AddonHelper
     }
 
     /**
-     * @param $key
-     * @param bool $noCache
-     * @param string $merchant_id
-     * @return mixed|string
-     */
-    public static function getConfigByKey($key, $noCache = false, $merchant_id = '')
-    {
-        $config = static::getConfig($noCache, $merchant_id);
-
-        return $config[$key] ?? '';
-    }
-
-    /**
-     * 获取配置信息
+     * 获取后台配置信息
      *
      * @return array|mixed
      */
-    public static function getConfig($noCache = false, $merchant_id = '')
+    public static function getBackendConfig($noCache = false, $name = '')
     {
-        $name = Yii::$app->params['addon']['name'];
+        return static::findConfig($noCache, '', $name, AppEnum::BACKEND);
+    }
 
-        return static::findConfig($noCache, $merchant_id, $name);
+    /**
+     * 获取商户配置信息
+     *
+     * @return array|mixed
+     */
+    public static function getMerchantConfig($noCache = false, $name = '', $merchant_id = '')
+    {
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        !$merchant_id && $merchant_id == 1;
+
+        return static::findConfig($noCache, $merchant_id, $name, AppEnum::MERCHANT);
+    }
+
+    /**
+     * 获取商户配置信息
+     *
+     * @return array|mixed
+     */
+    public static function getConfig($noCache = false, $name = '', $merchant_id = '')
+    {
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        $app_id = !$merchant_id ? AppEnum::BACKEND : AppEnum::MERCHANT;
+
+        return static::findConfig($noCache, $merchant_id, $name, $app_id);
     }
 
     /**
      * 写入配置信息
      *
-     * @param $config
+     * @param array $config
+     * @param string $app_id
      * @return array|mixed
      */
-    public static function setConfig(array $config)
+    public static function setConfig(array $config, $merchant_id = '', $app_id = '')
     {
-        $merchant_id = Yii::$app->services->merchant->getId();
+        !$app_id && $app_id = Yii::$app->id;
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
         $name = Yii::$app->params['addon']['name'];
-        if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name))) {
+        if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name, $app_id, $merchant_id))) {
             $configModel = new AddonsConfig();
             $configModel->addons_name = $name;
+            $configModel->app_id = $app_id;
             $configModel->data = [];
         }
 
         $configModel->data = array_merge($configModel->data, $config);
         $configModel->save();
 
-        return self::getConfig(true, $merchant_id);
+        return self::getConfig(true, $name, $merchant_id);
     }
 
     /**
@@ -225,22 +247,34 @@ class AddonHelper
      *
      * @return array|mixed
      */
-    public static function findConfig($noCache, $merchant_id, $name)
+    protected static function findConfig($noCache, $merchant_id, $name, $app_id)
     {
-        if (!$merchant_id) {
-            $merchant_id = Yii::$app->services->merchant->getId();
+        !$name && $name = Yii::$app->params['addon']['name'];
+        $cacheKey = [
+            'addonsConfig',
+            $app_id,
+            $name,
+            Yii::$app->params['addon']['updated_at'],
+            $merchant_id
+        ];
+
+        $cacheKey = implode(':', $cacheKey);
+        // 判断是否已经读取
+        if (isset(self::$_config[$cacheKey]) && $noCache == false) {
+            return self::$_config[$cacheKey];
         }
 
-        $cacheKey = CacheEnum::getPrefix('addonsConfig', $name . ':' . $merchant_id);
         if ($noCache == true || !($configModel = Yii::$app->cache->get($cacheKey))) {
-            if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name, $merchant_id))) {
+            if (empty($configModel = Yii::$app->services->addonsConfig->findByName($name, $app_id, $merchant_id))) {
                 return [];
             }
 
             Yii::$app->cache->set($cacheKey, $configModel, 7200);
         }
 
-        return $configModel->data;
+        self::$_config[$cacheKey] = $configModel->data;
+
+        return self::$_config[$cacheKey];
     }
 
     /**

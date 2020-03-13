@@ -13,6 +13,7 @@ class AccessTokenGroupEnum extends BaseEnum
     const PC = 'pc';
     const IOS = 'ios';
     const ANDROID = 'android';
+    const APP = 'app';
     const H5 = 'h5';
     const WECHAT = 'wechat';
     const WECHAT_MQ = 'wechatMq';
@@ -31,6 +32,7 @@ class AccessTokenGroupEnum extends BaseEnum
             self::DEFAULT => '默认',
             self::IOS => 'ios',
             self::ANDROID => 'android',
+            self::APP => 'app',
             self::H5 => 'H5',
             self::PC => 'PC',
             self::WECHAT => '微信',

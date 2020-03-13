@@ -23,7 +23,7 @@ class ResultHelper
      */
     public static function json($code = 404, $message = '未知错误', $data = [])
     {
-        if (in_array(Yii::$app->id, [AppEnum::API, AppEnum::OAUTH2])) {
+        if (in_array(Yii::$app->id, AppEnum::api())) {
             return static::api($code, $message, $data);
         }
 

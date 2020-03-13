@@ -3,6 +3,7 @@
 namespace services\merchant;
 
 use Yii;
+use common\enums\StatusEnum;
 use common\models\merchant\Member;
 use common\components\Service;
 
@@ -14,6 +15,36 @@ use common\components\Service;
 class MemberService extends Service
 {
     /**
+     * 用户
+     *
+     * @var Member
+     */
+    protected $member;
+
+    /**
+     * @param Member $member
+     * @return $this
+     */
+    public function set(Member $member)
+    {
+        $this->member = $member;
+        return $this;
+    }
+
+    /**
+     * @param $id
+     * @return array|Member|\yii\db\ActiveRecord|null
+     */
+    public function get($id)
+    {
+        if (!$this->member || $this->member['id'] != $id) {
+            $this->member = $this->findById($id);
+        }
+
+        return $this->member;
+    }
+
+    /**
      * @param $id
      * @return array|\yii\db\ActiveRecord|null
      */
@@ -23,6 +54,30 @@ class MemberService extends Service
             ->where(['id' => $id])
             ->with('assignment')
             ->one();
+    }
+
+    /**
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findById($id)
+    {
+        return Member::find()
+            ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * @param $merchant_id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findByMerchantId($merchant_id)
+    {
+        return Member::find()
+            ->andFilterWhere(['merchant_id' => $merchant_id])
+            ->asArray()
+            ->all();
     }
 
     /**

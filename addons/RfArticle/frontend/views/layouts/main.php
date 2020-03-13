@@ -47,7 +47,7 @@ AppAsset::register($this);
 <?= Alert::widget() ?>
 <?= $content ?>
 <div class="w_foot">
-    <div class="w_foot_copyright"><?= Yii::$app->debris->config('web_copyright')?><span></span></div>
+    <div class="w_foot_copyright"><?= Yii::$app->debris->backendConfig('web_copyright')?><span></span></div>
 </div>
 <?php $this->endBody() ?>
 </body>

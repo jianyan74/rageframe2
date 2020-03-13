@@ -95,7 +95,7 @@ class Config extends \common\models\base\BaseModel
     public function afterSave($insert, $changedAttributes)
     {
         // 重新写入缓存
-        Yii::$app->debris->configAll(true);
+        Yii::$app->debris->backendConfigAll(true);
 
         parent::afterSave($insert, $changedAttributes);
     }
@@ -106,7 +106,7 @@ class Config extends \common\models\base\BaseModel
     public function afterDelete()
     {
         // 重新写入缓存
-        Yii::$app->debris->configAll(true);
+        Yii::$app->debris->backendConfigAll(true);
         // 移除关联内容
         ConfigValue::deleteAll(['config_id' => $this->id]);
 

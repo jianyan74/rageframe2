@@ -139,6 +139,7 @@ class SiteController extends OnAuthController
 
         $member = new Member();
         $member->attributes = ArrayHelper::toArray($model);
+        $member->merchant_id = !empty($this->getMerchantId()) ? $this->getMerchantId() : 0;
         $member->password_hash = Yii::$app->security->generatePasswordHash($model->password);
         if (!$member->save()) {
             return ResultHelper::json(422, $this->getError($member));

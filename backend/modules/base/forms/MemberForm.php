@@ -5,7 +5,7 @@ namespace backend\modules\base\forms;
 use Yii;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
-use common\models\common\AuthRole;
+use common\models\rbac\AuthRole;
 use common\models\backend\Member;
 
 /**
@@ -135,9 +135,7 @@ class MemberForm extends Model
             }
 
             // 角色授权
-            if (!Yii::$app->services->authAssignment->authorization($member->id, $this->role_id, Yii::$app->id)) {
-                throw new NotFoundHttpException('权限写入错误');
-            }
+            Yii::$app->services->rbacAuthAssignment->assign([$this->role_id], $member->id, Yii::$app->id);
 
             $transaction->commit();
 

@@ -65,7 +65,7 @@ class LoginForm extends \common\models\forms\LoginForm
     public function validateIp($attribute)
     {
         $ip = Yii::$app->request->userIP;
-        $allowIp = Yii::$app->debris->config('sys_allow_ip');
+        $allowIp = Yii::$app->debris->backendConfig('sys_allow_ip');
         if (!empty($allowIp)) {
             $ipList = StringHelper::parseAttr($allowIp);
 

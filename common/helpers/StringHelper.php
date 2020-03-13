@@ -324,6 +324,20 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
+     * 生成随机code
+     *
+     * @param $merchant_id
+     * @return false|string
+     */
+    public static function code($merchant_id)
+    {
+        $time_str = date('YmdHis');
+        $rand_code = rand(0, 999999);
+
+        return substr(md5($time_str . $rand_code . $merchant_id), 16, 32);
+    }
+
+    /**
      * 字符串匹配替换
      *
      * @param $search

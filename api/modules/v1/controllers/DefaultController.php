@@ -36,6 +36,8 @@ class DefaultController extends OnAuthController
     /**
      * 测试查询方法
      *
+     * 注意：该方法在 main.php 文件里面的 extraPatterns 单独配置过才正常访问
+     *
      * @return string
      */
     public function actionSearch()

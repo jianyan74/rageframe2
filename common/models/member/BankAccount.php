@@ -2,7 +2,6 @@
 
 namespace common\models\member;
 
-use common\behaviors\MerchantBehavior;
 use common\enums\AccountTypeEnum;
 use common\enums\StatusEnum;
 
@@ -25,8 +24,6 @@ use common\enums\StatusEnum;
  */
 class BankAccount extends \common\models\base\BaseModel
 {
-    use MerchantBehavior;
-
     /**
      * {@inheritdoc}
      */
@@ -43,7 +40,7 @@ class BankAccount extends \common\models\base\BaseModel
         return [
             [['member_id', 'account_type', 'realname', 'mobile'], 'required'],
             [['member_id', 'merchant_id', 'is_default', 'account_type', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['branch_bank_name', 'realname', 'account_number', 'bank_code'], 'string', 'max' => 50],
+            [['branch_bank_name', 'ali_number', 'realname', 'account_number', 'bank_code'], 'string', 'max' => 50],
             [['mobile'], 'string', 'max' => 20],
             [['account_type_name'], 'string', 'max' => 30],
         ];
@@ -61,6 +58,7 @@ class BankAccount extends \common\models\base\BaseModel
             'branch_bank_name' => '支行信息',
             'realname' => '真实姓名',
             'account_number' => '银行账号',
+            'ali_number' => '支付宝账号',
             'bank_code' => '银行编号',
             'mobile' => '手机号',
             'is_default' => '是否默认账号',
@@ -78,12 +76,26 @@ class BankAccount extends \common\models\base\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->isNewRecord) {
-            $this->account_type_name = AccountTypeEnum::getValue($this->account_type);
+        $this->account_type_name = AccountTypeEnum::getValue($this->account_type);
+
+        if ($this->oldAttributes['is_default'] == StatusEnum::DISABLED && $this->is_default == StatusEnum::ENABLED) {
+            self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
         }
 
-        if ($this->is_default == StatusEnum::ENABLED) {
-            self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
+        // 清空其他数据
+        switch ($this->account_type) {
+            case AccountTypeEnum::UNION :
+                $this->ali_number = '';
+                break;
+            case AccountTypeEnum::ALI :
+                $this->account_number = '';
+                $this->branch_bank_name = '';
+                break;
+            default :
+                $this->ali_number = '';
+                $this->account_number = '';
+                $this->branch_bank_name = '';
+                break;
         }
 
         return parent::beforeSave($insert);

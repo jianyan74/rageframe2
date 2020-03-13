@@ -9,6 +9,8 @@ use common\models\member\Auth;
 use api\controllers\UserAuthController;
 
 /**
+ * 第三方授权
+ *
  * Class AuthController
  * @package api\modules\v1\controllers\member
  * @author jianyan74 <751393839@qq.com>

@@ -20,7 +20,7 @@ use common\widgets\menu\MenuLeftWidget;
                     <?php if (Yii::$app->services->auth->isSuperAdmin()) { ?>
                         超级管理员
                     <?php } else { ?>
-                        <?= Yii::$app->services->authRole->getTitle() ?>
+                        <?= Yii::$app->services->rbacAuthRole->getTitle() ?>
                     <?php } ?>
                 </a>
             </div>

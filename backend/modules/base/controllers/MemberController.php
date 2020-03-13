@@ -34,7 +34,8 @@ class MemberController extends BaseController
     public function actionIndex()
     {
         // 获取当前用户权限的下面的所有用户id，除超级管理员
-        $authIds = Yii::$app->services->authRole->getChildIds(AppEnum::BACKEND);
+        $ids = Yii::$app->services->rbacAuthAssignment->getChildIds(AppEnum::BACKEND);
+
         $searchModel = new SearchModel([
             'model' => $this->modelClass,
             'scenario' => 'default',
@@ -49,7 +50,7 @@ class MemberController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andFilterWhere(['in', 'id', $authIds])
+            ->andFilterWhere(['in', 'id', $ids])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->with('assignment');
 
@@ -85,7 +86,7 @@ class MemberController extends BaseController
 
         return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'roles' => Yii::$app->services->authRole->getLoginRoleChildUsers(AppEnum::BACKEND),
+            'roles' => Yii::$app->services->rbacAuthRole->getDropDown(AppEnum::BACKEND, true),
         ]);
     }
 

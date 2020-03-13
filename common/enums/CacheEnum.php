@@ -22,6 +22,7 @@ class CacheEnum
             'config' => $merchant_id, // 公用参数
             'addonsConfig' => $merchant_id, // 插件配置
             'apiAccessToken' => $merchant_id, // 用户信息记录
+            'merapiAccessToken' => $merchant_id, // 商户用户信息记录
             'wechatFansStat' => $merchant_id, // 粉丝统计缓存
             'levelList' => $merchant_id, // 会员等级
             'addons' => '', // 插件

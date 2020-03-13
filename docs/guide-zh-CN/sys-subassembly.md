@@ -20,7 +20,36 @@
 
 ### 基本组件
 
-##### 获取单个配置信息
+读取后台的配置
+
+```
+// 后台配置
+Yii::$app->debris->backendConfig($fildName);
+
+// 强制不从缓存读取配置
+Yii::$app->debris->backendConfig($fildName, true);
+
+// 强制不从缓存读取所有配置
+Yii::$app->debris->backendConfigAll(true);
+```
+
+读取商户端的配置
+
+```
+// 商户端配置
+Yii::$app->debris->merchantConfig($fildName);
+
+// 强制不从缓存读取配置
+Yii::$app->debris->merchantConfig($fildName, true);
+
+// 强制不从缓存读取所有配置
+Yii::$app->debris->merchantConfigAll(true);
+```
+
+自动读取对应配置信息
+
+> 不了解其机制的话请谨慎使用  
+> 规则：如果有 merchant_id 的话，则直接读取后台配置，没有的话会去读取商户端配置
 
 ```
 // 注意$fildName 为你的配置标识,默认从缓存读取
@@ -30,14 +59,7 @@ Yii::$app->debris->config($fildName);
 Yii::$app->debris->config($fildName, true);
 
 // 从缓存中强制读取商户 ID 为 1 配置(注意: 1 为总后台的 ID)
-Yii::$app->debris->config($fildName, false, 1);
-```
-
-读取某一端的配置
-
-```
-// 商户端配置
-Yii::$app->debris->merchantConfig($fildName);
+Yii::$app->debris->config($fildName, false);
 ```
 
 ##### 获取全部配置信息
@@ -182,9 +204,10 @@ $companies = Yii::$app->logistics->companies('aliyun');
  *
  * @param string $no 快递单号
  * @param null $company 快递公司
+ * @param bool $isCache 是否缓存读取默认缓存1小时
  * @return OrderInterface
  */
-$order = Yii::$app->logistics->aliyun($no, $company);
+$order = Yii::$app->logistics->aliyun($no, $company, $isCache);
 ```
 
 更多操作

@@ -6,7 +6,6 @@ use Yii;
 use common\helpers\ArrayHelper;
 use addons\Wechat\common\models\ReplyDefault;
 
-
 /**
  * 默认回复控制器
  *

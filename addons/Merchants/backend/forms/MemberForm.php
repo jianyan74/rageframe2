@@ -5,7 +5,7 @@ namespace addons\Merchants\backend\forms;
 use Yii;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
-use common\models\common\AuthRole;
+use common\models\rbac\AuthRole;
 use common\models\merchant\Member;
 use common\enums\AppEnum;
 
@@ -137,9 +137,7 @@ class MemberForm extends Model
             }
 
             // 角色授权
-            if (!Yii::$app->services->authAssignment->authorization($member->id, $this->role_id, AppEnum::MERCHANT)) {
-                throw new NotFoundHttpException('权限写入错误');
-            }
+            Yii::$app->services->rbacAuthAssignment->assign([$this->role_id], $member->id, AppEnum::MERCHANT);
 
             $transaction->commit();
 

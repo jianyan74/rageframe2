@@ -3,8 +3,6 @@
 namespace common\models\member;
 
 use yii\db\ActiveRecord;
-use common\behaviors\MerchantBehavior;
-
 
 /**
  * This is the model class for table "{{%member_account}}".
@@ -25,8 +23,6 @@ use common\behaviors\MerchantBehavior;
  */
 class Account extends ActiveRecord
 {
-    use MerchantBehavior;
-
     /**
      * {@inheritdoc}
      */

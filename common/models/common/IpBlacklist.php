@@ -52,7 +52,7 @@ class IpBlacklist extends \common\models\base\BaseModel
             'id' => 'ID',
             'merchant_id' => 'Merchant ID',
             'remark' => '备注',
-                'ip' => 'IP',
+            'ip' => 'IP',
             'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',

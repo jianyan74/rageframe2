@@ -101,7 +101,7 @@ class AddonsController extends Controller
      */
     protected function getConfig()
     {
-        return AddonHelper::getConfig();
+        return AddonHelper::getConfig(false);
     }
 
     /**

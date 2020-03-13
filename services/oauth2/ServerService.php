@@ -64,13 +64,13 @@ class ServerService extends Service
      */
     public function getPrivateKey()
     {
-        $privateKey = 'file://' . Yii::getAlias(Yii::$app->debris->config('oauth2_rsa_private'));
+        $privateKey = 'file://' . Yii::getAlias(Yii::$app->debris->backendConfig('oauth2_rsa_private'));
 
         // 如果私钥文件有密码
-        if (!empty(Yii::$app->debris->config('oauth2_rsa_private_encryption'))) {
+        if (!empty(Yii::$app->debris->backendConfig('oauth2_rsa_private_encryption'))) {
             $privateKey = new CryptKey(
                 $privateKey,
-                Yii::$app->debris->config('oauth2_rsa_private_password'),
+                Yii::$app->debris->backendConfig('oauth2_rsa_private_password'),
                 !StringHelper::isWindowsOS()
             );
         } else {
@@ -87,7 +87,7 @@ class ServerService extends Service
      */
     public function getEncryptionKey(): string
     {
-        $encryptionKey = Yii::$app->debris->config('oauth2_encryption_key'); // 加密密钥字符串
+        $encryptionKey = Yii::$app->debris->backendConfig('oauth2_encryption_key'); // 加密密钥字符串
         // generate using base64_encode(random_bytes(32))
         // $encryptionKey = Key::loadFromAsciiSafeString($encryptionKey); //如果通过 generate-defuse-key 脚本生成的字符串，可使用此方法传入
         return $encryptionKey;

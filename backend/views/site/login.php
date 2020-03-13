@@ -43,7 +43,7 @@ use yii\captcha\Captcha;
         </div>
         <?php ActiveForm::end(); ?>
         <div class="social-auth-links text-center">
-            <p><?= Html::encode(Yii::$app->debris->config('web_copyright')); ?></p>
+            <p><?= Html::encode(Yii::$app->debris->backendConfig('web_copyright')); ?></p>
         </div>
     </div>
     <!-- /.login-box-body -->

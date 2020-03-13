@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use common\enums\AppEnum;
 use Yii;
 
 /**
@@ -21,7 +22,8 @@ class WechatHelper
      */
     public static function verifyToken($signature, $timestamp, $nonce)
     {
-        $config = Yii::$app->debris->configAll(true, Yii::$app->services->merchant->getId());
+        $config = Yii::$app->debris->configAll(true);
+
         $token = $config['wechat_token'] ?? '';
         $tmpArr = [$token, $timestamp, $nonce];
         sort($tmpArr, SORT_STRING);

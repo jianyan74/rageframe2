@@ -94,7 +94,7 @@ class MapJob extends BaseObject implements \yii\queue\JobInterface
         $data = $curl->setGetParams([
             'address' => $this->address,
             'output' => 'json',
-            'ak' => Yii::$app->debris->config('map_baidu_ak'),
+            'ak' => Yii::$app->debris->backendConfig('map_baidu_ak'),
         ])->get("http://api.map.baidu.com/geocoder/v2/", false);
 
         if (isset($data['status']) && $data['status'] == 0) {

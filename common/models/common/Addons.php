@@ -26,7 +26,6 @@ use addons\Wechat\common\models\RuleKeyword;
  * @property array $wechat_message 接收微信回复类别
  * @property int $is_setting 设置
  * @property int $is_rule 是否要嵌入规则
- * @property int $is_merchant_route_map 商户路由映射
  * @property array $default_config 默认配置
  * @property array $console 控制台
  * @property int $status 状态[-1:删除;0:禁用;1启用]
@@ -56,7 +55,7 @@ class Addons extends BaseModel
             [['name', 'title', 'group', 'version', 'author'], 'required'],
             ['name', 'match', 'pattern' => '/^[_a-zA-Z]+$/', 'message' => '标识由英文和下划线组成'],
             [
-                ['is_setting', 'is_rule', 'is_merchant_route_map', 'status', 'created_at', 'updated_at'],
+                ['is_setting', 'is_merchant_route_map', 'is_rule', 'status', 'created_at', 'updated_at'],
                 'integer',
             ],
             [['title', 'group', 'version'], 'string', 'max' => 20],
@@ -88,9 +87,9 @@ class Addons extends BaseModel
             'version' => '版本',
             'wechat_message' => '接收微信消息',
             'is_rule' => '嵌入规则',
-            'is_merchant_route_map' => '商户路由映射',
             'is_setting' => '全局设置项',
             'is_mini_program' => 'Api/小程序',
+            'is_merchant_route_map' => '商户映射',
             'bootstrap' => '启动',
             'console' => '控制台',
             'default_config' => '默认配置',
@@ -109,33 +108,6 @@ class Addons extends BaseModel
     {
         return $this->hasMany(AddonsBinding::class,
             ['addons_name' => 'name'])->where(['entry' => 'menu'])->orderBy('id asc');
-    }
-
-    /**
-     * 关联首页绑定的菜单
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBindingIndexMenu()
-    {
-        return $this->hasOne(AddonsBinding::class, ['addons_name' => 'name'])
-            ->where(['entry' => 'menu', 'app_id' => Yii::$app->id])
-            ->asArray()
-            ->orderBy('id asc');
-    }
-
-    /**
-     * 关联授权的后台菜单
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuthChildMenu()
-    {
-        $role = Yii::$app->services->authRole->getRole();
-
-        return $this->hasOne(AuthItemChild::class, ['addons_name' => 'name'])
-            ->where(['is_menu' => StatusEnum::ENABLED, 'app_id' => Yii::$app->id, 'role_id' => $role['id'] ?? -1])
-            ->orderBy('item_id asc');
     }
 
     /**
@@ -184,7 +156,7 @@ class Addons extends BaseModel
         AddonsBinding::deleteAll(['addons_name' => $this->name]);
         AddonsConfig::deleteAll(['addons_name' => $this->name]);
         // 卸载权限
-        Yii::$app->services->authItem->uninstallAddonsByName($this->name);
+        Yii::$app->services->rbacAuthItem->delByAddonsName($this->name);
         // 卸载菜单分类
         Yii::$app->services->menuCate->delByAddonsName($this->name);
         // 卸载菜单
