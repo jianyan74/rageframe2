@@ -134,10 +134,10 @@ class Url extends BaseUrl
      */
     public static function removeMerchantIdUrl(string $action, array $url, $scheme = false)
     {
-        $real_app_id = Yii::$app->params['real_app_id'];
-        Yii::$app->params['real_app_id'] = AppEnum::BACKEND;
+        $realAppId = Yii::$app->params['realAppId'];
+        Yii::$app->params['realAppId'] = AppEnum::BACKEND;
         $url = self::$action($url, $scheme);
-        Yii::$app->params['real_app_id'] = $real_app_id;
+        Yii::$app->params['realAppId'] = $realAppId;
 
         return $url;
     }
@@ -196,9 +196,10 @@ class Url extends BaseUrl
      */
     protected static function isMerchant(array $url)
     {
-        if (Yii::$app->params['real_app_id'] != AppEnum::BACKEND) {
+        $merchant_id = Yii::$app->services->merchant->getId();
+        if (Yii::$app->params['realAppId'] != AppEnum::BACKEND && !empty($merchant_id)) {
             $url = ArrayHelper::merge([
-                'merchant_id' => Yii::$app->services->merchant->getId(),
+                'merchant_id' => $merchant_id,
             ], $url);
         }
 

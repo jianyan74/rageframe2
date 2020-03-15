@@ -103,7 +103,7 @@ class Echarts extends Widget
         AppAsset::register($view);
 
         if ($this->theme == 'bmap') {
-            $view->registerJsFile('http://api.map.baidu.com/api?v=2.0&ak=' . Yii::$app->debris->config('map_baidu_ak'));
+            $view->registerJsFile('http://api.map.baidu.com/api?v=2.0&ak=' . Yii::$app->debris->backendConfig('map_baidu_ak'));
         }
     }
 }

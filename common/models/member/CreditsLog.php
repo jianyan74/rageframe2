@@ -2,9 +2,7 @@
 
 namespace common\models\member;
 
-use common\enums\AppEnum;
 use Yii;
-use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%member_credits_log}}".
@@ -29,8 +27,6 @@ use common\behaviors\MerchantBehavior;
  */
 class CreditsLog extends \common\models\base\BaseModel
 {
-    use MerchantBehavior;
-
     // 金额类型
     const CREDIT_TYPE_USER_MONEY = 'user_money';
     const CREDIT_TYPE_GIVE_MONEY = 'give_money';
@@ -102,10 +98,6 @@ class CreditsLog extends \common\models\base\BaseModel
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
-            if( !in_array(Yii::$app->id, AppEnum::CONSOLE) ) {
-                $this->ip = Yii::$app->request->userIP;
-            }
-
             $this->app_id = Yii::$app->id;
             $this->addons_name = Yii::$app->params['addon']['name'] ?? '';
         }

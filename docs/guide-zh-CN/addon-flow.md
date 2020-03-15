@@ -8,15 +8,17 @@
 - 继承的基类说明
 - 开发
 
+> 注意：修改完毕配置后需要手动取插件列表更新配置或者卸载重新安装，不然配置是不会生效的
+
 ### 创建/维护
 
-进入后台 - 系统管理 - 系统功能 - 应用管理 - 设计新插件
+进入后台 - 系统管理 - 应用管理 - 设计新插件
 
 > 创建成功后会在 根目录的 addons 目录下生成插件文件
 
 ### 权限
 
-权限请在创建的模块下的 common/config 的各种应用文件内手动填写，安装后会自动注册进系统权限管理
+权限请在创建的模块下的 common/config 的各自应用文件内手动填写，安装后会自动注册进系统权限管理
 
 例如：
 
@@ -29,13 +31,13 @@
             'location' => 'addons', // default:系统顶部菜单;addons:应用中心菜单
             'icon' => 'fa fa-puzzle-piece',
         ],
-        // 子模块配置
+        // 子模块配置，代表注册插件的子模块进系统，方便模块化开发
         'modules' => [
             'v1' => [
-                'class' => 'addons\RfTinyShop\api\modules\v1\Module',
+                'class' => 'addons\TinyShop\api\modules\v1\Module',
             ],
             'v2' => [
-                'class' => 'addons\RfTinyShop\api\modules\v2\Module',
+                'class' => 'addons\TinyShop\api\modules\v2\Module',
             ],
         ],
     ],
@@ -43,16 +45,17 @@
     /**
      * 可授权权限
      *
-     * 例子：
-     *  array(
-     *      'index/index' => '首页',
-     *      'index/edit' => '首页编辑',
-     *  )
      * @var array
      */
     'authItem' => [
-        'curd/index' => 'Curd首页',
-        'curd/edit' => 'Curd编辑',
+        [
+            'title' => '一级权限',
+            'name' => 'test',
+            'child' =>[
+                'title' => '二级权限',
+                'name' => 'test/*', // 支持通配符 *， 插件下所有以 test/ 为前缀的路由都可以通过
+            ]
+        ],
     ];
     
     // ----------------------- 快捷入口 ----------------------- //
@@ -65,11 +68,17 @@
 
     'menu' => [
         [
-            'title' => 'Curd',
+            'title' => '一级菜单',
             'route' => 'curd/index',
             'icon' => '',
             'params' => [
                 'test' => '1'
+            ],
+            'child' => [
+                [
+                    'title' => '二级菜单',
+                    'route' => 'test/index',
+                ],
             ]
         ]
     ],
@@ -83,12 +92,24 @@
 
 ### 继承的基类说明
 
+##### 后台
+
+默认继承插件各自内自动生成的 BaseController，如果自己有特殊需求可以修改继承
+
 ##### api
 
-> 注意：开发Api的时候能使用RESTful的基类，但是不受路由规则管辖
+> 注意：开发 api 的时候能使用 restful 的基类，但是不受路由规则管辖
 
-- 控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `optional` 属性
+- 控制器请全部继承 `api\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `api\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `authOptional` 属性
 - 用户私有控制器请全部继承 `api\controllers\UserAuthController`
+
+##### merapi
+
+> 注意：开发 merapi 的时候能使用 restful 的基类，但是不受路由规则管辖
+
+- 控制器请全部继承 `merapi\controllers\OnAuthController`,注意Curd是改过的，不想用系统的Curd可直接继承 `merapi\controllers\ActiveController`，如果设置控制器内方法不需要验证请设置 `authOptional` 属性
+- 用户私有控制器请全部继承 `merapi\controllers\UserAuthController`
+
 
 ### 开发
 

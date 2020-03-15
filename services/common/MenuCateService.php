@@ -52,19 +52,13 @@ class MenuCateService extends Service
      */
     public function getOnAuthList()
     {
-        $auth = [];
-        if (!Yii::$app->services->auth->isSuperAdmin()) {
-            $role = Yii::$app->services->authRole->getRole();
-            $auth = Yii::$app->services->authRole->getAllAuthByRole($role);
-        }
-
         $models = $this->findAll();
         foreach ($models as $key => $model) {
-            if ($model['is_addon'] == WhetherEnum::DISABLED && !Auth::verify('cate:' . $model['id'], $auth)) {
+            if ($model['is_addon'] == WhetherEnum::DISABLED && !Auth::verify('cate:' . $model['id'])) {
                 unset($models[$key]);
             }
 
-            if ($model['is_addon'] == WhetherEnum::ENABLED && !Auth::verify($model['addons_name'], $auth)) {
+            if ($model['is_addon'] == WhetherEnum::ENABLED && !Auth::verify($model['addons_name'])) {
                 unset($models[$key]);
             }
         }

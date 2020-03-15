@@ -46,6 +46,7 @@ class AccessTokenService extends Service
     {
         $model = $this->findModel($member->id, $group);
         $model->member_id = $member->id;
+        $model->merchant_id = $member->merchant_id;
         $model->group = $group;
         // 删除缓存
         !empty($model->access_token) && Yii::$app->cache->delete($this->getCacheKey($model->access_token));

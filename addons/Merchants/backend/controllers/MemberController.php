@@ -32,7 +32,7 @@ class MemberController extends BaseController
         parent::init();
 
         $this->merchant_id = Yii::$app->request->get('merchant_id');
-        Yii::$app->services->merchant->setId(Yii::$app->request->get('merchant_id'));
+        Yii::$app->services->merchant->setId($this->merchant_id);
     }
 
     /**
@@ -88,12 +88,12 @@ class MemberController extends BaseController
     }
 
     /**
-     * 编辑/创建
+     * 创建
      *
      * @return mixed|string|\yii\web\Response
      * @throws \yii\base\ExitException
-     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function actionAjaxEdit()
     {
@@ -111,14 +111,9 @@ class MemberController extends BaseController
                 : $this->message($this->getError($model), $this->redirect(['index', 'merchant_id' => $this->merchant_id]), 'error');
         }
 
-        // 角色信息
-        $roles = Yii::$app->services->authRole->findAll(AppEnum::MERCHANT, $this->merchant_id);
-        $roles = ArrayHelper::itemsMerge($roles);
-        $roles = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($roles), 'id', 'title');
-
         return $this->renderAjax($this->action->id, [
             'model' => $model,
-            'roles' => $roles,
+            'roles' => Yii::$app->services->rbacAuthRole->getDropDown(AppEnum::MERCHANT),
             'merchant_id' => $this->merchant_id
         ]);
     }

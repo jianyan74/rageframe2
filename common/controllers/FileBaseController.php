@@ -27,21 +27,6 @@ class FileBaseController extends Controller
     public $enableCsrfValidation = false;
 
     /**
-     * @var int
-     */
-    protected $fileStart;
-
-    /**
-     * @var int
-     */
-    protected $fileEnd;
-
-    /**
-     * @var int
-     */
-    protected $fileNum = 0;
-
-    /**
      * @var \League\Flysystem\Adapter\Local
      */
     protected $filesystem;

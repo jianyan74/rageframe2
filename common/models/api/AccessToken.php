@@ -3,14 +3,13 @@
 namespace common\models\api;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UnauthorizedHttpException;
 use common\enums\StatusEnum;
 use common\models\member\Member;
 use common\models\common\RateLimit;
-use common\models\common\AuthAssignment;
+use common\models\rbac\AuthAssignment;
 
 /**
  *  如果不想速率控制请直接继承 \common\models\base\BaseModel
@@ -139,13 +138,6 @@ class AccessToken extends RateLimit
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
             ],
-            [
-                'class' => BlameableBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
-                ],
-                'value' => Yii::$app->services->merchant->getId(),
-            ]
         ];
     }
 }

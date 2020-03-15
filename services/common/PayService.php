@@ -126,7 +126,7 @@ class PayService extends Service
     {
         // 设置appid
         Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
-            'app_id' => Yii::$app->debris->config('miniprogram_appid'),
+            'app_id' => Yii::$app->debris->backendConfig('miniprogram_appid'),
         ]);
 
         $orderData = [

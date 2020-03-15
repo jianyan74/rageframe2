@@ -2,6 +2,7 @@
 
 namespace services\member;
 
+use Yii;
 use common\enums\StatusEnum;
 use common\helpers\EchantsHelper;
 use yii\web\NotFoundHttpException;
@@ -358,6 +359,8 @@ class CreditsLogService extends Service
     {
         $model = new CreditsLog();
         $model = $model->loadDefaultValues();
+        $model->ip = Yii::$app->request->userIP;
+        $model->merchant_id = $creditsLogForm->member->merchant_id;
         $model->member_id = $creditsLogForm->member->id;
         $model->pay_type = $creditsLogForm->pay_type;
         $model->old_num = $oldNum;

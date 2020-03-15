@@ -29,7 +29,7 @@ return [
         ],
         // 子模块配置
         'modules' => [
-<?php if (in_array($appID, [AppEnum::API, AppEnum::OAUTH2])) { ?>
+<?php if (in_array($appID, AppEnum::api())) { ?>
             'v1' => [
                 'class' => 'addons\<?= $model->name; ?>\<?= $appID ?>\modules\v1\Module',
             ],
@@ -93,6 +93,11 @@ return [
     // ----------------------- 权限配置 ----------------------- //
 
     'authItem' => [
-
+<?php if (in_array($appID, AppEnum::admin())) { ?>
+        [
+            'title' => '所有权限',
+            'name' => '*',
+        ],
+<?php } ?>
     ],
 ];

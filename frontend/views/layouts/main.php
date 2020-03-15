@@ -71,8 +71,8 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">
-            <?= Html::encode(Yii::$app->debris->config('web_copyright')) ?>
-            ICP证：<a href="http://www.beian.miit.gov.cn" target="_blank"><?= Html::encode(Yii::$app->debris->config('web_site_icp')) ?></a>
+            <?= Html::encode(Yii::$app->debris->backendConfig('web_copyright')) ?>
+            ICP证：<a href="http://www.beian.miit.gov.cn" target="_blank"><?= Html::encode(Yii::$app->debris->backendConfig('web_site_icp')) ?></a>
         </p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

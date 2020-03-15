@@ -14,7 +14,7 @@ use common\controllers\AddonsController;
 class BaseController extends AddonsController
 {
     /**
-    * @var string
-    */
-    // public $layout = "@addons/Merchants/merchant/views/layouts/main";
+     * @var string
+     */
+    public $layout = "@backend/views/layouts/main";
 }

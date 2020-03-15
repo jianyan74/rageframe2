@@ -251,6 +251,28 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
+     * 对比2组id，返回存在的id和被删除的id
+     *
+     * @param array $oldIds
+     * @param array $newIds
+     * @return array
+     */
+    public static function comparisonIds(array $oldIds, array $newIds)
+    {
+        $updatedIds = $deleteIds = [];
+
+        foreach ($oldIds as $oldId) {
+            if (in_array($oldId, $newIds)) {
+                $updatedIds[] = $oldId;
+            } else {
+                $deleteIds[] = $oldId;
+            }
+        }
+
+        return [$updatedIds, $deleteIds];
+    }
+
+    /**
      * 获取递归的第一个没有子级的数据
      *
      * @param $array

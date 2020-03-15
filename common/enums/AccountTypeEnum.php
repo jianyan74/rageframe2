@@ -22,7 +22,7 @@ class AccountTypeEnum extends BaseEnum
     {
         return [
             self::UNION => '银联卡',
-            self::WECHAT => '微信',
+            // self::WECHAT => '微信', (获取openid不方便，先禁用)
             self::ALI => '支付宝',
         ];
     }

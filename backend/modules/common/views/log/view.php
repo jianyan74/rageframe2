@@ -13,10 +13,6 @@ use common\helpers\DebrisHelper;
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         <tr>
-            <td>设备/浏览器</td>
-            <td><?= Html::encode($model['device']) ?></td>
-        </tr>
-        <tr>
             <td>提交方法</td>
             <td><?= Html::encode($model['method']) ?></td>
         </tr>

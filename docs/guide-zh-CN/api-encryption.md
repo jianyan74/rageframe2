@@ -2,6 +2,7 @@
 
 目录
 
+- 启动加密
 - 基本说明
 - Get请求
 - Post请求
@@ -9,14 +10,27 @@
 
 > 注意默认是关闭加密，可自行开启
 
-Url测试访问地址
+#### 启动加密
+
+具体查看文件 `api/config/params.php`
+
+```
+// 签名验证默认关闭验证，如果开启需了解签名生成及验证
+'user.httpSignValidity' => false,
+// 签名授权公钥秘钥
+'user.httpSignAccount' => [
+    'doormen' => 'e3de3825cfbf',
+],
+```
+
+#### 基本说明
+
+Url测试访问地址:
 
 ```
 // 注意系统默认关闭了该测试控制器 请去 api 的 main 文件内开启 sign-secret-key 路由
 http://www.example.com/api/sign-secret-key
 ```
-
-#### 基本说明
 
 签名sign的生成规则：  
 将需要参与签名的参数按照参数名字符串顺序升序排列，并用请求查询串的形式依次拼接。  

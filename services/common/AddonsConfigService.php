@@ -19,16 +19,11 @@ class AddonsConfigService extends Service
      * @param $merchant_id
      * @return array|\yii\db\ActiveRecord|null
      */
-    public function findByName($name, $merchant_id = '')
+    public function findByName($name, $app_id, $merchant_id = '')
     {
-        if (!$merchant_id) {
-            // 总后台强制商户 id 为 1 避免拿到错误的配置
-            $merchant_id = Yii::$app->services->merchant->getId();
-            AppEnum::BACKEND == Yii::$app->id && $merchant_id = 1;
-        }
-
         return AddonsConfig::find()
-            ->where(['addons_name' => $name, 'merchant_id' => $merchant_id])
+            ->where(['addons_name' => $name, 'app_id' => $app_id])
+            ->andFilterWhere(['merchant_id' => $merchant_id])
             ->one();
     }
 }

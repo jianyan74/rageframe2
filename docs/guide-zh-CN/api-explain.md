@@ -10,10 +10,20 @@
 - 公用请求方法
 - 公共状态码说明
 
+> api 文档下的大部分接口商户 api 也通用
+
 #### 测试域名
+
+用户 api
 
 ```
 http://www.example.com/api/接口版本/
+```
+
+商户 api
+
+```
+http://www.example.com/merapi/接口版本/
 ```
 
 #### 接口版本
@@ -34,16 +44,38 @@ Query 入参说明
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 access-token | string | 否 | 无 | 授权秘钥 | 需登录验证(出现401错误)必传,与下面的x-api-key 2选1即可
+merchant_id | int | 否 | 无 | 商户id | 
 
 Header 入参说明
 
 参数名 | 参数类型| 必填 | 默认 | 说明 | 备注
 ---|---|---|---|---|---
 x-api-key | string | 否 |  | 授权秘钥 | 与上面的access-token 2选1即可
-device | string | 否 |  | 设备类型 | ios/android
-device-uuid | string | 否 |  | 设备唯一码 | ios: IDFA码;android:IMEI码;
-device-version | string | 否 |  | 设备系统版本号 | 
-device-app-version | string | 否 |  | 设备上当前app版本号 | 
+merchant-id | string | 否 |  | 商户id | 
+device-id | string | 否 |  | 设备ID |
+device-name | string | 否 |  | 设备名称 | 
+width | int | 否 |  | 屏幕宽度 |
+height | int | 否 |  | 屏幕高度 |
+os | string | 否 |  | 操作系统 |
+os-version | string | 否 |  | 操作系统版本 |
+is-root | int | 否 |  | 是否越狱 | 0:未越狱， 1:已越狱
+network | string | 否 |  | 网络类型 |
+wifi-ssid | string | 否 |  | wifi的编号 |
+wifi-mac | string | 否 |  | wifi的mac |
+xyz | string | 否 |  | 三轴加速度 |
+version-name | string | 否 |  | APP版本名 |
+api-version | string | 否 |  | API的版本号 |
+channel | string | 否 |  | 渠道名 |
+app-name | int | 否 |  | APP编号 | 1:android， 2:iphone
+dpi | int | 否 |  | 屏幕密度 |
+api-level | string | 否 |  | android的API的版本号 |
+operator | string | 否 |  | 运营商 |
+idfa | string | 否 |  | iphone的IDFA |
+idfv | string | 否 |  | iphone的IDFV |
+open-udid | string | 否 |  | iphone的OpenUdid |
+wlan-ip | string | 否 |  | 局网ip地址 |
+time | int | 否 |  | 客户端时间 |
+
 
 #### 公共出参说明
 

@@ -4,7 +4,6 @@ namespace common\traits;
 
 use Yii;
 use yii\base\Model;
-use common\enums\AppEnum;
 use common\components\Init;
 
 /**
@@ -30,11 +29,6 @@ trait BaseAction
      */
     public function getMerchantId()
     {
-        // 总后台不允许开启多商户
-        if (Yii::$app->params['real_app_id'] == AppEnum::BACKEND) {
-            return '';
-        }
-
         if (!$this->merchant_id) {
             $this->merchant_id = Yii::$app->services->merchant->getId();
         }

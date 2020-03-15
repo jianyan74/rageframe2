@@ -62,6 +62,7 @@ class OnAuthController extends ActiveController
         $model = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
         $model->member_id = Yii::$app->user->identity->member_id;
+        $model->merchant_id = Yii::$app->user->identity->merchant_id;
         if (!$model->save()) {
             return ResultHelper::json(422, $this->getError($model));
         }

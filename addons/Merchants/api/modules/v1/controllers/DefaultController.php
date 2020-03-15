@@ -2,7 +2,6 @@
 
 namespace addons\Merchants\api\modules\v1\controllers;
 
-use Yii;
 use api\controllers\OnAuthController;
 
 /**

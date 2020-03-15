@@ -23,6 +23,9 @@ location /api {
 location /merchant {
     try_files $uri $uri/ /merchant/index.php$is_args$args;
 }
+location /merapi {
+    try_files $uri $uri/ /merapi/index.php$is_args$args;
+}
 location /html5 {
     try_files $uri $uri/ /html5/index.php$is_args$args;
 }
@@ -41,6 +44,7 @@ location /
      if (!-e $request_filename) {
            rewrite ^/backend(.*)$ /backend/index.php?s=$1 last;
            rewrite ^/merchant(.*)$ /merchant/index.php?s=$1 last;
+           rewrite ^/merapi(.*)$ /merapi/index.php?s=$1 last;
            rewrite ^/api(.*)$ /api/index.php?s=$1 last;
            rewrite ^/html5(.*)$ /html5/index.php?s=$1 last;
            rewrite ^/oauth2(.*)$ /oauth2/index.php?s=$1 last;
@@ -89,6 +93,14 @@ RewriteRule . index.php
         <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
     </conditions>
     <action type="Rewrite" url="merchant/index.php/{R:1}" />
+</rule>
+<rule name="merapi" stopProcessing="true">
+    <match url="^merapi/(.*)" />
+    <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+    </conditions>
+    <action type="Rewrite" url="merapi/index.php/{R:1}" />
 </rule>
 <rule name="html5" stopProcessing="true">
     <match url="^html5/(.*)" />

@@ -2,11 +2,12 @@
 
 namespace merchant\forms;
 
-use common\enums\StatusEnum;
+use common\models\merchant\Merchant;
 use Yii;
 use common\helpers\StringHelper;
 use common\models\merchant\Member;
-use yii\web\UnauthorizedHttpException;
+use common\enums\AppEnum;
+use common\enums\MerchantStateEnum;
 
 /**
  * Class LoginForm
@@ -63,7 +64,7 @@ class LoginForm extends \common\models\forms\LoginForm
     public function validateIp($attribute)
     {
         $ip = Yii::$app->request->userIP;
-        $allowIp = Yii::$app->debris->config('sys_allow_ip');
+        $allowIp = Yii::$app->debris->backendConfig('sys_allow_ip');
         if (!empty($allowIp)) {
             $ipList = StringHelper::parseAttr($allowIp);
 
@@ -83,8 +84,28 @@ class LoginForm extends \common\models\forms\LoginForm
     {
         /** @var Member $user */
         if ($user = $this->getUser()) {
-            if (!($merchant = Yii::$app->services->merchant->findById($user->merchant_id)) || $merchant->status != StatusEnum::ENABLED) {
+            if (!($merchant = Merchant::findOne($user->merchant_id))) {
                 $this->addError($attribute, '无法登陆请联系管理员');
+
+                return false;
+            }
+
+            if ($merchant->state == MerchantStateEnum::DISABLED) {
+                $this->addError($attribute, '商户已被关闭，请联系管理员');
+
+                return false;
+            }
+
+            if ($merchant->state == MerchantStateEnum::AUDIT) {
+                $this->addError($attribute, '商户正在审核中,请等待');
+
+                return false;
+            }
+
+            if (!Yii::$app->services->rbacAuthAssignment->findByUserIdAndAppId($user->id, AppEnum::MERCHANT)) {
+                $this->addError($attribute, '未授权, 请联系管理员授权');
+
+                return false;
             }
         }
     }

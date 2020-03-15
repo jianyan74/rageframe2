@@ -69,10 +69,10 @@ use merchant\widgets\notify\Notify;
                         <li class="user-body">
                             <div class="row">
                                 <div class="col-xs-6 text-center">
-                                    <a href="<?= Url::to(['/base/member/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
+                                    <a href="<?= Url::to(['/merchants/base/member/personal']); ?>" class="J_menuItem" onclick="$('body').click();">个人信息</a>
                                 </div>
                                 <div class="col-xs-6 text-center">
-                                    <a href="<?= Url::to(['/base/member/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
+                                    <a href="<?= Url::to(['/merchants/base/member/up-password']); ?>" class="J_menuItem" onclick="$('body').click();">修改密码</a>
                                 </div>
                             </div>
                             <!-- /.row -->

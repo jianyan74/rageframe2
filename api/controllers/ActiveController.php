@@ -51,10 +51,11 @@ class ActiveController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
         // 跨域支持
-        $behaviors['corsFilter'] = [
-            'class' => Cors::class,
-        ];
+//        $behaviors['corsFilter'] = [
+//            'class' => Cors::class,
+//        ];
 
+        // var_dump(1);die();
         // 移除行为的权限验证的优先级
         unset($behaviors['authenticator']);
 

@@ -4,7 +4,7 @@ namespace common\components;
 
 use Yii;
 use yii\web\UnprocessableEntityHttpException;
-use common\enums\CacheEnum;
+use common\enums\AppEnum;
 
 /**
  * Class Debris
@@ -26,10 +26,13 @@ class Debris
      * @param string $merchant_id
      * @return string|null
      */
-    public function config($name, $noCache = false, $merchant_id = 1)
+    public function config($name, $noCache = false, $merchant_id = '')
     {
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        $app_id = !$merchant_id ? AppEnum::BACKEND : AppEnum::MERCHANT;
+
         // 获取缓存信息
-        $info = $this->getConfigInfo($noCache, $merchant_id);
+        $info = $this->getConfigInfo($noCache, $app_id, $merchant_id);
 
         return isset($info[$name]) ? trim($info[$name]) : null;
     }
@@ -40,9 +43,42 @@ class Debris
      * @param bool $noCache true 不从缓存读取 false 从缓存读取
      * @return array|bool|mixed
      */
-    public function configAll($noCache = false, $merchant_id = 1)
+    public function configAll($noCache = false, $merchant_id = '')
     {
-        $info = $this->getConfigInfo($noCache, $merchant_id);
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        $app_id = !$merchant_id ? AppEnum::BACKEND : AppEnum::MERCHANT;
+
+        $info = $this->getConfigInfo($noCache, $app_id, $merchant_id);
+
+        return $info ? $info : [];
+    }
+
+    /**
+     * 返回配置名称
+     *
+     * @param string $name 字段名称
+     * @param bool $noCache true 不从缓存读取 false 从缓存读取
+     * @param string $merchant_id
+     * @return string|null
+     */
+    public function backendConfig($name, $noCache = false)
+    {
+        // 获取缓存信息
+        $info = $this->getConfigInfo($noCache, AppEnum::BACKEND);
+
+        return isset($info[$name]) ? trim($info[$name]) : null;
+    }
+
+    /**
+     * 返回配置名称
+     *
+     * @param bool $noCache true 不从缓存读取 false 从缓存读取
+     * @return array|bool|mixed
+     */
+    public function backendConfigAll($noCache = false)
+    {
+        $info = $this->getConfigInfo($noCache, AppEnum::BACKEND);
+
         return $info ? $info : [];
     }
 
@@ -53,9 +89,15 @@ class Debris
      * @param bool $noCache
      * @return string|null
      */
-    public function merchantConfig($name, $noCache = false)
+    public function merchantConfig($name, $noCache = false, $merchant_id = '')
     {
-        return $this->config($name, $noCache, Yii::$app->services->merchant->getId());
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        !$merchant_id && $merchant_id = 1;
+
+        // 获取缓存信息
+        $info = $this->getConfigInfo($noCache, AppEnum::MERCHANT, $merchant_id);
+
+        return isset($info[$name]) ? trim($info[$name]) : null;
     }
 
     /**
@@ -64,9 +106,14 @@ class Debris
      * @param bool $noCache
      * @return array|bool|mixed
      */
-    public function merchantConfigAll($noCache = false)
+    public function merchantConfigAll($noCache = false, $merchant_id = '')
     {
-        return $this->configAll($noCache, Yii::$app->services->merchant->getId());
+        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
+        !$merchant_id && $merchant_id = 1;
+
+        $info = $this->getConfigInfo($noCache, AppEnum::MERCHANT, $merchant_id);
+
+        return $info ? $info : [];
     }
 
     /**
@@ -76,27 +123,27 @@ class Debris
      * @param int $merchant_id 强制从某个商户读取
      * @return array|mixed
      */
-    protected function getConfigInfo($noCache, $merchant_id)
+    protected function getConfigInfo($noCache, $app_id, $merchant_id = '')
     {
-        if ($noCache == false && $this->config) {
-            return $this->config;
+        // 获取缓存信息
+        $cacheKey = 'config:' . $merchant_id . $app_id;
+        if ($noCache == false && !empty($this->config[$cacheKey])) {
+            return $this->config[$cacheKey];
         }
 
-        // 获取缓存信息
-        $cacheKey = CacheEnum::getPrefix('config', $merchant_id);
-        if ($noCache == true || !($this->config = Yii::$app->cache->get($cacheKey))) {
-            $config = Yii::$app->services->config->findAllWithValue($merchant_id);
-            $this->config = [];
+        if ($noCache == true || !($this->config[$cacheKey] = Yii::$app->cache->get($cacheKey))) {
+            $config = Yii::$app->services->config->findAllWithValue($app_id, $merchant_id);
+            $this->config[$cacheKey] = [];
 
             foreach ($config as $row) {
-                $this->config[$row['name']] = $row['value']['data'] ?? $row['default_value'];
+                $this->config[$cacheKey][$row['name']] = $row['value']['data'] ?? $row['default_value'];
             }
 
             // 设置缓存
-            Yii::$app->cache->set($cacheKey, $this->config, 60 * 60);
+            Yii::$app->cache->set($cacheKey, $this->config[$cacheKey], 60 * 60);
         }
 
-        return $this->config;
+        return $this->config[$cacheKey];
     }
 
     /**

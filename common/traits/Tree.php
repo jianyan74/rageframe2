@@ -4,11 +4,16 @@ namespace common\traits;
 
 use common\helpers\ArrayHelper;
 use common\helpers\TreeHelper;
+use common\models\member\Member;
 
 /**
  * Trait Tree
  *
  * 注意：必须带有
+ *
+ * id、pid、level、tree 字段
+ *
+ * 选择使用
  *
  * '''php
  *     public function getParent()
@@ -17,19 +22,58 @@ use common\helpers\TreeHelper;
  *     }
  * '''
  *
- * 和
- *
- * id、pid、level、tree 字段
- *
  * @package common\traits
  */
 trait Tree
 {
     /**
+     * 关联父级
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(self::class, ['id' => 'pid']);
+    }
+
+    /**
      * @param bool $insert
      * @return bool
      */
     public function beforeSave($insert)
+    {
+        // 处理上下级关系
+        $this->autoUpdateTree();
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        // 自动删除所有下级
+        $this->autoDeleteTree();
+
+        return parent::beforeDelete();
+    }
+
+    /**
+     * 自动删除所有下级
+     */
+    protected function autoDeleteTree()
+    {
+        self::deleteAll(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false]);
+    }
+
+    /**
+     * 自动更新树
+     *
+     * @param bool $insert
+     * @return bool
+     */
+    protected function autoUpdateTree()
     {
         if ($this->isNewRecord) {
             if ($this->pid == 0) {
@@ -59,18 +103,6 @@ trait Tree
                 $this->tree = $tree;
             }
         }
-
-        return parent::beforeSave($insert);
-    }
-
-    /**
-     * @return bool
-     */
-    public function beforeDelete()
-    {
-        self::deleteAll(['like', 'tree', $this->tree . TreeHelper::prefixTreeKey($this->id) . '%', false]);
-
-        return parent::beforeDelete();
     }
 
     /**

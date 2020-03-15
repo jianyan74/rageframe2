@@ -85,6 +85,8 @@ class AccessToken extends User
      */
     public function behaviors()
     {
+        $merchant_id = Yii::$app->services->merchant->getId();
+
         return [
             [
                 'class' => TimestampBehavior::class,
@@ -98,7 +100,7 @@ class AccessToken extends User
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['merchant_id'],
                 ],
-                'value' => Yii::$app->services->merchant->getId(),
+                'value' => !empty($merchant_id) ? $merchant_id : 0,
             ]
         ];
     }

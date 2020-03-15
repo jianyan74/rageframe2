@@ -37,6 +37,26 @@ class MerchantService extends Service
     }
 
     /**
+     * @param $merchant_id
+     */
+    public function addId($merchant_id)
+    {
+        !$this->merchant_id && $this->merchant_id = $merchant_id;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getCount()
+    {
+        return Merchant::find()
+            ->select('id')
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['state' => StatusEnum::ENABLED])
+            ->count();
+    }
+
+    /**
      * @return array|\yii\db\ActiveRecord|null
      */
     public function findByLogin()
@@ -50,7 +70,7 @@ class MerchantService extends Service
     public function findById($id)
     {
         return Merchant::find()
-            ->where(['status' => StatusEnum::ENABLED])
+            ->where(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['id' => $id])
             ->one();
     }

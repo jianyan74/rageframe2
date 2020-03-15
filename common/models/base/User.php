@@ -7,7 +7,7 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
-use common\models\common\AuthAssignment;
+use common\models\rbac\AuthAssignment;
 
 /**
  * User model

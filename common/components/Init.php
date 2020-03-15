@@ -22,12 +22,6 @@ class Init implements BootstrapInterface
      * @var
      */
     protected $id;
-    /**
-     * 默认商户ID
-     *
-     * @var int
-     */
-    protected $default_merchant_id = 1;
 
     /**
      * @param \yii\base\Application $application
@@ -41,15 +35,15 @@ class Init implements BootstrapInterface
         $this->id = $application->id;// 初始化变量
         // 商户信息
         if (in_array(Yii::$app->id, [AppEnum::CONSOLE, AppEnum::BACKEND])) {
-            $this->afreshLoad($this->default_merchant_id);
-        } elseif (Yii::$app->id == AppEnum::MERCHANT) {
+            $this->afreshLoad('');
+        } elseif (in_array(Yii::$app->id, [AppEnum::MERCHANT, AppEnum::MER_API])) {
             /** @var Member $identity */
             $identity = Yii::$app->user->identity;
-            $this->afreshLoad($identity->merchant_id ?? $this->default_merchant_id);
+            $this->afreshLoad($identity->merchant_id ?? '');
         } else {
             $merchant_id = Yii::$app->request->headers->get('merchant-id', '');
             if (empty($merchant_id)) {
-                $merchant_id = Yii::$app->request->get('merchant_id', $this->default_merchant_id);
+                $merchant_id = Yii::$app->request->get('merchant_id', '');
             }
 
             $this->afreshLoad($merchant_id);
@@ -69,7 +63,7 @@ class Init implements BootstrapInterface
         try {
             Yii::$app->services->merchant->setId($merchant_id);
             // 获取 ip 配置
-            $sys_ip_blacklist_open = Yii::$app->debris->config('sys_ip_blacklist_open');
+            $sys_ip_blacklist_open = Yii::$app->debris->backendConfig('sys_ip_blacklist_open');
             // 初始化模块
             Yii::$app->setModules($this->getModulesByAddons());
         } catch (\Exception $e) {
@@ -99,7 +93,6 @@ class Init implements BootstrapInterface
     /**
      * 获取模块
      *
-     * @return array
      * @throws \yii\base\InvalidConfigException
      */
     public function getModulesByAddons()
@@ -111,7 +104,6 @@ class Init implements BootstrapInterface
         foreach ($addons as $addon) {
             $name = $addon['name'];
             $app_id = $this->id;
-
             // 模块映射
             if ($this->id == AppEnum::BACKEND && $addon['is_merchant_route_map'] == true) {
                 $app_id = $merchant;

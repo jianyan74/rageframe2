@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\validators;
 
 use common\enums\StatusEnum;
@@ -60,7 +61,7 @@ class SmsCodeValidator extends Validator
         if (
             is_null($smsLog) ||
             ($smsLog->code != $model->$attribute) ||
-            ($smsLog->created_at > $time || $time > ($smsLog->created_at + $this->expireTime) )
+            ($smsLog->created_at > $time || $time > ($smsLog->created_at + $this->expireTime))
         ) {
             $this->addError($model, $attribute, '验证码错误');
         } else {

@@ -9,6 +9,7 @@ use common\behaviors\MerchantBehavior;
  *
  * @property string $id 主键
  * @property int $config_id 配置id
+ * @property string $app_id 应用id
  * @property string $merchant_id 商户id
  * @property string $data 配置内
  */
@@ -31,7 +32,7 @@ class ConfigValue extends \yii\db\ActiveRecord
     {
         return [
             [['config_id', 'merchant_id'], 'integer'],
-            [['data'], 'string'],
+            [['data', 'app_id'], 'string'],
         ];
     }
 
@@ -42,6 +43,7 @@ class ConfigValue extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'app_id' => '应用id',
             'config_id' => '配置id',
             'merchant_id' => '商户',
             'data' => '内容',

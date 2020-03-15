@@ -42,7 +42,7 @@
 - 消息概述和响应
 - [Access Token](wechat-token.md)
 
-#### 模块开发
+#### 插件模块开发
 
 - [模块介绍及目录](addon-introduce-catalog.md)
 - [模块开发流程](addon-flow.md)

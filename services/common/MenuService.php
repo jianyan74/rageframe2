@@ -2,6 +2,7 @@
 
 namespace services\common;
 
+use common\enums\AppEnum;
 use Yii;
 use yii\helpers\Json;
 use common\models\common\MenuCate;
@@ -103,12 +104,6 @@ class MenuService extends Service
         $models = $this->findAll();
 
         // 获取权限信息
-        $auth = [];
-        if (!Yii::$app->services->auth->isSuperAdmin()) {
-            $role = Yii::$app->services->authRole->getRole();
-            $auth = Yii::$app->services->authRole->getAllAuthByRole($role);
-        }
-
         foreach ($models as $key => &$model) {
             if (!empty($model['url'])) {
                 $params = Json::decode($model['params']);
@@ -125,13 +120,13 @@ class MenuService extends Service
             }
 
             // 系统菜单校验
-            if ($model['is_addon'] == WhetherEnum::DISABLED && Auth::verify($model['url'], $auth) === false) {
+            if ($model['is_addon'] == WhetherEnum::DISABLED && Auth::verify($model['url']) === false) {
                 unset($models[$key]);
             }
 
             // 插件菜单校验
             if ($model['is_addon'] == WhetherEnum::ENABLED) {
-                if (Auth::verify($model['url'], $auth) === false) {
+                if (Auth::verify($model['url']) === false) {
                     unset($models[$key]);
                 }
 
@@ -149,7 +144,7 @@ class MenuService extends Service
     {
         $data = Menu::find()->where(['status' => StatusEnum::ENABLED]);
         // 关闭开发模式
-        if (empty(Yii::$app->debris->config('sys_dev', false, 1))) {
+        if (empty(Yii::$app->debris->backendConfig('sys_dev'))) {
             $data = $data->andWhere(['dev' => StatusEnum::DISABLED]);
         }
 
