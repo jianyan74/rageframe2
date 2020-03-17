@@ -90,7 +90,7 @@ class Invoice extends \common\models\base\BaseModel
      */
     public function beforeSave($insert)
     {
-        if ($this->oldAttributes['is_default'] == StatusEnum::DISABLED && $this->is_default == StatusEnum::ENABLED) {
+        if (($this->isNewRecord || $this->oldAttributes['is_default'] == StatusEnum::DISABLED) && $this->is_default == StatusEnum::ENABLED) {
             self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
         }
 

@@ -78,7 +78,7 @@ class BankAccount extends \common\models\base\BaseModel
     {
         $this->account_type_name = AccountTypeEnum::getValue($this->account_type);
 
-        if ($this->oldAttributes['is_default'] == StatusEnum::DISABLED && $this->is_default == StatusEnum::ENABLED) {
+        if (($this->isNewRecord || $this->oldAttributes['is_default'] == StatusEnum::DISABLED) && $this->is_default == StatusEnum::ENABLED) {
             self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
         }
 

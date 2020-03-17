@@ -93,7 +93,7 @@ class Address extends \common\models\base\BaseModel
     public function beforeSave($insert)
     {
         $this->address_name = Yii::$app->services->provinces->getCityListName([$this->province_id, $this->city_id, $this->area_id]);
-        if ($this->oldAttributes['is_default'] == StatusEnum::DISABLED && $this->is_default == StatusEnum::ENABLED) {
+        if (($this->isNewRecord || $this->oldAttributes['is_default'] == StatusEnum::DISABLED) && $this->is_default == StatusEnum::ENABLED) {
             self::updateAll(['is_default' => StatusEnum::DISABLED], ['member_id' => $this->member_id, 'is_default' => StatusEnum::ENABLED]);
         }
 
