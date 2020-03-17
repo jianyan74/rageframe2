@@ -33,13 +33,13 @@ use common\helpers\Auth;
     <div class="col-sm-2">
         <div class="pull-right" style="margin-top: 4px">
             共 <strong class="text-danger"><?= $count ?></strong> 条
-            <?php if(Auth::verify('attachment/sync')){ ?>
+            <?php if(Auth::verify('/wechat/attachment/sync')){ ?>
                 <a class="btn btn-primary btn-xs" id="getAllAttachment">
                     <i class="fa fa-cloud-download"></i> 同步
                 </a>
             <?php } ?>
             <?php if($mediaType == 'news'){ ?>
-                <?php if(Auth::verify('attachment/news-edit')){ ?>
+                <?php if(Auth::verify('/wechat/attachment/news-edit')){ ?>
                     <a id="createPostBtn" class="btn btn-primary btn-xs">
                         <i class="fa fa-plus"></i> 创建
                     </a>
