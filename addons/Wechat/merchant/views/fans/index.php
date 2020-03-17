@@ -47,11 +47,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <div class="col-sm-6">
                                 <div class="pull-right">
                                     <!-- 权限校验判断 -->
-                                    <?php if(Auth::verify('fans/sync')){ ?>
+                                    <?php if(Auth::verify('/wechat/fans/sync')){ ?>
                                         <span class="btn btn-white btn-sm" id="sync"><i class="fa fa-cloud-download"></i> 同步选中粉丝信息</span>
                                     <?php } ?>
                                     <!-- 权限校验判断 -->
-                                    <?php if(Auth::verify('fans/get-all-fans')){ ?>
+                                    <?php if(Auth::verify('/wechat/fans/get-all-fans')){ ?>
                                         <span class="btn btn-white btn-sm" onclick="getAllFans()"><i class="fa fa-cloud-download"></i>  同步全部粉丝信息</span>
                                     <?php } ?>
                                 </div>
@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                                                 <span class="label label-default">无标签</span>
                                             <?php } ?>
                                             <!-- 权限校验判断 -->
-                                            <?php if (Auth::verify('fans/move-tag')){ ?>
+                                            <?php if (Auth::verify('/wechat/fans/move-tag')){ ?>
                                                 <a  href="<?= Url::to(['move-tag','fan_id' => $model->id])?>" data-toggle='modal' data-target='#ajaxModal' style="color: #76838f"><i class="icon ion-arrow-down-b "></i></a>
                                             <?php } ?>
                                         </td>

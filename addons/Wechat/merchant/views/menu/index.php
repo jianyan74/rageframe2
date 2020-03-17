@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     <div class="row">
                         <div class="col-lg-12 normalPaddingTop">
                             <!-- 权限校验判断 -->
-                            <?php if (Auth::verify('menu/sync')) { ?>
+                            <?php if (Auth::verify('/wechat/menu/sync')) { ?>
                                 <a class="btn btn-primary btn-xs" id="getNewMenu">
                                     <i class="fa fa-cloud-download"></i> 同步
                                 </a>
