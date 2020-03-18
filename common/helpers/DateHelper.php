@@ -187,7 +187,7 @@ class DateHelper
     public static function formatTimestamp($time)
     {
         $min = $time / 60;
-        $hours = $time / 60;
+        $hours = $time / 3600;
         $days = floor($hours / 24);
         $hours = floor($hours - ($days * 24));
         $min = floor($min - ($days * 60 * 24) - ($hours * 60));
