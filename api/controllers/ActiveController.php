@@ -50,13 +50,6 @@ class ActiveController extends \yii\rest\ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        // 跨域支持
-        $behaviors['corsFilter'] = [
-            'class' => Cors::class,
-        ];
-
-        // 移除行为的权限验证的优先级
-        unset($behaviors['authenticator']);
 
         // 进行签名验证
         if (Yii::$app->params['user.httpSignValidity'] == true) {

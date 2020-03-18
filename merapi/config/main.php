@@ -119,5 +119,8 @@ return [
             ]
         ],
     ],
+    'as cors' => [
+        'class' => \yii\filters\Cors::class,
+    ],
     'params' => $params,
 ];
