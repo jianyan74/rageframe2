@@ -1,6 +1,7 @@
 <?php
 namespace common\widgets\ueditor;
 
+use common\helpers\ResultHelper;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -259,10 +260,16 @@ class UeditorController extends Controller
         foreach ($source as $imgUrl) {
             try {
                 $upload->save($upload->verifyUrl($imgUrl));
-                $baseInfo = $upload->getBaseInfo();
+                if ($file = Yii::$app->services->attachment->findByMd5($upload->config['md5'])) {
+                    $url = $file['base_url'];
+                } else {
+                    $baseInfo = $upload->getBaseInfo();
+                    $url = $baseInfo['url'];
+                }
+
                 $list[] = [
                     'state' => 'SUCCESS',
-                    'url' => $baseInfo['url'],
+                    'url' => $url,
                     'source' => $imgUrl
                 ];
             } catch (\Exception $e) {

@@ -221,6 +221,7 @@ class UploadHelper
         // $name = $m ? $m[1] : "",
         $this->baseInfo['extension'] = $extend;
         $this->baseInfo['size'] = strlen($img);
+        $this->config['md5'] = md5($img);
         $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $extend;
 
         $this->verify();
@@ -289,7 +290,8 @@ class UploadHelper
 
         // 判断如果文件存在就重命名文件名
         if ($this->filesystem->has($this->baseInfo['url'])) {
-            $this->baseInfo['name'] = $this->baseInfo['name'] . '_' . StringHelper::randomNum();
+            $name = explode('_', $this->baseInfo['name']);
+            $this->baseInfo['name'] = $name[0] . '_' . time() . '_' . StringHelper::random(8);
             $this->baseInfo['url'] = $this->paths['relativePath'] . $this->baseInfo['name'] . '.' . $this->baseInfo['extension'];
         }
 
@@ -555,7 +557,7 @@ class UploadHelper
 
         $config = $this->config;
         // 保留原名称
-        $config['originalName'] == false && $this->baseInfo['name'] = $config['prefix'] . StringHelper::randomNum(time());
+        $config['originalName'] == false && $this->baseInfo['name'] = $config['prefix']  . time()  . '_' . StringHelper::random(8);
 
         // 文件路径
         $filePath = $config['path'] . date($config['subName'], time()) . "/";
