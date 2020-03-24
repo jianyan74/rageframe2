@@ -145,7 +145,11 @@ class AuthRoleService extends Service
         $models = ArrayHelper::itemsMerge($list);
         $data = ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
 
-        return ArrayHelper::merge([0 => '顶级角色'], $data);
+        if (Yii::$app->services->auth->isSuperAdmin()) {
+            return ArrayHelper::merge([0 => '顶级角色'], $data);
+        }
+
+        return $data;
     }
 
     /**
@@ -183,9 +187,16 @@ class AuthRoleService extends Service
     {
         $list = $this->findAll($app_id, Yii::$app->services->merchant->getId(), $this->roleCondition($sourceAuthChild));
 
-        $models = ArrayHelper::itemsMerge($list);
+        $pid = 0;
+        $treeStat = 1;
+        if ($sourceAuthChild == true && ($role = Yii::$app->services->rbacAuthRole->getRole())) {
+            $pid = $role['id'];
+            $treeStat = $role['level'] + 1;
+        }
 
-        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models), 'id', 'title');
+        $models = ArrayHelper::itemsMerge($list, $pid);
+
+        return ArrayHelper::map(ArrayHelper::itemsMergeDropDown($models, 'id', 'title', $treeStat), 'id', 'title');
     }
 
     /**
