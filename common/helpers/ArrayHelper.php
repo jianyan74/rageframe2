@@ -23,20 +23,23 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function itemsMerge(array $items, $pid = 0, $idField = "id", $pidField = 'pid', $child = '-')
     {
-        $map  = [];
+        $map = [];
         $tree = [];
-        foreach ($items as &$it){
+        foreach ($items as &$it) {
             $map[$it[$idField]] = &$it;
         }
-        foreach ($items as &$it){
+
+        foreach ($items as &$it) {
             $parent = &$map[$it[$pidField]];
-            if($parent) {
+            if ($parent) {
                 $parent[$child][] = &$it;
-            }else{
-                $tree[] = &$it;
+            } else {
+                $pid == $it[$pidField] && $tree[] = &$it;
             }
         }
-        unset($items,$map);
+
+        unset($items, $map);
+
         return $tree;
     }
 
