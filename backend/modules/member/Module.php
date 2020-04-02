@@ -21,7 +21,7 @@ class Module extends \yii\base\Module
     {
         parent::init();
 
-        Yii::$app->services->merchant->addId(0);
+        // Yii::$app->services->merchant->addId(0);
         // custom initialization code goes here
     }
 }
