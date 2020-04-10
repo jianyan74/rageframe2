@@ -65,7 +65,8 @@ class PayLog extends \common\models\base\BaseModel
             [['out_trade_no'], 'string', 'max' => 32],
             [['fee_type'], 'string', 'max' => 10],
             [['trade_type'], 'string', 'max' => 16],
-            [['order_sn', 'create_ip', 'pay_ip'], 'string', 'max' => 30],
+            [['create_ip', 'pay_ip'], 'string', 'max' => 30],
+            [['order_sn'], 'string', 'max' => 50],
         ];
     }
 

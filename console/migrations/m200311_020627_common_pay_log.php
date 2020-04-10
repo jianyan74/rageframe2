@@ -16,7 +16,7 @@ class m200311_020627_common_pay_log extends Migration
             'member_id' => "int(10) unsigned NULL DEFAULT '0' COMMENT '用户id'",
             'app_id' => "varchar(50) NULL DEFAULT '' COMMENT '应用id'",
             'addons_name' => "varchar(100) NULL DEFAULT '' COMMENT '插件名称'",
-            'order_sn' => "varchar(20) NULL DEFAULT '' COMMENT '关联订单号'",
+            'order_sn' => "varchar(50) NULL DEFAULT '' COMMENT '关联订单号'",
             'order_group' => "varchar(20) NULL DEFAULT '' COMMENT '组别[默认统一支付类型]'",
             'openid' => "varchar(50) NULL DEFAULT '' COMMENT 'openid'",
             'mch_id' => "varchar(20) NULL DEFAULT '' COMMENT '商户支付账户'",
