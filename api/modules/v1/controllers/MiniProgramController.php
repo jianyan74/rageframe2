@@ -71,6 +71,7 @@ class MiniProgramController extends OnAuthController
         // 判断是否有管理信息 数据也可以后续在绑定
         if (!($member = $memberAuthInfo->member)) {
             $member = new Member();
+            $member->pid = 0;
             $member->attributes = [
                 'gender' => $userinfo['gender'],
                 'nickname' => $userinfo['nickName'],
