@@ -85,7 +85,7 @@ trait Tree
             }
         } else {
             // 修改父类
-            if ($this->oldAttributes['pid'] != $this->pid) {
+            if (isset($this->oldAttributes['pid']) && $this->oldAttributes['pid'] != $this->pid) {
                 list($level, $tree) = $this->getParentData();
                 // 查找所有子级
                 $list = self::find()
