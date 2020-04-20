@@ -84,7 +84,7 @@ http://www.rageframe.com
 
 ### 插件
 
-- 微商城：https://github.com/jianyan74/Wechat
+- 微商城：https://github.com/jianyan74/TinyShop
 - 微信公众号：https://github.com/jianyan74/Wechat
 - 商家管理：https://github.com/jianyan74/Merchants
 - 在线文档：https://github.com/jianyan74/RfOnlineDoc
