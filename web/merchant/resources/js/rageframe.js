@@ -133,19 +133,29 @@ function autoChangeMenu(leftAuto = false) {
 
 /* data-table */
 var $table = $('.rf-table');
-function buildTable($el) {
+function buildTable($el, fixedNumber, fixedRightNumber) {
+    if (fixedNumber <= 0) {
+        fixedNumber = 0;
+    }
+
+    if (fixedRightNumber <= 0) {
+        fixedRightNumber = 0;
+    }
+
     $el.bootstrapTable('destroy').bootstrapTable({
         classes: 'table table-hover',
         fixedColumns: true,
-        fixedNumber: $($table).attr('fixedNumber') ?? 0,
-        fixedRightNumber: $($table).attr('fixedRightNumber') ?? 0
+        fixedNumber: fixedNumber,
+        fixedRightNumber: fixedRightNumber
     })
 }
 
 $(function() {
-    buildTable($table);
+    var fixedNumber = $($table).attr('fixedNumber');
+    var fixedRightNumber = $($table).attr('fixedRightNumber');
+    buildTable($table, fixedNumber, fixedRightNumber);
     $($table).find('thead tr').eq(1).remove();
-})
+});
 
 /* 导航标签切换 */
 $(document).on("click", ".rfTopMenu", function () {
