@@ -17,7 +17,7 @@ AppAsset::register($this);
         <title><?= Html::encode(Yii::$app->params['adminTitle']);?></title>
         <?php $this->head() ?>
     </head>
-    <body class="hold-transition skin-blue sidebar-mini fixed">
+    <body class="hold-transition skin-blue-light sidebar-mini fixed">
     <?php $this->beginBody() ?>
     <div class="wrapper">
         <!-- 头部区域 -->

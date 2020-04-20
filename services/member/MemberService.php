@@ -7,6 +7,7 @@ use common\enums\StatusEnum;
 use common\components\Service;
 use common\models\member\Member;
 use common\helpers\EchantsHelper;
+use common\helpers\TreeHelper;
 
 /**
  * Class MemberService
@@ -92,6 +93,76 @@ class MemberService extends Service
         return Member::find()
             ->where(['current_level' => $level])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * 获取所有下级id
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getChildIdsById($id)
+    {
+        $member = $this->get($id);
+
+        return Member::find()
+            ->select(['id'])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['like', 'tree', $member->tree . TreeHelper::prefixTreeKey($member->id) . '%', false])
+            ->andWhere(['<', 'level', $member->level + 3])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->orderBy('id desc')
+            ->asArray()
+            ->column();
+    }
+
+    /**
+     * 获取下级用户id
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getNextChildIdsById($id)
+    {
+        $member = $this->get($id);
+
+        return Member::find()
+            ->select(['id'])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['like', 'tree', $member->tree . TreeHelper::prefixTreeKey($member->id) . '%', false])
+            ->andWhere(['level' => $member->level + 1])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->orderBy('id desc')
+            ->asArray()
+            ->column();
+    }
+
+    /**
+     * 根据推广码查询
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByPromoCode($promo_code)
+    {
+        return Member::find()
+            ->where(['promo_code' => $promo_code, 'status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * 根据手机号码查询
+     *
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByMobile($mobile)
+    {
+        return Member::find()
+            ->where(['mobile' => $mobile, 'status' => StatusEnum::ENABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }

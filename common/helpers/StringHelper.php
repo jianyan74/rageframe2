@@ -46,7 +46,7 @@ class StringHelper extends BaseStringHelper
                 break;
             // php自带的唯一id
             case  'uniqid' :
-                return md5(uniqid(md5(microtime(true) . self::randomNum(8)), true));
+                return md5(uniqid(md5(microtime(true) . self::random(8)), true));
 
                 break;
         }
@@ -324,6 +324,17 @@ class StringHelper extends BaseStringHelper
     }
 
     /**
+     * 去除内容的注释
+     *
+     * @param $content
+     * @return string|string[]|null
+     */
+    public static function removeAnnotation($content)
+    {
+        return preg_replace("/(\/\*(\s|.)*?\*\/)|(\/\/.(\s|.*))|(#(\s*)?(.*))/", '', str_replace(["\r\n", "\r"], "\n", $content));
+    }
+
+    /**
      * 生成随机code
      *
      * @param $merchant_id
@@ -340,9 +351,9 @@ class StringHelper extends BaseStringHelper
     /**
      * 字符串匹配替换
      *
-     * @param $search
-     * @param $replace
-     * @param $subject
+     * @param string $search 查找的字符串
+     * @param string $replace 替换的字符串
+     * @param string $subject 字符串
      * @param null $count
      * @return mixed
      */

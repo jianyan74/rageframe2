@@ -259,10 +259,11 @@ class UeditorController extends Controller
         $upload = new UploadHelper(Yii::$app->request->get(), 'images');
         foreach ($source as $imgUrl) {
             try {
-                $upload->save($upload->verifyUrl($imgUrl));
+                $data = $upload->verifyUrl($imgUrl);
                 if ($file = Yii::$app->services->attachment->findByMd5($upload->config['md5'])) {
                     $url = $file['base_url'];
                 } else {
+                    $upload->save($data);
                     $baseInfo = $upload->getBaseInfo();
                     $url = $baseInfo['url'];
                 }

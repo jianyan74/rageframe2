@@ -185,7 +185,7 @@ $(function () {
         // 校验md5
         function md5File(file, uploader, config) {
             // 接管的直接上传跳过验证
-            if (config.independentUrl == true) {
+            if (config.independentUrl == true || config.md5Verify == false) {
                 $(document).trigger('md5Verify-create-progress-' + config.boxId, [file, uploader, config, '0%']);
                 // 开始上传
                 uploader.upload(file);

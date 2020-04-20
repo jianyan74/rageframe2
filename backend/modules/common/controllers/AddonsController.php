@@ -70,7 +70,6 @@ class AddonsController extends BaseController
     public function actionUnInstall()
     {
         $name = Yii::$app->request->get('name');
-
         // 删除数据库
         if ($model = Addons::findOne(['name' => $name])) {
             $model->delete();

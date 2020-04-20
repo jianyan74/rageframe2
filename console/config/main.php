@@ -13,26 +13,26 @@ return [
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'controllerMap' => [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
         /** ------ 数据库命令行备份 ------ **/
         'migrate' => [
             'class' => 'jianyan\migration\ConsoleController',
         ],
         /** ------ websocket ------ **/
 //        'websocket' => [
-//            'class' => 'console\controllers\WebSocketController',
+//            'class' => 'common\controllers\WebSocketController',
 //            'server' => 'common\components\WebSocketServer',
 //            'host' => '0.0.0.0',// 监听地址
 //            'port' => 9501, // 监听端口
 //            'type' => 'ws', // 默认为ws连接，可修改为wss
 //            'config' => [ // 标准的swoole配置项都可以再此加入
-//                'daemonize' => false, // 守护进程执行
+//                'daemonize' => true, // 守护进程执行
 //                'task_worker_num' => 4, //task进程的数量
 //                // 'ssl_cert_file' => '',
 //                // 'ssl_key_file' => '',

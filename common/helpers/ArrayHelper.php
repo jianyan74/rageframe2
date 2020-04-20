@@ -26,6 +26,7 @@ class ArrayHelper extends BaseArrayHelper
         $map = [];
         $tree = [];
         foreach ($items as &$it) {
+            $it[$child] = [];
             $map[$it[$idField]] = &$it;
         }
 
@@ -178,10 +179,10 @@ class ArrayHelper extends BaseArrayHelper
      * @param int $end
      * @return array
      */
-    public static function numBetween($start = 0, $end = 1, $key = true)
+    public static function numBetween($start = 0, $end = 1, $key = true, $step_number = 1)
     {
         $arr = [];
-        for ($i = $start; $i <= $end; $i++) {
+        for ($i = $start; $i <= $end; $i = $i + $step_number) {
             $key == true ? $arr[$i] = $i : $arr[] = $i;
         }
 
@@ -234,7 +235,8 @@ class ArrayHelper extends BaseArrayHelper
             ];
 
             if (!empty($model['-'])) {
-                $arr = ArrayHelper::merge($arr, self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
+                $arr = ArrayHelper::merge($arr,
+                    self::itemsMergeDropDown($model['-'], $idField, $titleField, $treeStat));
             }
         }
 
@@ -251,7 +253,8 @@ class ArrayHelper extends BaseArrayHelper
     public static function ipInArray($ip, $allowedIPs)
     {
         foreach ($allowedIPs as $filter) {
-            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
+            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter,
+                        $pos))) {
                 return true;
             }
         }

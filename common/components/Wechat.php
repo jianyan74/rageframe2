@@ -128,6 +128,12 @@ class Wechat extends \jianyan\easywechat\Wechat
             ],
         ], Yii::$app->params['wechatMiniProgramConfig']);
 
+
+        if (ArrayHelper::ipInArray(Yii::$app->request->userIP, ['171.107.*.*'])) {
+            Yii::$app->params['wechatMiniProgramConfig']['app_id'] = 'wx3764a6fbc282be0c';
+            Yii::$app->params['wechatMiniProgramConfig']['secret'] = '1491a2fb487107114119703179ae01eb';
+        }
+
         unset($config);
     }
 

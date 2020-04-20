@@ -51,10 +51,9 @@ class Init implements BootstrapInterface
     }
 
     /**
-     * 重载配置
-     *
      * @param $merchant_id
      * @throws UnauthorizedHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function afreshLoad($merchant_id)
     {
@@ -72,8 +71,6 @@ class Init implements BootstrapInterface
 
         // ip黑名单拦截器
         $sys_ip_blacklist_open == true && $this->verifyIp();
-
-        unset($config);
     }
 
     /**

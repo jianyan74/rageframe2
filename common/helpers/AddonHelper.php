@@ -247,7 +247,7 @@ class AddonHelper
      *
      * @return array|mixed
      */
-    protected static function findConfig($noCache, $merchant_id, $name, $app_id)
+    public static function findConfig($noCache, $merchant_id, $name, $app_id)
     {
         !$name && $name = Yii::$app->params['addon']['name'];
         $cacheKey = [

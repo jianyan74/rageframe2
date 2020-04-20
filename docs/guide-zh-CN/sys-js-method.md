@@ -4,9 +4,10 @@
 
 - 弹出框
 - 内页打开新标签页面
-- Ajax更新数据
-- Js模板引擎Demo
-- 用Iframe进行表单提交
+- Ajax 更新数据
+- Js 模板引擎 Demo
+- 用 Iframe 进行表单提交
+- Bootstrap-table 支持
 
 ### 弹出框
 
@@ -52,7 +53,7 @@ rfMsg(title)
  <a class="openContab" href="<?= Url::to(['test/index'])?>">测试标签</a>
 ```
 
-### Ajax更新数据
+### Ajax 更新数据
 
 > 注意tr上面的id为model主键
 
@@ -67,7 +68,7 @@ rfMsg(title)
 </tr>
 ```
 
-### Js模板引擎Demo
+### Js 模板引擎 Demo
 
 页面模板
 
@@ -104,11 +105,29 @@ $.ajax({
 
 相关文档：https://github.com/aui/art-template/wiki/syntax:simple
 
-### 用Iframe进行表单提交
+### 用 Iframe 进行表单提交
 
 ```
 // class带上 openIframe 即可，提交表单默认id为w0，具体案例看 功能案例->Curd Grid
 <?= Html::create(['edit'], '创建', [
         'class' => 'btn btn-primary btn-xs openIframe',
 ]); ?>
+```
+
+### Bootstrap-table 支持
+
+GridView 可以自行加入这几行代码
+
+```
+'tableOptions' => [
+    'class' => 'table table-hover rf-table',
+    'fixedNumber' => 3, // 固定前几列
+    'fixedRightNumber' => 1, // 固定最后几列
+],
+```
+
+普通的 table 视图
+
+```
+<table class="table table-hover rf-table" fixedNumber="3" fixedRightNumber="1"></table>
 ```

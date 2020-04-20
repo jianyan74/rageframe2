@@ -67,7 +67,7 @@ class BcHelper
     }
 
     /**
-     * 将二个高精确度数字相加
+     * 将二个高精确度数字相减
      *
      * @param $left_operand
      * @param $right_operand

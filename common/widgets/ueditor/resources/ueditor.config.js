@@ -363,13 +363,13 @@
 		,outputXssFilter: true
 		// xss过滤白名单 名单来源: https://raw.githubusercontent.com/leizongmin/js-xss/master/lib/default.js
 		,whitList: {
-			a:      ['target', 'href', 'title'],
+			a:      ['target', 'href', 'title', 'style'],
 			abbr:   ['title'],
 			address: [],
 			area:   ['shape', 'coords', 'href', 'alt'],
 			article: [],
 			aside:  [],
-			audio:  ['autoplay', 'controls', 'loop', 'preload', 'src'],
+			audio:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'style'],
 			b:      [],
 			bdi:    ['dir'],
 			bdo:    ['dir'],
@@ -415,17 +415,17 @@
 			sub:    [],
 			sup:    [],
 			strong: [],
-			table:  ['width', 'border', 'align', 'valign'],
+			table:  ['width', 'border', 'align', 'valign', 'style'],
 			tbody:  ['align', 'valign'],
-			td:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
+			td:     ['width', 'rowspan', 'colspan', 'align', 'valign', 'style'],
 			tfoot:  ['align', 'valign'],
-			th:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
-			thead:  ['align', 'valign'],
-			tr:     ['rowspan', 'align', 'valign'],
+			th:     ['width', 'rowspan', 'colspan', 'align', 'valign', 'style'],
+			thead:  ['align', 'valign', 'style'],
+			tr:     ['rowspan', 'align', 'valign', 'style'],
 			tt:     [],
 			u:      [],
 			ul:     [],
-			video:  ['autoplay', 'controls', 'loop', 'preload', 'poster', 'src', 'height', 'width']
+			video:  ['autoplay', 'controls', 'loop', 'preload', 'poster', 'src', 'height', 'width', 'style']
 		}
     };
 

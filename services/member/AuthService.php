@@ -58,4 +58,18 @@ class AuthService extends Service
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
+
+    /**
+     * @param $oauthClient
+     * @param $oauthClientUserId
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByMemberIdOauthClient($oauthClient, $memberId)
+    {
+        return Auth::find()
+            ->where(['oauth_client' => $oauthClient, 'member_id' => $memberId])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
 }

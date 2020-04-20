@@ -26,7 +26,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     //重新定义分页样式
-                    'tableOptions' => ['class' => 'table table-hover rf-table'],
+                    'tableOptions' => [
+                        'class' => 'table table-hover rf-table',
+                        'fixedNumber' => 2,
+                        'fixedRightNumber' => 1,
+                    ],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
@@ -55,7 +59,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'attribute' => 'level.name',
                             'value' => function ($model) {
                                 return Html::tag('span', $model->level->name ?? '', [
-                                        'class' => 'label label-primary'
+                                    'class' => 'label label-primary'
                                 ]);
                             },
                             'filter' => false,
@@ -99,32 +103,38 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         ],
                         [
                             'header' => "操作",
+                            'contentOptions' => ['class' => 'text-align-center'],
                             'class' => 'yii\grid\ActionColumn',
                             'template' => '{ajax-edit} {address} {recharge} {edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
-                                    return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
-                                        'data-toggle' => 'modal',
-                                        'data-target' => '#ajaxModal',
-                                    ]);
+                                    return Html::a('账号密码', ['ajax-edit', 'id' => $model->id], [
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#ajaxModal',
+                                            'class' => 'blue'
+                                        ]) . '<br>';
                                 },
                                 'address' => function ($url, $model, $key) {
-                                    return Html::linkButton(['address/index', 'member_id' => $model->id], '收货地址');
+                                    return Html::a('收货地址', ['address/index', 'member_id' => $model->id], [
+                                            'class' => 'cyan'
+                                        ]) . '<br>';
                                 },
                                 'recharge' => function ($url, $model, $key) {
-                                    return Html::linkButton(['recharge', 'id' => $model->id], '充值', [
-                                        'data-toggle' => 'modal',
-                                        'data-target' => '#ajaxModal',
-                                    ]);
+                                    return Html::a('充值', ['recharge', 'id' => $model->id], [
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#ajaxModal',
+                                            'class' => 'orange'
+                                        ]) . '<br>';
                                 },
                                 'edit' => function ($url, $model, $key) {
-                                    return Html::edit(['edit', 'id' => $model->id]);
-                                },
-                                'status' => function ($url, $model, $key) {
-                                    return Html::status($model->status);
+                                    return Html::a('编辑', ['edit', 'id' => $model->id], [
+                                            'class' => 'purple'
+                                        ]) . '<br>';
                                 },
                                 'destroy' => function ($url, $model, $key) {
-                                    return Html::delete(['destroy', 'id' => $model->id]);
+                                    return Html::a('删除', ['destroy', 'id' => $model->id], [
+                                            'class' => 'red',
+                                        ]) . '<br>';
                                 },
                             ],
                         ],
@@ -133,3 +143,4 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
             </div>
         </div>
     </div>
+</div>

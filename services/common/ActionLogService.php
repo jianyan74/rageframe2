@@ -2,6 +2,7 @@
 
 namespace services\common;
 
+use common\enums\AppEnum;
 use Yii;
 use common\helpers\DebrisHelper;
 use common\enums\StatusEnum;
@@ -45,7 +46,12 @@ class ActionLogService extends Service
         $model = new ActionLog();
         $model->behavior = $behavior;
         $model->remark = $remark;
-        $model->user_id = Yii::$app->user->id ?? 0;
+        if (in_array(Yii::$app->id, AppEnum::api())) {
+            $model->user_id = Yii::$app->user->identity->member_id ?? 0;
+        } else {
+            $model->user_id = Yii::$app->user->id ?? 0;
+        }
+
         $model->url = $url;
         $model->app_id = Yii::$app->id;
         $model->get_data = Yii::$app->request->get();

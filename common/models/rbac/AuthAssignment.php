@@ -51,6 +51,6 @@ class AuthAssignment extends \yii\db\ActiveRecord
     public function getRole()
     {
         return $this->hasOne(AuthRole::class, ['id' => 'role_id'])
-            ->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
+            ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()]);
     }
 }

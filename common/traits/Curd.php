@@ -59,7 +59,7 @@ trait Curd
         $id = Yii::$app->request->get('id', null);
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->referrer();
         }
 
         return $this->render($this->action->id, [

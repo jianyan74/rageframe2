@@ -19,6 +19,7 @@
 - 省市区控件(复选框)
 - 百度编辑器
 - Markdown 编辑器
+- 表情包选择
 - TreeGrid
 
 ### 颜色选择器
@@ -382,6 +383,37 @@ config 更多参考 http://fex.baidu.com/webuploader/doc/
 ```
 
 更多文档：https://pandao.github.io/editor.md/examples/index.html
+
+### 表情包选择
+
+引入
+
+```
+<?= \common\widgets\emoji\Emoji::widget([
+    'name' => 'emoji',
+    'theme' => 'default', // 可选择微信的表情包主题: wechat
+    'options' => [],
+    'bind_id' => '', // 绑定的文本域 id，如果填写会自动追加表情到文本域
+]); ?>
+```
+
+解析文本内的表情包
+
+```
+var text = $('.emoji').html();
+html = qqWechatEmotionParser(text);
+$('.emoji').html(html)
+```
+
+表情包提供回调触发事件提供用户自由发挥
+
+```
+// 表情回调 回调名称为 emoji-select-[初始化时候填写的 name]
+$(document).on('emoji-select-emoji', function (e, emoji) {
+    // 自由发挥，例如追加到 message 的光标文本域
+    $('#message').insertAtCaret(emoji);
+});
+```
 
 ### TreeGrid
 

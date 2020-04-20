@@ -80,7 +80,7 @@ class SiteController extends BaseController
     private function actionWechatPay()
     {
         $totalFee = 100;// 支付金额单位：分
-        $out_trade_no = time() . StringHelper::randomNum();
+        $out_trade_no = time() . StringHelper::random(8, true);
 
         $orderData = [
             'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...

@@ -118,6 +118,7 @@ class Files extends InputWidget
 
             /**-------------- 自定义的参数 ----------------**/
             'independentUrl' => false, // 独立上传地址,不受全局的地址上传影响
+            'md5Verify' => $this->typeConfig['md5Verify'], // md5 校验
             'mergeUrl' => Url::to(['/file/merge']),
             'getOssPathUrl' => Url::to(['/file/get-oss-path']),
             'verifyMd5Url' => Url::to(['/file/verify-md5']),

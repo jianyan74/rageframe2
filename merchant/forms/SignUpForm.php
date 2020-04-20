@@ -2,11 +2,11 @@
 
 namespace merchant\forms;
 
-use common\enums\MerchantStateEnum;
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
-use yii\helpers\Html;
+use common\enums\MerchantStateEnum;
 use common\enums\StatusEnum;
 use common\enums\WhetherEnum;
 use common\models\merchant\Member;
@@ -43,9 +43,25 @@ class SignUpForm extends Model
             [['title', 'cate_id', 'company_name', 'username', 'mobile', 'password', 're_pass'], 'required'],
             ['mobile', 'string', 'max' => 15],
             [['title', 'company_name'], 'unique', 'targetClass' => '\common\models\merchant\Merchant', 'message' => '{attribute}已经被占用.'],
-            ['mobile', 'unique', 'targetClass' => '\common\models\merchant\Member', 'message' => '该手机号码已经被占用.'],
+            [
+                'mobile',
+                'unique',
+                'targetClass' => '\common\models\merchant\Member',
+                'filter' => function (ActiveQuery $query) {
+                    return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+                },
+                'message' => '该手机号码已经被占用.'
+            ],
             ['mobile', 'match', 'pattern' => '/^1[3456789]\d{9}$/', 'message' => '手机号码格式不正确'],
-            [['username'], 'unique', 'targetClass' => '\common\models\merchant\Member', 'message' => '该用户名已经被占用了.'],
+            [
+                ['username'],
+                'unique',
+                'targetClass' => '\common\models\merchant\Member',
+                'filter' => function (ActiveQuery $query) {
+                    return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+                },
+                'message' => '该用户名已经被占用了.'
+            ],
             [
                 'username',
                 'match',

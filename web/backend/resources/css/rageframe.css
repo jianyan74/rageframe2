@@ -123,6 +123,10 @@
     margin-bottom: 0;
 }
 
+.text-align-center {
+    text-align: center;
+}
+
 /* ====== 替换AdminLTE样式 ====== */
 a {
     color: #76838f;
@@ -751,6 +755,17 @@ a.desc:after {
 }
 
 /* ====== 替换其他组件样式 ====== */
+
+.bootstrap-table {
+    margin-bottom: 20px;
+}
+
+.bootstrap-table .fixed-table-container .table thead th .desc {
+    background-image: none;
+}
+.bootstrap-table .fixed-table-container .table thead th .asc {
+    background-image: none;
+}
 
 .swal-title {
     font-weight: 300;

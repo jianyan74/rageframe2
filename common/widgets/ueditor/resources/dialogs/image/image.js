@@ -308,34 +308,34 @@
             var _this = this,
                 $ = jQuery,    // just in case. Make sure it's not an other libaray.
                 $wrap = _this.$wrap,
-            // 图片容器
+                // 图片容器
                 $queue = $wrap.find('.filelist'),
-            // 状态栏，包括进度和控制按钮
+                // 状态栏，包括进度和控制按钮
                 $statusBar = $wrap.find('.statusBar'),
-            // 文件总体选择信息。
+                // 文件总体选择信息。
                 $info = $statusBar.find('.info'),
-            // 上传按钮
+                // 上传按钮
                 $upload = $wrap.find('.uploadBtn'),
-            // 上传按钮
+                // 上传按钮
                 $filePickerBtn = $wrap.find('.filePickerBtn'),
-            // 上传按钮
+                // 上传按钮
                 $filePickerBlock = $wrap.find('.filePickerBlock'),
-            // 没选择文件之前的内容。
+                // 没选择文件之前的内容。
                 $placeHolder = $wrap.find('.placeholder'),
-            // 总体进度条
+                // 总体进度条
                 $progress = $statusBar.find('.progress').hide(),
-            // 添加的文件数量
+                // 添加的文件数量
                 fileCount = 0,
-            // 添加的文件总大小
+                // 添加的文件总大小
                 fileSize = 0,
-            // 优化retina, 在retina下这个值是2
+                // 优化retina, 在retina下这个值是2
                 ratio = window.devicePixelRatio || 1,
-            // 缩略图大小
+                // 缩略图大小
                 thumbnailWidth = 113 * ratio,
                 thumbnailHeight = 113 * ratio,
-            // 可能有pedding, ready, uploading, confirm, done.
+                // 可能有pedding, ready, uploading, confirm, done.
                 state = '',
-            // 所有文件的进度信息，key为file id
+                // 所有文件的进度信息，key为file id
                 percentages = {},
                 supportTransition = (function () {
                     var s = document.createElement('p').style,
@@ -347,7 +347,7 @@
                     s = null;
                     return r;
                 })(),
-            // WebUploader实例
+                // WebUploader实例
                 uploader,
                 actionUrl = editor.getActionUrl(editor.getOpt('imageActionName')),
                 acceptExtensions = (editor.getOpt('imageAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, ''),
@@ -403,10 +403,10 @@
             // 当有文件添加进来时执行，负责view的创建
             function addFile(file) {
                 var $li = $('<li id="' + file.id + '">' +
-                        '<p class="title">' + file.name + '</p>' +
-                        '<p class="imgWrap"></p>' +
-                        '<p class="progress"><span></span></p>' +
-                        '</li>'),
+                    '<p class="title">' + file.name + '</p>' +
+                    '<p class="imgWrap"></p>' +
+                    '<p class="progress"><span></span></p>' +
+                    '</li>'),
 
                     $btns = $('<div class="file-panel">' +
                         '<span class="cancel">' + lang.uploadDelete + '</span>' +
@@ -645,8 +645,8 @@
                 } else {
                     stats = uploader.getStats();
                     text = lang.updateStatusFinish.replace('_', fileCount).
-                        replace('_KB', WebUploader.formatSize(fileSize)).
-                        replace('_', stats.successNum);
+                    replace('_KB', WebUploader.formatSize(fileSize)).
+                    replace('_', stats.successNum);
 
                     if (stats.uploadFailNum) {
                         text += lang.updateStatusError.replace('_', stats.uploadFailNum);
@@ -864,9 +864,9 @@
                     'timeout': 100000,
                     'dataType': isJsonp ? 'jsonp':'',
                     'data': utils.extend({
-                            start: this.listIndex,
-                            size: this.listSize
-                        }, editor.queryCommandValue('serverparam')),
+                        start: this.listIndex,
+                        size: this.listSize
+                    }, editor.queryCommandValue('serverparam')),
                     'method': 'get',
                     'onsuccess': function (r) {
                         try {
@@ -1056,31 +1056,30 @@
         getImageData: function(){
             var _this = this,
                 key = $G('searchTxt').value,
-                type = $G('searchType').value,
                 keepOriginName = editor.options.keepOriginName ? "1" : "0",
-                url = "http://image.baidu.com/i?ct=201326592&cl=2&lm=-1&st=-1&tn=baiduimagejson&istype=2&rn=32&fm=index&pv=&word=" + _this.encodeToGb2312(key) + type + "&keeporiginname=" + keepOriginName + "&" + +new Date;
+                url = editor.options.selectUrl + "?upload_type=images&json=1&keyword=" + _this.encodeToGb2312(key) + "&keeporiginname=" + keepOriginName + "&" + +new Date;
 
             $G('searchListUl').innerHTML = lang.searchLoading;
-            ajax.request(url, {
-                'dataType': 'jsonp',
-                'charset': 'GB18030',
-                'onsuccess':function(json){
-                    var list = [];
-                    if(json && json.data) {
-                        for(var i = 0; i < json.data.length; i++) {
-                            if(json.data[i].objURL) {
-                                list.push({
-                                    title: json.data[i].fromPageTitleEnc,
-                                    src: json.data[i].objURL,
-                                    url: json.data[i].fromURL
-                                });
-                            }
+
+            $.ajax({
+                type:"get",
+                url: url,
+                dataType: "json",
+                success: function(result){
+                    if (result.code == 200) {
+                        var list = [];
+                        for(var i = 0; i < result.data.length; i++) {
+                            list.push({
+                                title: result.data[i].name,
+                                src: result.data[i].base_url,
+                                url: result.data[i].base_url
+                            });
                         }
+
+                        _this.setList(list);
+                    } else {
+                        $G('searchListUl').innerHTML = lang.searchRetry;
                     }
-                    _this.setList(list);
-                },
-                'onerror':function(){
-                    $G('searchListUl').innerHTML = lang.searchRetry;
                 }
             });
         },

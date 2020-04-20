@@ -131,6 +131,22 @@ function autoChangeMenu(leftAuto = false) {
     }
 }
 
+/* data-table */
+var $table = $('.rf-table');
+function buildTable($el) {
+    $el.bootstrapTable('destroy').bootstrapTable({
+        classes: 'table table-hover',
+        fixedColumns: true,
+        fixedNumber: $($table).attr('fixedNumber') ?? 0,
+        fixedRightNumber: $($table).attr('fixedRightNumber') ?? 0
+    })
+}
+
+$(function() {
+    buildTable($table);
+    $($table).find('thead tr').eq(1).remove();
+})
+
 /* 导航标签切换 */
 $(document).on("click", ".rfTopMenu", function () {
     var type = $(this).data('type');

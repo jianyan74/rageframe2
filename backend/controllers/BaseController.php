@@ -68,6 +68,13 @@ class BaseController extends Controller
             throw new ForbiddenHttpException('对不起，您现在还没获此操作的权限');
         }
 
+        // 记录上一页跳转
+        if (in_array($action->id, ['edit', 'delete', 'destroy'])) {
+            if (!Yii::$app->session->get(Yii::$app->controller->route)) {
+                Yii::$app->session->set(Yii::$app->controller->route, Yii::$app->request->referrer);
+            }
+        }
+
         return true;
     }
 }

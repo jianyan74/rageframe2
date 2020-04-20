@@ -13,7 +13,6 @@ Yii::$app->view->registerJs(<<<JS
     var boxId = "$boxId";
     echartsList[boxId] = echarts.init(document.getElementById(boxId + '-echarts'), '$themeJs');
     echartsListConfig[boxId] = jQuery.parseJSON('$jsonConfig');
-    
     // 动态加载数据
     $('#'+ boxId +' div span').click(function () {
         $(this).parent().find('span').removeClass('orange');
@@ -23,7 +22,6 @@ Yii::$app->view->registerJs(<<<JS
         var end = $(this).attr('data-end');
         var boxId = $(this).parent().parent().attr('id');
         var config = echartsListConfig[boxId];
-
         $.ajax({
             type:"get",
             url: config.server,

@@ -2,6 +2,9 @@
 
 namespace services\common;
 
+use common\enums\PayTypeEnum;
+use common\enums\StatusEnum;
+use common\helpers\StringHelper;
 use Yii;
 use common\models\forms\CreditsLogForm;
 use common\enums\PayGroupEnum;
@@ -9,6 +12,8 @@ use common\components\Service;
 use common\models\common\PayLog;
 use common\models\forms\PayForm;
 use common\helpers\ArrayHelper;
+use yii\helpers\Json;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Class PayService
@@ -146,6 +151,68 @@ class PayService extends Service
         }
 
         return $result;
+    }
+
+    /**
+     * 订单退款
+     *
+     * @param $pay_type
+     * @param $money
+     * @param $out_trade_no
+     * @throws UnprocessableEntityHttpException
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function refund($pay_type, $money, $order_sn)
+    {
+        $model = $this->findByOrderSn($order_sn);
+        if (!$model) {
+            throw new UnprocessableEntityHttpException('找不到支付记录');
+        }
+
+        if ($model->pay_status == StatusEnum::DISABLED) {
+            throw new UnprocessableEntityHttpException('未支付');
+        }
+
+        if ($model->is_refund == StatusEnum::ENABLED) {
+            throw new UnprocessableEntityHttpException('已经退款成功');
+        }
+
+        if ($money > $model->pay_fee) {
+            throw new UnprocessableEntityHttpException('退款金额不可大于支付金额');
+        }
+
+        $refund_sn = date('YmdHis') . StringHelper::random(8, true);
+        $response = [];
+         switch ($pay_type) {
+            case PayTypeEnum::WECHAT :
+                $info = [
+                    'out_trade_no' => $model->out_trade_no,
+                    'transaction_id' => $model->transaction_id, //The wechat trade no
+                    'out_refund_no'  => $refund_sn,
+                    'total_fee'      => $model->pay_fee * 100, //=0.01
+                    'refund_fee'     => $money * 100, //=0.01
+                ];
+
+                $response = Yii::$app->pay->wechat->refund($info);
+
+                break;
+
+            case PayTypeEnum::ALI :
+                $info = [
+                    'out_trade_no' => $model->out_trade_no,
+                    'trade_no' => $model->transaction_id,
+                    'refund_amount' => $money,
+                    'out_request_no' => $refund_sn
+                ];
+
+                $response = Yii::$app->pay->alipay->refund($info);
+                break;
+        }
+
+        $model->refund_fee = $money;
+        $model->refund_sn = $refund_sn;
+        $model->is_refund = StatusEnum::ENABLED;
+        $model->save();
     }
 
     /**

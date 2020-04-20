@@ -84,11 +84,12 @@ http://www.rageframe.com
 
 ### 插件
 
+- 微商城：https://github.com/jianyan74/Wechat
 - 微信公众号：https://github.com/jianyan74/Wechat
 - 商家管理：https://github.com/jianyan74/Merchants
 - 在线文档：https://github.com/jianyan74/RfOnlineDoc
 
-### 问题反馈
+### 问题反馈 
 
 在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
 

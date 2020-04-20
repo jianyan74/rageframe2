@@ -36,6 +36,7 @@ class FileHelper extends BaseFileHelper
     public static function writeLog($path, $content)
     {
         self::mkdirs(dirname($path));
+
         return file_put_contents($path, "\r\n" . $content, FILE_APPEND);
     }
 
@@ -49,17 +50,18 @@ class FileHelper extends BaseFileHelper
     {
         $handle = opendir($dir);
         $sizeResult = 0;
-        while (false !== ($FolderOrFile = readdir($handle))) {
-            if ($FolderOrFile != "." && $FolderOrFile != "..") {
-                if (is_dir("$dir/$FolderOrFile")) {
-                    $sizeResult += self::getDirSize("$dir/$FolderOrFile");
+        while (false !== ($folderOrFile = readdir($handle))) {
+            if ($folderOrFile != "." && $folderOrFile != "..") {
+                if (is_dir("$dir/$folderOrFile")) {
+                    $sizeResult += self::getDirSize("$dir/$folderOrFile");
                 } else {
-                    $sizeResult += filesize("$dir/$FolderOrFile");
+                    $sizeResult += filesize("$dir/$folderOrFile");
                 }
             }
         }
 
         closedir($handle);
+
         return $sizeResult;
     }
 
@@ -75,6 +77,32 @@ class FileHelper extends BaseFileHelper
                 mkdir($value);
             } else {
                 file_put_contents($value, '');
+            }
+        }
+    }
+
+    /**
+     * 软著文件生成
+     *
+     * @param $dir
+     * @param $savePath
+     */
+    public static function getDirFileContent($dir, $savePath, $suffix = ['php'])
+    {
+        $handle = opendir($dir);
+        while (false !== ($folderOrFile = readdir($handle))) {
+            if ($folderOrFile != "." && $folderOrFile != "..") {
+                if (is_dir("$dir/$folderOrFile")) {
+                    self::getDirFileContent("$dir/$folderOrFile", $savePath, $suffix);
+                } else {
+                    $array = explode('.', $folderOrFile);
+                    if (in_array(end($array), $suffix)) {
+                        // 去除注释
+                        $str = StringHelper::removeAnnotation(file_get_contents("$dir/$folderOrFile"));
+                        // 追加写入
+                        file_put_contents($savePath, $str, FILE_APPEND);
+                    }
+                }
             }
         }
     }

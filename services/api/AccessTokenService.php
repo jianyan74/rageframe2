@@ -88,9 +88,9 @@ class AccessTokenService extends Service
      * @param $type
      * @return array|mixed|null|ActiveRecord
      */
-    public function getTokenToCache($token, $type)
+    public function getTokenToCache($token, $type, $cache = false)
     {
-        if ($this->cache == false) {
+        if ($cache == false && $this->cache == false) {
             return $this->findByAccessToken($token);
         }
 

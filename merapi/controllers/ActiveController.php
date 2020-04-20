@@ -80,7 +80,7 @@ class ActiveController extends \yii\rest\ActiveController
                  * yii\filters\auth\HttpHeaderAuth::class,
                  */
                 // HttpBasicAuth::class,
-                HttpBearerAuth::class,
+                // HttpBearerAuth::class,
                 HttpHeaderAuth::class,
                 [
                     'class' => QueryParamAuth::class,

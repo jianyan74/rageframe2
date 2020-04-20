@@ -1,7 +1,7 @@
 <?php
 return [
     'name' => 'RageFrame',
-    'version' => '2.6.10',
+    'version' => '2.6.23',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -43,6 +43,13 @@ return [
             'hostname' => '127.0.0.1',
             'port' => 6379,
             'database' => 0,
+        ],
+        /** ------ websocket redis配置 ------ **/
+        'websocketRedis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '127.0.0.1',
+            'port' => 6379,
+            'database' => 1,
         ],
         /** ------ 网站碎片管理 ------ **/
         'debris' => [

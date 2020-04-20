@@ -26,12 +26,13 @@ class ExcelHelper
      * @param array $list
      * @param array $header
      * @param string $filename
-     * @param string $title
+     * @param string $suffix
+     * @param string $path 输出绝对路径
      * @return bool
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public static function exportData($list = [], $header = [], $filename = '', $suffix = 'xlsx')
+    public static function exportData($list = [], $header = [], $filename = '', $suffix = 'xlsx', $path = '')
     {
         if (!is_array($list) || !is_array($header)) {
             return false;
@@ -82,31 +83,47 @@ class ExcelHelper
         switch ($suffix) {
             case 'xlsx' :
                 $writer = new Xlsx($spreadsheet);
-                header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;");
-                header("Content-Disposition: inline;filename=\"{$filename}.xlsx\"");
-                header('Cache-Control: max-age=0');
-                $writer->save('php://output');
+                if (!empty($path)) {
+                    $writer->save($path);
+                } else {
+                    header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;");
+                    header("Content-Disposition: inline;filename=\"{$filename}.xlsx\"");
+                    header('Cache-Control: max-age=0');
+                    $writer->save('php://output');
+                }
                 break;
             case 'xls' :
                 $writer = new Xls($spreadsheet);
-                header("Content-Type:application/vnd.ms-excel;charset=utf-8;");
-                header("Content-Disposition:inline;filename=\"{$filename}.xls\"");
-                header('Cache-Control: max-age=0');
-                $writer->save('php://output');
+                if (!empty($path)) {
+                    $writer->save($path);
+                } else {
+                    header("Content-Type:application/vnd.ms-excel;charset=utf-8;");
+                    header("Content-Disposition:inline;filename=\"{$filename}.xls\"");
+                    header('Cache-Control: max-age=0');
+                    $writer->save('php://output');
+                }
                 break;
             case 'csv' :
                 $writer = new Csv($spreadsheet);
-                header("Content-type:text/csv;charset=utf-8;");
-                header("Content-Disposition:attachment; filename={$filename}.csv");
-                header('Cache-Control: max-age=0');
-                $writer->save('php://output');
+                if (!empty($path)) {
+                    $writer->save($path);
+                } else {
+                    header("Content-type:text/csv;charset=utf-8;");
+                    header("Content-Disposition:attachment; filename={$filename}.csv");
+                    header('Cache-Control: max-age=0');
+                    $writer->save('php://output');
+                }
                 break;
             case 'html' :
                 $writer = new Html($spreadsheet);
-                header("Content-Type:text/html;charset=utf-8;");
-                header("Content-Disposition:attachment;filename=\"{$filename}.{$suffix}\"");
-                header('Cache-Control: max-age=0');
-                $writer->save('php://output');
+                if (!empty($path)) {
+                    $writer->save($path);
+                } else {
+                    header("Content-Type:text/html;charset=utf-8;");
+                    header("Content-Disposition:attachment;filename=\"{$filename}.{$suffix}\"");
+                    header('Cache-Control: max-age=0');
+                    $writer->save('php://output');
+                }
                 break;
         }
 

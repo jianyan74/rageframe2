@@ -26,7 +26,6 @@ AppAsset::register($this);
         let config = {
             tag: "<?= Yii::$app->debris->merchantConfig('sys_tags') ?? false; ?>",
             isMobile: "<?= Yii::$app->params['isMobile'] ?? false; ?>",
-            emojiBaseUrl: "<?= Yii::$app->request->baseUrl ?>/resources/img/emoji/",
         };
     </script>
     <?= $this->render('@backend/views/layouts/_footer') ?>

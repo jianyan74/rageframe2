@@ -41,8 +41,8 @@ class RechargeForm extends Model
     {
         return [
             [['change'], 'integer'],
-            [['money'], 'number', 'min' => 0.01],
-            [['int'], 'integer', 'min' => 1],
+            [['money'], 'number', 'min' => 0.01, 'max' => 999999.99],
+            [['int'], 'integer', 'min' => 1, 'max' => 999999],
             [['remark', 'type'], 'string'],
             [['type'], 'verifyEmpty'],
         ];

@@ -179,6 +179,26 @@ class DateHelper
     }
 
     /**
+     * 格式化小时
+     *
+     * @param array $hours
+     * @return array
+     */
+    public static function formatHours(array $hours)
+    {
+        $time = 3600 * 24;
+        foreach ($hours as &$hour) {
+            if ($hour == $time) {
+                $hour = '24:00';
+            } else {
+                $hour = date('H:i', $hour + strtotime(date('Y-m-d')));
+            }
+        }
+
+        return $hours;
+    }
+
+    /**
      * 格式化时间戳
      *
      * @param $time

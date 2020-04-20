@@ -49,6 +49,7 @@ trait BaseAction
      * 重载配置
      *
      * @param $merchant_id
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\UnauthorizedHttpException
      */
     public function afreshLoad($merchant_id)
@@ -111,5 +112,22 @@ trait BaseAction
 
         Yii::$app->getSession()->setFlash($msgType, $msgText);
         return $skipUrl;
+    }
+
+    /**
+     * 跳转到之前的页面
+     *
+     * @return mixed
+     */
+    protected function referrer()
+    {
+        $key = Yii::$app->controller->route;
+        $url = Yii::$app->session->get($key);
+        Yii::$app->session->remove($key);
+        if ($url) {
+            return $this->redirect($url);
+        }
+
+        return $this->redirect(['index']);
     }
 }

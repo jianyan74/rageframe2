@@ -46,6 +46,10 @@ class SmsCodeValidator extends Validator
      */
     public function validateAttribute($model, $attribute)
     {
+        if (!empty($model->getErrors())) {
+            return false;
+        }
+
         $fieldName = $this->phoneAttribute;
         $cellPhone = $model->$fieldName;
 

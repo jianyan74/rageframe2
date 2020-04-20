@@ -2,6 +2,8 @@
 namespace frontend\forms;
 
 use yii\base\Model;
+use yii\db\ActiveQuery;
+use common\enums\StatusEnum;
 use common\models\member\Member;
 
 /**
@@ -22,11 +24,27 @@ class SignupForm extends Model
         return [
             [['username', 'email'], 'trim'],
             [['email', 'username', 'password'], 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\member\Member', 'message' => '这个用户名已经被占用.'],
+            [
+                'username',
+                'unique',
+                'targetClass' => '\common\models\member\Member',
+                'filter' => function (ActiveQuery $query) {
+                    return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+                },
+                'message' => '这个用户名已经被占用.'
+            ],
             ['username', 'string', 'min' => 2, 'max' => 20],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\member\Member', 'message' => '这个邮箱地址已经被占用了.'],
+            [
+                'email',
+                'unique',
+                'targetClass' => '\common\models\member\Member',
+                'filter' => function (ActiveQuery $query) {
+                    return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+                },
+                'message' => '这个邮箱地址已经被占用了.'
+            ],
             ['password', 'string', 'min' => 6, 'max' => 20],
         ];
     }

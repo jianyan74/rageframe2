@@ -52,7 +52,7 @@ class FileController extends FileBaseController
         // 文件后缀
         $fileExc = $this->extend[$type];
         $filePath = $config['path'] . date($config['subName'], time()) . "/";
-        $fileName = $config['prefix'] . StringHelper::randomNum(time());
+        $fileName = $config['prefix'] . time() . StringHelper::random(8, true);
         $relativePath = Yii::getAlias("@attachurl/") . $filePath; // 相对路径
         $absolutePath = Yii::getAlias("@attachment/") . $filePath; // 绝对路径
         $fileFullName = $fileName . $fileExc; // 完整文件名

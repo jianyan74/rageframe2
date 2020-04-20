@@ -104,8 +104,24 @@ class LevelService extends Service
         $merchant_id = Yii::$app->services->merchant->getId();
 
         return Level::find()
-            ->where(['merchant_id' => $merchant_id, 'status' => StatusEnum::ENABLED])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['merchant_id' => $merchant_id])
             ->orderBy(['level' => SORT_DESC, 'id' => SORT_DESC])
+            ->all();
+    }
+
+    /**
+     * @param $merchant_id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findAllByEdit()
+    {
+        $merchant_id = Yii::$app->services->merchant->getId();
+
+        return Level::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            // ->andWhere(['merchant_id' => $merchant_id])
+            ->orderBy(['level' => SORT_ASC, 'id' => SORT_DESC])
             ->all();
     }
 

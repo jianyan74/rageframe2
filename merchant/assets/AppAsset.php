@@ -28,7 +28,6 @@ class AppAsset extends AssetBundle
         'plugins/layer/layer.js',
         'plugins/sweetalert/sweetalert.min.js',
         'plugins/fancybox/jquery.fancybox.min.js',
-        'plugins/emoji/qq-wechat-emotion-parser.min.js',
         'js/template.js',
         'js/rageframe.js',
         'js/rageframe.widgets.js',

@@ -45,6 +45,7 @@ class UEditor extends InputWidget
         //常用配置项
         $config = [
             'serverUrl' => Url::to(['/ueditor/index']),
+            'selectUrl' => Url::to(['/file/selector']),
             'UEDITOR_HOME_URL' => $asset->baseUrl . '/',
             'lang' => 'zh-cn',
             'initialFrameHeight' => 400,

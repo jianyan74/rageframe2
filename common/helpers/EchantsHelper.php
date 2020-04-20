@@ -95,6 +95,9 @@ class EchantsHelper
                 $end = strtotime(Yii::$app->request->get('echarts_end')) + 60 * 60 * 24 - 1;
                 list($time, $format) = [['start' => strtotime(Yii::$app->request->get('echarts_start')), 'end' => $end], 'day'];
                 break;
+            case 'all' :
+                list($time, $format) = [['start' => $start_time, 'end' => $end_time], ''];
+                break;
             default :
                 // 默认今天
                 list($time, $format) = [DateHelper::today(), 'hour'];
@@ -134,14 +137,23 @@ class EchantsHelper
         $all = self::progressiveIncreaseTime($time['start'], $time['end'], $format);
         // 默认数据
         $seriesData = [];
-        foreach ($fields as $field => $value) {
-            $seriesData[] = [
-                'field' => $field,
-                'name' => $value,
-                'type' => $echartType,
-                // 'smooth' => 'true',
-                'data' => [],
-            ];
+        foreach ($fields as $field => &$value) {
+            if (is_array($value)) {
+                $value['data'] = [];
+                $seriesData[] = $value;
+            } else {
+                $seriesData[] = [
+                    'field' => $field,
+                    'name' => $value,
+                    'type' => $echartType,
+                    // 显示数量
+//                'label' => [
+//                    'show' => true
+//                ],
+                    // 'smooth' => 'true',
+                    'data' => [],
+                ];
+            }
         }
 
         foreach ($all as &$item) {

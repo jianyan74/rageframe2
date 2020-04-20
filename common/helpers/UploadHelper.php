@@ -564,7 +564,7 @@ class UploadHelper
         // 缩略图
         $thumbPath = Yii::$app->params['uploadConfig']['thumb']['path'] . date($config['subName'], time()) . "/";
 
-        empty($config['guid']) && $config['guid'] = StringHelper::randomNum();
+        empty($config['guid']) && $config['guid'] = StringHelper::random(8);
         $tmpPath = 'tmp/' . date($config['subName'], time()) . "/" . $config['guid'] . '/';
         $this->paths = [
             'relativePath' => $filePath, // 相对路径

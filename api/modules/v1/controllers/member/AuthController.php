@@ -29,11 +29,12 @@ class AuthController extends UserAuthController
      */
     public function actionCreate()
     {
+        $member_id = Yii::$app->user->identity->member_id;
         $oauthClient = Yii::$app->request->post('oauth_client');
         $oauthClientUserId = Yii::$app->request->post('oauth_client_user_id');
 
         /** @var Auth $model */
-        if (!($model = Yii::$app->services->memberAuth->findOauthClient($oauthClient, $oauthClientUserId))) {
+        if (!($model = Yii::$app->services->memberAuth->findByMemberIdOauthClient($oauthClient, $member_id))) {
             $model = new $this->modelClass();
             $model = $model->loadDefaultValues();
             $model->attributes = Yii::$app->request->post();

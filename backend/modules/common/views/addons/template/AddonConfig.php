@@ -39,6 +39,7 @@ class AddonConfig extends BaseAddonConfig
         'backend' => 'common/config/backend.php',
         'frontend' => 'common/config/frontend.php',
         'merchant' => 'common/config/merchant.php',
+        'merapi' => 'common/config/merapi.php',
         'html5' => 'common/config/html5.php',
         'api' => 'common/config/api.php',
         'oauth2' => 'common/config/oauth2.php',

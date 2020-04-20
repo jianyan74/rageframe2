@@ -4,6 +4,7 @@ namespace common\models\member;
 
 use Yii;
 use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\enums\StatusEnum;
@@ -24,6 +25,7 @@ use common\traits\Tree;
  * @property string $nickname 昵称
  * @property string $realname 真实姓名
  * @property string $head_portrait 头像
+ * @property string $promo_code 推广码
  * @property int $current_level 当前级别
  * @property int $gender 性别[0:未知;1:男;2:女]
  * @property string $qq qq
@@ -65,13 +67,15 @@ class Member extends User
         return [
             [['username', 'password_hash'], 'required', 'on' => ['backendCreate']],
             [['password_hash'], 'string', 'min' => 6, 'on' => ['backendCreate']],
-            [['username'], 'unique', 'on' => ['backendCreate']],
+            [['username'], 'unique', 'filter' => function (ActiveQuery $query) {
+                return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+            }, 'on' => ['backendCreate']],
             [['id', 'current_level', 'level', 'merchant_id', 'type', 'gender','visit_count', 'role', 'last_time', 'province_id', 'city_id', 'area_id', 'pid', 'status', 'created_at', 'updated_at'], 'integer'],
             [['birthday'], 'safe'],
             [['username', 'qq', 'home_phone', 'mobile'], 'string', 'max' => 20],
             [['password_hash', 'password_reset_token', 'head_portrait'], 'string', 'max' => 150],
             [['auth_key'], 'string', 'max' => 32],
-            [['nickname', 'realname'], 'string', 'max' => 50],
+            [['nickname', 'realname', 'promo_code'], 'string', 'max' => 50],
             [['email'], 'string', 'max' => 60],
             [['tree'], 'string', 'max' => 2000],
             [['last_ip'], 'string', 'max' => 16],
@@ -111,6 +115,7 @@ class Member extends User
             'area_id' => 'Area ID',
             'pid' => '上级id',
             'level' => '级别',
+            'promo_code' => '推广码',
             'tree' => '树',
             'status' => '状态',
             'created_at' => '创建时间',

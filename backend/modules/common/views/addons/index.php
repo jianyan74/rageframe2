@@ -24,7 +24,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
                         //重新定义分页样式
-                        'tableOptions' => ['class' => 'table table-hover rf-table'],
+                        'tableOptions' => [
+                            'class' => 'table table-hover rf-table',
+                            'fixedNumber' => 2,
+                            'fixedRightNumber' => 1,
+                        ],
                         'columns' => [
                             [
                                 'class' => 'yii\grid\SerialColumn',

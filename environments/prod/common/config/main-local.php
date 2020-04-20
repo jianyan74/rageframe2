@@ -15,6 +15,10 @@ return [
             // 'enableSchemaCache' => true, // 是否开启缓存, 请了解其中机制在开启，不了解谨慎
             // 'schemaCacheDuration' => 3600, // 缓存时间
             // 'schemaCache' => 'cache', // 缓存名称
+            // 断线重连，主要用于 websocket
+            // 'commandMap' => [
+            //     'mysql' => 'common\replaces\Command'
+            // ],
         ],
         /**
         // redis缓存

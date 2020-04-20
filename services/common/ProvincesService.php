@@ -40,13 +40,6 @@ class ProvincesService extends Service
             if ($item['level'] == 1) {
                 foreach ($data as $datum) {
                     !in_array($datum, $cityIds) && $item['is_disabled'] = false;
-                    $areas = $allIds[$datum] ?? [];
-
-                    foreach ($areas as $area) {
-                        !in_array($area, $areaIds) && $item['is_disabled'] = false;
-                    }
-
-                    unset($areas);
                 }
             }
 
