@@ -45,9 +45,6 @@ class AuthRoleService extends Service
             if (!($assignment = Yii::$app->user->identity->assignment)) {
                 throw new UnauthorizedHttpException('未授权角色，请联系管理员');
             }
-            // 
-            $merchant_id = Yii::$app->user->identity->merchant_id;
-            Yii::$app->services->merchant->setId($merchant_id);
 
             $merchant_id = $this->getMerchantId();
             if (Yii::$app->id == AppEnum::BACKEND) {
