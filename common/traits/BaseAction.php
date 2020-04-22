@@ -2,6 +2,7 @@
 
 namespace common\traits;
 
+use common\enums\AppEnum;
 use Yii;
 use yii\base\Model;
 use common\components\Init;
@@ -29,7 +30,7 @@ trait BaseAction
      */
     public function getMerchantId()
     {
-        if (!$this->merchant_id) {
+        if (!$this->merchant_id && !in_array(Yii::$app->id, [AppEnum::CONSOLE, AppEnum::BACKEND])) {
             $this->merchant_id = Yii::$app->services->merchant->getId();
         }
 
