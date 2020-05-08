@@ -116,6 +116,7 @@ class MemberForm extends Model
                 $member->last_time = time();
             }
             $member->username = $this->username;
+            $member->merchant_id = Yii::$app->services->merchant->getId();
 
             // 验证密码是否修改
             if ($this->member->password_hash != $this->password) {
