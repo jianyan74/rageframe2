@@ -81,7 +81,7 @@ return [
             'clients' => [
                 'qq' => [
                     'class' => 'xj\oauth\QqAuth',
-                    'clientId' => '101872198',
+                    'clientId' => '',
                     'clientSecret' => 'fbe274fbfe7576b20b1388426378166d',
 
                 ],
