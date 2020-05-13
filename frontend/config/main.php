@@ -81,8 +81,8 @@ return [
             'clients' => [
                 'qq' => [
                     'class' => 'xj\oauth\QqAuth',
-                    'clientId' => '111',
-                    'clientSecret' => '111',
+                    'clientId' => '101872198',
+                    'clientSecret' => 'fbe274fbfe7576b20b1388426378166d',
 
                 ],
                 'weibo' => [
