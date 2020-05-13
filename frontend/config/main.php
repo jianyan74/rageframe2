@@ -87,8 +87,8 @@ return [
                 ],
                 'weibo' => [
                     'class' => 'xj\oauth\WeiboAuth',
-                    'clientId' => '',
-                    'clientSecret' => '',
+                    'clientId' => '4127940203',
+                    'clientSecret' => '5cad9a0279cfcf73b3855fab5820d9cd',
                 ],
                 'weixin' => [
                     'class' => 'xj\oauth\WeixinAuth',
