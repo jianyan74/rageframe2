@@ -95,11 +95,6 @@ return [
                     'clientId' => '',
                     'clientSecret' => '',
                 ],
-                'wechat' => [
-                    'class' => 'xj\oauth\WeixinMpAuth', // weixin mp
-                    'clientId' => '111',
-                    'clientSecret' => '',
-                ],
                 'github' => [
                     'class' => 'yii\authclient\clients\GitHub',
                     'clientId' => '',
