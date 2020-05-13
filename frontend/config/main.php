@@ -95,11 +95,6 @@ return [
                     'clientId' => '',
                     'clientSecret' => '',
                 ],
-                'github' => [
-                    'class' => 'yii\authclient\clients\GitHub',
-                    'clientId' => '',
-                    'clientSecret' => '',
-                ],
             ]
         ]
     ],
