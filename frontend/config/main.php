@@ -92,7 +92,7 @@ return [
                 ],
                 'weixin' => [
                     'class' => 'xj\oauth\WeixinAuth',
-                    'clientId' => '',
+                    'clientId' => 'wxbcd55db91b3465c3',
                     'clientSecret' => '',
                 ],
             ]
