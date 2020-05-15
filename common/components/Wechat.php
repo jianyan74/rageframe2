@@ -36,6 +36,7 @@ class Wechat extends \jianyan\easywechat\Wechat
 
         $callbackUrl = $notifyUrl = '';
         if (!empty(Yii::$app->id) && Yii::$app->id != AppEnum::CONSOLE) {
+            $suiteID= Yii::$app->request->get('suiteCode',"");
             $callbackUrl = Yii::$app->request->hostInfo . Yii::$app->request->getUrl();
             $notifyUrl = Yii::$app->request->hostInfo . Yii::$app->urlManager->createUrl(['notify/index']);
         }
@@ -153,35 +154,8 @@ class Wechat extends \jianyan\easywechat\Wechat
         ],Yii::$app->params['wechatWorkConfig']);
 
         //企业微信服务商
-        Yii::$app->params['wechatOpenWorkConfig'] = ArrayHelper::merge([
-            'corp_id'              => $config['work_open_corp_id'] ?? "",
-            'secret'               => $config['work_open_provider_secret'] ?? "",
+        Yii::$app->params['wechatOpenWorkConfig'] = ArrayHelper::merge(Yii::$app->workService->suite->VerifyAgent($suiteID),Yii::$app->params['wechatOpenWorkConfig']);
 
-            'suite_id'             => '以ww或wx开头应用id',
-            'suite_secret'         => '应用secret',
-            'token'                => '应用的Token',
-            'aes_key'              => '应用的EncodingAESKey',
-
-            'reg_template_id'      => '注册定制化模板ID',
-            'redirect_uri_install' => '安装应用的回调url（可选）',
-            'redirect_uri_single'  => '单点登录回调url （可选）',
-            'redirect_uri_oauth'   => '网页授权第三方回调url （可选）',
-
-            'response_type' => 'array',
-
-            'log' => [
-                'level' => 'debug',
-                'permission' => 0777,
-                'file' => $this->createLogPath('workOpen'),
-            ],
-
-            'http' => [
-                'retries' => 1,
-                'retry_delay' => 500,
-                'timeout' => 5.0,
-                // 'base_uri' => 'https://api.weixin.qq.com/',
-            ],
-        ],Yii::$app->params['wechatOpenWorkConfig']);
         
         unset($config);
     }
