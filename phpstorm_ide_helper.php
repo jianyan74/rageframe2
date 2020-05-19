@@ -24,6 +24,7 @@ class Yii
  * @property \common\components\Logistics $logistics
  * @property \common\components\UploadDrive $uploadDrive
  * @property \common\components\BaseAddonModule $addons
+ * @property \addons\Crm\common\services\Application $crmService
  * @property \addons\TinyShop\services\Application $tinyShopService
  * @property \addons\TinyDistribution\services\Application $tinyDistributionService
  * @property \addons\Wechat\services\Application $wechatService
