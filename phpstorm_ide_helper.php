@@ -28,7 +28,6 @@ class Yii
  * @property \addons\TinyShop\services\Application $tinyShopService
  * @property \addons\TinyDistribution\services\Application $tinyDistributionService
  * @property \addons\Wechat\services\Application $wechatService
- * @property \addons\Crm\common\services\Application $crmService
  * @property \addons\Store\common\services\Application $storeService
  * @property \addons\Shop\common\services\Application $shopService
  * @property \addons\Work\common\services\Application $workService
