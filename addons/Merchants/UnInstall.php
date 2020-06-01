@@ -34,8 +34,8 @@ class UnInstall extends Migration implements AddonWidget
         // 清理配置
         ConfigValue::deleteAll(['app_id' => AppEnum::MERCHANT]);
 
-         MigrateHelper::downByPath([
-             '@addons/Merchants/console/migrations/'
-         ]);
+//         MigrateHelper::downByPath([
+//             '@addons/Merchants/console/migrations/'
+//         ]);
     }
 }
