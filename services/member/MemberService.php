@@ -168,6 +168,19 @@ class MemberService extends Service
     }
 
     /**
+     * @param $condition
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByCondition(array $condition)
+    {
+        return Member::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere($condition)
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
      * @param $id
      * @return array|\yii\db\ActiveRecord|null
      */
@@ -175,7 +188,6 @@ class MemberService extends Service
     {
         return Member::find()
             ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
 

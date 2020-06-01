@@ -139,7 +139,6 @@ class Debris
                 $this->config[$cacheKey][$row['name']] = $row['value']['data'] ?? $row['default_value'];
             }
 
-            // 设置缓存
             Yii::$app->cache->set($cacheKey, $this->config[$cacheKey], 60 * 60);
         }
 

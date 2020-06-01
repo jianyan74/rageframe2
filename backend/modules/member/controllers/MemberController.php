@@ -49,11 +49,11 @@ class MemberController extends BaseController
         $dataProvider->query
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
-            ->with(['account', 'level']);
+            ->with(['account', 'memberLevel']);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
+            'searchModel' => $searchModel
         ]);
     }
 

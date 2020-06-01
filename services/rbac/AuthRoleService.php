@@ -43,6 +43,7 @@ class AuthRoleService extends Service
         if (!$this->roles) {
             /* @var $assignment \common\models\rbac\AuthAssignment */
             if (!($assignment = Yii::$app->user->identity->assignment)) {
+                Yii::$app->user->logout();
                 throw new UnauthorizedHttpException('未授权角色，请联系管理员');
             }
 
@@ -268,6 +269,24 @@ class AuthRoleService extends Service
             ])
             ->with('authItemChild')
             ->asArray()
+            ->one();
+    }
+
+    /**
+     * 获取当前商户默认已启用的角色
+     *
+     * @param $app_id
+     * @return array|\yii\db\ActiveRecord|null|AuthRole
+     */
+    public function findDefaultByMerchantId($merchant_id, $app_id = AppEnum::MERCHANT)
+    {
+        return AuthRole::find()
+            ->where([
+                'is_default' => StatusEnum::ENABLED,
+                'app_id' => $app_id,
+                'merchant_id' => $merchant_id,
+                'status' => StatusEnum::ENABLED,
+            ])
             ->one();
     }
 

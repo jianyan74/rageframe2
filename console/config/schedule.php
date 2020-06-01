@@ -20,3 +20,12 @@ $schedule->command('wechat/msg-history/index')->cron('0 0 * * *')->sendOutputTo(
  */
 $filePath = $path . 'sendMessage.log';
 $schedule->command('wechat/send-message/index')->cron('* * * * *')->sendOutputTo($filePath);
+
+/**
+ * 重启ws
+ *
+ * 每天凌晨执行一次
+ */
+$filePath = $path . 'websocket.log';
+$schedule->command('websocket/stop')->cron('0 0 * * *')->sendOutputTo($filePath);
+$schedule->command('websocket/start')->cron('1 0 * * *')->sendOutputTo($filePath);

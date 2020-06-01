@@ -52,6 +52,7 @@ class LevelController extends BaseController
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+            'memberLevelUpgradeType' => Yii::$app->debris->backendConfig('member_level_upgrade_type')
         ]);
     }
 

@@ -66,12 +66,11 @@ class AuthItemChildService extends Service
 
     /**
      * @param $allAuthItem
-     * @param $allMenu
      * @param $name
      * @throws UnprocessableEntityHttpException
      * @throws \yii\db\Exception
      */
-    public function accreditByAddon($allAuthItem, $allMenu, $removeAppIds, $name)
+    public function accreditByAddon($allAuthItem, $name)
     {
         // 卸载权限
         Yii::$app->services->rbacAuthItem->delByAddonsName($name);
@@ -94,14 +93,7 @@ class AuthItemChildService extends Service
         // 重组路由
         $allAuth = [];
         foreach ($allAuthItem as $key => $item) {
-            if (isset($allMenu[$key])) {
-                $menu = ArrayHelper::regroupMapToArr($allMenu[$key]);
-                $menu = ArrayHelper::getColumn(ArrayHelper::getRowsByItemsMerge($menu, 'child'), 'route');
-            }
-
-            // 菜单类型
-            $is_menu = in_array($key, $removeAppIds) ? AuthMenuEnum::TOP : AuthMenuEnum::LEFT;
-            $allAuth = ArrayHelper::merge($allAuth, $this->regroupByAddonsData($item, $menu, $is_menu, $name, $key));
+            $allAuth = ArrayHelper::merge($allAuth, $this->regroupByAddonsData($item, $name, $key));
         }
 
         // 创建权限
@@ -193,12 +185,11 @@ class AuthItemChildService extends Service
 
     /**
      * @param $item
-     * @param $menu
      * @param $name
      * @param $app_id
-     * @return array
+     * @return mixed
      */
-    protected function regroupByAddonsData($item, $menu, $is_menu, $name, $app_id)
+    protected function regroupByAddonsData($item, $name, $app_id)
     {
         foreach ($item as &$value) {
             $value['app_id'] = $app_id;
@@ -207,7 +198,7 @@ class AuthItemChildService extends Service
 
             // 组合子级
             if (isset($value['child']) && !empty($value['child'])) {
-                $value['child'] = $this->regroupByAddonsData($value['child'], $menu, $is_menu, $name, $app_id);
+                $value['child'] = $this->regroupByAddonsData($value['child'], $name, $app_id);
             }
         }
 

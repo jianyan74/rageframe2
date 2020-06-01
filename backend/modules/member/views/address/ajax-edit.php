@@ -17,6 +17,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'realname')->textInput() ?>
         <?= $form->field($model, 'mobile')->textInput() ?>
+        <?= $form->field($model, 'zip_code')->textInput() ?>
         <?= \common\widgets\provinces\Provinces::widget([
             'form' => $form,
             'model' => $model,

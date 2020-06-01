@@ -124,4 +124,15 @@ class SiteController extends BaseController
             'config' => $config
         ]);
     }
+
+    /**
+     * @return string
+     */
+    public function actionWechatJs()
+    {
+        $payment = Yii::$app->wechat->app;
+        return $this->render($this->action->id, [
+            'jssdk' => $payment->jssdk, // $app通过上面的获取实例来获取
+        ]);
+    }
 }

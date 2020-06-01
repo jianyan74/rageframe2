@@ -7,6 +7,7 @@ use linslin\yii2\curl\Curl;
 use common\helpers\ResultHelper;
 use common\models\common\Attachment;
 use yii\web\Response;
+use Qiniu\Auth;
 
 /**
  * Class StorageController
@@ -120,5 +121,31 @@ class StorageController extends BaseController
         }
 
         return false;
+    }
+
+    /**
+     * 七牛回调
+     */
+    public function actionQiNiu()
+    {
+//        $accessKey = getenv('QINIU_ACCESS_KEY');
+//        $secretKey = getenv('QINIU_SECRET_KEY');
+//        $bucket = getenv('QINIU_TEST_BUCKET');
+//        $auth = new Auth($accessKey, $secretKey);
+//        //获取回调的body信息
+//        $callbackBody = file_get_contents('php://input');
+//        //回调的contentType
+//        $contentType = 'application/x-www-form-urlencoded';
+//        //回调的签名信息，可以验证该回调是否来自七牛
+//        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
+//        //七牛回调的url，具体可以参考：https://developer.qiniu.com/kodo/manual/1206/put-policy
+//        $url = 'http://172.30.251.210/upload_verify_callback.php';
+//        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
+//        if ($isQiniuCallback) {
+//            $resp = array('ret' => 'success');
+//        } else {
+//            $resp = array('ret' => 'failed');
+//        }
+//        echo json_encode($resp);
     }
 }

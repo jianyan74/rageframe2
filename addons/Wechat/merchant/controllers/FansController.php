@@ -120,8 +120,9 @@ class FansController extends BaseController
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws yii\web\UnprocessableEntityHttpException
+     * @throws \yii\web\UnprocessableEntityHttpException
      */
     public function actionMoveTag($fan_id)
     {
@@ -169,10 +170,7 @@ class FansController extends BaseController
         $request = Yii::$app->request;
         $next_openid = $request->get('next_openid', '');
         // 设置关注全部为为关注
-        empty($next_openid) && Fans::updateAll([
-            'follow' => Fans::FOLLOW_OFF,
-            'merchant_id' => Yii::$app->services->merchant->getId()
-        ]);
+        empty($next_openid) && Fans::updateAll(['follow' => Fans::FOLLOW_OFF], ['merchant_id' => Yii::$app->services->merchant->getId()]);
 
         try {
             list($total, $count, $next_openid) = Yii::$app->wechatService->fans->syncAllOpenid();

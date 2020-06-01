@@ -99,7 +99,7 @@ return [
                                 ],
                                 [
                                     'title' => '新增',
-                                    'name' => 'qrcode/add',
+                                    'name' => 'qrcode/ajax-edit',
                                 ],
                                 [
                                     'title' => '删除全部',

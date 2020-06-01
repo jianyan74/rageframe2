@@ -62,7 +62,7 @@ class Init implements BootstrapInterface
         try {
             Yii::$app->services->merchant->setId($merchant_id);
             // 获取 ip 配置
-            $sys_ip_blacklist_open = Yii::$app->debris->backendConfig('sys_ip_blacklist_open');
+            $this->id != AppEnum::CONSOLE && $sys_ip_blacklist_open = Yii::$app->debris->backendConfig('sys_ip_blacklist_open');
             // 初始化模块
             Yii::$app->setModules($this->getModulesByAddons());
         } catch (\Exception $e) {

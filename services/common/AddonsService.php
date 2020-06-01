@@ -28,6 +28,7 @@ class AddonsService extends Service
 {
     /**
      * @return array
+     * @throws \yii\web\UnauthorizedHttpException
      */
     public function getMenus()
     {
@@ -235,7 +236,10 @@ class AddonsService extends Service
             ])
             ->one();
 
-        Yii::$app->cache->set($cacheKey, $data, 7200);
+        // 控制台避免写入缓存权限为 644 导致 www 用户组失败
+        if (Yii::$app->id != AppEnum::CONSOLE && false == Yii::$app->cache->exists($cacheKey) ) {
+            Yii::$app->cache->set($cacheKey, $data, 7200);
+        }
 
         return $data;
     }
@@ -248,20 +252,32 @@ class AddonsService extends Service
      */
     public function findAllNames($noCache = false)
     {
+        if (Yii::$app->id == AppEnum::CONSOLE) {
+            return $this->findAllInitData();
+        }
+
         $cacheKey = CacheEnum::getPrefix('addonsName');
         if (!$noCache && Yii::$app->cache->exists($cacheKey)) {
             return Yii::$app->cache->get($cacheKey);
         }
 
-        $models = Addons::find()
-            ->select(['name', 'is_merchant_route_map', 'service', 'updated_at'])
-            ->where(['status' => StatusEnum::ENABLED])
-            ->asArray()
-            ->all();
+        $models = $this->findAllInitData();
 
         Yii::$app->cache->set($cacheKey, $models, 7200);
 
         return $models;
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findAllInitData()
+    {
+        return Addons::find()
+            ->select(['name', 'is_merchant_route_map', 'service', 'updated_at'])
+            ->where(['status' => StatusEnum::ENABLED])
+            ->asArray()
+            ->all();
     }
 
     /**

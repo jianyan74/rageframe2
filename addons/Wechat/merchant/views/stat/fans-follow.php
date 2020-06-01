@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box">
             <div class="info-box-content p-md">
-                <span class="info-box-number"><?= $today['cumulate_attention']; ?></span>
+                <span class="info-box-number"><?= $countFollow; ?></span>
                 <span class="info-box-text">累积关注(人)</span>
             </div>
             <!-- /.info-box-content -->

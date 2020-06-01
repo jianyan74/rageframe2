@@ -75,10 +75,14 @@ class AddonsController extends BaseController
             $model->delete();
         }
 
-        // 进行卸载数据库
-        if ($class = Yii::$app->services->addons->getConfigClass($name)) {
-            $uninstallClass = AddonHelper::getAddonRoot($name) . (new $class)->uninstall;
-            ExecuteHelper::map($uninstallClass, 'run', $model);
+        try {
+            // 进行卸载数据库
+            if ($class = Yii::$app->services->addons->getConfigClass($name)) {
+                $uninstallClass = AddonHelper::getAddonRoot($name) . (new $class)->uninstall;
+                ExecuteHelper::map($uninstallClass, 'run', $model);
+            }
+        } catch (\Exception $e) {
+
         }
 
         return $this->message('卸载成功', $this->redirect(['index']));
@@ -161,7 +165,7 @@ class AddonsController extends BaseController
                 }
             }
 
-            Yii::$app->services->rbacAuthItemChild->accreditByAddon($allAuthItem, $allMenu, $removeAppIds, $name);
+            Yii::$app->services->rbacAuthItemChild->accreditByAddon($allAuthItem, $name);
             // 移除
             foreach ($removeAppIds as $removeAppId) {
                 unset($allMenu[$removeAppId]);
@@ -183,7 +187,6 @@ class AddonsController extends BaseController
             return $this->message('安装/更新成功', $this->redirect(['index']));
         } catch (\Exception $e) {
             $transaction->rollBack();
-
             return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
         }
     }

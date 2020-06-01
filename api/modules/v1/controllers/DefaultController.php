@@ -3,6 +3,8 @@
 namespace api\modules\v1\controllers;
 
 use api\controllers\OnAuthController;
+use common\enums\StatusEnum;
+use common\helpers\UploadHelper;
 
 /**
  * 默认控制器

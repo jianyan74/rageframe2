@@ -26,6 +26,6 @@ trait HasOneMerchant
             'address_details',
             'longitude',
             'latitude',
-        ]);
+        ])->cache(60);
     }
 }

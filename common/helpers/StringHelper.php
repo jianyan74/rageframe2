@@ -331,7 +331,8 @@ class StringHelper extends BaseStringHelper
      */
     public static function removeAnnotation($content)
     {
-        return preg_replace("/(\/\*(\s|.)*?\*\/)|(\/\/.(\s|.*))|(#(\s*)?(.*))/", '', str_replace(["\r\n", "\r"], "\n", $content));
+        return preg_replace("/(\/\*(\s|.)*?\*\/)|(\/\/.(\s|.*))|(#(\s*)?(.*))/", '',
+            str_replace(["\r\n", "\r"], "\n", $content));
     }
 
     /**
@@ -370,6 +371,96 @@ class StringHelper extends BaseStringHelper
     public static function isWindowsOS()
     {
         return strncmp(PHP_OS, 'WIN', 3) === 0;
+    }
+
+    /**
+     * 文字自动换行
+     *
+     * @param integer $fontsize 字体大小
+     * @param integer $angle 角度
+     * @param string $fontface 字体名称
+     * @param string $string 字符串
+     * @param integer $width 预设宽度
+     * @param null $max_line
+     * @return string
+     */
+    public static function autoWrap($font_size, $angle, $font_face, $string, $width, $max_line = null)
+    {
+        // 这几个变量分别是 字体大小, 角度, 字体名称, 字符串, 预设宽度
+        $content = "";
+        // 将字符串拆分成一个个单字 保存到数组 letter 中
+        $letter = [];
+        for ($i = 0; $i < mb_strlen($string, 'UTF-8'); $i++) {
+            $letter[] = mb_substr($string, $i, 1, 'UTF-8');
+        }
+
+        $line_count = 0;
+        foreach ($letter as $l) {
+            $test_str = $content . " " . $l;
+            $test_box = imagettfbbox($font_size, $angle, $font_face, $test_str);
+
+            // 判断拼接后的字符串是否超过预设的宽度
+            if (($test_box[2] > $width) && ($content !== "")) {
+                $line_count++;
+
+                if ($max_line && $line_count >= $max_line) {
+                    $content = mb_substr($content, 0, -1, 'UTF-8') . "...";
+                    break;
+                }
+
+                $content .= "\n";
+            }
+
+            $content .= $l;
+        }
+
+        return $content;
+    }
+
+    /**
+     * 省略文字
+     *
+     * @param $text
+     * @param int $num
+     * @return string|string[]
+     */
+    public static function textOmit($string, $num = 26)
+    {
+        $letter = [];
+        for ($i = 0; $i < mb_strlen($string, 'UTF-8'); $i++) {
+            $letter[] = mb_substr($string, $i, 1, 'UTF-8');
+        }
+
+        $content = "";
+        foreach ($letter as $key => $l) {
+            if ($key + 1 == $num) {
+                $content .= '...';
+                break;
+            }
+
+            $content .= $l;
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param $string
+     * @return string
+     */
+    public static function strToInt($string)
+    {
+        $versionArr = explode('.', $string);
+        if (count($versionArr) > 3) {
+            return false;
+        }
+
+        $version_id = 0;
+        isset($versionArr[0]) && $version_id += BcHelper::mul((int)$versionArr[0], 100000000000, 12);
+        isset($versionArr[1]) && $version_id += BcHelper::mul((int)$versionArr[1], 10000000, 8);
+        isset($versionArr[2]) && $version_id += BcHelper::mul((int)$versionArr[2], 1000, 4);
+
+        return $version_id;
     }
 
     /**

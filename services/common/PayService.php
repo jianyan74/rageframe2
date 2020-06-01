@@ -56,7 +56,7 @@ class PayService extends Service
         // 交易类型
         $tradeType = $payLog->trade_type;
 
-        return Yii::$app->pay->wechat->$tradeType($order, false);
+        return Yii::$app->pay->wechat->$tradeType($order);
     }
 
     /**

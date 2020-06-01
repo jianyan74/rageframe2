@@ -13,6 +13,7 @@ use common\websockets\SiteWebSocket;
 use common\models\websocket\FdMemberMap;
 use common\models\websocket\DataForm;
 use common\enums\StatusEnum;
+use common\helpers\AddonHelper;
 
 /**
  * Class WebSocketServer
@@ -59,6 +60,13 @@ class WebSocketServer
      * @var string
      */
     protected $route;
+
+    /**
+     * 是否初始化服务
+     *
+     * @var bool
+     */
+    protected $isInitService = false;
 
     /**
      * 路由访问白名单
@@ -150,43 +158,8 @@ class WebSocketServer
 
         echo "receive from {}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
 
-        try {
-            // 消息
-            $data = new DataForm();
-            $data->attributes = Json::decode($frame->data);
-            // 格式化内容
-            if (!$data->validate()) {
-                throw new UnprocessableEntityHttpException($this->analyErr($data->getFirstErrors()));
-            }
-
-            // 未登录直接关闭
-            $member = [];
-            if (!in_array($data->route, $this->routeOptional) && !($member = $this->getFdMemberMap($this->fd))) {
-                return $server->disconnect($this->fd, 4001, '登录失败!');
-            }
-
-            // 解析路由
-            list($controller, $action) = $this->analysisRoute($data->route);
-            $this->childService($controller, $server, $frame, $member, $data)->$action();
-        } catch (\Exception $e) {
-            $error_info = [
-                'type' => get_class($e),
-                'file' => method_exists($e, 'getFile') ? $e->getFile() : '',
-                'errorMessage' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'stack-trace' => explode("\n", $e->getTraceAsString()),
-            ];
-
-            if (YII_DEBUG) {
-                $server->push($frame->fd, $this->json(5000, $e->getMessage(), $error_info));
-            } else {
-                $server->push($frame->fd, $this->json(5000, '服务器内部错误'));
-            }
-
-            Yii::error($error_info);
-        }
-
-        unset($data);
+        // 处理消息
+        $this->receptionMessage($server, $frame);
     }
 
     /**
@@ -273,6 +246,58 @@ class WebSocketServer
     }
 
     /**
+     * @param $server
+     * @param $frame
+     * @return mixed
+     */
+    public function receptionMessage($server, $frame, $retry = 0)
+    {
+        try {
+            // 消息
+            $data = new DataForm();
+            $data->attributes = Json::decode($frame->data);
+            // 格式化内容
+            if (!$data->validate()) {
+                throw new UnprocessableEntityHttpException($this->analyErr($data->getFirstErrors()));
+            }
+
+            // 未登录直接关闭
+            $member = [];
+            if (!in_array($data->route, $this->routeOptional) && !($member = $this->getFdMemberMap($this->fd))) {
+                return $server->disconnect($this->fd, 4001, '登录失败!');
+            }
+
+            // 解析路由
+            list($controller, $action) = $this->analysisRoute($data->route);
+            $this->childService($controller, $server, $frame, $member, $data)->$action();
+
+            unset($data);
+        } catch (\Exception $e) {
+            // 数据库查询超时
+            $retry++;
+            if ($retry <= 3 && strpos($e, 'Error while sending QUERY packet')) {
+                return $this->receptionMessage($server, $frame, $retry);
+            }
+
+            $error_info = [
+                'type' => get_class($e),
+                'file' => method_exists($e, 'getFile') ? $e->getFile() : '',
+                'errorMessage' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'stack-trace' => explode("\n", $e->getTraceAsString()),
+            ];
+
+            if (YII_DEBUG) {
+                $server->push($frame->fd, $this->json(5000, $e->getMessage(), $error_info));
+            } else {
+                $server->push($frame->fd, $this->json(5000, '服务器打瞌睡了...'));
+            }
+
+            Yii::error($error_info);
+        }
+    }
+
+    /**
      * 解析路由
      *
      * @param $route
@@ -304,6 +329,12 @@ class WebSocketServer
     protected function childService($childServiceName, $server, $frame, $member, DataForm $data)
     {
         if (!isset($this->_childService[$childServiceName])) {
+            // 初始化
+            if ($this->isInitService == false) {
+                $this->initService();
+                $this->isInitService = true;
+            }
+
             $childService = $this->childService;
 
             if (isset($childService[$childServiceName])) {
@@ -359,6 +390,27 @@ class WebSocketServer
 
         $errors = array_values($firstErrors)[0];
         return $errors ?? '未捕获到错误信息';
+    }
+
+    /**
+     * 初始化
+     */
+    protected function initService()
+    {
+        // 查询可用插件列表
+        $addons = Yii::$app->services->addons->getList();
+        $addons = ArrayHelper::arrayKey($addons, 'name');
+        $addonDir = Yii::getAlias('@addons');
+        // 获取插件列表
+        $dirs = array_map('basename', glob($addonDir . '/*'));
+        foreach ($dirs as $value) {
+            $class = AddonHelper::getAddonConfig($value);
+            // 判断是否安装
+            if (isset($addons[$value]) && class_exists($class) && !empty($webSocket = (new $class)->webSocket)) {
+                // 实例化插件失败忽略执行
+                $this->childService = ArrayHelper::merge($this->childService, $webSocket);
+            }
+        }
     }
 
     /**

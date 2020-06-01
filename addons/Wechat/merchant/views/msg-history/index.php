@@ -47,8 +47,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'value' => function ($model) {
                                 if (!$model->rule_id) {
                                     return '<span class="label label-default">未触发</span>';
+                                } elseif (!empty($model->rule)) {
+                                    return '<span class="label label-info">' . $model->rule->name . '</span>';
                                 } else {
-                                    return '<span class="label label-info">' . $model->rule->name ?? '规则被删除' . '</span>';
+                                    return '<span class="label label-info">规则被删除</span>';
                                 }
                             },
                             'format' => 'raw',
@@ -99,6 +101,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         </div>
     </div>
 </div>
+
+<?= \common\widgets\emoji\Emoji::widget([
+    'name' => 'websocket',
+    'options' => [
+        'class' => 'hide'
+    ]
+]); ?>
 
 <?php Yii::$app->view->registerJs(<<<js
   $('.emoji').each(function (i, data) {

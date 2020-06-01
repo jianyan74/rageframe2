@@ -33,7 +33,7 @@ class MenuController extends BaseController
         $type = Yii::$app->request->get('type', Menu::TYPE_CUSTOM);
         $data = Menu::find()
             ->where(['type' => $type])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()]);
+            ->andWhere(['merchant_id' => $this->getMerchantId()]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => $this->pageSize]);
         $models = $data->offset($pages->offset)
             ->orderBy('status desc, id desc')

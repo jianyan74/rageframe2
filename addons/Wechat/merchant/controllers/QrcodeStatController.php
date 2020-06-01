@@ -85,6 +85,7 @@ class QrcodeStatController extends BaseController
 
         $dataList = QrcodeStat::find()
             ->where(['between', 'created_at', strtotime($from_date), strtotime($to_date)])
+            ->andWhere(['merchant_id' => $this->getMerchantId()])
             ->andFilterWhere(['type' => $request->get('type')])
             ->andFilterWhere(['like', 'name', $request->get('keyword')])
             ->orderBy('created_at desc')

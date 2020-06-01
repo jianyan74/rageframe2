@@ -37,6 +37,14 @@ class MerchantService extends Service
     }
 
     /**
+     * @return int
+     */
+    public function getNotNullId(): int
+    {
+        return !empty($this->merchant_id) ? (int)$this->merchant_id : 0;
+    }
+
+    /**
      * @param $merchant_id
      */
     public function addId($merchant_id)

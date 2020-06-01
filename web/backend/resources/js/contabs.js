@@ -163,6 +163,11 @@ $(function () {
         return false;
     }
 
+    // 关闭当前的标签
+    window.closeCurrentConTab = function() {
+        $('.J_menuTabs .active i').click();
+    }
+
     // 内页打开新标签
     window.openConTab = function(that) {
         // 获取标识数据

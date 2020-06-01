@@ -155,6 +155,8 @@ $(function() {
     var fixedRightNumber = $($table).attr('fixedRightNumber');
     buildTable($table, fixedNumber, fixedRightNumber);
     $($table).find('thead tr').eq(1).remove();
+    $('.fixed-columns .fixed-table-body table thead input').attr('name', '');
+    $('.fixed-columns-right .fixed-table-body table thead input').attr('name', '');
 });
 
 /* 导航标签切换 */
@@ -189,6 +191,12 @@ toastr.options = {
 /* 在顶部导航栏打开tab */
 $(document).on("click", ".openContab", function (e) {
     parent.openConTab($(this));
+    return false;
+});
+
+// 关闭当前的标签
+$(document).on("click", ".closeCurrentConTab", function (e) {
+    parent.closeCurrentConTab();
     return false;
 });
 

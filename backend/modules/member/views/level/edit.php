@@ -42,10 +42,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="hidden" name="Level[check_integral]"
-                                               id="check_integral" value="<?= $model->check_integral ?>">
-                                        <input type="checkbox" <?= $model->check_integral ? 'checked' : ''?>
-                                               onclick="changeCheck('check_integral', this.checked)"> 累计积分满
+                                        累计积分满
                                     </label>
                                 </div>
                                 <input type="number" name="Level[integral]" value="<?= $model->integral ?>"
@@ -60,10 +57,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="hidden" name="Level[check_money]"
-                                               id="check_money" value="<?= $model->check_money ?>">
-                                        <input type="checkbox" <?= $model->check_money ? 'checked' : ''?>
-                                               onclick="changeCheck('check_money', this.checked)"> 消费额度满
+                                        消费额度满
                                     </label>
                                 </div>
                                 <input type="number" name="Level[money]" value="<?= $model->money ?>"
@@ -71,18 +65,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                 <label class="small" style="color: #777;"> *设置会员等级所需要的累计积分且必须大于等于0</label>
                             </div>
                         </div>
-
-                        <br/>
-
-                        <label class="col-sm-1 radio-inline">
-                            <input type="radio" name="Level[middle]"
-                                <?= $model->middle == 0 ? 'checked' : '' ?> value="0"> 或
-                        </label>
-                        <label class="col-sm-1 radio-inline">
-                            <input type="radio" name="Level[middle]"
-                                <?= $model->middle == 1 ? 'checked' : '' ?> value="1"> 且
-                        </label>
-                        <label class="small" style="color: #777;">*设置会员升级的条件关系</label>
                     </div>
                 </div>
             </div>
@@ -94,12 +76,3 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         </div>
     </div>
 </div>
-
-<script>
-    function changeCheck(id, obj) {
-        if (!id) {
-            return false;
-        }
-        $('#'+id).val(obj ? 1 : 0);
-    }
-</script>

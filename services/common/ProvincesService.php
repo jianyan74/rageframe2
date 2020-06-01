@@ -7,6 +7,7 @@ use common\enums\CacheEnum;
 use common\models\common\Provinces;
 use common\components\Service;
 use common\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 /**
  * Class ProvincesService
@@ -102,6 +103,18 @@ class ProvincesService extends Service
     }
 
     /**
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findById($id)
+    {
+        return Provinces::find()
+            ->where(['id' => $id])
+            ->asArray()
+            ->one();
+    }
+
+    /**
      * @param int $pid
      * @param string $level
      * @return array
@@ -167,6 +180,17 @@ class ProvincesService extends Service
         }
 
         return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsonData()
+    {
+        $data = $this->findAllInCache();
+        $items = ArrayHelper::itemsMerge($data, 0, 'id', 'pid', 'child');
+
+        return $items;
     }
 
     /**

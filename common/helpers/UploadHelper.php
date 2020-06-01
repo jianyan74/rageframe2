@@ -7,6 +7,7 @@ use yii\imagine\Image;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
+use linslin\yii2\curl;
 use common\enums\StatusEnum;
 use common\models\common\Attachment;
 use common\components\uploaddrive\DriveInterface;
@@ -203,22 +204,13 @@ class UploadHelper
         }
 
         $extend = StringHelper::clipping($imgUrl, '.', 1);
+        if (!in_array($extend, Yii::$app->params['uploadConfig']['images']['extensions'])) {
+            $extend = 'jpg';
+        }
 
-        //打开输出缓冲区并获取远程图片
-        ob_start();
-        $context = stream_context_create(
-            [
-                'http' => [
-                    'follow_location' => false // don't follow redirects
-                ]
-            ]
-        );
-        readfile($imgUrl, false, $context);
-        $img = ob_get_contents();
-        ob_end_clean();
-        preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
+        $curl = new curl\Curl();
+        $img = $curl->get($imgUrl);
 
-        // $name = $m ? $m[1] : "",
         $this->baseInfo['extension'] = $extend;
         $this->baseInfo['size'] = strlen($img);
         $this->config['md5'] = md5($img);

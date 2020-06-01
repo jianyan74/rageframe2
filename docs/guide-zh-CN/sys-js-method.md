@@ -4,6 +4,7 @@
 
 - 弹出框
 - 内页打开新标签页面
+- 关闭当前标签页
 - Ajax 更新数据
 - Js 模板引擎 Demo
 - 用 Iframe 进行表单提交
@@ -51,6 +52,14 @@ rfMsg(title)
 
 ```
  <a class="openContab" href="<?= Url::to(['test/index'])?>">测试标签</a>
+```
+
+### 关闭当前标签页
+
+达到此效果只需要给此元素一个 class 为 closeCurrentConTab
+
+```
+<span class="closeCurrentConTab">关闭当前标签页</span>
 ```
 
 ### Ajax 更新数据

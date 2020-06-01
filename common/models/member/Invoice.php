@@ -41,7 +41,7 @@ class Invoice extends \common\models\base\BaseModel
             [['type'], 'in', 'range' => InvoiceTypeEnum::getKeys()],
             [['type'], 'verifyType'],
             [['merchant_id', 'member_id', 'is_default', 'type', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'duty_paragraph'], 'string', 'max' => 200],
+            [['title', 'duty_paragraph', 'opening_bank', 'address'], 'string', 'max' => 200],
         ];
     }
 
@@ -56,6 +56,8 @@ class Invoice extends \common\models\base\BaseModel
             'member_id' => '用户id',
             'title' => '发票抬头',
             'duty_paragraph' => '税号',
+            'opening_bank' => '开户行',
+            'address' => '地址及电话',
             'is_default' => '默认',
             'type' => '类型', // 1企业 2个人
             'status' => '状态',

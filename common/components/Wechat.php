@@ -131,7 +131,6 @@ class Wechat extends \jianyan\easywechat\Wechat
         unset($config);
     }
 
-
     /**
      * 创建日志文件
      *

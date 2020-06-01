@@ -26,7 +26,7 @@ class ConfigService extends Service
      */
     public function updateAll($app_id, $data)
     {
-        $merchant_id = Yii::$app->services->merchant->getId();
+        $merchant_id = Yii::$app->services->merchant->getNotNullId();
 
         $config = Config::find()
             ->where(['in', 'name', array_keys($data)])
@@ -43,6 +43,7 @@ class ConfigService extends Service
             $val = $data[$item['name']] ?? '';
             /** @var ConfigValue $model */
             $model = $item->value ?? new ConfigValue();
+            $model->merchant_id = $merchant_id;
             $model->config_id = $item->id;
             $model->app_id = $item->app_id;
             $model->data = is_array($val) ? Json::encode($val) : $val;

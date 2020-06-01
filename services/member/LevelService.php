@@ -8,6 +8,7 @@
 
 namespace services\member;
 
+use common\enums\MemberLevelUpgradeTypeEnum;
 use Yii;
 use common\components\Service;
 use common\enums\CacheEnum;
@@ -64,6 +65,7 @@ class LevelService extends Service
             return false;
         }
 
+
         foreach ($levels as $level) {
             if (!$this->getMiddle($level, $money, $integral)) {
                 continue;
@@ -105,7 +107,7 @@ class LevelService extends Service
 
         return Level::find()
             ->where(['status' => StatusEnum::ENABLED])
-            ->andWhere(['merchant_id' => $merchant_id])
+            ->andFilterWhere(['merchant_id' => $merchant_id])
             ->orderBy(['level' => SORT_DESC, 'id' => SORT_DESC])
             ->all();
     }
@@ -137,26 +139,21 @@ class LevelService extends Service
             return false;
         }
 
-        $money = abs($money);
-        $integral = abs($integral);
+        $member_level_upgrade_type = Yii::$app->debris->backendConfig('member_level_upgrade_type');
 
-        ##### 校验余额条件 #####
-        $middle_money = $level->check_money ? (
-        $money >= $level->money ? 1 : 0
-        ) : 1;
-
-        ##### 校验积分条件 #####
-        $middle_integral = $level->check_integral ? (
-        $integral >= $level->integral ? 1 : 0
-        ) : 1;
-
-        ##### 校验判断条件 #####
-        if ($level->check_integral & $level->check_money) {
-            $middle = $level->middle ? '&' : '|';
-        } else {
-            $middle = '&';
+        switch ($member_level_upgrade_type) {
+            case MemberLevelUpgradeTypeEnum::INTEGRAL:
+                if (abs($integral) >= $level->integral) {
+                    return true;
+                }
+                break;
+            case MemberLevelUpgradeTypeEnum::CONSUMPTION_MONEY:
+                if (abs($money) >= $level->money) {
+                    return true;
+                }
+                break;
         }
 
-        return eval("return {$middle_money} {$middle} {$middle_integral};");
+        return false;
     }
 }

@@ -74,7 +74,10 @@ class EchantsHelper
                 list($time, $format) = [DateHelper::aYear(date('Y')), 'month'];
                 break;
             case 'this30Day' :
-                list($time, $format) = [['start' => time() - 60 * 60 *24 *30, 'end' => time()], 'day'];
+                list($time, $format) = [['start' => time() - 60 * 60 * 24 * 30, 'end' => time()], 'day'];
+                break;
+            case 'this7Day' :
+                list($time, $format) = [['start' => time() - 60 * 60 * 24 * 7, 'end' => time()], 'day'];
                 break;
             case 'lastYear' :
                 list($time, $format) = [DateHelper::aYear(date('Y') - 1), 'month'];

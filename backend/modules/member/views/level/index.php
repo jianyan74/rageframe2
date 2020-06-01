@@ -13,7 +13,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title"><?= $this->title; ?></h3>
+                <h3 class="box-title">
+                    <?= $this->title; ?>
+                    <small>可去「网站设置->会员配置」修改会员升级方式</small>
+                </h3>
                 <div class="box-tools">
                     <?= Html::create(['edit'], '创建') ?>
                 </div>
@@ -37,18 +40,15 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'label' => '升级条件',
                             'filter' => false, //不显示搜索框
-                            'value' => function ($model) {
-                                $money = $model->check_money ? '消费金额满' . $model->money . '元' : '';
-                                $middle = $model->middle ?
-                                    '<b class="red"> 且 </b>' :
-                                    '<b class="red"> 或 </b>';
-                                $integral = $model->check_integral ? '累计积分满' . $model->integral . '积分' : '';
-                                if ($money && $integral) {
-                                    $str = $money . $middle . $integral;
-                                } else {
-                                    $str = (!$money && !$integral) ? '无条件' : ($money ?: $integral);
+                            'value' => function ($model) use ($memberLevelUpgradeType) {
+                                switch ($memberLevelUpgradeType) {
+                                    case 1 :
+                                        return '累计积分满 ' . $model->integral . ' 积分';
+                                        break;
+                                    case 2 :
+                                        return '消费金额满 ' . $model->money . ' 元';
+                                        break;
                                 }
-                                return $str;
                             },
                             'format' => 'raw',
                         ],
