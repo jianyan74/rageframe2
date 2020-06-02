@@ -232,7 +232,7 @@ class ExcelHelper
             for ($currentRow = $startRow; $currentRow <= $allRow; $currentRow++) {
                 // 从第1列开始输出
                 for ($currentColumn = 1; $currentColumn <= $allColumn; $currentColumn++) {
-                    $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
+                    $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getFormattedValue();
                     $arr[$currentRow][] = trim($val);
                 }
 
