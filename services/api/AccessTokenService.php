@@ -72,10 +72,12 @@ class AccessTokenService extends Service
         Yii::$app->services->member->lastLogin($member);
         // 关联账号信息
         $account = $member->account;
+        $memberLevel = $member->memberLevel;
         $member = ArrayHelper::toArray($member);
         unset($member['password_hash'], $member['auth_key'], $member['password_reset_token'], $member['access_token'], $member['refresh_token']);
         $result['member'] = $member;
         $result['member']['account'] = ArrayHelper::toArray($account);
+        $result['member']['memberLevel'] = ArrayHelper::toArray($memberLevel);
 
         // 写入缓存
         $this->cache === true && Yii::$app->cache->set($this->getCacheKey($model->access_token), $model, $this->timeout);

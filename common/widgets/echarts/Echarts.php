@@ -40,11 +40,13 @@ class Echarts extends Widget
      * @var array
      */
     public $themeConfig = [
-        'today' => '今日',
-        'yesterday' => '昨日',
+        'today' => '今天',
+        'yesterday' => '昨天',
+        // 'this7Day' => '最近7天',
+        // 'this30Day' => '最近30天',
         'thisWeek' => '本周',
         'thisMonth' => '本月',
-        'thisYear' => '本年',
+        'thisYear' => '今年',
         'lastYear' => '去年',
         'customData' => '自定义区间'
     ];

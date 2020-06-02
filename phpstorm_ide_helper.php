@@ -33,6 +33,8 @@ class Yii
  * @property \addons\Work\common\services\Application $workService
  * @property \addons\RfOnlineDoc\services\Application $rfOnlineDocService
  * @property \addons\TinyService\services\Application $tinyServiceService
+ * @property \addons\LivingAliyun\services\Application $livingAliyunService
+ * @property \addons\TinyForum\services\Application $tinyForumService
  * @property \Detection\MobileDetect $mobileDetect
  * @property \jianyan\easywechat\Wechat $wechat
  * @property \Da\QrCode\Component\QrCodeComponent $qr

@@ -45,14 +45,14 @@ class WebSocketController extends Controller
      *
      * @var int
      */
-    public $mode = SWOOLE_BASE;
+    public $mode;
 
     /**
      * 传输协议
      *
      * @var int
      */
-    public $socket_type = SWOOLE_SOCK_TCP;
+    public $socket_type;
 
     /**
      * 长连接方式
@@ -94,8 +94,8 @@ class WebSocketController extends Controller
         $websocket = new $this->server(
             $this->host,
             $this->port,
-            $this->mode,
-            $this->socket_type,
+            $this->mode ?? SWOOLE_BASE,
+            $this->socket_type ?? SWOOLE_SOCK_TCP,
             $this->type,
             $this->config
         );
@@ -150,7 +150,6 @@ class WebSocketController extends Controller
             posix_kill($pid, $sig);
         } else {
             $this->stdout("服务未运行..." . PHP_EOL);
-            exit(1);
         }
     }
 

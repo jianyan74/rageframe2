@@ -2,6 +2,7 @@
 
 namespace common\models\merchant;
 
+use common\models\rbac\AuthRole;
 use Yii;
 use common\enums\AppEnum;
 use common\enums\StatusEnum;
@@ -194,6 +195,7 @@ class Merchant extends \common\models\base\BaseModel
         }
 
         if ($this->status == StatusEnum::DELETE) {
+            Member::updateAll(['status' => StatusEnum::DELETE], ['merchant_id' => $this->id]);
             Account::updateAll(['status' => StatusEnum::DELETE], ['merchant_id' => $this->id]);
         }
 

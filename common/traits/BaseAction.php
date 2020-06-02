@@ -2,10 +2,10 @@
 
 namespace common\traits;
 
-use common\enums\AppEnum;
 use Yii;
 use yii\base\Model;
 use common\components\Init;
+use common\enums\AppEnum;
 
 /**
  * trait BaseAction

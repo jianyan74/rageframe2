@@ -2,6 +2,7 @@
 
 namespace merchant\forms;
 
+use common\enums\AppEnum;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveQuery;
@@ -42,7 +43,15 @@ class SignUpForm extends Model
             [['rememberMe'], 'isRequired'],
             [['title', 'cate_id', 'company_name', 'username', 'mobile', 'password', 're_pass'], 'required'],
             ['mobile', 'string', 'max' => 15],
-            [['title', 'company_name'], 'unique', 'targetClass' => '\common\models\merchant\Merchant', 'message' => '{attribute}已经被占用.'],
+            [
+                ['title', 'company_name'],
+                'unique',
+                'targetClass' => '\common\models\merchant\Merchant',
+                'message' => '{attribute}已经被占用.',
+                'filter' => function (ActiveQuery $query) {
+                    return $query->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+                },
+            ],
             [
                 'mobile',
                 'unique',
@@ -138,6 +147,10 @@ class SignUpForm extends Model
                 $this->addErrors($member->getErrors());
                 throw new NotFoundHttpException('用户信息编辑错误');
             }
+
+            // 角色授权
+            $role = Yii::$app->services->rbacAuthRole->findDefaultByMerchantId($merchant->id);
+            !empty($role) && Yii::$app->services->rbacAuthAssignment->assign([$role->id], $member->id, AppEnum::MERCHANT);
 
             $transaction->commit();
 

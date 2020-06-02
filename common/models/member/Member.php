@@ -7,6 +7,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use common\helpers\HashidsHelper;
 use common\enums\StatusEnum;
 use common\models\base\User;
 use common\helpers\RegularHelper;
@@ -80,6 +81,11 @@ class Member extends User
             [['tree'], 'string', 'max' => 2000],
             [['last_ip'], 'string', 'max' => 16],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(),'message' => '不是一个有效的手机号码'],
+            [['mobile'], 'unique', 'filter' => function (ActiveQuery $query) {
+                return $query
+                    ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+                    ->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getMerchantId()]);
+            }],
         ];
     }
 
@@ -147,9 +153,9 @@ class Member extends User
     /**
      * 关联级别
      */
-    public function getLevel()
+    public function getMemberLevel()
     {
-        return $this->hasOne(Level::class, ['level' => 'current_level'])->where(['merchant_id' => Yii::$app->services->merchant->getId()]);
+        return $this->hasOne(Level::class, ['level' => 'current_level'])->andFilterWhere(['merchant_id' => Yii::$app->services->merchant->getId()]);
     }
 
     /**
@@ -190,6 +196,8 @@ class Member extends User
             $account->member_id = $this->id;
             $account->merchant_id = $this->merchant_id;
             $account->save();
+
+            empty($this->promo_code) && Member::updateAll(['promo_code' => HashidsHelper::encode($this->id)], ['id' => $this->id]);
         }
 
         if ($this->status == StatusEnum::DELETE) {

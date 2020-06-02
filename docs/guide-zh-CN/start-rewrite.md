@@ -32,6 +32,11 @@ location /html5 {
 location /oauth2 {
     try_files $uri $uri/ /oauth2/index.php$is_args$args;
 }
+
+location ~* ^/attachment/.*\.(php|php5)$ 
+{
+    deny all;
+}
 ```
 
 类似Apache的配置

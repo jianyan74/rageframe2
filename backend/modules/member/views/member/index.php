@@ -51,14 +51,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'filter' => false,
                             'format' => 'raw',
                         ],
+                        'username',
+                        'nickname',
                         [
-                            'attribute' => 'username',
-                            'filter' => false, //不显示搜索框
-                        ],
-                        [
-                            'attribute' => 'level.name',
+                            'attribute' => 'memberLevel.name',
                             'value' => function ($model) {
-                                return Html::tag('span', $model->level->name ?? '', [
+                                return Html::tag('span', $model->memberLevel->name ?? '', [
                                     'class' => 'label label-primary'
                                 ]);
                             },

@@ -117,6 +117,13 @@ class BaseAddonConfig
     public $wechatMessage = [];
 
     /**
+     * 即时通讯可用控制器
+     *
+     * @var array
+     */
+    public $webSocket = [];
+
+    /**
      * 保存在当前模块的根目录下面
      *
      * 例如 $install = 'Install';

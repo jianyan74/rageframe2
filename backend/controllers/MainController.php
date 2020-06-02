@@ -55,6 +55,19 @@ class MainController extends BaseController
     }
 
     /**
+     * 充值统计
+     *
+     * @param $type
+     * @return array
+     */
+    public function actionMemberRechargeStat($type)
+    {
+        $data = Yii::$app->services->memberCreditsLog->getRechargeStat($type);
+
+        return ResultHelper::json(200, '获取成功', $data);
+    }
+
+    /**
      * 用户指定时间内消费日志
      *
      * @param $type

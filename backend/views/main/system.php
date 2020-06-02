@@ -74,15 +74,31 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         </div>
         <!-- /.info-box -->
     </div>
-    <div class="col-md-12 col-xs-12">
+    <div class="col-md-6 col-xs-12">
         <div class="box box-solid">
             <div class="box-header">
                 <i class="fa fa-circle blue" style="font-size: 8px"></i>
-                <h3 class="box-title">关注人数统计</h3>
+                <h3 class="box-title">第三方消费统计</h3>
             </div>
             <?= \common\widgets\echarts\Echarts::widget([
                 'config' => [
-                    'server' => Url::to(['member-between-count']),
+                    'server' => Url::to(['member-credits-log-between-count']),
+                    'height' => '315px'
+                ]
+            ]) ?>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                <i class="fa fa-circle blue" style="font-size: 8px"></i>
+                <h3 class="box-title">充值统计</h3>
+            </div>
+            <?= \common\widgets\echarts\Echarts::widget([
+                'config' => [
+                    'server' => Url::to(['member-recharge-stat']),
                     'height' => '315px'
                 ]
             ]) ?>
@@ -94,11 +110,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         <div class="box box-solid">
             <div class="box-header">
                 <i class="fa fa-circle blue" style="font-size: 8px"></i>
-                <h3 class="box-title">第三方消费统计</h3>
+                <h3 class="box-title">关注人数统计</h3>
             </div>
             <?= \common\widgets\echarts\Echarts::widget([
                 'config' => [
-                    'server' => Url::to(['member-credits-log-between-count']),
+                    'server' => Url::to(['member-between-count']),
                     'height' => '315px'
                 ]
             ]) ?>

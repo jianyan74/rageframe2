@@ -3,6 +3,7 @@
 namespace common\models\forms;
 
 use common\enums\AccountTypeEnum;
+use common\enums\StatusEnum;
 use common\helpers\ArrayHelper;
 use common\models\member\BankAccount;
 
@@ -28,6 +29,10 @@ class BankAccountForm extends BankAccount
      */
     public function verifyAccountType($attribute)
     {
+        if ($this->status == StatusEnum::DELETE) {
+            return;
+        }
+
         if ($this->account_type == AccountTypeEnum::UNION) {
             !$this->account_number && $this->addError($attribute, '请填写银行账号');
             !$this->branch_bank_name && $this->addError($attribute, '支行信息');

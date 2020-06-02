@@ -77,6 +77,8 @@ class AuthController extends UserAuthController
             ];
         }
 
-        return ResultHelper::json(422, '请先授权绑定用户');
+        return [
+            'openid' => ''
+        ];
     }
 }

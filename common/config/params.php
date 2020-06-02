@@ -52,7 +52,7 @@ return [
             'drive' => 'local', // 默认本地 可修改 qiniu/oss/cos 上传
             'md5Verify' => true, // md5 校验
             'maxSize' => 1024 * 1024 * 50,// 最大上传大小,默认50M
-            'extensions' => ['mp4'],// 可上传文件后缀不填写即为不限
+            'extensions' => ['mp4', 'mp3'],// 可上传文件后缀不填写即为不限
             'path' => 'videos/',// 创建路径
             'subName' => 'Y/m/d',// 上传子目录规则
             'prefix' => 'video_',// 名称前缀

@@ -50,6 +50,8 @@ use common\components\Service;
  * @property \services\common\ConfigCateService $configCate 基础配置分类
  * @property \services\common\ProvincesService $provinces ip黑名单
  * @property \services\common\IpBlacklistService $ipBlacklist 省市区
+ * @property \services\common\GeTuiService $geTui 个推
+ * @property \services\common\MiniProgramLiveService $miniProgramLive 小程序直播
  * @property \services\rbac\AuthItemService $rbacAuthItem 权限
  * @property \services\rbac\AuthItemChildService $rbacAuthItemChild 授权的权限
  * @property \services\rbac\AuthRoleService $rbacAuthRole 角色
@@ -130,6 +132,8 @@ class Application extends Service
         'reportLog' => 'services\common\ReportLogService',
         'pay' => 'services\common\PayService',
         'jPush' => 'services\common\JPushService',
+        'geTui' => 'services\common\GeTuiService',
+        'miniProgramLive' => 'services\common\MiniProgramLiveService',
         'sms' => [
             'class' => 'services\common\SmsService',
             'queueSwitch' => false, // 是否丢进队列

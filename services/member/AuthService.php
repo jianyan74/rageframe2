@@ -32,6 +32,19 @@ class AuthService extends Service
     }
 
     /**
+     * @param $memberId
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findByMemberId($memberId)
+    {
+        return Auth::find()
+            ->where(['member_id' => $memberId])
+            ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->asArray()
+            ->all();
+    }
+
+    /**
      * @param $oauthClient
      * @param $memberId
      * @return array|\yii\db\ActiveRecord|null
@@ -69,6 +82,20 @@ class AuthService extends Service
         return Auth::find()
             ->where(['oauth_client' => $oauthClient, 'member_id' => $memberId])
             ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * @param $oauthClient
+     * @param $oauthClientUserId
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findOauthClientByApp($oauthClient, $oauthClientUserId)
+    {
+        return Auth::find()
+            ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
+            ->andWhere(['status' => StatusEnum::DISABLED])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }

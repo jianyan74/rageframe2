@@ -211,8 +211,8 @@ class AddonHelper
      */
     public static function getConfig($noCache = false, $name = '', $merchant_id = '')
     {
-        !$merchant_id && $merchant_id = Yii::$app->services->merchant->getId();
-        $app_id = !$merchant_id ? AppEnum::BACKEND : AppEnum::MERCHANT;
+        empty($merchant_id) && $merchant_id = Yii::$app->services->merchant->getId();
+        $app_id = empty($merchant_id) ? AppEnum::BACKEND : AppEnum::MERCHANT;
 
         return static::findConfig($noCache, $merchant_id, $name, $app_id);
     }
@@ -250,11 +250,13 @@ class AddonHelper
     public static function findConfig($noCache, $merchant_id, $name, $app_id)
     {
         !$name && $name = Yii::$app->params['addon']['name'];
+        $updated_at = Yii::$app->params['addon']['updated_at'] ?? '';
+
         $cacheKey = [
             'addonsConfig',
             $app_id,
             $name,
-            Yii::$app->params['addon']['updated_at'],
+            $updated_at,
             $merchant_id
         ];
 
@@ -330,7 +332,7 @@ class AddonHelper
             throw new NotFoundHttpException("插件不能为空");
         }
 
-        if (!($addon = Yii::$app->services->addons->findByNameWithBinding($name))) {
+        if (!($addon = Yii::$app->services->addons->findByNameWithBinding($name, Yii::$app->id == AppEnum::BACKEND))) {
             throw new NotFoundHttpException("插件不存在");
         }
 

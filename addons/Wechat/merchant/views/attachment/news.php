@@ -112,7 +112,8 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
         function init(){
             var nodeWidth = $(".normalPaddingRight").outerWidth(true),
                 colNum = parseInt( $(window).width() / nodeWidth ),
-                colSumHeight = [];
+                colSumHeight = [],
+                maxSumHeight = 0;
             for (var i=0;i<colNum;i++) {
                 colSumHeight.push(0);
             }

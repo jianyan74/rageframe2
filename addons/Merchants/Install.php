@@ -24,8 +24,8 @@ class Install extends Migration implements AddonWidget
     */
     public function run($addon)
     {
-         MigrateHelper::upByPath([
-             '@addons/Merchants/console/migrations/'
-         ]);
+//         MigrateHelper::upByPath([
+//             '@addons/Merchants/console/migrations/'
+//         ]);
     }
 }

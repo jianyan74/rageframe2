@@ -84,6 +84,7 @@ class StatController extends BaseController
             'fansStat' => $fansStat,
             'from_date' => $from_date,
             'to_date' => $to_date,
+            'countFollow' => Yii::$app->wechatService->fans->getCountFollow()
         ]);
     }
 

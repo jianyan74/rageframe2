@@ -55,6 +55,7 @@ class MenuService extends Service
             $model->attributes = $menu;
             // 增加父级
             !empty($parent) && $model->setParent($parent);
+
             $model->url = '/' . StringHelper::toUnderScore($cate->addons_name) . '/'. $menu['route'];
             $model->pid = $pid;
             $model->level = $level;
@@ -148,8 +149,7 @@ class MenuService extends Service
             $data = $data->andWhere(['dev' => StatusEnum::DISABLED]);
         }
 
-        $models = $data->orderBy('cate_id asc, sort asc')
-            ->andWhere(['app_id' => Yii::$app->id])
+        $models = $data->andWhere(['app_id' => Yii::$app->id])
             ->with(['cate' => function (\yii\db\ActiveQuery $query) {
                 return $query->andWhere(['app_id' => Yii::$app->id]);
             }])

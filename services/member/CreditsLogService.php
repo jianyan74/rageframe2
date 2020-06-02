@@ -68,7 +68,7 @@ class CreditsLogService extends Service
         }
 
         // 赠送增加
-        if (!$account->updateAllCounters([
+        if (!Account::updateAllCounters([
             'user_integral' => $creditsLogForm->num,
             'accumulate_integral' => $creditsLogForm->num,
             'give_integral' => $creditsLogForm->num,
@@ -100,7 +100,7 @@ class CreditsLogService extends Service
         }
 
         // 赠送增加
-        if (!$account->updateAllCounters([
+        if (!Account::updateAllCounters([
             'user_integral' => $creditsLogForm->num,
             'accumulate_integral' => $creditsLogForm->num,
             'give_integral' => $creditsLogForm->num,
@@ -166,7 +166,7 @@ class CreditsLogService extends Service
         }
 
         // 赠送增加
-        if (!$account->updateAllCounters([
+        if (!Account::updateAllCounters([
             'user_money' => $creditsLogForm->num,
             'accumulate_money' => $creditsLogForm->num,
             'give_money' => $creditsLogForm->num,
@@ -203,7 +203,7 @@ class CreditsLogService extends Service
         }
 
         // 消费
-        if (!$account->updateAllCounters(['consume_money' => $creditsLogForm->num,], ['id' => $account->id])) {
+        if (!Account::updateAllCounters(['consume_money' => $creditsLogForm->num,], ['id' => $account->id])) {
             throw new NotFoundHttpException('消费失败');
         }
 
@@ -232,7 +232,7 @@ class CreditsLogService extends Service
 
         if ($creditsLogForm->num > 0) {
             // 增加
-            $status = $account->updateAllCounters([
+            $status = Account::updateAllCounters([
                 'user_integral' => $creditsLogForm->num,
                 'accumulate_integral' => $creditsLogForm->num,
             ], ['id' => $account->id]);
@@ -241,7 +241,7 @@ class CreditsLogService extends Service
             $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral += $creditsLogForm->num);
         } else {
             // 消费
-            $status = $account->updateAllCounters([
+            $status = Account::updateAllCounters([
                 'user_integral' => $creditsLogForm->num,
                 'consume_integral' => $creditsLogForm->num
             ],
@@ -257,7 +257,7 @@ class CreditsLogService extends Service
         }
 
         if ($status == false && $creditsLogForm->num > 0) {
-            throw new NotFoundHttpException('增加失败');
+            throw new NotFoundHttpException('增加积分失败');
         }
 
         // 记录日志
@@ -282,13 +282,13 @@ class CreditsLogService extends Service
 
         if ($creditsLogForm->num > 0) {
             // 增加
-            $status = $account->updateAllCounters([
+            $status = Account::updateAllCounters([
                 'user_money' => $creditsLogForm->num,
                 'accumulate_money' => $creditsLogForm->num,
             ], ['id' => $account->id]);
         } else {
             // 消费
-            $status = $account->updateAllCounters(
+            $status = Account::updateAllCounters(
                 [
                     'user_money' => $creditsLogForm->num,
                     'consume_money' => $creditsLogForm->num,
@@ -308,11 +308,45 @@ class CreditsLogService extends Service
         }
 
         if ($status == false && $creditsLogForm->num > 0) {
-            throw new NotFoundHttpException('增加失败');
+            throw new NotFoundHttpException('增加余额失败');
         }
 
         // 记录日志
         return $this->create($creditsLogForm, $account->user_money, $account->user_money + $creditsLogForm->num);
+    }
+
+    /**
+     * 获取区间充值
+     *
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function getRechargeStat($type, $title = '充值统计')
+    {
+        $fields = [
+            'price' => $title,
+        ];
+
+        // 获取时间和格式化
+        list($time, $format) = EchantsHelper::getFormatTime($type);
+        // 获取数据
+        return EchantsHelper::lineOrBarInTime(function ($start_time, $end_time, $formatting) {
+            $data = CreditsLog::find()
+                ->select(['sum(num) as price', "from_unixtime(created_at, '$formatting') as time"])
+                ->where(['credit_type' => CreditsLog::CREDIT_TYPE_USER_MONEY])
+                ->andWhere(['in', 'credit_group', ['backend', 'recharge']])
+                ->andWhere(['>', 'status', StatusEnum::DISABLED])
+                ->andWhere(['between', 'created_at', $start_time, $end_time])
+                ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+                ->groupBy(['time'])
+                ->asArray()
+                ->all();
+
+            foreach ($data as &$datum) {
+                $datum['price'] = abs($datum['price']);
+            }
+
+            return $data;
+        }, $fields, $time, $format);
     }
 
     /**

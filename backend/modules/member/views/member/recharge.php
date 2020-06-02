@@ -24,9 +24,8 @@ use backend\modules\member\forms\RechargeForm;
             </div>
             <div class="col-sm-6 invoice-col">
                 <address>
-                    <strong><?= Html::encode($model['nickname']) ?></strong><br>
                     ID: <?= $model['id'] ?><br>
-                    昵称: <?= Html::encode($model['realname']) ?><br>
+                    昵称: <?= Html::encode($model['nickname']) ?><br>
                     姓名: <?= Html::encode($model['realname']) ?><br>
                     手机号码: <?= Html::encode($model['mobile']) ?>
                 </address>

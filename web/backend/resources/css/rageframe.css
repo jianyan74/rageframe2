@@ -269,7 +269,7 @@ a.desc:after {
 .box-header > .glyphicon,
 .box-header > .ion,
 .box-header .box-title {
-    font-size: 16px;
+    font-size: 15px;
     color: #37474f;
 }
 
@@ -284,6 +284,10 @@ a.desc:after {
     margin: 0;
     font-size: 13px;
     color: #76838f;
+}
+
+.nav-tabs-custom {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 
 .table-responsive {
@@ -626,6 +630,10 @@ a.desc:after {
     border-color: #1890ff;
 }
 
+.alert-info {
+    border-color: #00c0ef;
+}
+
 .skin-black .wrapper,
 .skin-black .main-sidebar,
 .skin-black .left-side,
@@ -677,6 +685,57 @@ a.desc:after {
 .skin-blue .sidebar-menu > li.menu-open > a {
     color: #fff;
     background: #263238;
+}
+
+.skin-light .main-sidebar,
+.skin-light .main-sidebar,
+.skin-light .main-sidebar,
+.skin-light .main-sidebar,
+.skin-light .main-sidebar,
+.skin-light .main-sidebar,
+.skin-black-light .main-sidebar,
+.skin-purple-light .main-sidebar,
+.skin-red-light .main-sidebar,
+.skin-yellow-light .main-sidebar,
+.skin-green-light .main-sidebar,
+.skin-blue-light .main-sidebar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.01);
+    border-right: 1px solid #e4eaec;
+}
+
+.skin-light .main-footer,
+.skin-light .main-footer,
+.skin-light .main-footer,
+.skin-light .main-footer,
+.skin-light .main-footer,
+.skin-light .main-footer,
+.skin-black-light .main-footer,
+.skin-purple-light .main-footer,
+.skin-red-light .main-footer,
+.skin-yellow-light .main-footer,
+.skin-green-light .main-footer,
+.skin-blue-light .main-footer {
+    border-top-color: #e4eaec;
+}
+
+.skin-black-light .main-header .logo {
+    border-right: 0;
+}
+
+.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a {
+    border-left: 0;
+}
+
+.skin-black-light .main-header {
+    border-bottom: 1px solid #e4eaec;
+}
+
+.main-footer {
+    border-top: 1px solid #e4eaec;
+}
+
+.user-panel > .info > p {
+    font-weight: 500;
 }
 
 .info-box {
@@ -740,6 +799,34 @@ a.desc:after {
 
 .orange {
     color: #eb6709 !important;
+}
+
+.indigo {
+    color: #6610f2 !important;
+}
+
+.pink {
+    color: #e83e8c !important;
+}
+
+.teal {
+    color: #20c997 !important;
+}
+
+.white {
+    color: #fff !important;
+}
+
+.gray {
+    color: #6c757d !important;
+}
+
+.gray-dark {
+    color: #343a40 !important;
+}
+
+.secondary {
+    color: #6c757d !important;
 }
 
 .yellow {
@@ -1027,6 +1114,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     border-bottom-left-radius: 0;
 }
 
+.daterangepicker {
+    border: 1px solid #e4eaec;
+}
+
+.daterangepicker .drp-buttons {
+    border-top: 1px solid #e4eaec;
+}
+
 .daterangepicker td.active, .daterangepicker td.active:hover {
     background-color: #62a8ea;
 }
@@ -1174,18 +1269,18 @@ div.required input + div label:before {
 
 /* 导航标签 */
 .content-tabs {
-    border-bottom: solid 2px #ecf0f5;
+    border-bottom: solid 1px #e4eaec;
     position: relative;
     height: 42px;
     background: #fafafa;
-    line-height: 40px;
+    line-height: 41px;
 }
 
 .content-tabs .roll-nav,
 .page-tabs-list {
     position: absolute;
     width: 43px;
-    height: 40px;
+    height: 41px;
     text-align: center;
     color: #777;
     z-index: 2;
@@ -1205,7 +1300,7 @@ div.required input + div label:before {
 .content-tabs button {
     background: #fff;
     border: 0;
-    height: 40px;
+    height: 41px;
     width: 40px;
     outline: none;
 }
@@ -1217,7 +1312,7 @@ div.required input + div label:before {
 nav.page-tabs {
     margin-left: 40px;
     width: 100000px;
-    height: 40px;
+    height: 41px;
     overflow: hidden;
     background: #FFFFFF;
 }
@@ -1270,7 +1365,7 @@ nav.page-tabs .page-tabs-content {
 
 .roll-right.J_tabExit {
     background: #fff;
-    height: 40px;
+    height: 41px;
     width: 60px;
     outline: none;
 }

@@ -14,6 +14,7 @@
 - Api应用增加了控制器方法，还是出现404
 - 商户端如何进行登录
 - 安装数据库出现 json 报错不支持
+- 安装插件一直有几个数据库文件未安装成功
 
 #### 出现 vendor/bower/jquery/dist 找不到的解决方案
 
@@ -82,3 +83,10 @@ header: {
 #### 安装数据库出现 json 报错不支持
 
 > 请安装 mysql5.7 及以上版本的数据库
+
+#### 安装插件一直有几个数据库文件未安装成功
+
+```
+// 里面的 TinyShop 可以替换成为你对应要安装的插件名称 
+php ./yii migrate --migrationPath=@addons/TinyShop/console/migrations
+```

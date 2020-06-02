@@ -14,7 +14,6 @@
     "require": {
         "php": ">=7.1.0",
         "yiisoft/yii2": "~2.0.14",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-imagine": "~2.0.0",
         "yiisoft/yii2-elasticsearch": "2.1.x-dev",
@@ -58,7 +57,9 @@
         "overtrue/wechat": "~4.2.2",
         "mingyoung/dingtalk": "2.0",
         "finecho/logistics": "^3.0",
-        "ext-bcmath": "*"
+        "tencentcloud/tencentcloud-sdk-php": "3.0.94",
+        "ext-bcmath": "*",
+        "fastgoo/getui-php": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

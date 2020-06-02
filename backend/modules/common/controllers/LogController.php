@@ -35,7 +35,8 @@ class LogController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->with(['member']);
 
         return $this->render($this->action->id, [
             'dataProvider' => $dataProvider,

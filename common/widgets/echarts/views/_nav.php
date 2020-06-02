@@ -18,12 +18,12 @@ HTML;
 </style>
 
 <div class="box-body" id="<?= $boxId; ?>">
-    <div class="m-b-md echarts-nav">
+    <div class="m-b-xl echarts-nav">
         <?php $i = 0; ?>
         <?php foreach ($themeConfig as $key => $value) { ?>
             <?php if ($key == 'customData') { ?>
                 <span class="hide" data-type="customData" data-start=""  data-end="" id="freedom-<?= $boxId; ?>">自定义日期</span>
-                <div class="input-group drp-container col-lg-3 pull-left" style="margin-top: -5px;margin-left: 10px;min-width:240px">
+                <div class="input-group drp-container col-lg-3 pull-left" style="margin-top: -5px;margin-left: 10px;width:240px">
                     <?= DateRangePicker::widget([
                         'name' => 'queryDate-' . $boxId,
                         'value' => '',
