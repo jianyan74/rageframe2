@@ -16,12 +16,12 @@ class AccessTokenGroupEnum extends BaseEnum
     const APP = 'app';
     const H5 = 'h5';
     const WECHAT = 'wechat';
-    const WECHAT_MQ = 'wechatMq';
-    const ALI_MQ = 'aliMq';
-    const QQ_MQ = 'qqMq';
-    const BAIDU_MQ = 'baiduMq';
-    const DING_TALK_MQ = 'dingTalkMq';
-    const TOU_TIAO_MQ = 'touTiaoMq';
+    const WECHAT_MP = 'wechatMp';
+    const ALI_MP = 'aliMp';
+    const QQ_MP = 'qqMp';
+    const BAIDU_MP = 'baiduMp';
+    const DING_TALK_MP = 'dingTalkMp';
+    const TOU_TIAO_MP = 'touTiaoMp';
 
     /**
      * @return array
@@ -36,12 +36,12 @@ class AccessTokenGroupEnum extends BaseEnum
             self::H5 => 'H5',
             self::PC => 'PC',
             self::WECHAT => '微信',
-            self::WECHAT_MQ => '微信小程序',
-            self::ALI_MQ => '支付宝小程序',
-            self::QQ_MQ => 'QQ小程序',
-            self::BAIDU_MQ => '百度小程序',
-            self::DING_TALK_MQ => '钉钉小程序',
-            self::TOU_TIAO_MQ => '头条小程序',
+            self::WECHAT_MP => '微信小程序',
+            self::ALI_MP => '支付宝小程序',
+            self::QQ_MP => 'QQ小程序',
+            self::BAIDU_MP => '百度小程序',
+            self::DING_TALK_MP => '钉钉小程序',
+            self::TOU_TIAO_MP => '头条小程序',
         ];
     }
 }

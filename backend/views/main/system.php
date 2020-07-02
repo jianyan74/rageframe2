@@ -10,6 +10,12 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
     .info-box-number {
         font-size: 20px;
     }
+
+    .info-box-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
 
 <div class="row">

@@ -20,4 +20,6 @@ return [
     'user.httpSignAccount' => [
         'doormen' => 'e3de3825cfbf',
     ],
+    // 触发格式化返回
+    'triggerBeforeSend' => true,
 ];

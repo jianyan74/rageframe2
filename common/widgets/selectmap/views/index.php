@@ -15,7 +15,7 @@ use yii\helpers\Url;
             <span class="input-group-btn"><a href="javascript:void (0);" class="btn btn-white map-select">地图选择</a></span>
         </div>
         <div class="hidden">
-            <a href="<?= Url::to(['/select-map/input', 'boxId' => $boxId,]) ?>" data-toggle="modal" data-target="#ajaxModal" class="rfEditMap"></a>
+            <a href="<?= Url::to(['/select-map/input', 'boxId' => $boxId]) ?>" data-toggle="modal" data-target="#ajaxModal" class="rfEditMap"></a>
             <a href="<?= Url::to(['/select-map/map',
                 'type' => $type,
                 'defaultSearchAddress' => $defaultSearchAddress,

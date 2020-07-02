@@ -180,7 +180,8 @@ https:https,','remark'=>'','is_hide_remark'=>'1','default_value'=>'http','sort'=
         $this->insert('{{%common_config}}',['id'=>'119','title'=>'App Key','name'=>'getui_app_key','app_id'=>'backend','type'=>'text','cate_id'=>'52','extra'=>'','remark'=>'','is_hide_remark'=>'1','default_value'=>'','sort'=>'0','status'=>'1','created_at'=>'1589641881','updated_at'=>'1589641881']);
         $this->insert('{{%common_config}}',['id'=>'120','title'=>'Master Secret','name'=>'getui_master_secret','app_id'=>'backend','type'=>'text','cate_id'=>'52','extra'=>'','remark'=>'','is_hide_remark'=>'1','default_value'=>'','sort'=>'0','status'=>'1','created_at'=>'1589642166','updated_at'=>'1589642166']);
         $this->insert('{{%common_config}}',['id'=>'121','title'=>'Logo','name'=>'getui_logo_url','app_id'=>'backend','type'=>'image','cate_id'=>'52','extra'=>'','remark'=>'','is_hide_remark'=>'1','default_value'=>'','sort'=>'0','status'=>'1','created_at'=>'1589642202','updated_at'=>'1589644938']);
-        
+        $this->insert('{{%common_config}}',['id'=>'122','title'=>'App Id','name'=>'wechat_open_appid','app_id'=>'backend','type'=>'text','cate_id'=>'9','extra'=>'','remark'=>'主要用于 app 支付，微信开放平台的 appid，如果只需要微信公众号支付，只配置微信公众号那边即可','is_hide_remark'=>'0','default_value'=>'','sort'=>'0','status'=>'1','created_at'=>'1591683438','updated_at'=>'1591684609']);
+
         /* 设置外键约束 */
         $this->execute('SET foreign_key_checks = 1;');
     }

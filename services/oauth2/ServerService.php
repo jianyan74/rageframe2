@@ -53,7 +53,7 @@ class ServerService extends Service
         // 将授权码授权类型添加进 server
         $this->_server->enableGrantType(
             $grant,
-            new \DateInterval('PT1H') // 设置访问令牌过期时间1小时
+            new \DateInterval(Yii::$app->params['user.accessTokenExpire'] ?? 'PT1H') // 设置访问令牌过期时间1小时
         );
     }
 

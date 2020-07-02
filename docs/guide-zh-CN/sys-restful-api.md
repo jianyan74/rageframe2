@@ -5,6 +5,7 @@
 - 继承的基类说明
 - 速率和参数配置
   - 不需要速率控制设置
+- 不进行格式化返回
 - 签名验证
 - Url权限配置
 - 方法权限验证
@@ -30,6 +31,14 @@
 ##### 不需要速率控制设置
 
 找到 `common\models\api\AccessToken` 让其直接继承 `common\models\base\BaseModel` 即可
+
+### 不进行格式化返回
+
+> 只需要在返回之前加上这行代码就可以不进行格式化返回
+
+```
+Yii::$app->params['triggerBeforeSend'] = true
+```
 
 ### 签名验证
 

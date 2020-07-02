@@ -20,6 +20,7 @@
 - 百度编辑器
 - Markdown 编辑器
 - 表情包选择
+- 递归多级联动选择器
 - TreeGrid
 
 ### 颜色选择器
@@ -413,6 +414,40 @@ $(document).on('emoji-select-emoji', function (e, emoji) {
     // 自由发挥，例如追加到 message 的光标文本域
     $('#message').insertAtCaret(emoji);
 });
+```
+
+### 递归多级联动选择器
+
+使用
+
+> 注意 ajax 这边会传递 pid 过来，只需要根据 pid 返回所有数据即可
+
+```
+<?= $form->field($model, 'cate_id')->widget(\common\widgets\selectlinkage\Linkage::class, [
+    'url' => Url::to(['cate/select']), // ajax数据 要求返回数据必须是带 id 和 title 的 二维数组 json 格式
+    'level' => 3, // 联动级别
+    'item' => $cate, // 当前数据
+    'allItem' => $cates, // 所有的数据
+]); ?>
+```
+
+ajax 返回数据案例
+
+```
+{
+  "code": "200",
+  "message": "获取成功",
+  "data": [
+    {
+      "id": "430",
+      "title": "电子词典"
+    },
+    {
+      "id": "431",
+      "title": "电纸书"
+    },
+  ]
+}
 ```
 
 ### TreeGrid

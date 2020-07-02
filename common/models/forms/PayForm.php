@@ -90,7 +90,7 @@ class PayForm extends PayLog
 
                     if ($this->trade_type == 'js') {
                         $user = Yii::$app->wechat->app->oauth->user();
-                        $this->openid = $user['openid'];
+                        $this->openid = $user['id'];
                     }
                 }
 
@@ -106,8 +106,6 @@ class PayForm extends PayLog
                 }
                 break;
         }
-
-
     }
 
     /**

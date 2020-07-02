@@ -38,14 +38,37 @@ class ProvincesController extends yii\web\Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $str = "-- 请选择市 --";
         $model = Yii::$app->services->provinces->getCityMapByPid($pid);
-        if ($type_id == 1 && !$pid) {
-            return Html::tag('option', '-- 请选择市 --', ['value' => '']);
-        } elseif ($type_id == 2 && !$pid) {
-            return Html::tag('option', '-- 请选择区 --', ['value' => '']);
-        } elseif ($type_id == 2 && $model) {
-            $str = "-- 请选择区 --";
+        switch ($type_id) {
+            case 1 :
+                $str = "-- 请选择市 --";
+                break;
+            case 2 :
+                $str = "-- 请选择区 --";
+                break;
+            case 3 :
+                $str = "-- 请选择乡/镇 --";
+                break;
+            case 4 :
+                $str = "-- 请选择村/社区 --";
+                break;
+        }
+
+        if (!$pid) {
+            switch ($type_id) {
+                case 1 :
+                    return Html::tag('option', '-- 请选择市 --', ['value' => '']);
+                    break;
+                case 2 :
+                    return Html::tag('option', '-- 请选择区 --', ['value' => '']);
+                    break;
+                case 3 :
+                    return Html::tag('option', '-- 请选择乡/镇 --', ['value' => '']);
+                    break;
+                case 4 :
+                    return Html::tag('option', '-- 请选择村/社区 --', ['value' => '']);
+                    break;
+            }
         }
 
         $str = Html::tag('option', $str, ['value' => '']);

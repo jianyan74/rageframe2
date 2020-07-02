@@ -59,11 +59,17 @@ class WechatPay
     {
         /* @var $gateway \Omnipay\WechatPay\AppGateway */
         $gateway = Omnipay::create($type);
-        $gateway->setAppId($this->config['app_id']);
         $gateway->setMchId($this->config['mch_id']);
         $gateway->setApiKey($this->config['api_key']);
         $gateway->setCertPath(Yii::getAlias($this->config['cert_client']));
         $gateway->setKeyPath(Yii::getAlias($this->config['cert_key']));
+
+        if ($type == self::APP) {
+            // 微信开放平台 appid
+            $gateway->setAppId($this->config['open_app_id']);
+        } else {
+            $gateway->setAppId($this->config['app_id']);
+        }
 
         // EasyWechat 兼容
         if ($type == self::JS) {

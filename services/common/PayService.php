@@ -2,18 +2,18 @@
 
 namespace services\common;
 
-use common\enums\PayTypeEnum;
-use common\enums\StatusEnum;
-use common\helpers\StringHelper;
 use Yii;
+use yii\helpers\Json;
+use yii\web\UnprocessableEntityHttpException;
 use common\models\forms\CreditsLogForm;
 use common\enums\PayGroupEnum;
 use common\components\Service;
 use common\models\common\PayLog;
 use common\models\forms\PayForm;
 use common\helpers\ArrayHelper;
-use yii\helpers\Json;
-use yii\web\UnprocessableEntityHttpException;
+use common\enums\PayTypeEnum;
+use common\enums\StatusEnum;
+use common\helpers\StringHelper;
 
 /**
  * Class PayService
@@ -55,8 +55,14 @@ class PayService extends Service
 
         // 交易类型
         $tradeType = $payLog->trade_type;
+        $result = Yii::$app->pay->wechat->$tradeType($order);
+        if (empty($result)) {
+            $debug = Yii::$app->pay->wechat->$tradeType($order, true);
+            Yii::$app->services->actionLog->create('wechatPayError', Json::encode($debug));
+            return $debug;
+        }
 
-        return Yii::$app->pay->wechat->$tradeType($order);
+        return $result;
     }
 
     /**
@@ -150,6 +156,8 @@ class PayService extends Service
             return $payment->jssdk->sdkConfig($result['prepay_id']);
         }
 
+        Yii::$app->services->actionLog->create('wechatMpPayError', Json::encode($result));
+
         return $result;
     }
 
@@ -194,6 +202,9 @@ class PayService extends Service
                 ];
 
                 $response = Yii::$app->pay->wechat->refund($info);
+                if ($response['return_code'] != 'SUCCESS' || $response['result_code'] != 'SUCCESS') {
+                    throw new UnprocessableEntityHttpException($response['return_msg']);
+                }
 
                 break;
 

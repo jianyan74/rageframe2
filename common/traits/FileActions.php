@@ -130,7 +130,8 @@ trait FileActions
     public function actionVerifyMd5()
     {
         $md5 = Yii::$app->request->post('md5');
-        if ($file = Yii::$app->services->attachment->findByMd5($md5)) {
+        $drive = Yii::$app->request->post('drive');
+        if ($file = Yii::$app->services->attachment->findByMd5($md5, $drive)) {
             $file['formatter_size'] = Yii::$app->formatter->asShortSize($file['size'], 2);
             $file['url'] = $file['base_url'];
             $file['upload_type'] = UploadHelper::formattingFileType($file['specific_type'], $file['extension'], $file['upload_type']);

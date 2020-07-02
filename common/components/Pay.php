@@ -67,6 +67,8 @@ class Pay extends Component
     {
         return new WechatPay(ArrayHelper::merge([
             'app_id' => $this->rfConfig['wechat_appid'], // 公众号 APPID
+            'open_app_id' => $this->rfConfig['wechat_open_appid'], // 微信开放平台 APPID
+            'mini_program_app_id' => $this->rfConfig['miniprogram_appid'], // 微信小程序 APPID
             'mch_id' => $this->rfConfig['wechat_mchid'],
             'api_key' => $this->rfConfig['wechat_api_key'],
             'cert_client' => $this->rfConfig['wechat_cert_path'], // optional，退款等情况时用到

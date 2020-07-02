@@ -40,8 +40,14 @@ class ClientRepository implements ClientRepositoryInterface
         $client->setIdentifier($clientIdentifier);
         $client->setName($clentModel['title']);
         // 校验回调域名
-        if (!Yii::$app->request->get('redirect_uri')) {
+        if (!($redirect_uri = Yii::$app->request->get('redirect_uri'))) {
+            $redirect_uri = Yii::$app->request->post('redirect_uri');
+        }
+
+        if (!$redirect_uri) {
             $client->setRedirectUri($clentModel['redirect_uri']);
+        } else {
+            $client->setRedirectUri($redirect_uri);
         }
 
         $client->setGrantType($grantType);

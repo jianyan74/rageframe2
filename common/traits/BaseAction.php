@@ -120,6 +120,22 @@ trait BaseAction
     }
 
     /**
+     * 记录上一页地址
+     *
+     * @param $actionId
+     */
+    protected function setReferrer($actionId)
+    {
+        if (in_array($actionId, ['edit', 'delete', 'destroy'])) {
+            $route = Yii::$app->controller->route;
+
+            if (!Yii::$app->session->get($route)) {
+                Yii::$app->session->set($route, Yii::$app->request->referrer);
+            }
+        }
+    }
+
+    /**
      * 跳转到之前的页面
      *
      * @return mixed

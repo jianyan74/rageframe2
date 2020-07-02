@@ -44,10 +44,11 @@ class Address extends \common\models\base\BaseModel
         return [
             [['province_id', 'city_id', 'area_id', 'address_details', 'realname', 'mobile'], 'required'],
             ['mobile', 'match', 'pattern' => RegularHelper::mobile(), 'message' => '不是一个有效的手机号码'],
-            [['merchant_id', 'member_id', 'province_id', 'city_id', 'area_id', 'is_default', 'zip_code', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'member_id', 'province_id', 'city_id', 'area_id', 'is_default', 'status', 'created_at', 'updated_at'], 'integer'],
             [['address_name', 'address_details'], 'string', 'max' => 200],
             [['realname'], 'string', 'max' => 100],
             [['home_phone', 'mobile'], 'string', 'max' => 20],
+            [['zip_code'], 'safe'],
         ];
     }
 

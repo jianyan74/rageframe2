@@ -99,4 +99,31 @@ class AuthService extends Service
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
+
+    /**
+     * @param $unionid
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByUnionId($unionid)
+    {
+        return Auth::find()
+            ->where(['unionid' => $unionid])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+    }
+
+    /**
+     * @param $member_id
+     * @return false|string|null
+     */
+    public function getCountByMemberId($member_id)
+    {
+        return Auth::find()
+            ->select(['count(id)'])
+            ->where(['member_id' => $member_id])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
+            ->scalar();
+    }
 }

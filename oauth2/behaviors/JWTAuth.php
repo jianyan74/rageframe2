@@ -53,6 +53,9 @@ class JWTAuth extends Behavior
         );
 
         try {
+            // 手动写入 header
+            // Yii::$app->params['Authorization'] = 'Bearer ' . $token;
+
             $request = ServerRequest::fromGlobals();
             $server->validateAuthenticatedRequest($request);
         } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {

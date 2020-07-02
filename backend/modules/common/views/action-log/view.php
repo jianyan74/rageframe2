@@ -21,6 +21,10 @@ use common\helpers\Html;
             <td><?= Html::encode($model['behavior']) ?></td>
         </tr>
         <tr>
+            <td>备注</td>
+            <td><?= Html::encode($model['remark']) ?></td>
+        </tr>
+        <tr>
             <td>提交方法</td>
             <td><?= Html::encode($model['method']) ?></td>
         </tr>

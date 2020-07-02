@@ -211,7 +211,7 @@ $(function () {
                         type: "post",
                         url: config.verifyMd5Url,
                         dataType: "json",
-                        data: {md5: md5[file.id]},
+                        data: {md5: md5[file.id], drive: config.formData.drive},
                         success: function (data) {
                             if (parseInt(data.code) === 200) {
                                 //跳过如果存在则跳过

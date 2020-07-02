@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use Yii;
+use yii\helpers\HtmlPurifier;
 use yii\helpers\Json;
 
 /**
@@ -71,7 +72,11 @@ class DebrisHelper
 
         // 查询字符串是否有page
         foreach ($getQueryParamArr as $key => $value) {
-            if (StringHelper::strExists($value, 'page=') || !StringHelper::strExists($value, 'per-page=')) {
+            if (StringHelper::strExists($value, 'page=')) {
+                unset($getQueryParamArr[$key]);
+            }
+
+            if (StringHelper::strExists($value, 'per-page=')) {
                 unset($getQueryParamArr[$key]);
             }
         }
@@ -84,10 +89,7 @@ class DebrisHelper
             $pageConnector = '&';
         }
 
-        $fullUrl = Html::encode($fullUrl);
-        $pageConnector = Html::encode($pageConnector);
-
-        return [$fullUrl, $pageConnector];
+        return [HtmlPurifier::process($fullUrl), $pageConnector];
     }
 
     /**

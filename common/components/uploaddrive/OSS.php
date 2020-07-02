@@ -39,7 +39,11 @@ class OSS extends DriveInterface
             $host = $config['storage_aliyun_transport_protocols'] . "://" . $config['storage_aliyun_user_url'];
         }
 
+        $inAddon = Yii::$app->params['inAddon'];
+        Yii::$app->params['inAddon'] = false;
         !$callbackUrl && $callbackUrl = Url::toFront(['storage/oss'], true);
+        Yii::$app->params['inAddon'] = $inAddon;
+
         $callback_param = [
             'callbackUrl' => $callbackUrl,
             'callbackBody' => 'filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}&format=${imageInfo.format}&md5=${x:md5}&merchant_id=${x:merchant_id}&type=${x:type}&host=${x:host}&upload_id=${x:upload_id}',

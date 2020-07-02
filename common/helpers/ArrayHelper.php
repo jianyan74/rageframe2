@@ -143,9 +143,13 @@ class ArrayHelper extends BaseArrayHelper
      * @param string $field 要成为key的字段名
      * @return array
      */
-    public static function arrayKey(array $arr, $field)
+    public static function arrayKey($arr, $field)
     {
         $newArray = [];
+        if (empty($arr)) {
+            return $newArray;
+        }
+
         foreach ($arr as $value) {
             isset($value[$field]) && $newArray[$value[$field]] = $value;
         }

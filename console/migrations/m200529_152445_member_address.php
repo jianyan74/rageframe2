@@ -20,7 +20,7 @@ class m200529_152445_member_address extends Migration
             'address_name' => "varchar(200) NULL DEFAULT '' COMMENT '地址'",
             'address_details' => "varchar(200) NULL DEFAULT '' COMMENT '详细地址'",
             'is_default' => "tinyint(4) unsigned NULL DEFAULT '0' COMMENT '默认地址'",
-            'zip_code' => "int(10) unsigned NULL DEFAULT '0' COMMENT '邮编'",
+            'zip_code' => "varchar(20) NULL DEFAULT '0' COMMENT '邮编'",
             'realname' => "varchar(100) NULL DEFAULT '' COMMENT '真实姓名'",
             'home_phone' => "varchar(20) NULL DEFAULT '' COMMENT '家庭号码'",
             'mobile' => "varchar(20) NULL DEFAULT '' COMMENT '手机号码'",

@@ -2,6 +2,7 @@
 
 namespace common\models\member;
 
+use common\helpers\StringHelper;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveQuery;
@@ -198,6 +199,10 @@ class Member extends User
             $account->save();
 
             empty($this->promo_code) && Member::updateAll(['promo_code' => HashidsHelper::encode($this->id)], ['id' => $this->id]);
+            if (empty($this->nickname) && !empty($this->mobile)) {
+                $nickname = StringHelper::random(5) . '_' . substr($this->mobile, -4);
+                Member::updateAll(['nickname' => $nickname], ['id' => $this->id]);
+            }
         }
 
         if ($this->status == StatusEnum::DELETE) {

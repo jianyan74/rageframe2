@@ -56,6 +56,18 @@ class MenuService extends Service
             // 增加父级
             !empty($parent) && $model->setParent($parent);
 
+            if ($model->params) {
+                $params = [];
+                foreach ($model->params as $key => $value) {
+                    $params[] = [
+                        'key' => $key,
+                        'value' => $value,
+                    ];
+                }
+
+                $model->params = $params;
+            }
+
             $model->url = '/' . StringHelper::toUnderScore($cate->addons_name) . '/'. $menu['route'];
             $model->pid = $pid;
             $model->level = $level;

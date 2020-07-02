@@ -42,6 +42,7 @@ use common\components\Service;
  * @property \services\common\PayService $pay 公用支付
  * @property \services\common\MailerService $mailer 公用邮件
  * @property \services\common\SmsService $sms 公用短信
+ * @property \services\common\OpenPlatformService $openPlatform 开放平台
  * @property \services\common\AddonsService $addons 插件
  * @property \services\common\AddonsConfigService $addonsConfig 插件配置
  * @property \services\common\AddonsBindingService $addonsBinding 插件菜单入口
@@ -134,6 +135,7 @@ class Application extends Service
         'jPush' => 'services\common\JPushService',
         'geTui' => 'services\common\GeTuiService',
         'miniProgramLive' => 'services\common\MiniProgramLiveService',
+        'openPlatform' => 'services\common\OpenPlatformService',
         'sms' => [
             'class' => 'services\common\SmsService',
             'queueSwitch' => false, // 是否丢进队列

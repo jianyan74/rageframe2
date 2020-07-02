@@ -368,6 +368,28 @@ function rfTwiceAffirm(obj, title, text) {
     });
 }
 
+// 二次确认返回提示
+function rfTwiceAffirmBack(obj, title, text) {
+    var dialogText = rfText(text);
+
+    swal(title, {
+        buttons: {
+            cancel: "取消",
+            defeat: '确定'
+        },
+        title: title,
+        text: dialogText,
+        // icon: "warning",
+    }).then(function (value) {
+        switch (value) {
+            case "defeat":
+                history.go(-1);
+                break;
+            default:
+        }
+    });
+}
+
 //删除确认提示
 function appConfirm(title, text, onConfirm) {
     swal(title, {

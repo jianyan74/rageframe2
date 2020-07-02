@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\controllers\member;
 
+use common\helpers\UploadHelper;
 use Yii;
 use common\enums\StatusEnum;
 use common\helpers\ResultHelper;
@@ -44,6 +45,13 @@ class AuthController extends UserAuthController
             return ResultHelper::json(422, '请先解除该账号绑定');
         }
 
+        // 下载图片
+        $upload = new UploadHelper(['writeTable' => StatusEnum::DISABLED], 'images');
+        $imgData = $upload->verifyUrl($model->head_portrait);
+        $upload->save($imgData);
+        $baseInfo = $upload->getBaseInfo();
+
+        $model->head_portrait = $baseInfo['url'];
         $model->oauth_client = $oauthClient;
         $model->oauth_client_user_id = $oauthClientUserId;
         $model->member_id = Yii::$app->user->identity->member_id;
@@ -61,6 +69,25 @@ class AuthController extends UserAuthController
         }
 
         return $model;
+    }
+
+    /**
+     * @param $id
+     * @return array|bool|mixed
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionDelete($id)
+    {
+        $member_id = Yii::$app->user->identity->member_id;
+        $member = Yii::$app->services->member->get($member_id);
+        if (empty($member['mobile']) && Yii::$app->services->memberAuth->getCountByMemberId($member_id) == 1) {
+            return ResultHelper::json(422, '无法解除该账号绑定');
+        }
+
+        $model = $this->findModel($id);
+        $model->status = StatusEnum::DELETE;
+
+        return $model->save();
     }
 
     /**

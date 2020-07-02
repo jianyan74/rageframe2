@@ -76,15 +76,15 @@ trait Curd
     public function actionDestroy($id)
     {
         if (!($model = $this->modelClass::findOne($id))) {
-            return $this->message("找不到数据", $this->redirect(['index']), 'error');
+            return $this->message("找不到数据", $this->redirect(Yii::$app->request->referrer), 'error');
         }
 
         $model->status = StatusEnum::DELETE;
         if ($model->save()) {
-            return $this->message("删除成功", $this->redirect(['index']));
+            return $this->message("删除成功", $this->redirect(Yii::$app->request->referrer));
         }
 
-        return $this->message("删除失败", $this->redirect(['index']), 'error');
+        return $this->message("删除失败", $this->redirect(Yii::$app->request->referrer), 'error');
     }
 
     /**
@@ -98,10 +98,10 @@ trait Curd
     public function actionDelete($id)
     {
         if ($this->findModel($id)->delete()) {
-            return $this->message("删除成功", $this->redirect(['index']));
+            return $this->message("删除成功", $this->redirect(Yii::$app->request->referrer));
         }
 
-        return $this->message("删除失败", $this->redirect(['index']), 'error');
+        return $this->message("删除失败", $this->redirect(Yii::$app->request->referrer), 'error');
     }
 
     /**
@@ -140,7 +140,7 @@ trait Curd
         if ($model->load(Yii::$app->request->post())) {
             return $model->save()
                 ? $this->redirect(Yii::$app->request->referrer)
-                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
+                : $this->message($this->getError($model), $this->redirect(Yii::$app->request->referrer), 'error');
         }
 
         return $this->renderAjax($this->action->id, [

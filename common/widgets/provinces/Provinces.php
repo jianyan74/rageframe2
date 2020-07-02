@@ -34,6 +34,20 @@ class Provinces extends Widget
     public $areaName = 'area';
 
     /**
+     * 乡镇字段名
+     *
+     * @var
+     */
+    public $townshipName = 'township';
+
+    /**
+     * 村/社区
+     *
+     * @var
+     */
+    public $villageName = 'village';
+
+    /**
      * 显示类型
      *
      * long/short
@@ -90,10 +104,10 @@ class Provinces extends Widget
             'provincesName' => $this->provincesName,
             'cityName' => $this->cityName,
             'areaName' => $this->areaName,
+            'townshipName' => $this->townshipName,
+            'villageName' => $this->villageName,
             'url' => $this->url,
             'level' => $this->level,
         ]);
     }
 }
-
-?>

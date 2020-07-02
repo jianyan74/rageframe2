@@ -37,8 +37,7 @@ class MemberController extends OnAuthController
                 'id', 'username', 'nickname',
                 'realname', 'head_portrait', 'gender',
                 'qq', 'email', 'birthday',
-                'user_money', 'user_integral', 'status',
-                'created_at'
+                'status', 'created_at'
             ])
             ->asArray()
             ->one();

@@ -91,11 +91,7 @@ class AddonsController extends Controller
             }
 
             // 记录上一页跳转
-            if (in_array($action->id, ['edit', 'delete', 'destroy'])) {
-                if (!Yii::$app->session->get(Yii::$app->controller->route)) {
-                    Yii::$app->session->set(Yii::$app->controller->route, Yii::$app->request->referrer);
-                }
-            }
+            $this->setReferrer($action->id);
         }
 
         return true;

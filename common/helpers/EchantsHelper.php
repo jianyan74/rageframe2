@@ -275,6 +275,30 @@ class EchantsHelper
     }
 
     /**
+     * 字符云
+     *
+     * @param $function
+     * @param array $time
+     * @param array $defaultSeries
+     * @return array
+     */
+    public static function wordCloud($function, array $time)
+    {
+        $data = call_user_func($function, $time['start'], $time['end']);
+
+        empty($data) && $data = [
+            [
+                'name' => '暂无数据',
+                'value' => 0,
+            ]
+        ];
+        return [
+            'seriesData' => $data,
+            'fieldsName' => [],
+        ];
+    }
+
+    /**
      * 重组数据 - 主要用户多此分组
      *
      * @param array $statData

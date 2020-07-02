@@ -32,7 +32,7 @@ class Wechat extends \jianyan\easywechat\Wechat
      */
     protected function initParams()
     {
-        $config = Yii::$app->debris->backendConfigAll();
+        $config = Yii::$app->debris->configAll();
 
         $callbackUrl = $notifyUrl = '';
         if (!empty(Yii::$app->id) && Yii::$app->id != AppEnum::CONSOLE) {

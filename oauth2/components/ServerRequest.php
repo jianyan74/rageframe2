@@ -1,6 +1,8 @@
 <?php
+
 namespace oauth2\components;
 
+use Yii;
 use GuzzleHttp\Psr7\LazyOpenStream;
 
 /**
@@ -19,6 +21,9 @@ class ServerRequest extends \GuzzleHttp\Psr7\ServerRequest
     {
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $headers = getallheaders();
+        if ($authorization = Yii::$app->params['Authorization']) {
+            $headers['Authorization'] = [$authorization];
+        }
         $uri = self::getUriFromGlobals();
         $body = new LazyOpenStream('php://input', 'r+');
         $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
@@ -38,6 +43,7 @@ class ServerRequest extends \GuzzleHttp\Psr7\ServerRequest
     public function withAttribute($attribute, $value)
     {
         $this->attributes[$attribute] = $value;
+
         return $this;
     }
 

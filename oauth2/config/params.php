@@ -12,7 +12,7 @@ return [
     // 设置授权码code过期时间为10分钟
     'user.codeExpire' => 'PT10M',
     // 设置授权码过期时间为1小时
-    'user.accessTokenExpire' => 'PT1H',
+    'user.accessTokenExpire' => 'PT48H',
     // 设置刷新令牌过期时间1个月
     'user.refreshTokenExpire' => 'P1M', //
     // 签名验证默认关闭验证，如果开启需了解签名生成及验证
@@ -21,4 +21,6 @@ return [
     'user.httpSignAccount' => [
         'doormen' => 'e3de3825cfbf',
     ],
+    // 触发格式化返回
+    'triggerBeforeSend' => true,
 ];

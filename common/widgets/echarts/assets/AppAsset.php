@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle
     public $js = [
         'echarts.min.js',
         'extension/bmap.js',
+        'extension/echarts-wordcloud.min.js',
         'theme/macarons.js',
         'theme/purple-passion.js',
         'theme/roma.js',

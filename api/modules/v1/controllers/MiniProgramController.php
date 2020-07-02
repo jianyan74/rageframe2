@@ -84,7 +84,7 @@ class MiniProgramController extends OnAuthController
             $memberAuthInfo->save();
         }
 
-        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessTokenGroupEnum::WECHAT_MQ);
+        return Yii::$app->services->apiAccessToken->getAccessToken($member, AccessTokenGroupEnum::WECHAT_MP);
     }
 
     /**

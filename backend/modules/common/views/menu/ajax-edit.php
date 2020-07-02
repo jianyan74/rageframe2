@@ -46,7 +46,7 @@ $form = ActiveForm::begin([
             ]
         ])->label(false);
         ?>
-        <?= $form->field($model, 'icon')->textInput()->hint('详情请参考：<a href="http://fontawesome.dashgame.com" target="_blank">http://fontawesome.dashgame.com</a>')?>
+        <?= $form->field($model, 'icon')->textInput()->hint('详情请参考：<a href="http://www.fontawesome.com.cn/faicons/" target="_blank">http://fontawesome.dashgame.com</a>')?>
         <?= $form->field($model, 'sort')->textInput() ?>
         <?= $form->field($model, 'dev')->radioList(WhetherEnum::getMap())->hint('去 网站设置->系统设置 里面开启或关闭开发模式,开启后才可显示该菜单') ?>
         <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>

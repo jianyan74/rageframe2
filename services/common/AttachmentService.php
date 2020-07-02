@@ -101,11 +101,12 @@ class AttachmentService extends Service
      * @param $md5
      * @return array|bool
      */
-    public function findByMd5($md5)
+    public function findByMd5($md5, $drive = '')
     {
         $model = Attachment::find()
             ->where(['md5' => $md5])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED])
+            ->andFilterWhere(['drive' => $drive])
             ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
 

@@ -59,7 +59,9 @@
         "finecho/logistics": "^3.0",
         "tencentcloud/tencentcloud-sdk-php": "3.0.94",
         "ext-bcmath": "*",
-        "fastgoo/getui-php": "^1.0"
+        "fastgoo/getui-php": "^1.0",
+        "dueros/bot-sdk": "^2.2",
+        "griffinledingham/php-apple-signin": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

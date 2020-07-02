@@ -17,6 +17,11 @@ class MemberController extends \yii\rest\ActiveController
     use BaseAction;
 
     /**
+     * @var string
+     */
+    public $modelClass = '';
+
+    /**
      * 不用进行登录验证的方法
      * 例如： ['index', 'update', 'create', 'view', 'delete']
      * 默认全部需要验证

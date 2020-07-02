@@ -31,6 +31,7 @@ class SmsLog extends \common\models\base\BaseModel
     const USAGE_LOGIN = 'login';
     const USAGE_REGISTER = 'register';
     const USAGE_UP_PWD = 'up-pwd';
+    const USAGE_UP_MOBILE = 'up-mobile';
 
     /**
      * @var array
@@ -39,6 +40,7 @@ class SmsLog extends \common\models\base\BaseModel
         self::USAGE_LOGIN => '登录',
         self::USAGE_REGISTER => '注册',
         self::USAGE_UP_PWD => '重置密码',
+        self::USAGE_UP_MOBILE => '修改手机号码',
     ];
 
     /**

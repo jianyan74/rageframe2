@@ -241,6 +241,7 @@ class AddonsController extends BaseController
                 } catch (\Exception $e) {
                     // 回滚事务
                     $transaction->rollBack();
+                    var_dump($e->getMessage());die();
 
                     return $this->message($e->getMessage(), $this->redirect(['index']), 'error');
                 }

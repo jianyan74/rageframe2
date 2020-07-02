@@ -30,7 +30,16 @@ class BeforeSend extends Behavior
      */
     public function beforeSend($event)
     {
-        if (YII_DEBUG && isset(Yii::$app->controller->module->id) &&Yii::$app->controller->module->id === "debug") {
+        if (YII_DEBUG && isset(Yii::$app->controller->module->id) && Yii::$app->controller->module->id === "debug") {
+            return;
+        }
+
+        // 不进行格式化出处理
+        if (Yii::$app->params['triggerBeforeSend'] == false) {
+            $response = $event->sender;
+            $response->format = yii\web\Response::FORMAT_JSON;
+            $response->statusCode = 200;
+
             return;
         }
 
