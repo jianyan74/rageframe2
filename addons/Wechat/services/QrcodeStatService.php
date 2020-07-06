@@ -6,6 +6,7 @@ use Yii;
 use common\helpers\ArrayHelper;
 use common\enums\WechatEnum;
 use common\components\Service;
+use addons\Wechat\common\models\Qrcode;
 use addons\Wechat\common\models\QrcodeStat;
 
 /**
@@ -43,6 +44,7 @@ class QrcodeStatService extends Service
         }
 
         if ($qrCode = Yii::$app->wechatService->qrcode->findByWhere($where)) {
+            Qrcode::updateAllCounters(['subnum' => 1], ['id' => $qrCode['id']]);
             $this->create($qrCode, $message['FromUserName'], QrcodeStat::TYPE_SCAN);
 
             return $qrCode['keyword'];
@@ -54,7 +56,7 @@ class QrcodeStatService extends Service
     /**
      * 插入扫描记录
      *
-     * @param $qrCode
+     * @param Qrcode $qrCode
      * @param $openid
      * @param $type
      */
@@ -62,6 +64,7 @@ class QrcodeStatService extends Service
     {
         $model = new QrcodeStat();
         $model->attributes = ArrayHelper::toArray($qrCode);
+        $model->qrcord_id = $qrCode->id;
         $model->openid = $openid;
         $model->type = $type;
         $model->save();

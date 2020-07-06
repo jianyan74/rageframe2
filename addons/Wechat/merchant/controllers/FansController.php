@@ -167,8 +167,7 @@ class FansController extends BaseController
      */
     public function actionSyncAllOpenid()
     {
-        $request = Yii::$app->request;
-        $next_openid = $request->get('next_openid', '');
+        $next_openid = Yii::$app->request->get('next_openid', '');
         // 设置关注全部为为关注
         empty($next_openid) && Fans::updateAll(['follow' => Fans::FOLLOW_OFF], ['merchant_id' => Yii::$app->services->merchant->getId()]);
 
