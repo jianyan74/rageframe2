@@ -17,7 +17,7 @@ class MerchantForm extends Merchant
     public function rules()
     {
         return [
-            [['province_id', 'area_id', 'mobile', 'cover', 'address_details'], 'required'],
+            [['province_id', 'city_id', 'area_id', 'mobile', 'cover', 'address_details'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['address_name', 'stamp'], 'string', 'max' => 200],
             [['cover'], 'string', 'max' => 150],
