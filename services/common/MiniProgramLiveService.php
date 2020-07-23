@@ -17,7 +17,7 @@ class MiniProgramLiveService extends Service
     /**
      * 直播 url
      */
-    const LIVE_URL = 'http://api.weixin.qq.com/wxa/business/getliveinfo';
+    const LIVE_URL = 'https://api.weixin.qq.com/wxa/business/getliveinfo';
 
     /**
      * 同步直播
