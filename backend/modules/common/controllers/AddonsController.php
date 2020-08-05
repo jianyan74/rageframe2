@@ -118,6 +118,8 @@ class AddonsController extends BaseController
             return $this->message('实例化失败,插件不存在或检查插件名称', $this->redirect(['index']), 'error');
         }
 
+        ini_set("max_execution_time", 300);
+
         // 开启事务
         $transaction = Yii::$app->db->beginTransaction();
         try {
