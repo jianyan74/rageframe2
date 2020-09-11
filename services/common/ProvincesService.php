@@ -255,7 +255,7 @@ class ProvincesService extends Service
                 '黑龙江省',
             ],
             '西北' => [
-                '陕西省',
+                '甘肃省',
                 '陕西省',
                 '青海省',
                 '宁夏回族自治区',
