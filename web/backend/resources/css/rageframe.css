@@ -89,7 +89,16 @@
     text-align: center;
 }
 
+.rf-table thead tr th {
+    word-break: keep-all;
+    white-space: nowrap;
+}
+
 .rf-table tbody tr td {
+    white-space: nowrap;
+}
+
+.bootstrap-table .fixed-table-container .table {
     white-space: nowrap;
 }
 
@@ -180,7 +189,7 @@ a.desc:after {
     color: rgba(255, 255, 255, .95);
 }
 
-.register-page{
+.register-page {
     background: #18c8f6;
     height: auto;
     background: url("../img/register-bg.jpg") no-repeat center fixed;
@@ -213,20 +222,23 @@ a.desc:after {
     .main-header {
         position: relative;
     }
+
     .main-header .logo,
     .main-header .navbar {
         width: 100%;
         float: none;
     }
+
     .main-header .navbar {
         margin: 0;
     }
+
     .main-header .navbar-custom-menu {
         float: right;
     }
 }
 
-@media (max-width: 767px){
+@media (max-width: 767px) {
     .main-sidebar {
         -webkit-transform: translate(-200px, 0);
         -ms-transform: translate(-200px, 0);
@@ -235,7 +247,7 @@ a.desc:after {
     }
 }
 
-@media (max-width: 767px){
+@media (max-width: 767px) {
     .content-wrapper, .main-footer {
         margin-left: 0;
     }
@@ -287,7 +299,7 @@ a.desc:after {
 }
 
 .nav-tabs-custom {
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .table-responsive {
@@ -361,6 +373,7 @@ a.desc:after {
     line-height: 1.3333333;
     border-radius: 6px;
 }
+
 .btn-sm,
 .btn-group-sm > .btn {
     padding: 4px 8px;
@@ -368,6 +381,7 @@ a.desc:after {
     line-height: 1.5;
     border-radius: 3px;
 }
+
 .btn-xs,
 .btn-group-xs > .btn {
     padding: 1px 5px;
@@ -699,7 +713,7 @@ a.desc:after {
 .skin-yellow-light .main-sidebar,
 .skin-green-light .main-sidebar,
 .skin-blue-light .main-sidebar {
-    box-shadow: 0 2px 4px rgba(0,0,0,.01);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .01);
     border-right: 1px solid #e4eaec;
 }
 
@@ -850,6 +864,7 @@ a.desc:after {
 .bootstrap-table .fixed-table-container .table thead th .desc {
     background-image: none;
 }
+
 .bootstrap-table .fixed-table-container .table thead th .asc {
     background-image: none;
 }
@@ -1007,6 +1022,7 @@ a.desc:after {
 .sp-replacer {
     background: #fff;
 }
+
 .has-success .sp-krajee.sp-replacer {
     background-color: #fff;
 }

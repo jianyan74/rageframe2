@@ -45,12 +45,12 @@ class Logistics extends Service
                 'app_code' => $defaultConfig['logistics_juhe_app_code'] ?? '',
             ],
             'kdniao' => [
-                'app_code' => $defaultConfig['logistics_kdniao_app_id'] ?? '',
-                'customer' => $defaultConfig['logistics_kdniao_app_key'] ?? '',
+                'app_code' => $defaultConfig['logistics_kdniao_app_key'] ?? '',
+                'customer' => $defaultConfig['logistics_kdniao_app_id'] ?? '',
             ],
             'kd100' => [
-                'app_code' => $defaultConfig['logistics_kd100_app_id'] ?? '',
-                'customer' => $defaultConfig['logistics_kd100_app_key'] ?? '',
+                'app_code' => $defaultConfig['logistics_kd100_app_key'] ?? '',
+                'customer' => $defaultConfig['logistics_kd100_app_id'] ?? '',
             ],
         ];
 

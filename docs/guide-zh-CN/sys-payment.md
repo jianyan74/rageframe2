@@ -121,6 +121,43 @@ try {
 
 更多文档：https://github.com/lokielse/omnipay-alipay
 
+
+单笔转账
+
+```
+$info = [
+     'out_biz_no' => '转账单号',
+     'payee_type' => '收款人账号类型', // ALIPAY_USERID:支付宝唯一号;ALIPAY_LOGONID:支付宝登录号
+     'payee_account' => '收款人账号',
+     'amount' => '收款金额',
+     'payee_real_name' => '收款方真实姓名', // 非必填
+     'remark' => '账业务的标题，用于在支付宝用户的账单里显示', // 非必填
+]
+```
+
+转账案例
+
+```
+$res = Yii::$app->pay->alipay([
+    'notify_url' => Url::toFront(['transfer/alipay'])
+])->transfer([
+    'out_biz_no' => time() . StringHelper::random(10),
+    'payee_account' => 13484261295,
+    'amount' => 1.00
+]);
+```
+
+转账查询
+
+```
+$result = Yii::$app->pay->alipay->transferQuery([
+    'out_biz_no' => '转账单号',
+    'order_id' => '回调单号',
+]);
+```
+
+单笔转账文档：https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.toaccount.transfer
+
 ### 微信
 
 订单

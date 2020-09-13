@@ -8,14 +8,15 @@
 
 namespace services\member;
 
-use common\enums\MemberLevelUpgradeTypeEnum;
 use Yii;
+use common\helpers\ArrayHelper;
 use common\components\Service;
 use common\enums\CacheEnum;
 use common\enums\StatusEnum;
 use common\models\member\Account;
 use common\models\member\Level;
 use common\models\member\Member;
+use common\enums\MemberLevelUpgradeTypeEnum;
 
 /**
  * 用户等级类
@@ -98,6 +99,16 @@ class LevelService extends Service
     }
 
     /**
+     * @return array
+     */
+    public function getMap()
+    {
+        $list = $this->findAll();
+
+        return ArrayHelper::map($list, 'level', 'name');
+    }
+
+    /**
      * @param $merchant_id
      * @return array|\yii\db\ActiveRecord[]
      */
@@ -155,5 +166,17 @@ class LevelService extends Service
         }
 
         return false;
+    }
+
+    /**
+     * @param $level
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByLevel($level)
+    {
+        return Level::find()
+            ->where(['status' => StatusEnum::ENABLED])
+            ->andWhere(['level' => $level])
+            ->one();
     }
 }

@@ -18,6 +18,7 @@ use common\components\Service;
  * @property \services\merchant\CommissionWithdrawService $merchantCommissionWithdraw 商户提现
  * @property \services\backend\BackendService $backend 系统
  * @property \services\backend\MemberService $backendMember 管理员
+ * @property \services\backend\MemberAuthService $backendMemberAuth 管理员第三方绑定
  * @property \services\backend\NotifyService $backendNotify 消息
  * @property \services\backend\NotifyPullTimeService $backendNotifyPullTime 消息拉取日志
  * @property \services\backend\NotifySubscriptionConfigService $backendNotifySubscriptionConfig 提醒配置
@@ -39,7 +40,9 @@ use common\components\Service;
  * @property \services\common\MenuCateService $menuCate 菜单分类
  * @property \services\common\LogService $log 公用日志
  * @property \services\common\ReportLogService $reportLog 风控日志
+ * @property \services\common\BankNumberService $bankNumber 提现银行卡
  * @property \services\common\PayService $pay 公用支付
+ * @property \services\common\CommissionWithdrawService $commissionWithdraw 公用提现
  * @property \services\common\MailerService $mailer 公用邮件
  * @property \services\common\SmsService $sms 公用短信
  * @property \services\common\OpenPlatformService $openPlatform 开放平台
@@ -52,7 +55,10 @@ use common\components\Service;
  * @property \services\common\ProvincesService $provinces ip黑名单
  * @property \services\common\IpBlacklistService $ipBlacklist 省市区
  * @property \services\common\GeTuiService $geTui 个推
+ * @property \services\common\MapService $map 地图
  * @property \services\common\MiniProgramLiveService $miniProgramLive 小程序直播
+ * @property \services\common\PrinterYiLianYunService $printerYiLianYun 易联云小票打印
+ * @property \services\common\PrinterFeiEYunService $printerFeiEYunService 飞鹅云小票打印机
  * @property \services\rbac\AuthItemService $rbacAuthItem 权限
  * @property \services\rbac\AuthItemChildService $rbacAuthItemChild 授权的权限
  * @property \services\rbac\AuthRoleService $rbacAuthRole 角色
@@ -77,6 +83,7 @@ class Application extends Service
         'backendNotifyPullTime' => 'services\backend\NotifyPullTimeService',
         'backendNotifySubscriptionConfig' => 'services\backend\NotifySubscriptionConfigService',
         'backendMember' => 'services\backend\MemberService',
+        'backendMemberAuth' => 'services\backend\MemberAuthService',
         /** ------ 用户 ------ **/
         'member' => 'services\member\MemberService',
         'memberAuth' => 'services\member\AuthService',
@@ -131,9 +138,12 @@ class Application extends Service
             'exceptCode' => [403] // 除了数组内的状态码不记录，其他按照配置记录
         ],
         'reportLog' => 'services\common\ReportLogService',
+        'bankNumber' => 'services\common\BankNumberService',
         'pay' => 'services\common\PayService',
+        'commissionWithdraw' => 'services\common\CommissionWithdrawService',
         'jPush' => 'services\common\JPushService',
         'geTui' => 'services\common\GeTuiService',
+        'map' => 'services\common\MapService',
         'miniProgramLive' => 'services\common\MiniProgramLiveService',
         'openPlatform' => 'services\common\OpenPlatformService',
         'sms' => [
@@ -144,6 +154,8 @@ class Application extends Service
             'class' => 'services\common\MailerService',
             'queueSwitch' => false, // 是否丢进队列
         ],
+        'printerYiLianYun' => 'services\common\PrinterYiLianYunService',
+        'printerFeiEYunService' => 'services\common\PrinterFeiEYunService',
         /** ------ rbac ------ **/
         'rbacAuthItem' => 'services\rbac\AuthItemService',
         'rbacAuthItemChild' => 'services\rbac\AuthItemChildService',

@@ -22,6 +22,12 @@ class CreditsLogForm extends Model
     public $credit_group;
     public $remark = '';
     public $map_id = 0;
+    /**
+     * 记录到消费数量
+     *
+     * @var bool
+     */
+    public $consume_change = false;
 
     /**
      * 支付类型

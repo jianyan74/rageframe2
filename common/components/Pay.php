@@ -7,6 +7,7 @@ use yii\base\Component;
 use common\components\payment\AliPay;
 use common\components\payment\UnionPay;
 use common\components\payment\WechatPay;
+use common\components\payment\Stripe;
 use common\helpers\ArrayHelper;
 
 /**
@@ -17,6 +18,7 @@ use common\helpers\ArrayHelper;
  * @property \common\components\payment\WechatPay $wechat
  * @property \common\components\payment\AliPay $alipay
  * @property \common\components\payment\UnionPay $union
+ * @property \common\components\payment\Stripe $stripe
  * @author jianyan74 <751393839@qq.com>
  */
 class Pay extends Component
@@ -91,6 +93,23 @@ class Pay extends Component
             'return_url' => '',
             'cert_id' => $this->rfConfig['union_cert_id'],
             'private_key' => $this->rfConfig['union_private_key'],
+        ], $config));
+    }
+
+    /**
+     * Stripe
+     *
+     * 测试的接口，在key 结尾加 _test 字符串.
+     * Test card: 4000001240000000
+     * @param array $config
+     * @return Stripe
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function stripe(array $config = [])
+    {
+        return new Stripe(ArrayHelper::merge([
+            'publishable_key' => $this->rfConfig['stripe_publishable_key'],
+            'secret_key' => $this->rfConfig['stripe_secret_key'],
         ], $config));
     }
 

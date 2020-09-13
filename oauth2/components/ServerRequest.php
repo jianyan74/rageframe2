@@ -21,7 +21,7 @@ class ServerRequest extends \GuzzleHttp\Psr7\ServerRequest
     {
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $headers = getallheaders();
-        if ($authorization = Yii::$app->params['Authorization']) {
+        if ($authorization = Yii::$app->params['Authorization'] ?? '') {
             $headers['Authorization'] = [$authorization];
         }
         $uri = self::getUriFromGlobals();

@@ -31,7 +31,8 @@ use common\widgets\menu\MenuLeftWidget;
                 <li class="header" data-rel="external">相关链接</li>
                 <li><a href="http://www.rageframe.com" target="_blank"><i class="fa fa-bookmark text-red"></i> <span>系统官网</span></a></li>
                 <li><a href="https://github.com/jianyan74/rageframe2/blob/master/docs/guide-zh-CN/README.md" target="_blank"><i class="fa fa-list text-yellow"></i> <span>在线文档</span></a></li>
-                <li><a href="https://jq.qq.com/?_wv=1027&k=5yvRLd7" target="_blank"><i class="fa fa-qq text-aqua"></i> <span>QQ交流群</span></a></li>
+                <li><a href="https://jq.qq.com/?_wv=1027&k=5yvRLd7" target="_blank"><i class="fa fa-qq text-aqua"></i> <span>QQ交流群1</span></a></li>
+                <li><a href="https://jq.qq.com/?_wv=1027&k=Wk663e9N" target="_blank"><i class="fa fa-qq text-aqua"></i> <span>QQ交流群2</span></a></li>
             <?php } ?>
         </ul>
     </section>

@@ -32,6 +32,36 @@ class MemberAuthService extends Service
     }
 
     /**
+     * @param $merchant_id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function findByMerchantId($merchant_id)
+    {
+        return Auth::find()
+            ->where(['merchant_id' => $merchant_id])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->all();
+    }
+
+    /**
+     * @param $oauthClient
+     * @param $memberId
+     * @return array|bool|\yii\db\ActiveRecord
+     */
+    public function unBind($oauthClient, $memberId)
+    {
+        $model = $this->findOauthClientByMemberId($oauthClient, $memberId);
+        if (!$model) {
+            return true;
+        }
+
+        $model->status = StatusEnum::DISABLED;
+        $model->save();
+
+        return $model;
+    }
+
+    /**
      * @param $oauthClient
      * @param $memberId
      * @return array|\yii\db\ActiveRecord|null
@@ -41,7 +71,6 @@ class MemberAuthService extends Service
         return Auth::find()
             ->where(['oauth_client' => $oauthClient, 'member_id' => $memberId])
             ->andWhere(['status' => StatusEnum::ENABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
 
@@ -55,7 +84,6 @@ class MemberAuthService extends Service
         return Auth::find()
             ->where(['oauth_client' => $oauthClient, 'oauth_client_user_id' => $oauthClientUserId])
             ->andWhere(['status' => StatusEnum::ENABLED])
-            ->andFilterWhere(['merchant_id' => $this->getMerchantId()])
             ->one();
     }
 }

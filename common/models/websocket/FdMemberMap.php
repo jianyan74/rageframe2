@@ -5,7 +5,8 @@ namespace common\models\websocket;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\redis\ActiveRecord;
-use yii\redis\Connection;
+use addons\TinyService\common\enums\TypeEnum;
+use common\models\base\BaseModel;
 
 /**
  * Class FdMemberMap
@@ -22,15 +23,14 @@ use yii\redis\Connection;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class FdMemberMap extends ActiveRecord
+class FdMemberMap extends BaseModel
 {
     /**
-     * @return object|Connection|null
-     * @throws \yii\base\InvalidConfigException
+     * {@inheritdoc}
      */
-    public static function getDb()
+    public static function tableName()
     {
-        return Yii::$app->get('websocketRedis');
+        return '{{%addon_tiny_service_fd_member_map}}';
     }
 
     /**
@@ -43,16 +43,6 @@ class FdMemberMap extends ActiveRecord
             [['fd', 'member_id', 'merchant_id', 'max_reception_num', 'now_reception_num', 'unread_num', 'gender', 'status'], 'integer'],
             [['nickname', 'head_portrait', 'qq', 'mobile', 'type', 'job_number', 'ip'], 'string'],
         ];
-    }
-
-    /**
-     * 表字段
-     *
-     * {@inheritdoc}
-     */
-    public function attributes()
-    {
-        return array_keys($this->attributeLabels());
     }
 
     /**
@@ -81,6 +71,33 @@ class FdMemberMap extends ActiveRecord
             'created_at' => '发送时间',
             'updated_at' => '更新时间',
         ];
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        // 记录到总数据
+        Yii::$app->tinyServiceService->fdMemberMap->set($this->fd, [
+            'member_id' => $this->member_id,
+            'app_id' => $this->type,
+        ]);
+
+        switch ($this->type) {
+            case TypeEnum::MEMBER :
+                Yii::$app->tinyServiceService->memberFdMap->set($this->member_id, $this->fd);
+                break;
+            case TypeEnum::BACKEND :
+                Yii::$app->tinyServiceService->backendFdMap->set($this->member_id, $this->fd);
+                break;
+            case TypeEnum::MERCHANT :
+                Yii::$app->tinyServiceService->merchantFdMap->set($this->member_id, $this->fd);
+                break;
+        }
+
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /**

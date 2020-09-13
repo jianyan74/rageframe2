@@ -99,10 +99,10 @@ use yii\helpers\Html;
     var boxId = "<?= $boxId;?>";
     var linkageUrl = "<?= $url;?>";
     var linkageData = [];
-    var linkageItem = JSON.parse('<?= json_encode($item); ?>');
-    var linkageAlltItem = JSON.parse('<?= json_encode($allItem); ?>');
-    var linkageDefaultItem = JSON.parse('<?= json_encode($defaultItem); ?>');
-    var linkageParents = JSON.parse('<?= json_encode($parents); ?>');
+    var linkageItem = <?= $item; ?>;
+    var linkageAlltItem = <?= $allItem ?>;
+    var linkageDefaultItem = <?= $defaultItem; ?>;
+    var linkageParents = <?= $parents; ?>;
 
     // 初始化渲染
     $(document).ready(function () {
@@ -115,14 +115,17 @@ use yii\helpers\Html;
                     'name': linkageParents[i-1]['title'],
                 }
 
-                for (let j = 0; j < linkageDefaultItem[i].length; j++) {
-                    var linkageSelected = '';
-                    if (linkageParents[i-1]['id'] == linkageDefaultItem[i][j]['id']) {
-                        linkageSelected = 'selected';
-                    }
+                // 判断键值存在
+                if (linkageDefaultItem.hasOwnProperty(i)) {
+                    for (let j = 0; j < linkageDefaultItem[i].length; j++) {
+                        var linkageSelected = '';
+                        if (linkageParents[i-1]['id'] == linkageDefaultItem[i][j]['id']) {
+                            linkageSelected = 'selected';
+                        }
 
-                    var childText = '<li class="'+linkageSelected+'" data-id="' + linkageDefaultItem[i][j]['id'] + '" data-level="'+i+'"><span class="name">' + linkageDefaultItem[i][j]['title'] + '</span> <span class="right-arrow">&gt;</span> </li>'
-                    $(".level-" + i).append(childText);
+                        var childText = '<li class="'+linkageSelected+'" data-id="' + linkageDefaultItem[i][j]['id'] + '" data-level="'+i+'"><span class="name">' + linkageDefaultItem[i][j]['title'] + '</span> <span class="right-arrow">&gt;</span> </li>'
+                        $(".level-" + i).append(childText);
+                    }
                 }
             }
         } else {

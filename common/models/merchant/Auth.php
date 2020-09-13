@@ -2,9 +2,7 @@
 
 namespace common\models\merchant;
 
-use Yii;
 use common\behaviors\MerchantBehavior;
-use common\enums\StatusEnum;
 
 /**
  * This is the model class for table "{{%member_auth}}".
@@ -29,11 +27,6 @@ use common\enums\StatusEnum;
 class Auth extends \common\models\base\BaseModel
 {
     use MerchantBehavior;
-
-    const CLIENT_WECHAT = 'wechat';
-    const CLIENT_WECHAT_MP = 'wechatMp';
-    const CLIENT_QQ = 'qq';
-    const CLIENT_SINA = 'sina';
 
     /**
      * {@inheritdoc}
@@ -83,27 +76,6 @@ class Auth extends \common\models\base\BaseModel
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    /**
-     * 验证绑定
-     *
-     * @param $attribute
-     */
-    public function isBinding($attribute)
-    {
-        $model = self::find()
-            ->where([
-                'member_id' => $this->member_id,
-                'oauth_client_user_id' => $this->oauth_client_user_id,
-                'status' => StatusEnum::ENABLED,
-                'merchant_id' => Yii::$app->services->merchant->getId()
-            ])
-            ->one();
-
-        if ($model && $model->id != $this->id) {
-            $this->addError($attribute, '用户已绑定请不要重复绑定');
-        }
     }
 
     /**

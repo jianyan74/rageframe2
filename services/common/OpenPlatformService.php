@@ -7,6 +7,7 @@ use common\components\Service;
 use linslin\yii2\curl\Curl;
 use yii\helpers\Json;
 use AppleSignIn\ASDecoder;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Class OpenPlatformService
@@ -61,12 +62,13 @@ class OpenPlatformService extends Service
     /**
      * apple 登录
      *
-     * @param string $identityToken example_encoded_jwt
-     * @return mixed
+     * @param string $clientUser openid
+     * @param string $identityToken jwt
+     * @return array
+     * @throws UnprocessableEntityHttpException
      */
-    public function apple($identityToken)
+    public function apple(string $clientUser, string $identityToken)
     {
-        $clientUser = "example_client_user";
         $appleSignInPayload = ASDecoder::getAppleSignInPayload($identityToken);
 
         /**
@@ -79,7 +81,10 @@ class OpenPlatformService extends Service
          * Determine whether the client-provided user is valid.
          */
         $isValid = $appleSignInPayload->verifyUser($clientUser);
+        if ($isValid == false) {
+            throw new UnprocessableEntityHttpException('验证失败');
+        }
 
-        return $user;
+        return [$email, $user];
     }
 }

@@ -37,6 +37,20 @@ interface PayHandler
     public function getOrderSn(): string;
 
     /**
+     * 交易流水号
+     *
+     * @return string
+     */
+    public function getOutTradeNo();
+
+    /**
+     * 获取商户id
+     *
+     * @return float
+     */
+    public function getMerchantId(): int;
+
+    /**
      * 是否查询订单号(避免重复生成)
      *
      * @return bool

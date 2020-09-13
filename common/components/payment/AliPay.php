@@ -164,6 +164,66 @@ class AliPay
     }
 
     /**
+     * 转账
+     *
+     * $info = [
+     *     'out_biz_no' => '转账单号',
+     *     'payee_type' => '收款人账号类型', // ALIPAY_USERID:支付宝唯一号;ALIPAY_LOGONID:支付宝登录号
+     *     'payee_account' => '收款人账号',
+     *     'amount' => '收款金额',
+     *     'payee_real_name' => '收款方真实姓名', // 非必填
+     *     'remark' => '账业务的标题，用于在支付宝用户的账单里显示', // 非必填
+     *  ]
+     *
+     * payee_type
+     *     1、ALIPAY_USERID：支付宝账号对应的支付宝唯一用户号。以2088开头的16位纯数字组成。
+     *     2、ALIPAY_LOGONID：支付宝登录号，支持邮箱和手机号格式。
+     *
+     * 老的接口：
+     * https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.toaccount.transfer
+     *
+     * 新的接口
+     * https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.uni.transfer/
+     *
+     * @return mixed
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function transfer(array $info)
+    {
+        !isset($info['payee_type']) && $info['payee_type'] = 'ALIPAY_LOGONID';
+
+        $gateway = $this->create();
+        $request = $gateway->transfer();
+        $response = $request->setBizContent($info)->send();
+
+        $data = $response->getData();
+
+        return $data['alipay_fund_trans_toaccount_transfer_response'] ?? '';
+    }
+
+    /**
+     * 付款到账查询
+     *
+     * $info = [
+     *     'out_biz_no' => '转账单号',
+     *     'order_id' => '回调单号',
+     *  ]
+     *
+     * @return mixed
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function transferQuery(array $info)
+    {
+        $gateway = $this->create();
+        $request = $gateway->transferQuery();
+        $response = $request->setBizContent($info)->send();
+
+        $data = $response->getData();
+
+        return $data['alipay_fund_trans_toaccount_transfer_response'] ?? '';
+    }
+
+    /**
      * 退款
      *
      * $info = [

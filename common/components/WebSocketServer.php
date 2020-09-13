@@ -14,6 +14,7 @@ use common\models\websocket\FdMemberMap;
 use common\models\websocket\DataForm;
 use common\enums\StatusEnum;
 use common\helpers\AddonHelper;
+use addons\TinyService\common\enums\TypeEnum;
 
 /**
  * Class WebSocketServer
@@ -77,6 +78,10 @@ class WebSocketServer
         'site.login',
         'site.ping',
         'service.login',
+        'merchantSite.login',
+        'merchantSite.ping',
+        'backendSite.login',
+        'backendSite.ping',
     ];
 
     /**
@@ -109,6 +114,15 @@ class WebSocketServer
         // 踢所有用户下线
         FdMemberMap::updateAll(['status' => StatusEnum::DISABLED]);
 
+        try {
+            Yii::$app->tinyServiceService->fdMemberMap->release();
+            Yii::$app->tinyServiceService->memberFdMap->release();
+            Yii::$app->tinyServiceService->backendFdMap->release();
+            Yii::$app->tinyServiceService->merchantFdMap->release();
+        } catch (\Exception $e) {
+
+        }
+
         $this->server->set($this->config);
         $this->server->on('open', [$this, 'onOpen']);
         $this->server->on('message', [$this, 'onMessage']);
@@ -127,7 +141,7 @@ class WebSocketServer
      */
     public function onOpen(Server $server, $request)
     {
-        echo "server: handshake success with fd{$request->fd}\n";
+        echo "server: handshake success with fd{$request->fd} time" . date('Y-m-d H:i:s') . PHP_EOL;
 
         $this->fd = $request->fd;
         $server->push($request->fd, $this->json(2001, '连接成功', ['fd' => $request->fd]));
@@ -156,7 +170,7 @@ class WebSocketServer
     {
         $this->fd = $frame->fd;
 
-        echo "receive from {}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+        echo "receive from {}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish},fd:{$frame->fd},time:" . date('Y-m-d H:i:s') . PHP_EOL;
 
         // 处理消息
         $this->receptionMessage($server, $frame);
@@ -192,8 +206,31 @@ class WebSocketServer
     public function onClose(Server $server, $fd)
     {
         $this->fd = $fd;
-        if ($server->isEstablished($fd)) {
-            $server->push($fd, $this->json(4000, '连接已被断开', ['fd' => $fd]));
+        try {
+//            if ($server->isEstablished($fd)) {
+//                $server->push($fd, $this->json(4000, '连接已被断开', ['fd' => $fd]));
+//            }
+
+            if ($member = Yii::$app->tinyServiceService->fdMemberMap->get($fd)) {
+                switch ($member['app_id']) {
+                    // service 临时
+                    case 'service';
+                        Yii::$app->tinyServiceService->backendFdMap->del($member['member_id'], $fd);
+                        break;
+                    case TypeEnum::BACKEND;
+                        Yii::$app->tinyServiceService->backendFdMap->del($member['member_id'], $fd);
+                        break;
+                    case TypeEnum::MERCHANT;
+                        Yii::$app->tinyServiceService->merchantFdMap->del($member['member_id'], $fd);
+                        break;
+                    default;
+                        Yii::$app->tinyServiceService->memberFdMap->del($member['member_id'], $fd);
+                        break;
+                }
+            }
+
+        } catch (\Exception $e) {
+            echo "client {$e->getMessage()} closed error，fd {$fd}" . PHP_EOL;
         }
 
         // 用户下线
@@ -262,9 +299,21 @@ class WebSocketServer
             }
 
             // 未登录直接关闭
-            $member = [];
-            if (!in_array($data->route, $this->routeOptional) && !($member = $this->getFdMemberMap($this->fd))) {
+            if (
+                !in_array($data->route, $this->routeOptional) &&
+                !($fdMemberMap = Yii::$app->tinyServiceService->fdMemberMap->get($this->fd))
+            ) {
+                echo '失败路由：' . $data->route . PHP_EOL;
+
                 return $server->disconnect($this->fd, 4001, '登录失败!');
+            }
+
+            $member = [];
+            if (!in_array($data->route, $this->routeOptional)) {
+                $member = $this->getFdMemberMap($fdMemberMap['member_id'], $fdMemberMap['app_id']);
+                if (!$member) {
+                    return $server->disconnect($this->fd, 4001, '找不到用户信息');
+                }
             }
 
             // 解析路由
@@ -273,12 +322,6 @@ class WebSocketServer
 
             unset($data);
         } catch (\Exception $e) {
-            // 数据库查询超时
-            $retry++;
-            if ($retry <= 3 && strpos($e, 'Error while sending QUERY packet')) {
-                return $this->receptionMessage($server, $frame, $retry);
-            }
-
             $error_info = [
                 'type' => get_class($e),
                 'file' => method_exists($e, 'getFile') ? $e->getFile() : '',
@@ -286,6 +329,14 @@ class WebSocketServer
                 'line' => $e->getLine(),
                 'stack-trace' => explode("\n", $e->getTraceAsString()),
             ];
+
+            echo Json::encode(ArrayHelper::toArray($error_info)) . PHP_EOL;
+
+            // 数据库查询超时
+            $retry++;
+            if ($retry <= 3 && strpos($e, 'Error while sending QUERY packet')) {
+                return $this->receptionMessage($server, $frame, $retry);
+            }
 
             if (YII_DEBUG) {
                 $server->push($frame->fd, $this->json(5000, $e->getMessage(), $error_info));
@@ -418,10 +469,11 @@ class WebSocketServer
      *
      * @return array|\yii\redis\ActiveRecord|null
      */
-    protected function getFdMemberMap($fd)
+    protected function getFdMemberMap($member_id, $type)
     {
         return FdMemberMap::find()->where([
-            'fd' => $fd,
+            'member_id' => $member_id,
+            'type' => $type,
             'status' => StatusEnum::ENABLED,
         ])->one();
     }

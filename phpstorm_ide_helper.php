@@ -17,6 +17,7 @@ class Yii
  * Class MyApplication
  *
  * @property \yii\redis\Connection $redis
+ * @property \yii\redis\Connection $websocketRedis
  * @property \yii\queue\cli\Queue $queue
  * @property \services\Application $services
  * @property \common\components\Debris $debris

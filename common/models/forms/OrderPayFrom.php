@@ -87,6 +87,24 @@ class OrderPayFrom extends Model implements PayHandler
     }
 
     /**
+     * 交易流水号
+     *
+     * @return string
+     */
+    public function getOutTradeNo()
+    {
+        return $this->order['out_trade_no'] ?? '';
+    }
+
+    /**
+     * @return int
+     */
+    public function getMerchantId(): int
+    {
+        return $this->order['merchant_id'];
+    }
+
+    /**
      * 是否查询订单号(避免重复生成)
      *
      * @return bool

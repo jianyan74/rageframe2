@@ -14,7 +14,7 @@ use common\helpers\ResultHelper;
 
 #### Json
 
-> 如果是 api/oauth2 那边调用注意 要符合 http 状态码
+> 如果是 `api/oauth2/merapi` 那边调用注意 要符合 http 状态码
 
 ```
 /**

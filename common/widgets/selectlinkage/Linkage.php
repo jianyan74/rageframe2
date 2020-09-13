@@ -4,6 +4,7 @@ namespace common\widgets\selectlinkage;
 
 use common\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Json;
 use yii\widgets\InputWidget;
 use common\helpers\StringHelper;
 
@@ -83,13 +84,13 @@ class Linkage extends InputWidget
         return $this->render($this->template, [
             'url' => $this->url,
             'level' => $this->level,
-            'item' => $this->item,
-            'allItem' => $this->allItem,
-            'defaultItem' => $defaultItem,
+            'item' => Json::encode($this->item),
+            'allItem' => Json::encode($this->allItem),
+            'defaultItem' => Json::encode($defaultItem),
             'col' => $col,
             'width' => $width,
             'text' => implode('/', $text),
-            'parents' => $parents,
+            'parents' => Json::encode($parents),
             'name' => $name,
             'value' => $value,
             'boxId' => StringHelper::uuid('uniqid')

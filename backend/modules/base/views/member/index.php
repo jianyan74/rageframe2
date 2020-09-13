@@ -2,6 +2,7 @@
 
 use common\helpers\Html;
 use common\helpers\ImageHelper;
+use common\enums\MemberAuthEnum;
 use yii\grid\GridView;
 
 $this->title = '后台用户';
@@ -61,6 +62,19 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'format' => 'raw',
                         ],
                         [
+                            'label'=> '微信绑定',
+                            'filter' => false, //不显示搜索框
+                            'format' => 'raw',
+                            'value' => function($model){
+                                if (!empty($model->authWechat)) {
+                                    return Html::tag('span', '已绑定',
+                                        ['class' => 'label label-primary']);
+                                } else {
+                                    return Html::tag('span', '未绑定', ['class' => 'label label-default']);
+                                }
+                            },
+                        ],
+                        [
                             'label' => '最后登录',
                             'filter' => false, //不显示搜索框
                             'value' => function ($model) {
@@ -73,26 +87,41 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                         [
                             'header' => "操作",
                             'class' => 'yii\grid\ActionColumn',
-                            'template' => '{recharge} {edit} {status} {destroy}',
+                            'template' => '{account} {binding} {edit} {destroy}',
+                            'contentOptions' => ['class' => 'text-align-center'],
                             'buttons' => [
-                                'recharge' => function ($url, $model, $key) {
-                                    return Html::linkButton(['ajax-edit', 'id' => $model->id], '账号密码', [
-                                        'data-toggle' => 'modal',
-                                        'data-target' => '#ajaxModal',
-                                    ]);
+                                'account' => function ($url, $model, $key) {
+                                    return Html::a('账号密码', ['ajax-edit', 'id' => $model->id], [
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#ajaxModal',
+                                            'class' => 'blue'
+                                        ]) . '<br>';
+                                },
+                                'binding' => function ($url, $model, $key) {
+                                    if (!empty($model->authWechat)) {
+                                        return Html::a('解绑微信', ['un-bind', 'id' => $model->id, 'type' => MemberAuthEnum::WECHAT], [
+                                                'class' => 'cyan',
+                                            ]) . '<br>';
+                                    } else {
+                                        return Html::a('绑定微信', ['binding', 'id' => $model->id, 'type' => MemberAuthEnum::WECHAT], [
+                                                'class' => 'cyan',
+                                                'data-fancybox' => 'gallery',
+                                            ]) . '<br>';
+                                    }
                                 },
                                 'edit' => function ($url, $model, $key) {
-                                    return Html::edit(['edit', 'id' => $model->id]);
+                                    return Html::a('编辑', ['edit', 'id' => $model->id], [
+                                            'class' => 'purple'
+                                        ]) . '<br>';
                                 },
-                                'status' => function ($url, $model, $key) {
+                                'destroy' => function ($url, $model, $key)  {
                                     if ($model->id != Yii::$app->params['adminAccount']) {
-                                        return Html::status($model->status);
+                                        return Html::a('删除', ['destroy', 'id' => $model->id], [
+                                                'class' => 'red',
+                                            ]);
                                     }
-                                },
-                                'destroy' => function ($url, $model, $key) {
-                                    if ($model->id != Yii::$app->params['adminAccount']) {
-                                        return Html::delete(['destroy', 'id' => $model->id]);
-                                    }
+
+                                    return '';
                                 },
                             ],
                         ],

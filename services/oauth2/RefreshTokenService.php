@@ -22,15 +22,15 @@ class RefreshTokenService extends Service
      */
     public function create($client_id, $grant_type, $refresh_token, $expires, $member_id, $scopes)
     {
-        if (!($model = $this->findByClientId($client_id, $grant_type))) {
+        if (!($model = $this->findByClientId($client_id, $grant_type, $member_id))) {
             $model = new RefreshToken();
             $model->client_id = $client_id;
+            $model->grant_type = $grant_type;
+            $model->member_id = (string)$member_id;
         }
 
         $model->expires = $expires;
-        $model->grant_type = $grant_type;
         $model->refresh_token = $refresh_token;
-        $model->member_id = (string)$member_id;
         $model->scope = $scopes;
         $model->save();
     }
@@ -59,10 +59,14 @@ class RefreshTokenService extends Service
      * @param $grant_type
      * @return array|\yii\db\ActiveRecord|null
      */
-    public function findByClientId($client_id, $grant_type)
+    public function findByClientId($client_id, $grant_type, $member_id)
     {
         return RefreshToken::find()
-            ->where(['client_id' => $client_id, 'grant_type' => $grant_type])
+            ->where([
+                'client_id' => $client_id,
+                'grant_type' => $grant_type,
+                'member_id' => $member_id
+            ])
             ->one();
     }
 }

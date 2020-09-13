@@ -10,9 +10,8 @@ class m200529_152443_backend_auth extends Migration
         $this->execute('SET foreign_key_checks = 0');
         
         /* 创建表 */
-        $this->createTable('{{%backend_auth}}', [
+        $this->createTable('{{%backend_member_auth}}', [
             'id' => "int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键'",
-            'merchant_id' => "int(10) unsigned NULL DEFAULT '0' COMMENT '商户id'",
             'member_id' => "int(10) unsigned NULL DEFAULT '0' COMMENT '用户id'",
             'unionid' => "varchar(64) NULL DEFAULT '' COMMENT '唯一ID'",
             'oauth_client' => "varchar(20) NULL DEFAULT '' COMMENT '授权组别'",
@@ -31,8 +30,8 @@ class m200529_152443_backend_auth extends Migration
         ], "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台_第三方绑定'");
         
         /* 索引设置 */
-        $this->createIndex('oauth_client','{{%backend_auth}}','oauth_client, oauth_client_user_id',0);
-        $this->createIndex('member_id','{{%backend_auth}}','member_id',0);
+        $this->createIndex('oauth_client','{{%backend_member_auth}}','oauth_client, oauth_client_user_id',0);
+        $this->createIndex('member_id','{{%backend_member_auth}}','member_id',0);
         
         
         /* 表数据 */
@@ -45,7 +44,7 @@ class m200529_152443_backend_auth extends Migration
     {
         $this->execute('SET foreign_key_checks = 0');
         /* 删除表 */
-        $this->dropTable('{{%backend_auth}}');
+        $this->dropTable('{{%backend_member_auth}}');
         $this->execute('SET foreign_key_checks = 1;');
     }
 }

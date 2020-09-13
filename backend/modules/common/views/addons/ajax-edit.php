@@ -21,6 +21,7 @@ $form = ActiveForm::begin([
     <div class="modal-body">
         <?= $form->field($model, 'title')->textInput() ?>
         <?= $form->field($model, 'author')->textInput() ?>
+        <?= $form->field($model, 'version')->textInput()->hint('如果不了解其更新机制，请不要随意修改版本号') ?>
         <?= $form->field($model, 'brief_introduction')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
         <?= $form->field($model, 'status')->radioList(StatusEnum::getMap()) ?>

@@ -129,9 +129,9 @@ class DebrisHelper
         $ipData = \Zhuzhichao\IpLocationZh\Ip::find($ip);
 
         $str = '';
-        isset($ipData[0]) && $str .= $ipData[0];
-        isset($ipData[1]) && $str .= ' · ' . $ipData[1];
-        isset($ipData[2]) && $str .= ' · ' . $ipData[2];
+        !empty($ipData[0]) && $str .= $ipData[0];
+        !empty($ipData[1]) && $str .= ' · ' . $ipData[1];
+        !empty($ipData[2]) && $str .= ' · ' . $ipData[2];
 
         return $str;
     }

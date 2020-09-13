@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m200529_152444_common_config_cate extends Migration
+class m200711_160402_common_config_cate extends Migration
 {
     public function up()
     {
@@ -51,17 +51,17 @@ class m200529_152444_common_config_cate extends Migration
         $this->insert('{{%common_config_cate}}',['id'=>'21','title'=>'小程序','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'3','tree'=>'tr_0 ','status'=>'1','created_at'=>'1553908673','updated_at'=>'1553908673']);
         $this->insert('{{%common_config_cate}}',['id'=>'22','title'=>'基础配置','pid'=>'21','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_21 ','status'=>'1','created_at'=>'1553908719','updated_at'=>'1553908719']);
         $this->insert('{{%common_config_cate}}',['id'=>'23','title'=>'图片处理','pid'=>'2','app_id'=>'backend','level'=>'2','sort'=>'1','tree'=>'tr_0 tr_2 ','status'=>'1','created_at'=>'1553908747','updated_at'=>'1553908747']);
-        $this->insert('{{%common_config_cate}}',['id'=>'24','title'=>'App推送','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'12','tree'=>'tr_0 ','status'=>'1','created_at'=>'1553908754','updated_at'=>'1583371092']);
+        $this->insert('{{%common_config_cate}}',['id'=>'24','title'=>'App推送','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'13','tree'=>'tr_0 ','status'=>'1','created_at'=>'1553908754','updated_at'=>'1593760704']);
         $this->insert('{{%common_config_cate}}',['id'=>'25','title'=>'极光推送','pid'=>'24','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_24 ','status'=>'1','created_at'=>'1553908769','updated_at'=>'1553908769']);
         $this->insert('{{%common_config_cate}}',['id'=>'26','title'=>'分享配置','pid'=>'3','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_3 ','status'=>'1','created_at'=>'1553909273','updated_at'=>'1553909273']);
         $this->insert('{{%common_config_cate}}',['id'=>'27','title'=>'短信配置','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'8','tree'=>'tr_0 ','status'=>'1','created_at'=>'1559260477','updated_at'=>'1583371087']);
         $this->insert('{{%common_config_cate}}',['id'=>'28','title'=>'阿里云','pid'=>'27','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_27 ','status'=>'1','created_at'=>'1559260496','updated_at'=>'1559260496']);
-        $this->insert('{{%common_config_cate}}',['id'=>'29','title'=>'地图','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'11','tree'=>'tr_0 ','status'=>'1','created_at'=>'1559402417','updated_at'=>'1583371091']);
+        $this->insert('{{%common_config_cate}}',['id'=>'29','title'=>'地图','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'12','tree'=>'tr_0 ','status'=>'1','created_at'=>'1559402417','updated_at'=>'1593760703']);
         $this->insert('{{%common_config_cate}}',['id'=>'30','title'=>'百度地图','pid'=>'29','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_29 ','status'=>'1','created_at'=>'1559402426','updated_at'=>'1559402426']);
         $this->insert('{{%common_config_cate}}',['id'=>'31','title'=>'腾讯地图','pid'=>'29','app_id'=>'backend','level'=>'2','sort'=>'1','tree'=>'tr_0 tr_29 ','status'=>'1','created_at'=>'1559402436','updated_at'=>'1559402436']);
         $this->insert('{{%common_config_cate}}',['id'=>'32','title'=>'高德地图','pid'=>'29','app_id'=>'backend','level'=>'2','sort'=>'3','tree'=>'tr_0 tr_29 ','status'=>'1','created_at'=>'1559402447','updated_at'=>'1559402447']);
         $this->insert('{{%common_config_cate}}',['id'=>'33','title'=>'腾讯COS','pid'=>'7','app_id'=>'backend','level'=>'2','sort'=>'2','tree'=>'tr_0 tr_7 ','status'=>'1','created_at'=>'1559527993','updated_at'=>'1559527993']);
-        $this->insert('{{%common_config_cate}}',['id'=>'34','title'=>'OAuth2','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'13','tree'=>'tr_0 ','status'=>'1','created_at'=>'1559704928','updated_at'=>'1583371093']);
+        $this->insert('{{%common_config_cate}}',['id'=>'34','title'=>'OAuth2','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'14','tree'=>'tr_0 ','status'=>'1','created_at'=>'1559704928','updated_at'=>'1593760705']);
         $this->insert('{{%common_config_cate}}',['id'=>'35','title'=>'授权配置','pid'=>'34','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_34 ','status'=>'1','created_at'=>'1559704944','updated_at'=>'1559704944']);
         $this->insert('{{%common_config_cate}}',['id'=>'36','title'=>'系统配置','pid'=>'0','app_id'=>'merchant','level'=>'1','sort'=>'0','tree'=>'tr_0 ','status'=>'1','created_at'=>'1572587852','updated_at'=>'1572587852']);
         $this->insert('{{%common_config_cate}}',['id'=>'37','title'=>'系统基础','pid'=>'36','app_id'=>'merchant','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_36 ','status'=>'1','created_at'=>'1572587861','updated_at'=>'1572587861']);
@@ -80,6 +80,10 @@ class m200529_152444_common_config_cate extends Migration
         $this->insert('{{%common_config_cate}}',['id'=>'50','title'=>'会员配置','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'2','tree'=>'tr_0 ','status'=>'1','created_at'=>'1589014050','updated_at'=>'1589014057']);
         $this->insert('{{%common_config_cate}}',['id'=>'51','title'=>'基础配置','pid'=>'50','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_50 ','status'=>'1','created_at'=>'1589014067','updated_at'=>'1589014067']);
         $this->insert('{{%common_config_cate}}',['id'=>'52','title'=>'个推推送','pid'=>'24','app_id'=>'backend','level'=>'2','sort'=>'1','tree'=>'tr_0 tr_24 ','status'=>'1','created_at'=>'1589641827','updated_at'=>'1589641827']);
+        $this->insert('{{%common_config_cate}}',['id'=>'53','title'=>'小票打印','pid'=>'0','app_id'=>'backend','level'=>'1','sort'=>'11','tree'=>'tr_0 ','status'=>'1','created_at'=>'1593760723','updated_at'=>'1593760734']);
+        $this->insert('{{%common_config_cate}}',['id'=>'54','title'=>'易联云','pid'=>'53','app_id'=>'backend','level'=>'2','sort'=>'0','tree'=>'tr_0 tr_53 ','status'=>'1','created_at'=>'1593760743','updated_at'=>'1593760743']);
+        $this->insert('{{%common_config_cate}}',['id'=>'55','title'=>'Stripe','pid'=>'4','app_id'=>'backend','level'=>'2','sort'=>'3','tree'=>'tr_0 tr_4 ','status'=>'1','created_at'=>'1594103281','updated_at'=>'1594103281']);
+        $this->insert('{{%common_config_cate}}',['id'=>'56','title'=>'AlphaPay','pid'=>'4','app_id'=>'backend','level'=>'2','sort'=>'4','tree'=>'tr_0 tr_4 ','status'=>'1','created_at'=>'1594103294','updated_at'=>'1594103294']);
         
         /* 设置外键约束 */
         $this->execute('SET foreign_key_checks = 1;');

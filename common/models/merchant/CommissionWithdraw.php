@@ -45,7 +45,7 @@ class CommissionWithdraw extends \common\models\base\BaseModel
     public function rules()
     {
         return [
-            [['merchant_id', 'state', 'payment_date', 'transfer_type', 'transfer_status', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['merchant_id', 'state', 'account_type', 'payment_date', 'transfer_type', 'transfer_status', 'status', 'created_at', 'updated_at'], 'integer'],
             [['cash', 'transfer_money'], 'number'],
             [['withdraw_no', 'transfer_no', 'transfer_account_no'], 'string', 'max' => 100],
             [['bank_name', 'account_number', 'transfer_name'], 'string', 'max' => 50],
@@ -92,5 +92,13 @@ class CommissionWithdraw extends \common\models\base\BaseModel
     public function getMember()
     {
         return $this->hasOne(Member::class, ['id' => 'member_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMerchant()
+    {
+        return $this->hasOne(Merchant::class, ['id' => 'merchant_id']);
     }
 }

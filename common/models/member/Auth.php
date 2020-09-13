@@ -33,6 +33,7 @@ class Auth extends \common\models\base\BaseModel
     const CLIENT_WECHAT = 'wechat';
     const CLIENT_WECHAT_MP = 'wechatMp';
     const CLIENT_WECHAT_OP = 'wechatOp';
+    const CLIENT_APPLE = 'apple';
     const CLIENT_QQ = 'qq';
     const CLIENT_SINA = 'sina';
 

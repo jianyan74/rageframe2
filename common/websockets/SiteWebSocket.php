@@ -33,18 +33,17 @@ class SiteWebSocket extends BaseWebSocket
     public function actionLogin()
     {
         /** @var AccessToken $identity */
-        $identity = !empty($this->token) ? Yii::$app->services->apiAccessToken->getTokenToCache($this->token, null, true) : '';
+        $identity = !empty($this->token) ? Yii::$app->services->apiAccessToken->findByAccessToken($this->token) : '';
         // 找不到用户直接关闭
-        if (!$identity) {
+        if (empty($identity)) {
+            echo '找不到用户登录失败,fd:' . $this->frame->fd . PHP_EOL;
             return $this->disconnect($this->frame->fd, 4101, '登录失败');
         }
 
         /** @var Member $member */
-        $member = $identity->member;
+        $member = Yii::$app->services->member->findById($identity->member_id);
         /** @var FdMemberMap $model */
-        if ($model = $this->getFdMemberMap($member->id, 'member')) {
-            $model->status == StatusEnum::ENABLED && $this->disconnect($model->fd, 4101, '已在别处登录');
-        } else {
+        if (!($model = $this->getFdMemberMap($member->id, 'member'))) {
             $model = new FdMemberMap();
         }
 
@@ -57,11 +56,12 @@ class SiteWebSocket extends BaseWebSocket
         $model->merchant_id = $identity->merchant_id;
         $model->status = StatusEnum::ENABLED;
         $model->save();
+        if (!$model) {
+            return $this->pushError(Yii::$app->debris->analyErr($model->getFirstErrors()));
+        }
 
         // 修改当前的用户信息
         $this->member = $model;
-
-        unset($clientInfo, $model, $member);
 
         return $this->push('登录成功');
     }

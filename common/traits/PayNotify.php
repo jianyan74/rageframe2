@@ -154,6 +154,31 @@ trait PayNotify
     }
 
     /**
+     * 公用支付回调 - Stripe
+     *
+     * @return bool|string
+     */
+    public function actionStripe()
+    {
+        $response = Json::decode(file_get_contents('php://input'));
+        unset($response['data']['object']['charges']);
+
+        if ($response['data']['object']['status'] == 'succeeded') {
+            $logPath = $this->getLogPath('stripe');
+            FileHelper::writeLog($logPath, Json::encode(ArrayHelper::toArray($response)));
+            $response['out_trade_no'] = $response['data']['object']['metadata']['out_trade_no'];
+            $response['pay_fee'] = $response['data']['object']['amount'] / 100;
+            if ($this->pay($response)) {
+                http_response_code(200);die('success');
+            }
+
+            http_response_code(400);die('fail');
+        } else {
+            die('fail');
+        }
+    }
+
+    /**
      * @param $message
      * @return bool
      */
@@ -187,9 +212,16 @@ trait PayNotify
         } catch (\Exception $e) {
             $transaction->rollBack();
 
+            FileHelper::writeLog($this->getLogPath('error'), $e->getMessage());
             // 记录报错日志
-            $logPath = $this->getLogPath('error');
-            FileHelper::writeLog($logPath, $e->getMessage());
+            FileHelper::writeLog($this->getLogPath('error'), Json::encode(ArrayHelper::toArray([
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => method_exists($e, 'getFile') ? $e->getFile() : '',
+                'trace' => $e->getTrace(),
+                'code' => $e->getCode(),
+            ])));
+
             return false;
         }
     }

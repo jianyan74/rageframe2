@@ -5,6 +5,7 @@ namespace common\components\payment;
 use Yii;
 use yii\helpers\ArrayHelper;
 use Omnipay\Omnipay;
+use common\enums\WechatPayTypeEnum;
 
 /**
  * 微信支付类
@@ -60,28 +61,10 @@ class WechatPay
         /* @var $gateway \Omnipay\WechatPay\AppGateway */
         $gateway = Omnipay::create($type);
         $gateway->setMchId($this->config['mch_id']);
+        $gateway->setAppId($this->config['app_id']);
         $gateway->setApiKey($this->config['api_key']);
         $gateway->setCertPath(Yii::getAlias($this->config['cert_client']));
         $gateway->setKeyPath(Yii::getAlias($this->config['cert_key']));
-
-        if ($type == self::APP) {
-            // 微信开放平台 appid
-            $gateway->setAppId($this->config['open_app_id']);
-        } else {
-            $gateway->setAppId($this->config['app_id']);
-        }
-
-        // EasyWechat 兼容
-        if ($type == self::JS) {
-            Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
-                'app_id' => $this->config['app_id'],
-                'mch_id' => $this->config['mch_id'],
-                'key' => $this->config['api_key'],
-                'cert_path' => Yii::getAlias($this->config['cert_client']),
-                'key_path' => Yii::getAlias($this->config['cert_key']),
-            ]);
-        }
-
         return $gateway;
     }
 
@@ -113,6 +96,7 @@ class WechatPay
     public function app($order, $debug = false)
     {
         $gateway = $this->create(self::APP);
+        $gateway->setAppId($this->config['open_app_id']);
         $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -156,6 +140,36 @@ class WechatPay
     public function js($order, $debug = false)
     {
         $gateway = $this->create(self::JS);
+        $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
+        $response = $request->send();
+
+        // 兼容EasyWechat
+        Yii::$app->params['wechatPaymentConfig'] = ArrayHelper::merge(Yii::$app->params['wechatPaymentConfig'], [
+            'app_id' => $this->config['app_id'],
+            'mch_id' => $this->config['mch_id'],
+            'key' => $this->config['api_key'],
+            'cert_path' => Yii::getAlias($this->config['cert_client']),
+            'key_path' => Yii::getAlias($this->config['cert_key']),
+        ]);
+
+        $data = $response->getJsOrderData();
+        if (isset($data['timeStamp'])) {
+            $data['timestamp'] = $data['timeStamp'];
+            unset($data['timeStamp']);
+        }
+
+        return $debug ? $response->getData() : $data;
+    }
+
+    /**
+     * @param $order
+     * @param bool $debug
+     * @return array|mixed|null
+     */
+    public function miniProgram($order, $debug = false)
+    {
+        $gateway = $this->create(self::JS);
+        $gateway->setAppId($this->config['mini_program_app_id']);
         $request = $gateway->purchase(ArrayHelper::merge($this->order, $order));
         $response = $request->send();
 
@@ -253,9 +267,18 @@ class WechatPay
      *      'refund_fee'    => 1, //=0.01
      * ]
      */
-    public function refund($info)
+    public function refund($info, $type = WechatPayTypeEnum::JS)
     {
         $gateway = $this->create(self::DEFAULT);
+        switch ($type) {
+            case WechatPayTypeEnum::MINI_PROGRAM :
+                $gateway->setAppId($this->config['mini_program_app_id']);
+                break;
+            case WechatPayTypeEnum::APP :
+                $gateway->setAppId($this->config['open_app_id']);
+                break;
+        }
+
         $response = $gateway->refund($info)->send();
 
         return $response->getData();

@@ -2,11 +2,11 @@
 
 namespace api\modules\v1\controllers\member;
 
-use common\helpers\UploadHelper;
 use Yii;
 use common\enums\StatusEnum;
 use common\helpers\ResultHelper;
 use common\models\member\Auth;
+use common\helpers\UploadHelper;
 use api\controllers\UserAuthController;
 
 /**
@@ -45,13 +45,15 @@ class AuthController extends UserAuthController
             return ResultHelper::json(422, '请先解除该账号绑定');
         }
 
-        // 下载图片
-        $upload = new UploadHelper(['writeTable' => StatusEnum::DISABLED], 'images');
-        $imgData = $upload->verifyUrl($model->head_portrait);
-        $upload->save($imgData);
-        $baseInfo = $upload->getBaseInfo();
+        if ($model->head_portrait) {
+            // 下载图片
+            $upload = new UploadHelper(['writeTable' => StatusEnum::DISABLED], 'images');
+            $imgData = $upload->verifyUrl($model->head_portrait);
+            $upload->save($imgData);
+            $baseInfo = $upload->getBaseInfo();
+        }
 
-        $model->head_portrait = $baseInfo['url'];
+        $model->head_portrait = $baseInfo['url'] ?? '';
         $model->oauth_client = $oauthClient;
         $model->oauth_client_user_id = $oauthClientUserId;
         $model->member_id = Yii::$app->user->identity->member_id;

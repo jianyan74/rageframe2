@@ -30,9 +30,9 @@ class AccessTokenGroupEnum extends BaseEnum
     {
         return [
             self::DEFAULT => '默认',
-            self::IOS => 'ios',
-            self::ANDROID => 'android',
-            self::APP => 'app',
+            self::IOS => 'iOS',
+            self::ANDROID => 'Android',
+            self::APP => 'App',
             self::H5 => 'H5',
             self::PC => 'PC',
             self::WECHAT => '微信',

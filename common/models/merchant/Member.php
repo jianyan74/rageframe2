@@ -2,6 +2,7 @@
 
 namespace common\models\merchant;
 
+use common\enums\MemberAuthEnum;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -140,6 +141,14 @@ class Member extends User
     public function getAuth()
     {
         return $this->hasMany(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED]);
+    }
+
+    /**
+     * 关联微信第三方绑定
+     */
+    public function getAuthWechat()
+    {
+        return $this->hasOne(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED, 'oauth_client' => MemberAuthEnum::WECHAT]);
     }
 
     /**

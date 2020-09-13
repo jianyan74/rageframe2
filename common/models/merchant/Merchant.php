@@ -133,7 +133,7 @@ class Merchant extends \common\models\base\BaseModel
             'region' => '店铺默认配送区域',
             'qrcode' => '公众号二维码',
             'state' => '店铺状态',
-            'status' => '状态[-1:删除;0:禁用;1启用]',
+            'status' => '状态',
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];

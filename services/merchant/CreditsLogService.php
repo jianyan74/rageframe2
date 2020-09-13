@@ -238,6 +238,25 @@ class CreditsLogService extends Service
     }
 
     /**
+     * 获取区间统计金额
+     *
+     * @param $start_time
+     * @param $end_time
+     * @param string $merchant_id
+     */
+    public function getBetweenMoney($start_time, $end_time, $merchant_id = '')
+    {
+        return CreditsLog::find()
+            ->select(['sum(num)'])
+            ->where(['credit_type' => CreditsLog::CREDIT_TYPE_USER_MONEY])
+            ->andWhere(['>', 'num', 0])
+            ->andWhere(['>', 'status', StatusEnum::DISABLED])
+            ->andWhere(['between', 'created_at', $start_time, $end_time])
+            ->andFilterWhere(['merchant_id' => $merchant_id])
+            ->scalar() ?? 0;
+    }
+
+    /**
      * @param MerchantCreditsLogForm $creditsLogForm
      * @param $oldNum
      * @param $newNum

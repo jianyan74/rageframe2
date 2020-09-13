@@ -32,7 +32,7 @@ return [
             'port' => 9501, // 监听端口
             'type' => 'ws', // 默认为ws连接，可修改为wss
             'config' => [ // 标准的swoole配置项都可以再此加入
-                'daemonize' => true, // 守护进程执行
+                'daemonize' => false, // 守护进程执行
                 'task_worker_num' => 4, //task进程的数量
                 // 'ssl_cert_file' => '',
                 // 'ssl_key_file' => '',

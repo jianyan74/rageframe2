@@ -2,13 +2,17 @@
 
 namespace backend\modules\base\controllers;
 
+use common\enums\MemberAuthEnum;
+use common\helpers\HashidsHelper;
 use Yii;
+use yii\web\Response;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
 use common\traits\Curd;
 use common\models\backend\Member;
 use common\enums\AppEnum;
 use common\helpers\ResultHelper;
+use common\helpers\Url;
 use backend\controllers\BaseController;
 use backend\modules\base\forms\PasswdForm;
 use backend\modules\base\forms\MemberForm;
@@ -139,5 +143,45 @@ class MemberController extends BaseController
         return $this->render($this->action->id, [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * 绑定
+     *
+     * @param $uuid
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionBinding($id, $type)
+    {
+        $uuid = HashidsHelper::encode($id);
+        switch ($type) {
+            case MemberAuthEnum::WECHAT;
+                $getUrl = Url::toHtml5(['binding-wechat/index', 'uuid' => $uuid]);
+
+                $qr = Yii::$app->get('qr');
+                Yii::$app->response->format = Response::FORMAT_RAW;
+                Yii::$app->response->headers->add('Content-Type', $qr->getContentType());
+
+                return $qr->setText($getUrl)
+                    ->setSize(200)
+                    ->setMargin(7)
+                    ->writeString();
+                break;
+        }
+    }
+
+    /**
+     * 解绑
+     *
+     * @param $uuid
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionUnBind($type, $member_id)
+    {
+        Yii::$app->services->backendMemberAuth->unBind($type, $member_id);
+
+        return $this->message("解绑成功", $this->redirect(['index']));
     }
 }

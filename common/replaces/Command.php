@@ -70,7 +70,11 @@ class Command extends \yii\db\Command
     private function handleException(\yii\db\Exception $e)
     {
         $errorMsg = $e->getMessage();
-        if (strpos($errorMsg, 'MySQL server has gone away') || strpos($errorMsg, 'Error while sending QUERY packet')) {
+        if (
+            strpos($errorMsg, 'MySQL server has gone away') ||
+            strpos($errorMsg, 'Error while sending QUERY packet') ||
+            strpos($errorMsg, 'SQLSTATE[HY000]: General error')
+        ) {
             $this->retry = true;
             $this->pdoStatement = null;
             $this->db->close();

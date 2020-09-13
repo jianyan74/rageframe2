@@ -43,7 +43,7 @@ class BankAccount extends \common\models\base\BaseModel
         return [
             [['account_type', 'realname', 'mobile'], 'required'],
             [['merchant_id', 'is_default', 'account_type', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['branch_bank_name', 'realname', 'ali_number', 'account_number', 'bank_code'], 'string', 'max' => 50],
+            [['branch_bank_name', 'realname', 'account_number'], 'string', 'max' => 50],
             [['mobile'], 'string', 'max' => 20],
             [['account_type_name'], 'string', 'max' => 30],
         ];
@@ -60,8 +60,6 @@ class BankAccount extends \common\models\base\BaseModel
             'branch_bank_name' => '支行信息',
             'realname' => '真实姓名',
             'account_number' => '账号',
-            'bank_code' => '银行编号',
-            'ali_number' => '支付宝账号',
             'mobile' => '手机号',
             'is_default' => '默认账号',
             'account_type' => '账户类型',
@@ -84,20 +82,8 @@ class BankAccount extends \common\models\base\BaseModel
             self::updateAll(['is_default' => StatusEnum::DISABLED], ['merchant_id' => $this->merchant_id, 'is_default' => StatusEnum::ENABLED]);
         }
 
-        // 清空其他数据
-        switch ($this->account_type) {
-            case AccountTypeEnum::UNION :
-                $this->ali_number = '';
-                break;
-            case AccountTypeEnum::ALI :
-                $this->account_number = '';
-                $this->branch_bank_name = '';
-                break;
-            default :
-                $this->ali_number = '';
-                $this->account_number = '';
-                $this->branch_bank_name = '';
-                break;
+        if ($this->account_type == AccountTypeEnum::ALI) {
+            $this->branch_bank_name = '';
         }
 
         return parent::beforeSave($insert);

@@ -8,11 +8,11 @@
 
 ### 环境要求
 
-- PHP >= 7.2 (卸载邮件依赖 7.1.3 亦可)
+- PHP >= 7.2
 - PHP cURL 扩展
 - PHP OpenSSL 扩展
 - PHP fileinfo 拓展 素材管理模块需要用到
-- Mysql >= 5.7
+- Mysql >= 5.7.7
 - Apache 或 Nginx
 - Composer (用于管理第三方扩展包)
 - 安装CA证书 (windows开发环境下)
@@ -38,7 +38,7 @@ cd rageframe2
 3、安装依赖
 
 ```
-// 如果你只有 php 7.1 也可以忽略版本进行安装 php composer.phar install --ignore-platform-reqs
+// (不建议) 如果你只有 php 7.1 也可以忽略版本进行安装 php composer.phar install --ignore-platform-reqs
 
 php composer.phar install 
 ```

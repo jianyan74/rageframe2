@@ -14,6 +14,9 @@ use common\helpers\ArrayHelper;
 use common\enums\PayTypeEnum;
 use common\enums\StatusEnum;
 use common\helpers\StringHelper;
+use common\models\common\PayRefund;
+use common\helpers\BcHelper;
+use common\enums\WechatPayTypeEnum;
 
 /**
  * Class PayService
@@ -49,9 +52,9 @@ class PayService extends Service
         ];
 
         //  判断如果是js支付
-        $payLog->trade_type == 'js' && $order['openid'] = $payLog->openid;
+        $payLog->trade_type == WechatPayTypeEnum::JS && $order['openid'] = $payLog->openid;
         //  判断如果是刷卡支付
-        $payLog->trade_type == 'pos' && $order['auth_code'] = $payLog->auth_code;
+        $payLog->trade_type == WechatPayTypeEnum::POS && $order['auth_code'] = $payLog->auth_code;
 
         // 交易类型
         $tradeType = $payLog->trade_type;
@@ -59,6 +62,7 @@ class PayService extends Service
         if (empty($result)) {
             $debug = Yii::$app->pay->wechat->$tradeType($order, true);
             Yii::$app->services->actionLog->create('wechatPayError', Json::encode($debug));
+
             return $debug;
         }
 
@@ -162,6 +166,77 @@ class PayService extends Service
     }
 
     /**
+     * AlphaPay
+     *
+     * 加拿大海外代理
+     *
+     * @param PayLog $payLog
+     * @return mixed
+     */
+    public function alphapay(PayLog $payLog)
+    {
+        if (in_array($payLog->pay_type, [PayTypeEnum::MINIP_ALPHAPAY, PayTypeEnum::WECHAT_ALPHAPAY])) {
+            $channel = 'Wechat';
+        } elseif (in_array($payLog->pay_type, [PayTypeEnum::ALI_ALPHAPAY, PayTypeEnum::ALIH5_ALPHAPAY])) {
+            $channel = 'Alipay';
+        } else {
+            $channel = null;
+        }
+
+        // 生成订单
+        $order = [
+            'pay_type' => $payLog->pay_type,
+            'description' => $payLog->body, // 内容
+            'order_id' => $payLog->out_trade_no, // 订单号
+            'price' => $payLog->total_fee * 100,
+            'notify_url' => $payLog->notify_url, // 回调地址
+            'return_url' => $payLog->return_url,
+            'channel' => $channel, // 3: wechat_alphapay, 4: alipay_alphapay
+            'operator' => $payLog->detail, // 操作人员
+        ];
+
+        // 代理微信小程序
+        if ($payLog->pay_type === PayTypeEnum::MINIP_ALPHAPAY) {
+            $order['appid'] = Yii::$app->debris->backendConfig('miniprogram_appid');
+            $order['customer_id'] = $payLog->openid;
+        }
+
+        // 交易类型
+        $tradeType = $payLog->trade_type;
+
+        return Yii::$app->pay->alphapay->$tradeType($order);
+    }
+
+    /**
+     * Stripe
+     *
+     * @param PayLog $payLog
+     * @return mixed
+     */
+    public function stripe(PayLog $payLog)
+    {
+        // 生成订单
+        $order = [
+            'amount' => $payLog->total_fee < 1 ? 1 : $payLog->total_fee,
+            'currency' => 'CAD',
+            'token' => $payLog->detail,
+            'description' => $payLog->body,
+            'returnUrl' => $payLog->return_url,
+            'metadata' => [
+                'order_sn' => $payLog->order_sn,
+                'out_trade_no' => $payLog->out_trade_no,
+            ],
+            // 'paymentMethod' => '',
+            'confirm' => true,
+        ];
+
+        // 交易类型
+        $tradeType = $payLog->trade_type;
+
+        return Yii::$app->pay->stripe->$tradeType($order);
+    }
+
+    /**
      * 订单退款
      *
      * @param $pay_type
@@ -172,6 +247,7 @@ class PayService extends Service
      */
     public function refund($pay_type, $money, $order_sn)
     {
+        /** @var PayLog $model */
         $model = $this->findByOrderSn($order_sn);
         if (!$model) {
             throw new UnprocessableEntityHttpException('找不到支付记录');
@@ -181,29 +257,26 @@ class PayService extends Service
             throw new UnprocessableEntityHttpException('未支付');
         }
 
-        if ($model->is_refund == StatusEnum::ENABLED) {
-            throw new UnprocessableEntityHttpException('已经退款成功');
-        }
-
-        if ($money > $model->pay_fee) {
+        $residueMoney = BcHelper::sub($model->pay_fee, $this->getRefundMoneyByPayId($model->id));
+        if ($money > $residueMoney) {
             throw new UnprocessableEntityHttpException('退款金额不可大于支付金额');
         }
 
         $refund_sn = date('YmdHis') . StringHelper::random(8, true);
         $response = [];
-         switch ($pay_type) {
+        switch ($pay_type) {
             case PayTypeEnum::WECHAT :
                 $info = [
                     'out_trade_no' => $model->out_trade_no,
                     'transaction_id' => $model->transaction_id, //The wechat trade no
-                    'out_refund_no'  => $refund_sn,
-                    'total_fee'      => $model->pay_fee * 100, //=0.01
-                    'refund_fee'     => $money * 100, //=0.01
+                    'out_refund_no' => $refund_sn,
+                    'total_fee' => $model->pay_fee * 100, //=0.01
+                    'refund_fee' => $money * 100, //=0.01
                 ];
 
-                $response = Yii::$app->pay->wechat->refund($info);
+                $response = Yii::$app->pay->wechat->refund($info, $model->trade_type);
                 if ($response['return_code'] != 'SUCCESS' || $response['result_code'] != 'SUCCESS') {
-                    throw new UnprocessableEntityHttpException($response['return_msg']);
+                    throw new UnprocessableEntityHttpException($response['err_code_des']);
                 }
 
                 break;
@@ -213,17 +286,27 @@ class PayService extends Service
                     'out_trade_no' => $model->out_trade_no,
                     'trade_no' => $model->transaction_id,
                     'refund_amount' => $money,
-                    'out_request_no' => $refund_sn
+                    'out_request_no' => $refund_sn,
                 ];
 
                 $response = Yii::$app->pay->alipay->refund($info);
                 break;
         }
 
-        $model->refund_fee = $money;
-        $model->refund_sn = $refund_sn;
-        $model->is_refund = StatusEnum::ENABLED;
+        $model->refund_fee += $money;
         $model->save();
+
+        $refund = new PayRefund();
+        $refund = $refund->loadDefaultValues();
+        $refund->pay_id = $model->id;
+        $refund->app_id = Yii::$app->id;
+        $refund->ip = Yii::$app->request->userIP ?? 0;
+        $refund->order_sn = $order_sn;
+        $refund->merchant_id = $model->merchant_id;
+        $refund->member_id = $model->member_id;
+        $refund->refund_trade_no = $refund_sn;
+        $refund->refund_money = $money;
+        $refund->save();
     }
 
     /**
@@ -281,6 +364,19 @@ class PayService extends Service
 
                 break;
         }
+    }
+
+    /**
+     * @param $pay_id
+     * @return bool|int|mixed|string|null
+     */
+    public function getRefundMoneyByPayId($pay_id)
+    {
+        $money = PayRefund::find()
+            ->where(['pay_id' => $pay_id])
+            ->sum('refund_money');
+
+        return empty($money) ? 0 : $money;
     }
 
     /**

@@ -89,6 +89,7 @@ $actionLog = Yii::$app->services->actionLog->findByAppId(Yii::$app->id, $model['
                             ]
                         ]); ?>
                         <?= $form->field($model, 'address')->textarea() ?>
+                        <?= $form->field($model, 'status')->radioList(\common\enums\StatusEnum::getMap()) ?>
                     </div>
                 </div>
                 <div class="tab-pane" id="oauth">

@@ -53,10 +53,10 @@ class BankAccountService extends Service
         foreach ($model as $item) {
             $tmp = [];
             $tmp[] = $item['account_type_name'];
-            $tmp[] = $item['realname'];
-            $tmp[] = $item['mobile'];
+            // $tmp[] = $item['realname'];
+            // $tmp[] = $item['mobile'];
             if ($item['account_type'] == AccountTypeEnum::ALI) {
-                $tmp[] = $item['ali_number'];
+                $tmp[] = $item['account_number'];
             }
 
             if ($item['account_type'] == AccountTypeEnum::UNION) {

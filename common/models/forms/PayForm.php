@@ -12,6 +12,7 @@ use common\models\common\PayLog;
 use common\interfaces\PayHandler;
 use common\helpers\ArrayHelper;
 use common\helpers\StringHelper;
+use common\enums\WechatPayTypeEnum;
 
 /**
  * 支付校验
@@ -74,7 +75,7 @@ class PayForm extends PayLog
 
         switch ($this->pay_type) {
             case PayTypeEnum::WECHAT :
-                if (!in_array($this->trade_type, ['native', 'app', 'js', 'pos', 'mweb', 'mini_program'])) {
+                if (!in_array($this->trade_type, WechatPayTypeEnum::getKeys())) {
                     $this->addError($attribute, '微信交易类型不符');
 
                     return;
@@ -82,13 +83,13 @@ class PayForm extends PayLog
 
                 // 直接通过授权码进行支付
                 if ($this->code) {
-                    if ($this->trade_type == 'mini_program') {
+                    if ($this->trade_type == WechatPayTypeEnum::MINI_PROGRAM) {
                         $auth = Yii::$app->wechat->miniProgram->auth->session($this->code);
                         Yii::$app->debris->getWechatError($auth);
                         $this->openid = $auth['openid'];
                     }
 
-                    if ($this->trade_type == 'js') {
+                    if ($this->trade_type == WechatPayTypeEnum::JS) {
                         $user = Yii::$app->wechat->app->oauth->user();
                         $this->openid = $user['id'];
                     }
@@ -103,6 +104,12 @@ class PayForm extends PayLog
             case PayTypeEnum::UNION :
                 if (!in_array($this->trade_type, ['app', 'html'])) {
                     $this->addError($attribute, '银联交易类型不符');
+                }
+                break;
+            // 海外信用卡 stripe
+            case PayTypeEnum::STRIPE :
+                if (!in_array($this->trade_type, ['cards', 'card'])) {
+                    $this->addError($attribute, 'Strip交易类型不符');
                 }
                 break;
         }
@@ -144,15 +151,20 @@ class PayForm extends PayLog
         }
 
         $log = new PayLog();
-        $log->out_trade_no = date('YmdHis') . StringHelper::random(8, true);
         if ($model->isQueryOrderSn() == true && ($history = Yii::$app->services->pay->findByOrderSn($model->getOrderSn()))) {
             $log = $history;
         }
 
+        $log->out_trade_no = $model->getOutTradeNo();
+        if (empty($log->out_trade_no)) {
+            $log->out_trade_no = date('YmdHis') . StringHelper::random(8, true);
+        }
+
         $log->attributes = ArrayHelper::toArray($this);
-        $log->body = $model->getBody();
-        $log->detail = $model->getDetails();
         $log->order_sn = $model->getOrderSn();
+        $log->body = $model->getBody() . '-' . $log->order_sn;
+        $log->detail = $model->getDetails();
+        $log->merchant_id = $model->getMerchantId();
         $log->total_fee = $model->getTotalFee();
         $log->pay_fee = $log->total_fee;
         if (!$log->save()) {
@@ -180,6 +192,21 @@ class PayForm extends PayLog
                 break;
             case PayTypeEnum::UNION :
                 return Yii::$app->services->pay->union($log);
+                break;
+            case PayTypeEnum::WECHAT_ALPHAPAY :
+                return Yii::$app->services->pay->alphapay($log);
+                break;
+            case PayTypeEnum::ALI_ALPHAPAY :
+                return Yii::$app->services->pay->alphapay($log);
+                break;
+            case PayTypeEnum::ALIH5_ALPHAPAY :
+                return Yii::$app->services->pay->alphapay($log);
+                break;
+            case PayTypeEnum::MINIP_ALPHAPAY :
+                return Yii::$app->services->pay->alphapay($log);
+                break;
+            case PayTypeEnum::STRIPE :
+                return Yii::$app->services->pay->stripe($log);
                 break;
         }
     }

@@ -3,7 +3,6 @@
 namespace common\models\common;
 
 use Yii;
-use common\behaviors\MerchantBehavior;
 
 /**
  * This is the model class for table "{{%common_pay_log}}".
@@ -41,8 +40,6 @@ use common\behaviors\MerchantBehavior;
  */
 class PayLog extends \common\models\base\BaseModel
 {
-    use MerchantBehavior;
-
     /**
      * {@inheritdoc}
      */

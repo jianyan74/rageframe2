@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\enums\AppEnum;
 use common\models\base\User;
+use common\enums\MemberAuthEnum;
+use common\enums\StatusEnum;
 use common\models\rbac\AuthAssignment;
 
 /**
@@ -102,6 +104,14 @@ class Member extends User
             'created_at' => '创建时间',
             'updated_at' => '修改时间',
         ];
+    }
+
+    /**
+     * 关联微信第三方绑定
+     */
+    public function getAuthWechat()
+    {
+        return $this->hasOne(Auth::class, ['member_id' => 'id'])->where(['status' => StatusEnum::ENABLED, 'oauth_client' => MemberAuthEnum::WECHAT]);
     }
 
     /**

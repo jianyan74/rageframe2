@@ -51,6 +51,17 @@ class MemberService extends Service
      * @param $id
      * @return array|\yii\db\ActiveRecord|null
      */
+    public function findById($id)
+    {
+        return Member::find()
+            ->where(['id' => $id, 'status' => StatusEnum::ENABLED])
+            ->one();
+    }
+
+    /**
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
     public function findByIdWithAssignment($id)
     {
         return Member::find()

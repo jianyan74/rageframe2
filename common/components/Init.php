@@ -2,6 +2,7 @@
 
 namespace common\components;
 
+use common\helpers\ArrayHelper;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\UnauthorizedHttpException;
@@ -72,7 +73,7 @@ class Init implements BootstrapInterface
         // ip黑名单拦截器
         if ($sys_ip_blacklist_open == true && !in_array(Yii::$app->id, [AppEnum::CONSOLE])) {
             $ips = Yii::$app->services->ipBlacklist->findIps();
-            if (in_array(Yii::$app->request->userIP, $ips)) {
+            if (ArrayHelper::ipInArray(Yii::$app->request->userIP, $ips)) {
                 throw new UnauthorizedHttpException('你的访问被禁止');
             }
         }

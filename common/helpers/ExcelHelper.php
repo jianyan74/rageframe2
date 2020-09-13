@@ -308,7 +308,7 @@ class ExcelHelper
     {
         $newField = explode('.', $field);
         if (count($newField) == 1) {
-            return $row[$field];
+            return $row[$field] ?? '';
         }
 
         foreach ($newField as $item) {

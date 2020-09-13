@@ -93,16 +93,16 @@ class Map extends InputWidget
         switch ($this->type) {
             case 'baidu' :
                 empty($this->secret_key) && $this->secret_key = Yii::$app->debris->backendConfig('map_baidu_ak');
-                $view->registerJsFile('http://api.map.baidu.com/api?v=2.0&ak=' . $this->secret_key);
+                $view->registerJsFile('https://api.map.baidu.com/api?v=2.0&ak=' . $this->secret_key);
                 break;
             case 'amap' :
                 empty($this->secret_key) && $this->secret_key = Yii::$app->debris->backendConfig('map_amap_key');
-                $view->registerJsFile('http://webapi.amap.com/maps?v=1.4.11&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&key=' . $this->secret_key);
-                $view->registerJsFile('http://webapi.amap.com/ui/1.0/main.js?v=1.0.11');
+                $view->registerJsFile('https://webapi.amap.com/maps?v=1.4.11&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&key=' . $this->secret_key);
+                $view->registerJsFile('https://webapi.amap.com/ui/1.0/main.js?v=1.0.11');
                 break;
             case 'tencent' :
                 empty($this->secret_key) && $this->secret_key = Yii::$app->debris->backendConfig('map_tencent_key');
-                $view->registerJsFile('http://map.qq.com/api/js?v=2.exp&libraries=place&key=' . $this->secret_key);
+                $view->registerJsFile('https://map.qq.com/api/js?v=2.exp&libraries=place&key=' . $this->secret_key);
                 break;
         }
 

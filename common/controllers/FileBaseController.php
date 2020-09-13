@@ -31,25 +31,25 @@ class FileBaseController extends Controller
      */
     protected $filesystem;
 
-    /**
-     * 行为控制
-     *
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],// 登录
-                    ],
-                ],
-            ],
-        ];
-    }
+//    /**
+//     * 行为控制
+//     *
+//     * @return array
+//     */
+//    public function behaviors()
+//    {
+//        return [
+//            'access' => [
+//                'class' => AccessControl::class,
+//                'rules' => [
+//                    [
+//                        'allow' => true,
+//                        'roles' => ['@'],// 登录
+//                    ],
+//                ],
+//            ],
+//        ];
+//    }
 
     /**
      * 图片上传

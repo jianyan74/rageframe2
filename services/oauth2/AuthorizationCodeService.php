@@ -21,14 +21,14 @@ class AuthorizationCodeService extends Service
      */
     public function create($client_id, $authorization_code, $expires, $member_id, $scopes)
     {
-        if (!($model = $this->findByClientId($client_id))) {
+        if (!($model = $this->findByClientId($client_id, $member_id))) {
             $model = new AuthorizationCode();
             $model->client_id = $client_id;
+            $model->member_id = (string)$member_id;
         }
 
         $model->expires = $expires;
         $model->authorization_code = $authorization_code;
-        $model->member_id = (string)$member_id;
         $model->scope = $scopes;
         $model->save();
     }
@@ -56,10 +56,13 @@ class AuthorizationCodeService extends Service
      * @param $client_id
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function findByClientId($client_id)
+    public function findByClientId($client_id, $member_id)
     {
         return AuthorizationCode::find()
-            ->where(['client_id' => $client_id])
+            ->where([
+                'client_id' => $client_id,
+                'member_id' => $member_id
+            ])
             ->one();
     }
 }

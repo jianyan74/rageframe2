@@ -175,7 +175,7 @@ class CreditsLogService extends Service
         }
 
         // 变动级别
-        $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral += $creditsLogForm->num);
+        $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral + $creditsLogForm->num);
 
         // 记录日志
         return $this->create($creditsLogForm, $account->user_money, $account->user_money + $creditsLogForm->num);
@@ -208,7 +208,7 @@ class CreditsLogService extends Service
         }
 
         // 变动级别
-        $creditsLogForm->updateLevel($account->consume_money += $creditsLogForm->num, $account->accumulate_integral);
+        $creditsLogForm->updateLevel($account->consume_money + $creditsLogForm->num, $account->accumulate_integral);
 
         // 记录日志
         return $this->create($creditsLogForm, $account->consume_money, $account->consume_money + $creditsLogForm->num);
@@ -238,7 +238,7 @@ class CreditsLogService extends Service
             ], ['id' => $account->id]);
 
             // 变动级别
-            $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral += $creditsLogForm->num);
+            $creditsLogForm->updateLevel($account->consume_money, $account->accumulate_integral + $creditsLogForm->num);
         } else {
             // 消费
             $status = Account::updateAllCounters([
@@ -288,11 +288,12 @@ class CreditsLogService extends Service
             ], ['id' => $account->id]);
         } else {
             // 消费
+            $counters = ['user_money' => $creditsLogForm->num];
+            // 增加消费数量
+            $creditsLogForm->consume_change && $counters['consume_money'] = $creditsLogForm->num;
+
             $status = Account::updateAllCounters(
-                [
-                    'user_money' => $creditsLogForm->num,
-                    'consume_money' => $creditsLogForm->num,
-                ],
+                $counters,
                 [
                     'and',
                     ['id' => $account->id],
@@ -300,7 +301,7 @@ class CreditsLogService extends Service
                 ]);
 
             // 变动级别
-            $creditsLogForm->updateLevel($account->consume_money += $creditsLogForm->num, $account->accumulate_integral);
+            $creditsLogForm->updateLevel($account->consume_money + $creditsLogForm->num, $account->accumulate_integral);
         }
 
         if ($status == false && $creditsLogForm->num < 0) {

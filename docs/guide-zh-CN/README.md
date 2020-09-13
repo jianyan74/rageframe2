@@ -77,6 +77,7 @@
 - RegularHelper - 正则验证辅助类
 - HashidsHelper - ID加密辅助类
 - UploadHelper - 上传辅助类
+- [AddonHelper](helper-addon.md) - 插件辅助类
 - [ResultHelper](helper-result-data.md) - 格式化数据返回辅助类
 - [ExcelHelper](helper-excel.md) - Excel导入导出辅助类
 - ...

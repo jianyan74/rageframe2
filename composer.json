@@ -61,7 +61,11 @@
         "ext-bcmath": "*",
         "fastgoo/getui-php": "^1.0",
         "dueros/bot-sdk": "^2.2",
-        "griffinledingham/php-apple-signin": "^1.1"
+        "griffinledingham/php-apple-signin": "^1.1",
+        "firebase/php-jwt": "^5.2",
+        "yly-openapi/yly-openapi-sdk": "v1.0.1",
+        "league/omnipay": "^3.0",
+        "omnipay/stripe": "^3.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

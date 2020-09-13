@@ -2,6 +2,8 @@
 
 namespace common\components;
 
+use addons\TinyService\common\enums\TypeEnum;
+use Yii;
 use yii\helpers\Json;
 use common\enums\StatusEnum;
 use common\models\websocket\FdMemberMap;
@@ -120,7 +122,7 @@ class BaseWebSocket
             $this->server->push($fd, $this->json($code, $message, $content));
         }
 
-        unset($content, $message, $code, $fd);
+        unset($content, $message, $code, $fd, $sendFds);
 
         return true;
     }
@@ -154,14 +156,15 @@ class BaseWebSocket
      */
     public function disconnect($fd, $code = null, $reason = null)
     {
-        // 用户下线
-        FdMemberMap::updateAll(['status' => StatusEnum::DISABLED], ['fd' => $fd]);
         // 踢下线
-        if ($this->server->isEstablished($this->frame->fd)) {
-            $this->server->disconnect($fd, $code, $reason);
-        }
+        try {
+            if ($this->server->isEstablished($fd)) {
+                $this->server->disconnect($fd, $code, $reason);
+            }
 
-        unset($reason, $code, $fd);
+        } catch (\Exception $e) {
+
+        }
 
         return true;
     }
@@ -192,21 +195,5 @@ class BaseWebSocket
             'member_id' => $member_id,
             'type' => $type,
         ])->one();
-    }
-
-    /**
-     * 获取所有的在线
-     *
-     * @return array|\yii\redis\ActiveRecord[]
-     */
-    public function getAllServiceFdMemberMap()
-    {
-        return FdMemberMap::find()
-            ->where([
-            'type' => 'service',
-            'status' => StatusEnum::ENABLED
-        ])
-            ->asArray()
-            ->all();
     }
 }

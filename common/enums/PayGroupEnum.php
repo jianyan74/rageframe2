@@ -12,6 +12,7 @@ namespace common\enums;
 class PayGroupEnum extends BaseEnum
 {
     const ORDER = 'order';
+    const ORDER_BATCH = 'orderBatch';
     const RECHARGE = 'recharge';
 
     /**
@@ -21,6 +22,7 @@ class PayGroupEnum extends BaseEnum
     {
         return [
             self::ORDER => '订单',
+            self::ORDER_BATCH => '订单批量支付',
             self::RECHARGE => '充值',
         ];
     }

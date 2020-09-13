@@ -2,6 +2,7 @@
 
 namespace common\models\forms;
 
+use Yii;
 use yii\base\Model;
 use common\helpers\StringHelper;
 use common\interfaces\PayHandler;
@@ -67,6 +68,24 @@ class RechargePayFrom extends Model implements PayHandler
     public function getOrderSn(): string
     {
         return time() . StringHelper::random(8, true);
+    }
+
+    /**
+     * 交易流水号
+     *
+     * @return string
+     */
+    public function getOutTradeNo()
+    {
+        return '';
+    }
+
+    /**
+     * @return int
+     */
+    public function getMerchantId(): int
+    {
+        return Yii::$app->services->merchant->getNotNullId();
     }
 
     /**

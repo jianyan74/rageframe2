@@ -119,7 +119,7 @@ class MemberService extends Service
     }
 
     /**
-     * 获取下级用户id
+     * 获取下一级用户id
      *
      * @param $id
      * @return array|\yii\db\ActiveRecord[]

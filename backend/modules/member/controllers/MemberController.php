@@ -92,6 +92,31 @@ class MemberController extends BaseController
     }
 
     /**
+     * 修改等级
+     *
+     * @return mixed|string|\yii\web\Response
+     * @throws \yii\base\ExitException
+     */
+    public function actionUpdateLevel()
+    {
+        $id = Yii::$app->request->get('id');
+        $model = $this->findModel($id);
+
+        // ajax 校验
+        $this->activeFormValidate($model);
+        if ($model->load(Yii::$app->request->post())) {
+            return $model->save()
+                ? $this->redirect(['index'])
+                : $this->message($this->getError($model), $this->redirect(['index']), 'error');
+        }
+
+        return $this->renderAjax($this->action->id, [
+            'model' => $model,
+            'levelMap' => Yii::$app->services->memberLevel->getMap(),
+        ]);
+    }
+
+    /**
      * 积分/余额变更
      *
      * @param $id

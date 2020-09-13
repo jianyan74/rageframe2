@@ -3,6 +3,7 @@
 namespace services\merchant;
 
 use common\components\Service;
+use common\enums\MerchantStateEnum;
 use common\enums\StatusEnum;
 use common\models\merchant\Merchant;
 
@@ -55,12 +56,26 @@ class MerchantService extends Service
     /**
      * @return int|string
      */
-    public function getCount()
+    public function getCount($merchant_id = '')
     {
         return Merchant::find()
             ->select('id')
             ->where(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['state' => StatusEnum::ENABLED])
+            ->andFilterWhere(['id' => $merchant_id])
+            ->count();
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getApplyCount($merchant_id = '')
+    {
+        return Merchant::find()
+            ->select('id')
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['in', 'state', [MerchantStateEnum::AUDIT]])
+            ->andFilterWhere(['id' => $merchant_id])
             ->count();
     }
 
@@ -81,5 +96,67 @@ class MerchantService extends Service
             ->where(['>=', 'status', StatusEnum::DISABLED])
             ->andWhere(['id' => $id])
             ->one();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findBaseById($id)
+    {
+        return Merchant::find()
+            ->select([
+                'id',
+                'title',
+                'cover',
+                'address_name',
+                'address_details',
+                'longitude',
+                'latitude',
+            ])
+            ->where(['id' => $id])
+            ->andWhere(['status' => StatusEnum::ENABLED])
+            ->asArray()
+            ->one();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findBaseByIds($ids)
+    {
+        return Merchant::find()
+            ->select([
+                'id',
+                'title',
+                'cover',
+                'address_name',
+                'address_details',
+                'longitude',
+                'latitude',
+            ])
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->andWhere(['in', 'id', $ids])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findBaseAll()
+    {
+        return Merchant::find()
+            ->select([
+                'id',
+                'title',
+                'cover',
+                'address_name',
+                'address_details',
+                'longitude',
+                'latitude',
+            ])
+            ->where(['>=', 'status', StatusEnum::DISABLED])
+            ->asArray()
+            ->all();
     }
 }

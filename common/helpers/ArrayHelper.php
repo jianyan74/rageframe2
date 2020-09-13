@@ -257,8 +257,7 @@ class ArrayHelper extends BaseArrayHelper
     public static function ipInArray($ip, $allowedIPs)
     {
         foreach ($allowedIPs as $filter) {
-            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter,
-                        $pos))) {
+            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
                 return true;
             }
         }

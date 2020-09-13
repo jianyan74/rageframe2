@@ -201,6 +201,7 @@ class Member extends User
             empty($this->promo_code) && Member::updateAll(['promo_code' => HashidsHelper::encode($this->id)], ['id' => $this->id]);
             if (empty($this->nickname) && !empty($this->mobile)) {
                 $nickname = StringHelper::random(5) . '_' . substr($this->mobile, -4);
+                $this->nickname = $nickname;
                 Member::updateAll(['nickname' => $nickname], ['id' => $this->id]);
             }
         }

@@ -52,6 +52,11 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'format' => 'raw',
                         ],
                         'username',
+                        'realname',
+                        [
+                            'attribute' => 'mobile',
+                            'headerOptions' => ['class' => 'col-md-1'],
+                        ],
                         'nickname',
                         [
                             'attribute' => 'memberLevel.name',
@@ -62,11 +67,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             },
                             'filter' => false,
                             'format' => 'raw',
-                        ],
-                        'realname',
-                        [
-                            'attribute' => 'mobile',
-                            'headerOptions' => ['class' => 'col-md-1'],
                         ],
                         [
                             'label' => '账户金额',
@@ -103,7 +103,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'header' => "操作",
                             'contentOptions' => ['class' => 'text-align-center'],
                             'class' => 'yii\grid\ActionColumn',
-                            'template' => '{ajax-edit} {address} {recharge} {edit} {status} {destroy}',
+                            'template' => '{ajax-edit} {address} {update-level} {recharge} {edit} {status} {destroy}',
                             'buttons' => [
                                 'ajax-edit' => function ($url, $model, $key) {
                                     return Html::a('账号密码', ['ajax-edit', 'id' => $model->id], [
@@ -116,6 +116,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return Html::a('收货地址', ['address/index', 'member_id' => $model->id], [
                                             'class' => 'cyan'
                                         ]) . '<br>';
+                                },
+                                'update-level' => function ($url, $model, $key) {
+                                    return Html::a('修改等级', ['update-level', 'id' => $model->id], [
+                                        'data-toggle' => 'modal',
+                                        'data-target' => '#ajaxModal',
+                                        'class' => 'green'
+                                    ]) . '<br>';
                                 },
                                 'recharge' => function ($url, $model, $key) {
                                     return Html::a('充值', ['recharge', 'id' => $model->id], [
