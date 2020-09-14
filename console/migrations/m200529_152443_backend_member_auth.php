@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m200529_152443_backend_auth extends Migration
+class m200529_152443_backend_member_auth extends Migration
 {
     public function up()
     {
