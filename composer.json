@@ -51,7 +51,7 @@
         "xxtime/flysystem-aliyun-oss": "^1.2",
         "hashids/hashids": "^3.0",
         "league/oauth2-server": "^7.4",
-        "overtrue/flysystem-cos": "dev-master",
+        "overtrue/flysystem-cos": "^2.0",
         "mobiledetect/mobiledetectlib": "^2.8",
         "jaeger/querylist": "^4.1",
         "overtrue/wechat": "~4.2.2",
