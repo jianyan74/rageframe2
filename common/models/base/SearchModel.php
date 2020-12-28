@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
+use yii\validators\Validator;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -276,6 +277,17 @@ class SearchModel extends Model
                     ];
                 }
             }
+
+            // 重新组合 rule, 移除自定义的验证器
+            $rules = [];
+            $builtInValidators = Validator::$builtInValidators;
+            $validRule = array_keys($builtInValidators);
+            foreach ($this->rules as $rule) {
+                if (isset($rule[1]) && in_array($rule[1], $validRule)) {
+                    $rules[] = $rule;
+                }
+            }
+            $this->rules = $rules;
 
             $query->joinWith(array_keys($this->relations));
         }
