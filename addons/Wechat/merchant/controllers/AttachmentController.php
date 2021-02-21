@@ -193,6 +193,7 @@ class AttachmentController extends BaseController
     public function actionSend($data, $mediaType)
     {
         $model = new SendForm();
+        $model = $model->loadDefaultValues();
         $model->$mediaType = $data;
         $model->module = $mediaType;
         $model->send_time = time();

@@ -139,16 +139,27 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 <script>
     // 同步所有粉丝openid
     function getAllFans() {
-
         rfAffirm('同步中,请不要关闭当前页面');
+        syncOpenid()
+    }
 
+    function syncOpenid(next_openid = '') {
         $.ajax({
             type:"get",
-            url:"<?= Url::to(['sync-all-openid'])?>",
+            url:"<?= Url::to(['sync-all-openid'])?>" + '?next_openid=' + next_openid,
             dataType: "json",
             data: {},
             success: function(data){
-                sync('all');
+                if (parseInt(data.code) === 200) {
+                    if (data.data.next_openid) {
+                        syncOpenid(data.data.next_openid);
+                    } else {
+                        sync('all');
+                    }
+                } else {
+                    rfAffirm(data.message);
+                    window.location.reload();
+                }
             }
         });
     }
@@ -161,7 +172,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
             dataType: "json",
             data: {type:type,page:page,openids:openids},
             success: function(data){
-                if (data.code == 200 && data.data.page) {
+                if (parseInt(data.code) === 200 && data.data.page) {
                     sync(type, data.data.page);
                 } else {
                     rfAffirm(data.message);

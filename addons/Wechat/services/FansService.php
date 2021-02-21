@@ -92,10 +92,10 @@ class FansService extends Service
      * @throws \yii\db\Exception
      * @throws \yii\web\UnprocessableEntityHttpException
      */
-    public function syncAllOpenid()
+    public function syncAllOpenid($nextOpenId = null)
     {
         // 获取全部列表
-        $fans_list = Yii::$app->wechat->app->user->list();
+        $fans_list = Yii::$app->wechat->app->user->list($nextOpenId);
         Yii::$app->debris->getWechatError($fans_list);
         $fans_count = $fans_list['total'];
 

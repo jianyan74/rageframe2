@@ -25,6 +25,15 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'class' => 'yii\grid\SerialColumn',
                         ],
                         [
+                            'label' => '头像',
+                            'attribute' => 'fans.head_portrait',
+                            'filter' => false, //不显示搜索框
+                            'format' => 'raw',
+                            'value' => function ($model) {
+                                return "<img src=" . $model->fans->head_portrait . " class='img-circle rf-img-md img-bordered-sm'>";
+                            },
+                        ],
+                        [
                             'label' => '昵称',
                             'attribute' => 'fans.nickname',
                             'filter' => false, //不显示搜索框
@@ -37,7 +46,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                             'label' => '内容',
                             'attribute' => 'message',
                             'value' => function ($model) {
-                                $data = Yii::$app->wechatService->msgHistory->readMessage($model->type, $model->message);
+                                $data = Yii::$app->wechatService->msgHistory->readMessage($model->type,
+                                    $model->message);
+
                                 return '<div style="max-width:515px; overflow:hidden; word-break:break-all; word-wrap:break-word;" class="emoji">' . $data . '</div>';
                             },
                             'format' => 'raw',
@@ -62,12 +73,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                                     return '<span class="label label-default">未触发</span>';
                                 } else {
                                     $title = $moduleExplain[$model->module] ?? $model->module;
+
                                     return '<span class="label label-info">' . $title . '</span>';
                                 }
                             },
                             'filter' => Html::activeDropDownList($searchModel, 'module', $moduleExplain, [
                                     'prompt' => '全部',
-                                    'class' => 'form-control'
+                                    'class' => 'form-control',
                                 ]
                             ),
                             'format' => 'raw',
@@ -105,8 +117,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
 <?= \common\widgets\emoji\Emoji::widget([
     'name' => 'websocket',
     'options' => [
-        'class' => 'hide'
-    ]
+        'class' => 'hide',
+    ],
 ]); ?>
 
 <?php Yii::$app->view->registerJs(<<<js
@@ -116,4 +128,4 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
         $(data).html(html)
     })
 js
-)?>
+) ?>

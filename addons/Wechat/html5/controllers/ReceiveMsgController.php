@@ -78,7 +78,7 @@ class ReceiveMsgController extends BaseController
                         return $reply;
                     } catch (\Exception $e) {
                         // 记录行为日志
-                        Yii::$app->services->log->setErrorStatus(500, 'wechatApiReply', $e->getMessage());
+                        Yii::$app->services->log->setErrorStatus(500, 'wechatApiReply', Yii::$app->debris->getSysError($e));
                         Yii::$app->services->log->push();
 
                         if (YII_DEBUG) {

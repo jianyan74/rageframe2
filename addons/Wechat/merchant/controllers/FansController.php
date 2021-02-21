@@ -30,18 +30,17 @@ class FansController extends BaseController
      */
     public function actionIndex()
     {
-        $request = Yii::$app->request;
-        $follow = $request->get('follow', 1);
-        $tag_id = $request->get('tag_id', null);
-        $keyword = $request->get('keyword', null);
+        $follow = Yii::$app->request->get('follow', 1);
+        $tag_id = Yii::$app->request->get('tag_id', null);
+        $keyword = Yii::$app->request->get('keyword', null);
 
         $where = $keyword ? ['or', ['like', 'f.openid', $keyword], ['like', 'f.nickname', $keyword]] : [];
 
         // 关联角色查询
         $data = Fans::find()
-            ->where($where)
             ->alias('f')
-            ->andWhere(['f.follow' => $follow])
+            ->where(['f.follow' => $follow])
+            ->andWhere($where)
             ->joinWith("tags AS t", true, 'LEFT JOIN')
             ->filterWhere(['t.tag_id' => $tag_id])
             ->andFilterWhere(['f.merchant_id' => $this->getMerchantId()]);
@@ -172,12 +171,12 @@ class FansController extends BaseController
         empty($next_openid) && Fans::updateAll(['follow' => Fans::FOLLOW_OFF], ['merchant_id' => Yii::$app->services->merchant->getId()]);
 
         try {
-            list($total, $count, $next_openid) = Yii::$app->wechatService->fans->syncAllOpenid();
+            list($total, $count, $nextOpenid) = Yii::$app->wechatService->fans->syncAllOpenid($next_openid);
 
             return ResultHelper::json(200, '同步粉丝openid完成', [
                 'total' => $total,
                 'count' => $count,
-                'next_openid' => $next_openid,
+                'next_openid' => $nextOpenid,
             ]);
         } catch (\Exception $e) {
             return ResultHelper::json(422, $e->getMessage());

@@ -130,6 +130,9 @@ class MsgHistoryService extends Service
                     case 'MASSSENDJOBFINISH' :
                         return "点击图文MsgID为 : " . $messgae['MsgID'];
                         break;
+                    case 'view_miniprogram' :
+                        return "浏览小程序";
+                        break;
                     default :
                         return Json::encode($messgae);
                         break;
