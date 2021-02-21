@@ -190,6 +190,23 @@ class Debris
     }
 
     /**
+     * 解析系统报错
+     *
+     * @param \Exception $e
+     * @return array
+     */
+    public function getSysError(\Exception $e)
+    {
+        return [
+            'errorMessage' => $e->getMessage(),
+            'type' => get_class($e),
+            'file' => method_exists($e, 'getFile') ? $e->getFile() : '',
+            'line' => $e->getLine(),
+            'stack-trace' => explode("\n", $e->getTraceAsString()),
+        ];
+    }
+
+    /**
      * 解析微信是否报错
      *
      * @param array $message 微信回调数据
