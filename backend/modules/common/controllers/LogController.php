@@ -129,8 +129,11 @@ class LogController extends BaseController
      */
     public function actionView($id)
     {
+        $model = Log::findOne($id);
+        $model->error_data = json_decode($model->error_data);
+
         return $this->renderAjax($this->action->id, [
-            'model' => Log::findOne($id),
+            'model' => $model,
         ]);
     }
 }
