@@ -204,6 +204,8 @@ class Files extends InputWidget
         $boxId = $this->boxId;
         $jsConfig = Json::encode($this->config);
         $disabled = $this->themeConfig['sortable'] ?? true;
+        // 手机端禁用拖动
+        Yii::$app->mobileDetect->isMobile() && $disabled = false;
 
         $view->registerJs(<<<Js
     var sortable = '{$disabled}';
