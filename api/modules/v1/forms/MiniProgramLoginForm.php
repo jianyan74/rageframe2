@@ -20,6 +20,11 @@ class MiniProgramLoginForm extends Model
     public $auth;
 
     /**
+     * @var
+     */
+    protected $openid;
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -64,6 +69,15 @@ class MiniProgramLoginForm extends Model
         }
 
         $this->auth = $auth;
+        $this->openid = $auth['openid'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOpenid()
+    {
+        return $this->openid;
     }
 
     /**
