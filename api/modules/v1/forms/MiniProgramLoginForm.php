@@ -79,13 +79,16 @@ class MiniProgramLoginForm extends Model
     {
         return $this->openid;
     }
-
+    
     /**
      * @return array
      * @throws \EasyWeChat\Kernel\Exceptions\DecryptException
      */
     public function getUser()
     {
-        return Yii::$app->wechat->miniProgram->encryptor->decryptData($this->auth['session_key'], $this->iv, $this->encryptedData);
+        $user = Yii::$app->wechat->miniProgram->encryptor->decryptData($this->auth['session_key'], $this->iv, $this->encryptedData);
+        $user['openId'] = $this->openid;
+
+        return $user;
     }
 }
