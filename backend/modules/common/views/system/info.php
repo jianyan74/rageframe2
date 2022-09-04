@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Html;
 use common\helpers\RegularHelper;
 
 $this->title = '系统信息';
@@ -47,7 +48,7 @@ $prefix = !RegularHelper::verify('url', Yii::getAlias('@attachurl')) ? Yii::$app
                     </tr>
                     <tr>
                         <td>客户端信息</td>
-                        <td><?= $_SERVER['HTTP_USER_AGENT'] ?></td>
+                        <td><?= Html::encode($_SERVER['HTTP_USER_AGENT']) ?></td>
                     </tr>
                 </table>
             </div>
