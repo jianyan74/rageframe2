@@ -2,8 +2,7 @@
 
 重量级全栖框架，为二次开发而生
 
-> 快来一起体验 [RageFrame 3.0](https://github.com/jianyan74/rageframe3) (2.0商城插件未支持)
-
+> 最新版本为 [RageFrame 3.0版本](https://github.com/jianyan74/rageframe3), 请前往使用
 
 ### 前言
 
@@ -33,32 +32,32 @@ RageFrame 创建于 2016 年 4 月 16 日，一个基于 Yii2 高级框架的快
 
 ### 思维导图
 
-![image](docs/guide-zh-CN/images/RageFrame2.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzsW8.png)
 
 ### 应用架构流程
 
-![image](docs/guide-zh-CN/images/app-flow.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzdeA.png)
 
 ### 系统快照
 
 【系统 - 首页】
-![image](docs/guide-zh-CN/images/sys-index.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzgyQ.png)
 【系统 - 配置管理】
-![image](docs/guide-zh-CN/images/sys-config.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzcQg.png)
 【系统 - 角色编辑】
-![image](docs/guide-zh-CN/images/rbac-role.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCz6SS.png)
 【系统 - 日志统计】
-![image](docs/guide-zh-CN/images/log-stat.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzDFP.png)
 【会员 - 信息】
-![image](docs/guide-zh-CN/images/member-info.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCz0ot.png)
 【微信 - 自定义菜单】
-![image](docs/guide-zh-CN/images/wechat-menu.png)
+![image](https://s1.ax1x.com/2023/08/02/pPPFa1x.png)
 【插件模块 - 列表】
-![image](docs/guide-zh-CN/images/addon-list.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzrJf.png)
 【插件模块 - 文章模块】
-![image](docs/guide-zh-CN/images/addon-activity.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCzwdI.png)
 【插件模块 - 系统监控】
-![image](docs/guide-zh-CN/images/system.png)
+![image](https://s1.ax1x.com/2023/08/02/pPCz2Lj.png)
 
 ### 开始之前
 
@@ -121,6 +120,6 @@ RageFrame 遵循 Apache2 开源协议发布，并提供免费使用。
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2016-2020 by RageFrame [www.rageframe.com](http://www.rageframe.com)
+版权所有Copyright © 2016-2023 by RageFrame [www.rageframe.com](http://www.rageframe.com)
 
 All rights reserved。
