@@ -26,8 +26,8 @@ tradeType
 > 根据对应的支付类型，选择支持的交易类型即可，例如：app
 
 ```
-支付宝：'native', 'app', 'js', 'pos', 'mweb'
-微信：'pc', 'app', 'f2f', 'wap', 'mini_program'
+微信：'native', 'app', 'js', 'pos', 'mweb'
+支付宝：'pc', 'app', 'f2f', 'wap', 'mini_program'
 银联：'app', 'html'
 余额：'default'
 ```
